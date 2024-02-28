@@ -1,0 +1,278 @@
+body {
+  box-sizing: border-box;
+  font-family: Rubik;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+[data-loading] {
+  display: none;
+}
+
+a {
+  color: #1e72bd;
+  text-decoration: none;
+}
+
+p {
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+em {
+  font-style: italic;
+}
+
+a:hover {
+  color: #087232;
+}
+
+header, footer {
+  background-color: #087232;
+  color: white;
+}
+
+footer {
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+}
+
+.site-branding-container {
+  display: inline-flex;
+  align-items: center;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.site-logo {
+  margin-right: 1em;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.site-logo img {
+  width: 50px;
+  vertical-align: middle;
+  height: auto;
+  max-width: 100%;
+}
+
+.site-branding h1 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.2em;
+  word-wrap: break-word;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.container p {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.container a {
+  color: white;
+}
+
+.container a:hover {
+  color: #f3e600;
+}
+
+.site-branding a, .site-branding a:hover {
+  color: #ffffff;
+}
+
+.username {
+  text-align: right;
+}
+
+footer p {
+  text-align: center;
+}
+
+main {
+  max-width: 1020px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 40px;
+}
+
+.cards {
+  display: grid;
+  column-gap: 20px;
+  row-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-auto-rows: 1fr;
+}
+
+.card {
+  display: block;
+  padding: 0 20px 20px 20px;
+  text-decoration: none;
+  color: rgb(34, 34, 34);
+  border-radius: 10px;
+  box-shadow: hsla(0, 0%, 39%, 0.2) 0px 2px 8px 0px;
+  transition: all 0.2s ease-in;
+}
+
+.card:hover {
+  background-color: rgb(245, 245, 245);
+  box-shadow: hsla(0, 0%, 39%, 0.3) 0px 4px 8px 0px;
+  color: rgb(34, 34, 34);
+}
+
+.card .hero {
+  content: ' ';
+  margin: 0 -20px 20px -20px;
+  aspect-ratio: 1.5 / 1;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-size: cover;
+}
+
+.card.readme .hero {
+  background-image: url('https://www.shutterstock.com/image-photo/female-holding-leaflet-close-up-260nw-1203400762.jpg');
+}
+
+.card.guide .hero {
+  background-image: url('https://c8.alamy.com/comp/BW9E2D/channel-5-tv-program-guide-program-listing-BW9E2D.jpg');
+}
+
+.card.stream .hero {
+  background-image: url('https://media.rcphotostock.com/static2/preview2/stock-photo-online-movie-stream-with-smartphone-woman-watching-film-on-mobile-phone-with-imaginary-video-player-service-881.jpg');
+}
+
+.card.chat .hero {
+  background-image: url('https://www.shutterstock.com/image-photo/womens-hand-typing-on-keyboard-260nw-636276959.jpg');
+}
+
+.card.website .hero {
+  background-image: url('https://www.shutterstock.com/image-vector/concept-web-design-website-page-260nw-1939082209.jpg');
+}
+
+.card h3 {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.card h4 {
+  margin-bottom: 20px;
+}
+
+article {
+  line-height: 1.5;
+  margin-top: 1em;
+}
+
+article h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+article h4 {
+  font-weight: bold;
+}
+
+.button {
+  display: inline-flex;
+  padding: 10px 20px;
+  background-color: #087232;
+  color: #ffffff;
+  transition: color .1s ease-in-out, background-color .1s ease-in-out;
+}
+
+.button:hover {
+  background-color: #f3e600;
+  color: #087232;
+}
+
+form p {
+  margin-bottom: 0;
+}
+
+form .label {
+  font-weight: bold;
+}
+
+form .hint {
+  font-style: italic;
+}
+
+form input[type='email'], form input[type='password']{
+  width: 100%;
+  max-width: 50ch;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  font-size: 1.2rem;
+}
+
+form input[type='submit'] {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background-color: #087232;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: color .1s ease-in-out, background-color .1s ease-in-out;
+}
+
+form input[type='submit']:hover {
+  background-color: #f3e600;
+  color: #087232;
+}
+
+form input[type='submit']:disabled, form input[type='submit']:disabled:hover {
+  background-color: #AAAA;
+  color: #555;
+  cursor: default;
+  background-image: url('/resources/spinner.gif');
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center right 10px;
+  padding-right: 38px;
+}
+
+.filled-in-field {
+  margin-top: 10px;
+}
+
+.filled-in-field a {
+  margin-left: 1em;
+}
+
+fieldset {
+  margin-top: 20px;
+}
+
+.error {
+  margin-top: 20px;
+  color: rgb(250, 50, 50);
+}
+
+.info {
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 40em) {
+  .container {
+    flex-direction: column;
+    align-items: start;
+  }
+  .username {
+    text-align: left;
+    padding-top: 10px;
+  }
+  form input[type='email'], form input[type='password']{
+    max-width: 100%;
+  }
+}
