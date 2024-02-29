@@ -41,6 +41,19 @@ render_header();
     <h4>&nbsp;</h4>
     <p>Find out the latest news and other information about Levitation 2024.</p>
   </a>
+
+<?php
+  if (current_user_has_permission('manage-discord-ids')) {
+?>
+  <a href="/admin/discord/" class="card discord-mod">
+    <div class="hero"></div>
+    <h3>Discord ids</h3>
+    <h4>Admin area</h4>
+    <p>See what member's discord ids are.</p>
+  </a>
+<?php
+  }
+?>
 </div>
 
 <?php

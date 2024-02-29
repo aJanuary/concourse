@@ -97,4 +97,11 @@ function get_login_link_status($email, $login_code) {
   return "ok";
 }
 
+function current_user_has_permission($permission) {
+  if (!isset($_COOKIE['session'])) {
+    return false;
+  }
+  return db_has_permission($_COOKIE['session'], $permission);
+}
+
 ?>

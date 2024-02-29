@@ -1,0 +1,66 @@
+<?php
+require_once('../../../includes/config.php');
+require_once('../../../includes/session_auth.php');
+require_once('../../../includes/template.php');
+
+if (!current_user_has_permission('manage-discord-ids')) {
+  header('Location: /');
+  exit;
+}
+
+render_header();
+?>
+
+<a href="/" class="back">&lt; Back to member portal</a>
+
+<article>
+  <h3>Manage discord ids</h3>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Badge no</th>
+        <th>Name</th>
+        <th>Discord ID</th>
+        <th>Discord username</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+      $members = db_get_discord_ids();
+      foreach ($members as $member) {
+        $rowspan = max(count($member['discords']), 1);
+      ?>
+      <tr class="new-badgeno-row">
+        <td rowspan=<?php echo $rowspan; ?>><?php echo $member['badge_no']; ?></td>
+        <td rowspan=<?php echo $rowspan; ?>><?php echo $member['name']; ?></td>
+        <?php
+        if (count($member['discords']) == 0) {
+        ?>
+            <td colspan=2><em>No discord id</em></td>
+          </tr>
+        <?php
+        } else {
+          foreach ($member['discords'] as $i => $discord) {
+            if ($i > 0) {
+            ?>
+            <tr>
+            <?php
+            }
+            ?>
+            <td><?php echo $discord['id']; ?></td>
+            <td><?php echo $discord['username']; ?></td>
+          </tr>
+          <?php
+          }
+        }
+      }
+      ?>
+    </tbody>
+  </table>
+
+</article>
+
+<?php
+render_footer();
+?>

@@ -280,3 +280,24 @@ fieldset {
     max-width: 100%;
   }
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+td, th {
+  padding: 10px;
+}
+
+th {
+  background-color: #087232;
+  color: white;
+  text-align: left;
+  font-weight: bold;
+}
+
+.new-badgeno-row {
+  border-top: solid 1px #DDD;
+}
