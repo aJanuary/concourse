@@ -140,23 +140,27 @@ main {
 }
 
 .card.readme .hero {
-  background-image: url('https://www.shutterstock.com/image-photo/female-holding-leaflet-close-up-260nw-1203400762.jpg');
+  background-image: url('/resources/readme.jpg');
 }
 
 .card.guide .hero {
-  background-image: url('https://c8.alamy.com/comp/BW9E2D/channel-5-tv-program-guide-program-listing-BW9E2D.jpg');
+  background-image: url('/resources/guide.jpg');
 }
 
 .card.stream .hero {
-  background-image: url('https://media.rcphotostock.com/static2/preview2/stock-photo-online-movie-stream-with-smartphone-woman-watching-film-on-mobile-phone-with-imaginary-video-player-service-881.jpg');
+  background-image: url('/resources/stream.jpg');
 }
 
 .card.chat .hero {
-  background-image: url('https://www.shutterstock.com/image-photo/womens-hand-typing-on-keyboard-260nw-636276959.jpg');
+  background-image: url('/resources/chat.jpg');
 }
 
 .card.website .hero {
   background-image: url('https://www.shutterstock.com/image-vector/concept-web-design-website-page-260nw-1939082209.jpg');
+}
+
+.card.discord-mod .hero {
+  background-image: url('/resources/discord-mod.png');
 }
 
 .card h3 {
