@@ -1,6 +1,8 @@
 <?php
 
-define('ROOT_URL', 'https://member-portal.eastercon2024.co.uk');
+require_once('secrets.php');
+
+define('ROOT_URL', 'https://' . ENVIRONMENT . '.eastercon2024.co.uk');
 define('CON_NAME', 'Levitation 2024');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'u943682649_member_portal');
