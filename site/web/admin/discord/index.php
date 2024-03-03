@@ -27,29 +27,29 @@ render_header();
     </thead>
     <tbody>
       <?php
-      $members = db_get_discord_ids();
+      $members = db_get_member_discord_data();
       foreach ($members as $member) {
-        $rowspan = max(count($member['discords']), 1);
+        $rowspan = max(count($member['discord_ids']), 1);
       ?>
       <tr class="new-badgeno-row">
         <td rowspan=<?php echo $rowspan; ?>><?php echo $member['badge_no']; ?></td>
         <td rowspan=<?php echo $rowspan; ?>><?php echo $member['name']; ?></td>
         <?php
-        if (count($member['discords']) == 0) {
+        if (count($member['discord_ids']) == 0) {
         ?>
             <td colspan=2><em>No discord id</em></td>
           </tr>
         <?php
         } else {
-          foreach ($member['discords'] as $i => $discord) {
+          foreach ($member['discord_ids'] as $i => $discord_id) {
             if ($i > 0) {
             ?>
             <tr>
             <?php
             }
             ?>
-            <td><?php echo $discord['id']; ?></td>
-            <td><?php echo $discord['username']; ?></td>
+            <td><?php echo $discord_id['id']; ?></td>
+            <td><?php echo $discord_id['username']; ?></td>
           </tr>
           <?php
           }

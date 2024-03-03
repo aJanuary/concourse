@@ -190,7 +190,7 @@ function db_has_permission($session_id, $permission) {
   return $has_permission;
 }
 
-function db_get_discord_ids() {
+function db_get_member_discord_data() {
   $mysqli = db_connect();
 
   $result = $mysqli->query("SELECT members.badge_no, name, discord_ids.discord_id, discord_ids.username from members LEFT OUTER JOIN discord_ids USING (badge_no) ORDER by badge_no");
@@ -198,14 +198,14 @@ function db_get_discord_ids() {
   $cur_member = null;
   while ($row = $result->fetch_assoc()) {
     if ($cur_member && $cur_member['badge_no'] === $row['badge_no']) {
-      $cur_member['discords'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
+      $cur_member['discord_ids'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
     } else {
       if ($cur_member) {
         $members[] = $cur_member;
       }
-      $cur_member = ['badge_no' => $row['badge_no'], 'name' => $row['name'], 'discords' => []];
+      $cur_member = ['badge_no' => $row['badge_no'], 'name' => $row['name'], 'discord_ids' => []];
       if ($row['discord_id']) {
-        $cur_member['discords'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
+        $cur_member['discord_ids'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
       }
     }
   }
@@ -215,6 +215,19 @@ function db_get_discord_ids() {
   $result->close();
 
   return $members;
+}
+
+function db_get_discord_ids() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT discord_id FROM discord_ids");
+  $discord_ids = [];
+  while ($row = $result->fetch_assoc()) {
+    $discord_ids[] = $row['discord_id'];
+  }
+  $result->close();
+
+  return $discord_ids;
 }
 
 function db_get_hopin_links() {
