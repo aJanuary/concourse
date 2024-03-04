@@ -15,6 +15,10 @@ a {
   text-decoration: none;
 }
 
+a:hover {
+  color: #087232;
+}
+
 p {
   line-height: 1.5;
   margin-bottom: 20px;
@@ -24,9 +28,12 @@ em {
   font-style: italic;
 }
 
-a:hover {
-  color: #087232;
+kbd {
+  font-style: italic;
 }
+
+kbd:before { content: open-quote; }
+kbd:after  { content: close-quote; }
 
 header, footer {
   background-color: #087232;
@@ -122,6 +129,7 @@ main {
   border-radius: 10px;
   box-shadow: hsla(0, 0%, 39%, 0.2) 0px 2px 8px 0px;
   transition: all 0.2s ease-in;
+  font-weight: noral;
 }
 
 .card:hover {
@@ -175,6 +183,10 @@ main {
 article {
   line-height: 1.5;
   margin-top: 1em;
+}
+
+article a {
+  font-weight: bold;
 }
 
 article h3 {
@@ -300,4 +312,9 @@ th {
 
 .new-badgeno-row {
   border-top: solid 1px #DDD;
+}
+
+ol {
+  list-style-type: decimal;
+  margin-left: 1rem;
 }
