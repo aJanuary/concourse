@@ -21,12 +21,18 @@ render_header();
     <p>See what's on where and when. Bookmark items to make sure you don't miss them.</p>
   </a>
 
+<?php
+  if (current_user_has_permission('see-hopin')) {
+?>
   <a href="/stream/" class="card stream">
     <div class="hero"></div>
     <h3>Stream and catch-up</h3>
     <h4>Ring Central Events</h4>
     <p>Watch the live streams of programme items, or watch the recorded videos afterwards.</p>
   </a>
+<?php
+  }
+?>
 
   <a href="/chat/" class="card chat">
     <div class="hero"></div>

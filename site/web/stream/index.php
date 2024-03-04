@@ -3,6 +3,11 @@ require_once('../../includes/config.php');
 require_once('../../includes/session_auth.php');
 require_once('../../includes/template.php');
 
+if (!current_user_has_permission('see-hopin')) {
+  header('Location: /');
+  exit;
+}
+
 $magic_link = db_get_magic_link($_COOKIE['session']);
 
 render_header();
