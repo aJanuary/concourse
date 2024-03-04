@@ -12,8 +12,8 @@ render_header();
 
 <article>
   <h3>Online Chat</h3>
-  <p>We are using a platform called Discord to host our online chat, both text and audio/video.</p>
-  <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=https%3A%2F%2Fmember-portal.eastercon2024.co.uk%2Fchat%2Fcallback%2F&scope=identify">Join the Discord server</a></p>
+  <p>We are using a platform called <a href="https://discord.com/">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
+  <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat%2Fcallback%2F&scope=identify">Join the Discord server</a></p>
   
   <h4>How to use Discord</h4>
   <p>Instructions go here.</p>

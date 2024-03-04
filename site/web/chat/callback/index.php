@@ -15,7 +15,7 @@ $token_resp = api_call('https://discord.com/api/oauth2/token', [
   'client_secret' => DISCORD_CLIENT_SECRET,
   'grant_type' => 'authorization_code',
   'code' => $code,
-  'redirect_uri' => 'https://member-portal.eastercon2024.co.uk/chat/callback/',
+  'redirect_uri' => ROOT_URL . '/chat/callback/',
   'scope' => 'identify'
 ]));
 $access_token = $token_resp['access_token'];
