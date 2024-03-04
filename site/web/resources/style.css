@@ -156,15 +156,15 @@ main {
 }
 
 .card.stream .hero {
-  background-image: url('/resources/stream.jpg');
+  background-image: url('/resources/stream.png');
 }
 
 .card.chat .hero {
-  background-image: url('/resources/chat.jpg');
+  background-image: url('/resources/chat.png');
 }
 
 .card.website .hero {
-  background-image: url('https://www.shutterstock.com/image-vector/concept-web-design-website-page-260nw-1939082209.jpg');
+  background-image: url('/resources/website.png');
 }
 
 .card.discord-mod .hero {

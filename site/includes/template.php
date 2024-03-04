@@ -51,7 +51,7 @@
     </main>
     <footer>
       <div class="container">
-        <p>&copy; <?php echo date('Y'); ?> <?php echo CON_NAME; ?></p>
+        <p>&copy; <?php echo date('Y'); ?> <?php echo CON_NAME; ?>. Artwork by <a href="https://www.facebook.com/SpaceArtistJackieBurns/">Jackie Burns</a></p>
       </div>
     </footer>
   </body>
