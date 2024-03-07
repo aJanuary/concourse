@@ -41,6 +41,13 @@ render_header();
     <p>Chat with other members online in Discord. Talk about panel items, your fannish interests, and catch up with friends.</p>
   </a>
 
+  <a href="/vote/" class="card vote">
+    <div class="hero"></div>
+    <h3>Vote</h3>
+    <h4>Doc Weir and BSFA</h4>
+    <p>Vote for the Doc Weir award and the BSFA awards.</p>
+  </a>
+
   <a href="https://eastercon2024.co.uk" class="card website" target="_blank">
     <div class="hero"></div>
     <h3>Website</h3>
