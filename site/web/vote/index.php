@@ -10,7 +10,7 @@ render_header();
 
 <article>
   <h3>Doc Weir</h3>
-  <p>The Doc Weir Award celebrates the unsung heroes in fandom, those who do the work behind the scenes every year. You can vote for your chosen candidate online, or fill in the form and putting in the box at Ops Help Desk by 10:30 am on Monday.</p>
+  <p>The Doc Weir Award celebrates the unsung heroes in fandom, those who do the work behind the scenes every year. You can vote by clicking the button below, or find Claire Brialey at the fan funds table in the Dealers room for a paper ballot.</p>
   <p><a target="_blank" class="button" href="https://forms.gle/7xDLsFmHQJpve7V16">Vote for the Doc Weir Award</a></p>
 
   <h3>BSFA Awards</h3>
