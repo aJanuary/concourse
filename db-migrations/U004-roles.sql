@@ -5,14 +5,14 @@ CREATE TABLE roles (
 
 CREATE TABLE users_roles (
   badge_no VARCHAR(5) NOT NULL,
-  role_id  bigint(20)  NOT NULL,
+  role_id  bigint(20) UNSIGNED NOT NULL,
   PRIMARY KEY (badge_no, role_id),
   FOREIGN KEY (badge_no) REFERENCES members(badge_no),
   FOREIGN KEY (role_id) REFERENCES roles(role_id)
 );
 
 CREATE TABLE roles_permissions (
-  role_id  bigint(20) NOT NULL,
+  role_id  bigint(20) UNSIGNED NOT NULL,
   permission VARCHAR(255) NOT NULL,
   PRIMARY KEY (role_id, permission),
   FOREIGN KEY (role_id) REFERENCES roles(role_id)
