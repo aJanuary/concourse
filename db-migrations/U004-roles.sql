@@ -20,6 +20,8 @@ CREATE TABLE roles_permissions (
 
 INSERT INTO roles(name) VALUES ('admin');
 INSERT INTO roles_permissions(role_id, permission) SELECT role_id, 'see-hopin' FROM roles WHERE name = 'admin';
+INSERT INTO roles_permissions(role_id, permission) SELECT role_id, 'see-guide' FROM roles WHERE name = 'admin';
+INSERT INTO roles_permissions(role_id, permission) SELECT role_id, 'see-vote' FROM roles WHERE name = 'admin';
 INSERT INTO roles_permissions(role_id, permission) SELECT role_id, 'manage-discord-ids' FROM roles WHERE name = 'admin';
 
 INSERT INTO roles(name) VALUES ('moderator');

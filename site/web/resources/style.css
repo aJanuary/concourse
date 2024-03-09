@@ -35,6 +35,10 @@ kbd {
 kbd:before { content: open-quote; }
 kbd:after  { content: close-quote; }
 
+img {
+  max-width: 100%;
+}
+
 header, footer {
   background-color: #087232;
   color: white;

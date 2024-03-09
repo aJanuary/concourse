@@ -14,12 +14,18 @@ render_header();
     <p>Find out all the key information you need to know for Levitation 2024.</p>
   </a>
 
+<?php
+  if (current_user_has_permission('see-guide')) {
+?>
   <a href="https://guide.conversation2023.org.uk/" class="card guide" target="_blank">
     <div class="hero"></div>
     <h3>Programme guide</h3>
     <h4>ConCl&aacute;r</h4>
     <p>See what's on where and when. Bookmark items to make sure you don't miss them.</p>
   </a>
+<?php
+  }
+?>
 
 <?php
   if (current_user_has_permission('see-hopin')) {
@@ -41,12 +47,18 @@ render_header();
     <p>Chat with other members online in Discord. Talk about panel items, your fannish interests, and catch up with friends.</p>
   </a>
 
+<?php
+  if (current_user_has_permission('see-vote')) {
+?>
   <a href="/vote/" class="card vote">
     <div class="hero"></div>
     <h3>Vote</h3>
     <h4>Doc Weir and BSFA</h4>
     <p>Vote for the Doc Weir award and the BSFA awards.</p>
   </a>
+<?php
+  }
+?>
 
   <a href="https://eastercon2024.co.uk" class="card website" target="_blank">
     <div class="hero"></div>

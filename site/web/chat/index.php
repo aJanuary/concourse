@@ -44,7 +44,16 @@ render_header();
       <p><img src="/resources/discord/5-join.png" alt="Discord server invite dialog with the Accept Invite button highlighted"></p>
     </li>
     <li>
-      <p>TODO: Instructions for going through the onboarding.</p>
+      <p>Fill out the onboarding questions. These are aimed at making sure you see the correct channels. If any of the questions don't apply to you, you can always just click <kbd>Skip</kbd>.</p>
+      <p><img src="/resources/discord/6-onboarding.png" alt="Discord onboarding questions"></p>
+    </li>
+    <li>
+      <p>After completing the questions, you will be taken to the <kbd>Server Guide</kbd>. This has a list of tasks to help you get started with Discord. For example, the first one is <kbd>Check out the read-me!</kbd>. Click it to be taken to the Discord read-me.</p>
+      <p><img src="/resources/discord/7-server-guide.png" alt="Discord server guide with the Check out the read-me! task highlighted"></p>
+    </li>
+    <li>
+      <p>You can get back to the server guide to complete the other tasks, or re-read the Read-me, by clicking the <kbd>Server Guide</kbd> link in the channel list list on the left.</p>
+      <p><img src="/resources/discord/8-server-guide-link.png" alt="Discord server guide link in the channel list"></p>
     </li>
   </ol>
   <h4>Help using Discord</h4>
