@@ -14,6 +14,7 @@ define("SMTP_ADDRESS", "smtp.hostinger.com");
 define("SMTP_PORT","465");
 define("SMTP_USER", "info@eastercon2024.co.uk");
 define("EMAIL", "info@eastercon2024.co.uk");
+define("CONREG_USERNAME", "andrewjanuary");
 
 function log_exception(Throwable $exception) {
   $err_code = bin2hex(random_bytes(8));

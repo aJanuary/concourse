@@ -91,13 +91,13 @@ function db_delete_session($session_token) {
   $stmt->close();
 }
 
-function db_create_member($badge_id, $name, $email, $invite_url) {
+function db_create_member($badge_id, $name, $email, $type, $invite_url) {
   $mysqli = db_connect();
 
   $mysqli->begin_transaction();
   try {
-    $members_stmt = $mysqli->prepare("INSERT INTO members (badge_no, name, email) VALUES (?, ?, ?)");
-    $members_stmt->bind_param("sss", $badge_id, $name, $email);
+    $members_stmt = $mysqli->prepare("INSERT INTO members (badge_no, name, type, email) VALUES (?, ?, ?, ?)");
+    $members_stmt->bind_param("ssss", $badge_id, $name, $type, $email);
     $members_stmt->execute();
     $members_stmt->close();
 

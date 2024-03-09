@@ -47,9 +47,12 @@ function render_login_link_form($email) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
 
-    if (member_is_registered($email)) {
+    $reg_status = get_registration_status($email);
+    if ($reg_status == "registered") {
         send_login_link($email);
         render_login_link_form($email);
+    } else if ($reg_status == "pending") {
+        render_login_form('We are still processing your registration. Please try again later.');
     } else {
         render_login_form('No member with this email address can be found. Please check your email address and try again.');
     }

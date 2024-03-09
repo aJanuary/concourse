@@ -45,27 +45,81 @@ function logout() {
   setcookie('session', '', time() - 3600, '/');
 }
 
-function member_is_registered($email) {
+function get_registration_status($email) {
   $member_exists = db_member_exists($email);
   if ($member_exists) {
-    return true;
+    return "registered";
   }
 
-  // Don't have it hooked up to ConReg yet. For now, invent members for anyone with an @eastercon2024.co.uk email address.
-  // Just for testing.
+  // Login
+  $ch = curl_init();
 
-  if (!preg_match('/@eastercon2024.co.uk$/', $email)) {
-    return false;
+  curl_setopt($ch, CURLOPT_URL, 'https://registration.eastercon2024.co.uk/user/login');
+  curl_setopt($ch, CURLOPT_POST, 1);
+  $headers = [
+      'Content-Type: application/x-www-form-urlencoded',
+  ];
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  $data = 'name=' . CONREG_USERNAME . '&pass=' . CONREG_PASSWORD . '&form_id=user_login_form&op=Log+in&antibot_key=OuGabhEnsQCUCR95JficG3FK_Za41XClnU4XV3i7-M4';
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  $response = curl_exec($ch);
+
+  if (curl_errno($ch)) {
+    throw new Exception(curl_error($ch));
+  } else {
+      preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $response, $matches);
+      $cookies = array();
+      foreach($matches[1] as $item) {
+          parse_str($item, $cookie);
+          $cookies = array_merge($cookies, $cookie);
+      }
+  }
+  curl_close($ch);
+
+  // Get memberlist
+  $ch = curl_init();
+
+  curl_setopt($ch, CURLOPT_URL, 'https://registration.eastercon2024.co.uk/admin/members/memberlist');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  $headers = [
+      'Cookie: ' . http_build_query($cookies, '', '; '),
+  ];
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  $response = curl_exec($ch);
+
+  if (curl_errno($ch)) {
+    throw new Exception(curl_error($ch));
   }
 
-  $badge_no = sprintf('%04d', rand(0, 9999));
-  $name = explode('@', $email)[0];
-  
-  create_member($badge_no, $email, $name);
-  return true;
+  curl_close($ch);
+
+  // Check if they are in the memberlist
+  $dom = new DOMDocument();
+  @$dom->loadHTML($response);
+  $xpath = new DOMXPath($dom);
+  $rows = $xpath->query('(//table)[2]/tbody/tr');
+  foreach ($rows as $row) {
+    $cols = $row->getElementsByTagName('td');
+    $member_email = $cols->item(5)->textContent;
+    if ($member_email == $email) {
+      if ($cols->item(19)->textContent != 'Yes') {
+        return "pending";
+      }
+      $type = $cols->item(1)->textContent;
+      $badge_no = $cols->item(2)->textContent;
+      $name = $cols->item(6)->textContent;
+      create_member($badge_no, $email, $name, $type);
+      return "registered";
+    }
+  }
+
+  return "unregistered";
 }
 
-function create_member($badge_no, $email, $name) {
+function create_member($badge_no, $email, $name, $type) {
   $magic_link_resp = api_call('https://api.events.ringcentral.com/v1/tickets/' . HOPIN_TICKET_ID . '/magicLinks', [
     'Authorization: Bearer ' . HOPIN_API_KEY,
     'Content-Type: application/json'
@@ -83,7 +137,7 @@ function create_member($badge_no, $email, $name) {
   ]));
   $magic_link = $magic_link_resp['data']['attributes']['magicLink'];
 
-  db_create_member($badge_no, $name, $email, $magic_link);
+  db_create_member($badge_no, $name, $email, $type, $magic_link);
 }
 
 function get_login_link_status($email, $login_code) {
