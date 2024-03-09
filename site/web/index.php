@@ -30,7 +30,7 @@ render_header();
 <?php
   if (current_user_has_permission('see-hopin')) {
 ?>
-  <a href="/stream/" class="card stream">
+  <a href="/stream" class="card stream">
     <div class="hero"></div>
     <h3>Stream and catch-up</h3>
     <h4>RingCentral Events</h4>
@@ -40,7 +40,7 @@ render_header();
   }
 ?>
 
-  <a href="/chat/" class="card chat">
+  <a href="/chat" class="card chat">
     <div class="hero"></div>
     <h3>Chat online</h3>
     <h4>Discord</h4>
@@ -50,7 +50,7 @@ render_header();
 <?php
   if (current_user_has_permission('see-vote')) {
 ?>
-  <a href="/vote/" class="card vote">
+  <a href="/vote" class="card vote">
     <div class="hero"></div>
     <h3>Vote</h3>
     <h4>Doc Weir and BSFA</h4>
@@ -70,7 +70,7 @@ render_header();
 <?php
   if (current_user_has_permission('manage-discord-ids')) {
 ?>
-  <a href="/admin/discord/" class="card discord-mod">
+  <a href="/admin/discord" class="card discord-mod">
     <div class="hero"></div>
     <h3>Discord ids</h3>
     <h4>Admin area</h4>
