@@ -2,7 +2,7 @@
 
 require_once('config.php');
 require_once('secrets.php');
-require_once('../../external/swiftmailer-5.4.8/lib/swift_required.php');
+require_once('../external/swiftmailer-5.4.8/lib/swift_required.php');
 
 function send_email($to, $subject, $text_body, $html_body) {
   $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT, 'SSL'))

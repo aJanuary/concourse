@@ -12,7 +12,7 @@ if (is_logged_in()) {
 
 function render_login_form($error=false) {
 ?>
-    <form hx-post="/login/" hx-swap="innerHTML" hx-ext="loading-states" data-loading-disable data-loading-aria-busy>
+    <form hx-post="/login" hx-swap="innerHTML" hx-ext="loading-states" data-loading-disable data-loading-aria-busy>
         <?php if ($error) { ?>
             <p class="error"><?php echo $error; ?></p>
         <?php } ?>
@@ -53,6 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         render_login_link_form($email);
     } else if ($reg_status == "pending") {
         render_login_form('We are still processing your registration. Please try again later.');
+    } else if ($reg_status == "blocked") {
+        render_login_form('Sorry, we are not open to the general membership just yet. Watch out for an email telling you when the member portal is open.');
     } else {
         render_login_form('No member with this email address can be found. Please check your email address and try again.');
     }

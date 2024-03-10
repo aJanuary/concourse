@@ -51,6 +51,12 @@ function get_registration_status($email) {
     return "registered";
   }
 
+  if (defined('EMAIL_ALLOWLIST')) {
+    if (!in_array($email, EMAIL_ALLOWLIST)) {
+      return "blocked";
+    }
+  }
+
   // Login
   $ch = curl_init();
 
