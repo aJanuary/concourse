@@ -187,6 +187,28 @@ function db_has_permission($session_id, $permission) {
   $stmt->fetch();
   $stmt->close();
 
+  if ($has_permission) {
+    return true;
+  }
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM roles_permissions JOIN roles USING (role_id) WHERE roles.name = 'Default' AND permission = ?");
+  $stmt->bind_param("s", $permission);
+  $stmt->execute();
+  $stmt->bind_result($has_permission);
+  $stmt->fetch();
+  $stmt->close();
+
+  if ($has_permission) {
+    return true;
+  }
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM users_roles JOIN sessions USING (badge_no) JOIN roles USING (role_id) WHERE session_id = ? AND name = 'Admin'");
+  $stmt->bind_param("s", $session_id);
+  $stmt->execute();
+  $stmt->bind_result($has_permission);
+  $stmt->fetch();
+  $stmt->close();
+
   return $has_permission;
 }
 
