@@ -14,7 +14,8 @@ render_header();
   <h3>Online Chat</h3>
   <p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
   <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify">Join the Discord server</a></p>
-  
+  <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
+
   <h4>How to join the Discord Server</h4>
   <ol>
     <li>

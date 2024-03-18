@@ -2,11 +2,11 @@
 
 require_once('secrets.php');
 
-define('ROOT_URL', 'https://members' . (STAGING !== null ? '-staging' : '') . '.eastercon2024.co.uk');
+define('ROOT_URL', 'https://members' . (defined('STAGING') ? '-staging' : '') . '.eastercon2024.co.uk');
 define('CON_NAME', 'Levitation 2024');
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u943682649_members' . (STAGING !== null ? '_stagin' : ''));
-define('DB_USER', 'u943682649_members' . (STAGING !== null ? '_stagin' : ''));
+define('DB_NAME', 'u943682649_members' . (defined('STAGING') ? '_stagin' : ''));
+define('DB_USER', 'u943682649_members' . (defined('STAGING') ? '_stagin' : ''));
 define('HOPIN_TICKET_ID', 'KaO15ej7TA7lroiNMIhiruo4a');
 define('DISCORD_CLIENT_ID', '1216360885933703239');
 define('DISCORD_CHANNEL_ID', '1214240728184787013');

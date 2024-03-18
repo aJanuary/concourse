@@ -105,6 +105,13 @@ function db_create_member($badge_id, $name, $email, $type, $invite_url) {
     $invites_stmt->bind_param("ss", $badge_id, $invite_url);
     $invites_stmt->execute();
     $invites_stmt->close();
+
+    if (substr($badge_id, 0, 1) === 'D') {
+      $roles_stmt = $mysqli->prepare("INSERT INTO users_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = 'dealers'");
+      $roles_stmt->bind_param("s", $badge_id);
+      $roles_stmt->execute();
+      $roles_stmt->close();
+    }
   
     $mysqli->commit();
   } catch (mysqli_sql_exception $exception) {
@@ -239,17 +246,26 @@ function db_get_member_discord_data() {
   return $members;
 }
 
-function db_get_discord_ids() {
+function db_get_all_discord_info() {
   $mysqli = db_connect();
 
-  $result = $mysqli->query("SELECT discord_id FROM discord_ids");
-  $discord_ids = [];
+  $result = $mysqli->query("SELECT badge_no, members.name member_name, discord_id, roles.name role_name FROM discord_ids JOIN members USING (badge_no) LEFT JOIN users_roles USING (badge_no) LEFT JOIN roles USING (role_id)");
+  $discord_info = [];
   while ($row = $result->fetch_assoc()) {
-    $discord_ids[] = $row['discord_id'];
+    if (!isset($discord_info[$row['discord_id']])) {
+      $discord_info[$row['discord_id']] = [
+        "name" => $row['member_name'],
+        "badge_no" => $row['badge_no'],
+        "roles" => [],
+      ];
+    }
+    if ($row['role_name']) {
+      $discord_info[$row['discord_id']]["roles"][] = $row['role_name'];
+    }
   }
   $result->close();
 
-  return $discord_ids;
+  return $discord_info;
 }
 
 function db_get_hopin_links() {

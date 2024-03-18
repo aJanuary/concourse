@@ -85,15 +85,20 @@ try {
       throw new ClientException("ERR_MALFORMED_BODY", "Error parsing content as json");
   }
 
-  $discord_ids = db_get_discord_ids();
-  $missing_ids = array_diff($data["discordUserIds"], $discord_ids);
-  error_log("DAta: " . print_r($data, true));
+  $recorded_discord_info = db_get_all_discord_info();
+  $response = [];
+
+  foreach ($data["discordUserIds"] as $discord_id) {
+    if (isset($recorded_discord_info[$discord_id])) {
+      $response[$discord_id] = $recorded_discord_info[$discord_id];
+    } else {
+      $response[$discord_id] = null;
+    }
+  }
 
   http_response_code(200);
   header("Content-Type: application/json; charset=utf-8");
-  echo json_encode([
-    "missing" => $missing_ids
-  ]);
+  echo json_encode($response);
 } catch (ClientException $e) {
   send_error(400, $e->public_error_code, $e->getMessage());
 } catch (AuthorizationException $e) {

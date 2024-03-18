@@ -133,7 +133,7 @@ main {
   border-radius: 10px;
   box-shadow: hsla(0, 0%, 39%, 0.2) 0px 2px 8px 0px;
   transition: all 0.2s ease-in;
-  font-weight: noral;
+  font-weight: normal;
 }
 
 .card:hover {

@@ -7,12 +7,18 @@ render_header();
 ?>
 
 <div class="cards">
+<?php
+  if (current_user_has_permission('see-readme')) {
+?>
   <a href="https://www.google.co.uk" class="card readme" target="_blank">
     <div class="hero"></div>
     <h3>Readme</h3>
     <h4>&nbsp;</h4>
     <p>Find out all the key information you need to know for Levitation 2024.</p>
   </a>
+<?php
+  }
+?>
 
 <?php
   if (current_user_has_permission('see-guide')) {
@@ -40,12 +46,18 @@ render_header();
   }
 ?>
 
+<?php
+  if (current_user_has_permission('see-discord')) {
+?>
   <a href="/chat" class="card chat">
     <div class="hero"></div>
     <h3>Chat online</h3>
     <h4>Discord</h4>
     <p>Chat with other members online in Discord. Talk about panel items, your fannish interests, and catch up with friends.</p>
   </a>
+<?php
+  }
+?>
 
 <?php
   if (current_user_has_permission('see-vote')) {
