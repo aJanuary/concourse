@@ -223,6 +223,13 @@ article h4 {
   color: #087232;
 }
 
+.button.disabled {
+  background-color: #DDD;
+  color: #999;
+  font-weight: bold;
+  cursor: default;
+}
+
 form p {
   margin-bottom: 0;
 }
