@@ -18,9 +18,8 @@ CREATE TABLE roles_permissions (
   FOREIGN KEY (role_id) REFERENCES roles(role_id)
 );
 
-INSERT INTO roles(name) VALUES ('default');
-
+INSERT INTO roles(name) VALUES ('default'), ('admin'), ('moderator'), ('programme participant'), ('programme moderator'), ('artist'), ('fan table'), ('dealer');
 INSERT INTO roles(name) VALUES ('admin');
-
 INSERT INTO roles(name) VALUES ('moderator');
 INSERT INTO roles_permissions(role_id, permission) SELECT role_id, 'manage-discord-ids' FROM roles WHERE name = 'moderator';
+INSERT INTO roles_permissions(role_id, permission) SELECT role_id, 'see-participant-guides' FROM roles WHERE name IN ('programme participant', 'programme moderator');
