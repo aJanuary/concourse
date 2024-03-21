@@ -30,7 +30,7 @@ render_header();
     <p><a target="_blank" class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSdJuDiyff79D0J-dnZo4M3iffL2jhDcFNiqJv07AV_O_rryQQ/viewform?usp=pp_url&entry.1413306060=<?php echo $name; ?>&entry.1071906679=<?php echo $badge_no; ?>&entry.1519493446=Yes">Vote in the BSFA Awards</a></p>
   <?php } ?>
   <h3>Doc Weir</h3>
-  <p>The Doc Weir Award celebrates the unsung heroes in fandom, those who do the work behind the scenes every year. You can vote by clicking the button below, or find Claire Brialey at the fan funds table in the Dealers room for a paper ballot.</p>
+  <p>The Doc Weir Award celebrates the unsung heroes in fandom, those who do the work behind the scenes every year. You can vote by clicking the button below, or find Claire Brialey at the fan funds table in the Dealers' room for a paper ballot.</p>
   <?php if (time() < $doc_vote_open) { ?>
   <p><em>Voting will open on <?php echo date('l jS F ga', $doc_vote_open); ?></em>.</p>
   <p><span class="button disabled">Vote for the Doc Weir Award</a></p>
@@ -40,7 +40,7 @@ render_header();
   <?php } else { ?>
   <p><a target="_blank" class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScnW-OmD5-2ZrJxK32j7CRt3M9VicLp6xbKxE82OqX_MXbC2w/viewform?usp=pp_url&entry.1912252717=<?php echo $name; ?>&entry.1345035588=<?php echo $badge_no; ?>">Vote for the Doc Weir Award</a></p>
   <?php } ?>
-  <p>Do you know someone in fandom who helps make things happen, contributing time, effort, ideas and support - often behind the scenes? That might mean that they&apos;ve already won the Doc Weir Award (you can see a list of winners, and what they&apos;ve done on efanzines). But it might mean that you just think they must have won, until you check.</p>
+  <p>Do you know someone in fandom who helps make things happen, contributing time, effort, ideas and support - often behind the scenes? That might mean that they&apos;ve already won the Doc Weir Award (you can see a list of winners, and what they&apos;ve done, on <a href="https://efanzines.com/DocWeir/">efanzines</a>). But it might mean that you just think they must have won, until you check.</p>
   <p>Named in memory of Dr Arthur Rose ‘Doc&apos; Weir and first presented in 1963, the Award offers some recognition for the community activities that can seem to go unnoticed. It&apos;s been won by authors, booksellers and many fans: fanzine editors, convention runners, club organisers, and other people who just do stuff; winners have included specialists who contribute in a particular role at every opportunity, people who help out all over the place in a variety of ways, and most points in between. It&apos;s not necessarily an award for conrunning in general or Eastercon-running in particular, although it often has been.</p>
   <p>As an on-site or virtual attending member of Levitation, you can vote from Friday 29 March until 11 am on Monday 1 April. (Only one vote per member in that period will count towards this year&apos;s award.) Votes can be cast through the member portal by clicking the button above; if you&apos;re there in person and have a question or prefer a paper ballot form, come to find me at the fan funds table in the dealers&apos; room. The 2024 winner will be announced at the closing ceremony.</p>
   <p><em>- Claire Brialey (2023 winner and current administrator)</em></p>
