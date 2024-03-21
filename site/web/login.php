@@ -31,8 +31,8 @@ function render_login_form($error=false) {
 function send_login_link($email) {
     $login_code = bin2hex(random_bytes(16));
     $subject = 'Log in to ' . CON_NAME . ' member portal';
-    $plaintext_message = "Hello,\n\nYou requested to log in to " . CON_NAME . ".\n\nTo log in, visit " . ROOT_URL . "/login/?email=" . $email . "&login_code=" . $login_code . "\n\nThis link is just for you. Do not share it with anyone.\n\nIf you did not request this invitation, please ignore this email.\n\nBest wishes,\n\nThe " . CON_NAME . " team";
-    $html_message = "<p>Hello,</p><p>You requested to log in to " . CON_NAME . ".</p><p>To log in, visit <a href=\"" . ROOT_URL . "/login/?email=" . $email . "&login_code=" . $login_code . "\">" . ROOT_URL . "/login/?email=" . $email . "&login_code=" . $login_code . "</a>.</p><p>This link is just for you. Do not share it with anyone.</p><p>If you did not request this invitation, please ignore this email.</p><p>Best wishes,</p><p>The " . CON_NAME . " team</p>";
+    $plaintext_message = "Hello,\n\nYou requested to log in to " . CON_NAME . ".\n\nTo log in, visit " . ROOT_URL . "/login?email=" . $email . "&login_code=" . $login_code . "\n\nThis link is just for you. Do not share it with anyone.\n\nIf you did not request this invitation, please ignore this email.\n\nBest wishes,\n\nThe " . CON_NAME . " team";
+    $html_message = "<p>Hello,</p><p>You requested to log in to " . CON_NAME . ".</p><p>To log in, visit <a href=\"" . ROOT_URL . "/login?email=" . $email . "&login_code=" . $login_code . "\">" . ROOT_URL . "/login/?email=" . $email . "&login_code=" . $login_code . "</a>.</p><p>This link is just for you. Do not share it with anyone.</p><p>If you did not request this invitation, please ignore this email.</p><p>Best wishes,</p><p>The " . CON_NAME . " team</p>";
     db_insert_login_link($email, $login_code, time() + 60*60*24*5);
     send_email($email, $subject, $plaintext_message, $html_message);
 }
