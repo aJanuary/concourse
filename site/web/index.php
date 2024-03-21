@@ -60,6 +60,19 @@ render_header();
 ?>
 
 <?php
+  if (current_user_has_permission('see-souvenir')) {
+?>
+  <a href="/souvenir" class="card souvenir">
+    <div class="hero"></div>
+    <h3>Souvenir Book</h3>
+    <h4>epub and pdf</h4>
+    <p>Videos, articles and short stories from our Guests of Honour, compiled into an e-book.</p>
+  </a>
+<?php
+  }
+?>
+
+<?php
   if (current_user_has_permission('see-vote')) {
 ?>
   <a href="/vote" class="card vote">

@@ -183,6 +183,10 @@ main {
   background-image: url('/resources/partguide.png');
 }
 
+.card.souvenir .hero {
+  background-image: url('/resources/souvenir.png');
+}
+
 .card h3 {
   font-weight: bold;
   margin-bottom: 5px;

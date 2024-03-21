@@ -7,3 +7,7 @@
   RewriteCond %{REQUEST_FILENAME}.php -f
   RewriteRule ^ %{REQUEST_URI}.php [NC,L]
 </IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/epub+zip .epub
+</IfModule>
