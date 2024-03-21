@@ -10,7 +10,7 @@ render_header();
 <?php
   if (current_user_has_permission('see-readme')) {
 ?>
-  <a href="https://www.google.co.uk" class="card readme" target="_blank">
+  <a href="https://eastercon2024.co.uk/readme/" class="card readme">
     <div class="hero"></div>
     <h3>Readme</h3>
     <h4>&nbsp;</h4>
@@ -23,7 +23,7 @@ render_header();
 <?php
   if (current_user_has_permission('see-guide')) {
 ?>
-  <a href="https://guide.conversation2023.org.uk/" class="card guide" target="_blank">
+  <a href="https://guide.conversation2023.org.uk/" class="card guide">
     <div class="hero"></div>
     <h3>Programme guide</h3>
     <h4>ConCl&aacute;r</h4>
@@ -88,7 +88,7 @@ render_header();
 <?php
   if (current_user_has_permission('see-participant-guides')) {
 ?>
-  <a href="https://eastercon2024.co.uk/participant-guides/" class="card partguide" target="_blank">
+  <a href="https://eastercon2024.co.uk/participant-guides/" class="card partguide">
     <div class="hero"></div>
     <h3>Participant Guides</h3>
     <h4>For people on programme</h4>
@@ -98,7 +98,7 @@ render_header();
   }
 ?>
 
-  <a href="https://eastercon2024.co.uk" class="card website" target="_blank">
+  <a href="https://eastercon2024.co.uk" class="card website">
     <div class="hero"></div>
     <h3>Website</h3>
     <h4>&nbsp;</h4>
