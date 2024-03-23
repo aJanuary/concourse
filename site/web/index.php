@@ -23,7 +23,7 @@ render_header();
 <?php
   if (current_user_has_permission('see-guide')) {
 ?>
-  <a href="https://guide.conversation2023.org.uk/" class="card guide">
+  <a href="https://guide.eastercon2024.co.uk/" class="card guide">
     <div class="hero"></div>
     <h3>Programme guide</h3>
     <h4>ConCl&aacute;r</h4>
