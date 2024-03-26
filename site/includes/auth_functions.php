@@ -111,7 +111,7 @@ function get_registration_status($email) {
     $cols = $row->getElementsByTagName('td');
     $member_email = $cols->item(5)->textContent;
     if ($member_email == $email) {
-      if ($cols->item(19)->textContent != 'Yes') {
+      if ($cols->item(19)->textContent != 'Yes' || $cols->item(2)->textContent == '0') {
         return "pending";
       }
       $type = $cols->item(1)->textContent;
