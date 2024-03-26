@@ -214,6 +214,11 @@ article h4 {
   font-weight: bold;
 }
 
+article ul {
+  list-style: disc;
+  margin-bottom: 20px;
+}
+
 .button {
   display: inline-flex;
   padding: 10px 20px;

@@ -22,8 +22,15 @@ render_header();
   <p><em>This link is tied to your membership. Please do not share it with other people.</em></p>
   <p>The use of RingCentral Events is thanks to the generosity of <a href="https://glasgow2024.org/">Glasgow 2024</a>. This is the same platform as will be used at this year's Worldcon, Glasgow 2024.</p>
   <h4>How to use RingCentral Events</h4>
-  <p>Instructions go here.</p>
-
+  <p>In the <a href="https://eastercon2024.co.uk/guide-to-ringcentral-events/">our guide</a> you will find instructions on how to:</p>
+  <ul>
+    <li>Watch a live stream</li>
+    <li>Watch catch up items</li>
+    <li>Turn on captions</li>
+    <li>Use Picture in Picture</li>
+    <li>AirPlay and Cast</li>
+  </ul>
+  <p><a class="button" href="https://eastercon2024.co.uk/guide-to-ringcentral-events/">Guide to RingCentral Events</a></p>
 </article>
 
 <?php
