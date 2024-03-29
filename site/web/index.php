@@ -54,6 +54,19 @@ render_header();
 ?>
 
 <?php
+  if (current_user_has_permission('see-newsletter')) {
+?>
+  <a href="/newsletter" class="card newsletter">
+    <div class="hero"></div>
+    <h3>Newsletter</h3>
+    <h4></h4>
+    <p>Find out the latest announcement and convention gossip.</p>
+  </a>
+<?php
+  }
+?>
+
+<?php
   if (current_user_has_permission('see-souvenir')) {
 ?>
   <a href="/souvenir" class="card souvenir">

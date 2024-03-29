@@ -346,3 +346,20 @@ ol {
   list-style-type: decimal;
   margin-left: 1rem;
 }
+
+ul#newsletter {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+#newsletter li {
+  display: flex;
+  flex-direction: column;
+}
+
+#newsletter img {
+  max-width: 300px;
+  border: solid 1px #DDD;
+}
