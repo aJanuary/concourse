@@ -281,4 +281,20 @@ function db_get_hopin_links() {
   return $members;
 }
 
+function db_get_discord_usernames($session_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT discord_ids.username FROM discord_ids JOIN sessions USING (badge_no) WHERE session_id = ?");
+  $stmt->bind_param("s", $session_id);
+  $stmt->execute();
+  $stmt->bind_result($username);
+  $usernames = [];
+  while ($stmt->fetch()) {
+    $usernames[] = $username;
+  }
+  $stmt->close();
+
+  return $usernames;
+}
+
 ?>

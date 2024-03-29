@@ -3,7 +3,7 @@ require_once('../includes/config.php');
 require_once('../includes/session_auth.php');
 require_once('../includes/template.php');
 
-$magic_link = db_get_magic_link($_COOKIE['session']);
+$usernames = db_get_discord_usernames($_COOKIE['session']);
 
 render_header();
 ?>
@@ -13,7 +13,36 @@ render_header();
 <article>
   <h3>Online Chat</h3>
   <p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
+<?php
+  if (empty($usernames)) {
+?>
   <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify">Join the Discord server</a></p>
+<?php
+  } else {
+    if (count($usernames) === 1) {
+?>
+  <p>You have joined the Discord with the username <?php echo $usernames[0]; ?>.</p>
+<?php
+    } else {
+?>
+  <p>You have joined the Discord with the usernames:</p>
+  <ul>
+<?php
+      foreach ($usernames as $username) {
+?>
+    <li><?php echo $username; ?></li>
+<?php
+      }
+?>
+  </ul>
+<?php
+    }
+?>
+  <p><a class="button" target="_blank" href="https://discord.com/channels/1214240728130256926/1214240728583118871">Go to Discord in your browser</a> or log in as <?php echo $usernames[0]; ?> in the <a href="https://discord.com/download">Discord app</a></p>
+  <p><a target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify">Join the Discord server as a different user</a></p>
+<?php
+  }
+?>
   <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
 
   <h4>How to join the Discord Server</h4>
