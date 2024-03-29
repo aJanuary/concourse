@@ -7,7 +7,7 @@ define('CON_NAME', 'Levitation 2024');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'u943682649_members' . (defined('STAGING') ? '_stagin' : ''));
 define('DB_USER', 'u943682649_members' . (defined('STAGING') ? '_stagin' : ''));
-define('HOPIN_TICKET_ID', 'KaO15ej7TA7lroiNMIhiruo4a');
+define('HOPIN_TICKET_ID', '5FZJAa9JnmNskwuvujgNJ93O3');
 define('DISCORD_CLIENT_ID', '1216360885933703239');
 define('DISCORD_CHANNEL_ID', '1214240728184787013');
 define("SMTP_ADDRESS", "smtp.hostinger.com");
