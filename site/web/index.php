@@ -33,18 +33,12 @@ render_header();
   }
 ?>
 
-<?php
-  if (current_user_has_permission('see-hopin')) {
-?>
   <a href="/stream" class="card stream">
     <div class="hero"></div>
     <h3>Stream and catch-up</h3>
     <h4>RingCentral Events</h4>
     <p>Watch the live streams of programme items, or watch the recorded videos afterwards.</p>
   </a>
-<?php
-  }
-?>
 
 <?php
   if (current_user_has_permission('see-discord')) {
