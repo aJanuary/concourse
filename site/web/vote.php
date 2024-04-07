@@ -44,6 +44,13 @@ render_header();
   <p>Named in memory of Dr Arthur Rose ‘Doc&apos; Weir and first presented in 1963, the Award offers some recognition for the community activities that can seem to go unnoticed. It&apos;s been won by authors, booksellers and many fans: fanzine editors, convention runners, club organisers, and other people who just do stuff; winners have included specialists who contribute in a particular role at every opportunity, people who help out all over the place in a variety of ways, and most points in between. It&apos;s not necessarily an award for conrunning in general or Eastercon-running in particular, although it often has been.</p>
   <p>As an on-site or virtual attending member of Levitation, you can vote from Friday 29 March until 11 am on Monday 1 April. (Only one vote per member in that period will count towards this year&apos;s award.) Votes can be cast through the member portal by clicking the button above; if you&apos;re there in person and have a question or prefer a paper ballot form, come to find me at the fan funds table in the dealers&apos; room. The 2024 winner will be announced at the closing ceremony.</p>
   <p><em>- Claire Brialey (2023 winner and current administrator)</em></p>
+  <h3>Fan Funds</h3>
+  <p>Fan Funds are an opportunity to send fans to conventions they might not otherwise be able to attend.</p>
+  <ul>
+    <li><strong><a href="https://taff.org.uk/vote.php">Trans-Atlantic Fan Fund</a></strong> which sends fans between Europe and North America.<br><a href="https://taff.org.uk/vote.php" class="button">Vote in the Trans-Atlantic Fan Fund</a>
+    <li><strong><a href="https://taff.org.uk/ballots/guff2024.pdf">Going Under Fan Fund</a></strong> which send fans between Europe and Oceania.<br><a href="https://airtable.com/appW5ZzJtRNaTY1i4/pagbhUagYedO5QOWC/form" class="button">Vote in the Going Under Fan Fund</a>
+    <li><strong><a href="https://forms.gle/TaTU4e5ajnkSmdMZ9">European Fan Fund</a></strong> which enables fans to travel within Europe to attend the Eurocon.<br><a href="https://forms.gle/TaTU4e5ajnkSmdMZ9" class="button">Vote in the European Fan Fund</a>    
+  </ul>
 </article>
 
 <?php

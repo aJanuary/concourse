@@ -92,13 +92,20 @@ render_header();
   }
 ?>
 
+<a href="https://app.collectionpot.com/pot/3064884" class="card donate">
+  <div class="hero"></div>
+  <h3>Collection for staff</h3>
+  <h4></h4>
+  <p>To show our appreciation of the staff of the Telford International Centre for their dedication during Levitation.</p>
+</a>
+
 <?php
   if (current_user_has_permission('see-participant-guides')) {
 ?>
-  <a href="https://eastercon2024.co.uk/participant-guides/" class="card partguide">
+  <a href="/participants" class="card partguide">
     <div class="hero"></div>
     <h3>Participant Guides</h3>
-    <h4>For people on programme</h4>
+    <h4>Guides and Zoom Link</h4>
     <p>Guides for panellists, moderators and speakers. Please make sure you've read the appropriate guides before your item.</p>
   </a>
 <?php

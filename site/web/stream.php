@@ -13,6 +13,7 @@ render_header();
 <article>
   <h3>Stream and catch-up</h3>
   <p>We are using a platform called RingCentral Events to stream our programme items. You can watch the live streams of programme items, or watch the recorded videos afterwards. It works on both desktop and mobile.</p>
+  <p>Items will be available for catch-up until 1<sup>st</sup> May 2024.</p>
 <?php
   if (!current_user_has_permission('see-hopin')) {
 ?>
