@@ -1,7 +1,24 @@
-# Members page for Levitation 2024
+# Members page for Glasgow 2024
 
 ## Deployment
-Log in to Hostinger. See the password spreadsheet for the credentials.
-The db-migrations files can be run against the database manually by pasting into the SQL page of myPHPAdmin.
-scp the contents of the `site` to `/home/u943682649/members` or `/home/u943682649/members-staging` on the server.
-`site/includes/secrets.php` contains secrets that are not committed to git. See `site/includes/secret.php.example` for the format.
+Requirements:
+* [https://docs.docker.com/compose/](docker-compose)
+
+1. Clone the repository
+2. Create a folder called `secrets` and populate it with the secrets.
+   See the `secrets` section of the `docker-compose.yml` file for an explanation
+   of what secrets should be placed in what file.
+3. Run `docker-compose up` to start the server.
+4. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
+   phpMyAdmin.
+
+## Development
+
+### Database changes
+1. Create a new file in the `db-migrations` folder with the name
+   `U<nnn>-<description>.sql` where `nnn` is the next number in the sequence and
+   `description` is a short description of the change.
+2. Put the SQL commands to apply the change in the file.
+3. Run
+   `docker-compose exec db bash -c 'mysql --verbose -u root -p$(cat /run/secrets/db_root_password) members < /root/db-migrations/U<nnn>-<description>.sql'`
+   to apply the changes to the database.

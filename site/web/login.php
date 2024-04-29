@@ -1,9 +1,8 @@
 <?php
-require_once('../includes/config.php');
-require_once('../includes/auth_functions.php');
-require_once('../includes/db.php');
-require_once('../includes/template.php');
-require_once('../includes/mail.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 if (is_logged_in()) {
     header('Location: /');
@@ -28,20 +27,11 @@ function render_login_form($error=false) {
 <?php
 }
 
-function send_login_link($email) {
-    $login_code = bin2hex(random_bytes(16));
-    $subject = 'Log in to ' . CON_NAME . ' member portal';
-    $plaintext_message = "Hello,\n\nYou requested to log in to " . CON_NAME . ".\n\nTo log in, visit " . ROOT_URL . "/login?email=" . $email . "&login_code=" . $login_code . "\n\nThis link is just for you. Do not share it with anyone.\n\nIf you did not request this invitation, please ignore this email.\n\nBest wishes,\n\nThe " . CON_NAME . " team";
-    $html_message = "<p>Hello,</p><p>You requested to log in to " . CON_NAME . ".</p><p>To log in, visit <a href=\"" . ROOT_URL . "/login?email=" . $email . "&login_code=" . $login_code . "\">" . ROOT_URL . "/login/?email=" . $email . "&login_code=" . $login_code . "</a>.</p><p>This link is just for you. Do not share it with anyone.</p><p>If you did not request this invitation, please ignore this email.</p><p>Best wishes,</p><p>The " . CON_NAME . " team</p>";
-    db_insert_login_link($email, $login_code, time() + 60*60*24*5);
-    send_email($email, $subject, $plaintext_message, $html_message);
-}
-
-function render_login_link_form($email) {
-?>
-    <p>A log in link has been sent to <?php echo $email; ?>.</p>
-    <p>Please check your email and follow the instructions to log in.</p>
-<?php
+function make_session($email) {
+    $session_id = sha1(rand());
+    $expires_at = time() + 60*60*24*30;
+    db_insert_session($session_id, $email, $expires_at);
+    setcookie("session", $session_id, $expires_at, '/', '', true, true);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -49,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $reg_status = get_registration_status($email);
     if ($reg_status == "registered") {
-        send_login_link($email);
-        render_login_link_form($email);
+        make_session($email);
+        header('HX-Redirect: /');
     } else if ($reg_status == "pending") {
         render_login_form('We are still processing your registration. Please try again later.');
     } else if ($reg_status == "blocked") {
@@ -69,10 +59,7 @@ if (isset($_GET['email']) && isset($_GET['login_code'])) {
 
     $link_status = get_login_link_status($email, $login_code);
     if ($link_status === "ok") {
-        $session_id = sha1(rand());
-        $expires_at = time() + 60*60*24*30;
-        db_insert_session($session_id, $email, $expires_at);
-        setcookie("session", $session_id, $expires_at, '/', '', true, true);
+        make_session($email);
         header('Location: /');
         exit();
     } else if ($link_status === "expired") {

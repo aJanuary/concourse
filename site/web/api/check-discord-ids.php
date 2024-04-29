@@ -1,7 +1,7 @@
 <?php
 
-require_once('../../includes/config.php');
-require_once('../../includes/db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 
 class ClientException extends Exception {
   public $public_error_code;

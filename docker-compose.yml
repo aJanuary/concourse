@@ -1,0 +1,102 @@
+version: '3'
+
+services:
+  db:
+    container_name: db
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    secrets:
+      - db_root_password
+      - db_dba_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: &db-name members
+      MYSQL_USER: &db-user dba
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_dba_password
+    volumes:
+      - ./db-migrations:/root/db-migrations
+    ports:
+      - 3306:3306
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    secrets:
+      - db_dba_password
+      - web_secrets
+    ports:
+      - 8080:80
+    volumes:
+      - type: bind
+        source: ./site/lib
+        target: &lib-dir /srv/lib
+      - type: bind
+        source: ./site/web
+        target: &web-dir /var/www/html
+    environment:
+      CONFIG_LIB_DIR: *lib-dir
+      CONFIG_WEB_DIR: *web-dir
+      CONFIG_DB_HOST: db
+      CONFIG_DB_NAME: *db-name
+      CONFIG_DB_USER: *db-user
+      CONFIG_DB_PASSWORD_FILE: /run/secrets/db_dba_password
+      CONFIG_SECRETS_FILE: /run/secrets/web_secrets
+    depends_on:
+      - db
+  
+  phpmyadmin:
+    image: phpmyadmin:5.2.1-apache
+    ports:
+      - 8081:80
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+
+secrets:
+  db_root_password:
+    # The root password for the database.
+    # This should be a random string.
+    file: ./secrets/db_root_password.txt
+  db_dba_password:
+    # The password for the database user.
+    # This should be a random string.
+    file: ./secrets/db_dba_password.txt
+  web_secrets:
+    # An ini file containing the secrets for the web server.
+    #
+    # [discord]
+    #
+    # ; The token for the Watson Discord bot.
+    # ; This comes from the Discord Developer Portal.
+    # bot_token =
+    #
+    # ; The client id and secret for the Discord bot used to initiate the
+    # ; OAuth Flow
+    # ; This comes from the Discord Developer Portal.
+    # client_id =
+    #
+    # ; The client secret for the Discord  bot used to initiate the OAuth Flow.
+    # ; This comes from the Discord Developer Portal.
+    # client_secret =
+    #
+    # [rce]
+    # 
+    # ; The API key for the RingCentral Events API.
+    # ; This comes from RingCentral.
+    # api_key =
+    #
+    # ; The id of the ticket to generate magic links for.
+    # ; This comes from the RingCentral event config.
+    # ticket_id =
+    file: ./secrets/web_secrets.ini
+
+networks:
+  portalnet:
+    external: true

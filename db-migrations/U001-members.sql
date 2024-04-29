@@ -2,7 +2,6 @@ CREATE TABLE members (
     badge_no VARCHAR(5) PRIMARY KEY,
     email VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
-    type VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
