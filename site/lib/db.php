@@ -179,7 +179,7 @@ function db_get_login_link_expiry($email, $login_code) {
 function db_has_permission($session_id, $permission) {
   $mysqli = db_connect();
 
-  $stmt = $mysqli->prepare("SELECT 1 FROM role_permissions JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) WHERE session_id = ? AND permission = ?");
+  $stmt = $mysqli->prepare("SELECT 1 FROM role_permissions JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) JOIN permissions USING (permission_id) WHERE session_id = ? AND permissions.name = ?");
   $stmt->bind_param("ss", $session_id, $permission);
   $stmt->execute();
   $stmt->bind_result($has_permission);
@@ -190,7 +190,7 @@ function db_has_permission($session_id, $permission) {
     return true;
   }
 
-  $stmt = $mysqli->prepare("SELECT 1 FROM role_permissions JOIN roles USING (role_id) WHERE roles.name = 'Default' AND permission = ?");
+  $stmt = $mysqli->prepare("SELECT 1 FROM role_permissions JOIN roles USING (role_id) JOIN permissions USING (permission_id) WHERE roles.name = 'Default' AND permissions.name = ?");
   $stmt->bind_param("s", $permission);
   $stmt->execute();
   $stmt->bind_result($has_permission);
@@ -287,6 +287,71 @@ function db_get_discord_usernames($session_id) {
   $stmt->close();
 
   return $usernames;
+}
+
+function db_get_roles() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT role_id, name FROM roles");
+  $roles = [];
+  while ($row = $result->fetch_assoc()) {
+    $roles[] = $row;
+  }
+  $result->close();
+
+  return $roles;
+}
+
+function db_get_role_permissions($role_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT permission_id, name, IFNULL(has_permission, 0) has_permission FROM permissions LEFT OUTER JOIN (SELECT permission_id, COUNT(*) has_permission FROM role_permissions WHERE role_id=? GROUP BY permission_id) h_p USING (permission_id) ORDER BY name;");
+  $stmt->bind_param("s", $role_id);
+  $stmt->execute();
+  $stmt->bind_result($permission_id, $name, $has_permission);
+  $permissions = [];
+  while ($stmt->fetch()) {
+    $permissions[] = ['permission_id' => $permission_id, 'name' => $name, 'has_permission' => $has_permission];
+  }
+  $stmt->close();
+  
+  return $permissions;
+}
+
+function db_set_role_permission($role_id, $permission_id, $has_permission) {
+  $mysqli = db_connect();
+
+  if ($has_permission) {
+    $stmt = $mysqli->prepare("REPLACE INTO role_permissions (role_id, permission_id) VALUES (?, ?)");
+    $stmt->bind_param("ss", $role_id, $permission_id);
+    $stmt->execute();
+    $stmt->close();
+  } else {
+    $stmt = $mysqli->prepare("DELETE FROM role_permissions WHERE role_id = ? AND permission_id = ?");
+    $stmt->bind_param("ss", $role_id, $permission_id);
+    $stmt->execute();
+    $stmt->close();
+  }
+}
+
+function db_create_role($name) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("INSERT INTO roles (name) VALUES (?)");
+  $stmt->bind_param("s", $name);
+  $stmt->execute();
+  $stmt->close();
+
+  return $mysqli->insert_id;
+}
+
+function db_delete_role($role_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("DELETE FROM roles WHERE role_id = ?");
+  $stmt->bind_param("s", $role_id);
+  $stmt->execute();
+  $stmt->close();
 }
 
 ?>
