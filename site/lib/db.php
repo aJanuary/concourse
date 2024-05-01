@@ -176,41 +176,6 @@ function db_get_login_link_expiry($email, $login_code) {
   return strtotime($expires_at);
 }
 
-function db_has_permission($session_id, $permission) {
-  $mysqli = db_connect();
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM role_permissions JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) JOIN permissions USING (permission_id) WHERE session_id = ? AND permissions.name = ?");
-  $stmt->bind_param("ss", $session_id, $permission);
-  $stmt->execute();
-  $stmt->bind_result($has_permission);
-  $stmt->fetch();
-  $stmt->close();
-
-  if ($has_permission) {
-    return true;
-  }
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM role_permissions JOIN roles USING (role_id) JOIN permissions USING (permission_id) WHERE roles.name = 'Default' AND permissions.name = ?");
-  $stmt->bind_param("s", $permission);
-  $stmt->execute();
-  $stmt->bind_result($has_permission);
-  $stmt->fetch();
-  $stmt->close();
-
-  if ($has_permission) {
-    return true;
-  }
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM member_roles JOIN sessions USING (badge_no) JOIN roles USING (role_id) WHERE session_id = ? AND name = 'Admin'");
-  $stmt->bind_param("s", $session_id);
-  $stmt->execute();
-  $stmt->bind_result($has_permission);
-  $stmt->fetch();
-  $stmt->close();
-
-  return $has_permission;
-}
-
 function db_get_member_discord_data() {
   $mysqli = db_connect();
 
@@ -352,6 +317,65 @@ function db_delete_role($role_id) {
   $stmt->bind_param("s", $role_id);
   $stmt->execute();
   $stmt->close();
+}
+
+function db_get_permissions_by_session($session_id) {
+  if (db_session_has_admin_role($session_id)) {
+    return db_get_permissions();
+  }
+
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("(SELECT name FROM permissions JOIN role_permissions USING (permission_id) JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) WHERE session_id = ?) UNION (SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default')");
+  $stmt->bind_param("s", $session_id);
+  $stmt->execute();
+  $stmt->bind_result($name);
+  $permissions = [];
+  while ($stmt->fetch()) {
+    $permissions[] = $name;
+  }
+  $stmt->close();
+
+  return $permissions;
+}
+
+function db_session_has_admin_role($session_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM member_roles JOIN sessions USING (badge_no) JOIN roles USING (role_id) WHERE session_id = ? AND roles.name = 'admin'");
+  $stmt->bind_param("s", $session_id);
+  $stmt->execute();
+  $stmt->bind_result($has_admin_role);
+  $stmt->fetch();
+  $stmt->close();
+
+  return $has_admin_role;
+}
+
+function db_get_permissions() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT name FROM permissions");
+  $permissions = [];
+  while ($row = $result->fetch_assoc()) {
+    $permissions[] = $row['name'];
+  }
+  $result->close();
+
+  return $permissions;
+}
+
+function db_get_role_id($role_name) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT role_id FROM roles WHERE name = ?");
+  $stmt->bind_param("s", $role_name);
+  $stmt->execute();
+  $stmt->bind_result($role_id);
+  $stmt->fetch();
+  $stmt->close();
+
+  return $role_id;
 }
 
 ?>
