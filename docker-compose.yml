@@ -17,7 +17,7 @@ services:
     secrets:
       - db_root_password
       - db_dba_password
-    # restart: always
+    restart: always
     environment:
       MYSQL_DATABASE: &db-name members
       MYSQL_USER: &db-user dba
@@ -33,6 +33,7 @@ services:
     container_name: web
     # The script will wait for db to be ready, run migrations and then start web server
     command: "/var/scripts/start.sh"
+    restart: always
     build:
       context: .
       dockerfile: web.Dockerfile
