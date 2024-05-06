@@ -7,6 +7,8 @@ done
 
 #
 cd /var/php-migrations
+curl -s https://getcomposer.org/installer | php -d allow_url_fopen=On
+php composer.phar require robmorgan/phinx
 vendor/bin/phinx migrate -e development
 # to rollback
 # vendor/bin/phinx rollback -e development 
