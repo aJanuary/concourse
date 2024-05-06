@@ -1,7 +1,8 @@
 # 
+# 1. To create the volume portal-mysqldata
 #   docker volume create --name=portal-mysqldata
-# 
-# docker-compose -p portal-dev -f docker-compose.yml up
+# 2. To start dev env using docker compose
+#   docker-compose -p portal-dev -f docker-compose.yml up
 # 
 version: '3.7'
 

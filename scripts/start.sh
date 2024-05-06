@@ -1,31 +1,18 @@
+#!/bin/sh
 #
-#
+
+# Wait for the database to be ready
 until mysqlcheck -h db -u dba --password=Rh1annon --databases members; do
   echo "waiting for mysql..."
   sleep 5
 done
 
-#
+# Setup and run migrations
 cd /var/php-migrations
 curl -s https://getcomposer.org/installer | php -d allow_url_fopen=On
 php composer.phar require robmorgan/phinx
 vendor/bin/phinx migrate -e development
-# to rollback
-# vendor/bin/phinx rollback -e development 
 
+# Then start tehe server
 cd
 apache2-foreground
-
-# To allow for database migrations ...
-# 
-# RUN curl -s https://getcomposer.org/installer | php -d allow_url_fopen=On
-# RUN php composer.phar require robmorgan/phinx
-
-#  mysql -h db -u dba --password=Rh1annon -e "SHOW VARIABLES LIKE 'version%'"
-
-# mysqlcheck -h db -u dba --password=Rh1annon --databases members
-# if [ $? -eq 0 ] 
-# failed
-# else
-# passed
-# fi
