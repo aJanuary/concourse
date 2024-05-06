@@ -49,7 +49,7 @@ services:
         source: ./site/web
         target: &web-dir /var/www/html
       - type: bind
-        source: ./php-migrations
+        source: ./site/php-migrations
         target: /var/php-migrations
     environment:
       CONFIG_LIB_DIR: *lib-dir

@@ -1,5 +1,5 @@
 secrets/*
 .envrc
 composer.phar
-/php-migrations/vendor/
+/site/php-migrations/vendor/
 /vendor/
