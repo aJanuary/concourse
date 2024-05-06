@@ -1,27 +1,37 @@
-version: '3'
+# 
+#   docker volume create --name=portal-mysqldata
+# 
+# docker-compose -p portal-dev -f docker-compose.yml up
+# 
+version: '3.7'
+
+volumes:
+  # Have a store for the DB data that persists across restarts
+  portal-mysqldata:
+    external: true
 
 services:
   db:
-    container_name: db
-    build:
-      context: .
-      dockerfile: db.Dockerfile
+    image: mysql:8.0.37-debian
     secrets:
       - db_root_password
       - db_dba_password
-    restart: always
+    # restart: always
     environment:
       MYSQL_DATABASE: &db-name members
       MYSQL_USER: &db-user dba
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_PASSWORD_FILE: /run/secrets/db_dba_password
+    # Make sure we have peristent data between restarts
     volumes:
-      - ./db-migrations:/root/db-migrations
+      - portal-mysqldata:/var/lib/mysql
     ports:
       - 3306:3306
 
   web:
     container_name: web
+    # The script will wait for db to be ready, run migrations and then start web server
+    command: "/var/scripts/start.sh"
     build:
       context: .
       dockerfile: web.Dockerfile
@@ -31,12 +41,16 @@ services:
     ports:
       - 8080:80
     volumes:
+      - ./scripts/start.sh:/var/scripts/start.sh
       - type: bind
         source: ./site/lib
         target: &lib-dir /srv/lib
       - type: bind
         source: ./site/web
         target: &web-dir /var/www/html
+      - type: bind
+        source: ./php-migrations
+        target: /var/php-migrations
     environment:
       CONFIG_LIB_DIR: *lib-dir
       CONFIG_WEB_DIR: *web-dir
@@ -55,7 +69,7 @@ services:
     restart: always
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
+      # MYSQL_ROOT_PASSWORD: root
     depends_on:
       - db
 
