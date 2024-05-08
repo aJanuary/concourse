@@ -2,7 +2,7 @@
 #
 
 # Wait for the database to be ready
-until mysqlcheck -h db -u dba --password=Rh1annon --databases members; do
+until mysqlcheck -h db -u dba --password=`cat $CONFIG_DB_PASSWORD_FILE` --databases members; do
   echo "waiting for mysql..."
   sleep 5
 done
