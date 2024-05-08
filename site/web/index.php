@@ -120,6 +120,19 @@ render_header();
   </a>
 
 <?php
+  if (current_user_has_permission('manage-roles')) {
+?>
+  <a href="/admin/roles" class="card manage-roles">
+    <div class="hero"></div>
+    <h3>Manage roles</h3>
+    <h4>Admin area</h4>
+    <p>Create roles and set what permissions those roles have.</p>
+  </a>
+<?php
+  }
+?>
+
+<?php
   if (current_user_has_permission('manage-discord-ids')) {
 ?>
   <a href="/admin/discord" class="card discord-mod">
@@ -131,6 +144,7 @@ render_header();
 <?php
   }
 ?>
+
 </div>
 
 <?php

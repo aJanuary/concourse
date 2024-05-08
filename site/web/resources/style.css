@@ -268,14 +268,22 @@ form input[type='email'], form input[type='password']{
   font-size: 1.2rem;
 }
 
-form input[type='submit'] {
+form input[type='submit'], form input[type='button'] {
   padding: 10px 20px;
   margin-top: 10px;
-  background-color: #087232;
-  color: #ffffff;
   border: none;
   cursor: pointer;
   transition: color .1s ease-in-out, background-color .1s ease-in-out;
+}
+
+form input[type='submit'] {
+  background-color: #087232;
+  color: #ffffff;
+}
+
+form input[type='button'] {
+  background-color: #d0d6d3;
+  color: #087232;
 }
 
 form input[type='submit']:hover {
@@ -283,7 +291,14 @@ form input[type='submit']:hover {
   color: #087232;
 }
 
-form input[type='submit']:disabled, form input[type='submit']:disabled:hover {
+form input[type='button']:hover {
+  background-color: #e3e7e3;
+}
+
+form input[type='submit']:disabled,
+form input[type='submit']:disabled:hover,
+form input[type='input']:disabled,
+form input[type='input']:disabled:hover {
   background-color: #AAAA;
   color: #555;
   cursor: default;
@@ -376,4 +391,10 @@ sup {
   vertical-align: super;
   font-size: smaller;
   line-height: normal;
+}
+
+#permissions {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
