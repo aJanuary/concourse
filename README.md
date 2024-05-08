@@ -1,6 +1,6 @@
 # Members page for Glasgow 2024
 
-## Deployment
+## Deployment for Development
 Requirements:
 * [https://docs.docker.com/compose/](docker-compose)
 
@@ -8,17 +8,31 @@ Requirements:
 2. Create a folder called `secrets` and populate it with the secrets.
    See the `secrets` section of the `docker-compose.yml` file for an explanation
    of what secrets should be placed in what file.
-3. Run `docker-compose up` to start the server.
-4. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
+3. Create a docker volume for the database
+  `docker volume create --name=portal-mysqldata`
+4. Run docket compose to start the servers:
+  ```
+  docker-compose -p portal-dev -f docker-compose.yml up
+  ```
+  NOTE: the -p portal dev is optional but gives a way to group the containers if
+  you have other projects on your machine.
+
+5. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
    phpMyAdmin.
 
 ## Development
 
 ### Database changes
-1. Create a new file in the `db-migrations` folder with the name
-   `U<nnn>-<description>.sql` where `nnn` is the next number in the sequence and
-   `description` is a short description of the change.
-2. Put the SQL commands to apply the change in the file.
-3. Run
-   `docker-compose exec db bash -c 'mysql --verbose -u root -p$(cat /run/secrets/db_root_password) members < /root/db-migrations/U<nnn>-<description>.sql'`
-   to apply the changes to the database.
+1. All migrations use phinx for database changes. The migrations are in the folder
+   `sites/php-migrations`
+   To create a migration file run (replace MIGRATIONNAME with a meanningful name for
+   your migration)
+   `docker exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx create MIGRATIONNAME'`
+2. Edit the file to put in the PHP or SQL for the migration.
+3. The migration will be automatically applied to the database on start up of the web container.
+   If you want to apply the change right away do:
+   ```
+   docker exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx migrate -e development'
+   ```
+
+See the Phinx documentation for more details [https://book.cakephp.org/phinx/0/en/index.html]
