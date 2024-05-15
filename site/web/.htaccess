@@ -1,11 +1,11 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)/$ /$1 [L,R]
+  RewriteBase /
+
+  RewriteRule ^(.*)/+$ $1 [R=301,L]
   
   RewriteCond %{REQUEST_FILENAME}.php -f
-  RewriteRule ^ %{REQUEST_URI}.php [NC,L]
+  RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [QSA,L]
 </IfModule>
 
 <IfModule mod_mime.c>
