@@ -37,7 +37,7 @@
         <?php
           if (is_logged_in()) {
         ?>
-          <p class="username"><?php echo get_current_user_name(); ?> | <a href="/logout/">Logout</a></p>
+          <p class="username"><?php echo get_current_user_name(); ?> | <a href="/logout">Logout</a></p>
         <?php
           }
         ?>

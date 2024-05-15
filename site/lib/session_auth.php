@@ -3,7 +3,7 @@ require_once('auth_functions.php');
 require_once('db.php');
 
 if (!is_logged_in()) {
-  header('Location: /login/');
+  header('Location: /login');
   exit;
 }
 
