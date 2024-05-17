@@ -40,7 +40,7 @@ See the Phinx documentation for more details [https://book.cakephp.org/phinx/0/e
 ### Login with Clyde
 
 Add clyde credentials to the web_secrets.ini file. To get these you will need a valid
-publically accesible URL for the portal. You can do this by using a servivce such
+publically accessible URL for the portal. You can do this by using a service such
 as loophole and issuing a command such as the following (where the string MYPORTAL is
 going to be whatever unique hostname you want for your server):
 
