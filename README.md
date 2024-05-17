@@ -1,6 +1,8 @@
 # Members page for Glasgow 2024
 
-## Deployment for Development
+## Development
+
+### Deployment for Development
 Requirements:
 * [https://docs.docker.com/compose/](docker-compose)
 
@@ -20,8 +22,6 @@ Requirements:
 5. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
    phpMyAdmin.
 
-## Development
-
 ### Database changes
 1. All migrations use phinx for database changes. The migrations are in the folder
    `sites/php-migrations`
@@ -36,3 +36,18 @@ Requirements:
    ```
 
 See the Phinx documentation for more details [https://book.cakephp.org/phinx/0/en/index.html]
+
+### Login with Clyde
+
+Add clyde credentials to the web_secrets.ini file. To get these you will need a valid
+publically accesible URL for the portal. You can do this by using a servivce such
+as loophole and issuing a command like:
+
+```
+loophole http 8080 --hostname MYPORTAL
+```
+
+Replace MYPORTAL with a name representing your instance. You will end up with a URL similar to
+`https://MYPORTAL.loophole.site`. Then request credentials to from a clyde admin for staging the staging
+site providing a callback as `https://MYPORTAL.loophole.site/clyde`.
+

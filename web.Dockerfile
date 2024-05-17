@@ -4,6 +4,9 @@ RUN apt-get update -y && apt-get install -y libmariadb-dev zip mariadb-client
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN a2enmod rewrite
 
+# Using the default php ini file for now
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
 # Install composer in the docker image, 
 # and put in a place that composer will be in the path
 RUN curl -sS https://getcomposer.org/installer | php -d allow_url_fopen=On -- --install-dir=/usr/local/bin --filename=composer

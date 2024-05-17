@@ -1,0 +1,6 @@
+{
+    "require": {
+        "league/oauth2-client": "^2.7",
+        "wohali/oauth2-discord-new": "^1.2"
+    }
+}

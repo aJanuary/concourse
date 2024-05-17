@@ -5,8 +5,18 @@ require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 if (is_logged_in()) {
-    header('Location: /');
-    exit;
+  // NOTE: when we have link to URK+L (RCE etc) and login is needed we should
+  // redirect to the requested location rather then the "home" after authentication
+  header('Location: /');
+  exit;
+}
+
+function render_clyde_login_form($error=false) {
+?>
+  <form action="/login_with_clyde">
+    <input type="submit" value="Login with Glasgow Registration" data-loading-disable>
+  </form>
+<?php
 }
 
 function render_login_form($error=false) {
@@ -69,6 +79,10 @@ if (isset($_GET['email']) && isset($_GET['login_code'])) {
     }
 }
 
+if (isset($_GET['error']) && ($_GET['error'] == 'clyde')) {
+  $error = "Sorry, it appears you do not have a membership to access the online convention. Please contact XXXXX";
+}
+
 render_header();
 
 ?>
@@ -77,6 +91,8 @@ render_header();
     <h3>Log in</h3>
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
     <?php render_login_form($error); ?>
+    <p> This will replace the "magic" link ...</p>
+    <?php render_clyde_login_form($error); ?>
 </article>
 
 <?php

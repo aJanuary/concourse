@@ -10,12 +10,18 @@ until mysqlcheck -h $CONFIG_DB_HOST -u $CONFIG_DB_USER --password=`cat $CONFIG_D
   sleep 5
 done
 
+# Setup and install vendor libs
+cd /srv/lib
+composer update
+
 # Setup and run migrations
 cd /var/php-migrations
 # ensure phinx etc is installed
 composer update
+
 # run the migrations
-vendor/bin/phinx migrate -e development
+# NOTE: RUNTIME_ENV is set to developmen or production ...
+vendor/bin/phinx migrate -e $RUNTIME_ENV
 
 # Then start the server
 cd

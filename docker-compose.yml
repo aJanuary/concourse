@@ -61,6 +61,7 @@ services:
       CONFIG_DB_USER: *db-user
       CONFIG_DB_PASSWORD_FILE: /run/secrets/db_dba_password
       CONFIG_SECRETS_FILE: /run/secrets/web_secrets
+      RUNTIME_ENV: development
     depends_on:
       - db
   
@@ -110,6 +111,15 @@ secrets:
     # ; The id of the ticket to generate magic links for.
     # ; This comes from the RingCentral event config.
     # ticket_id =
+    # 
+    # [clyde]
+    # ; The if of the clyde client
+    # client_id =
+    # ; The secret for the clyde client
+    # client_secret =
+    # ; The server endpoint of the clyde system (test is https://worldcon.staxotest.net)
+    # server_endpoint =
+    # 
     file: ./secrets/web_secrets.ini
 
 networks:
