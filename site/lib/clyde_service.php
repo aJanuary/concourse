@@ -19,11 +19,9 @@ class ClydeService {
     ]);
   }
 
-  // 
   // Eventually we want to pass a path here that is
   // passed by via the OAuth state and provides the redirect
   // to where the user really wants to go
-  //
   function authorize_url($path = null) {
     // Set the state in the auth request
     $authUrl = $this->provider->getAuthorizationUrl();
