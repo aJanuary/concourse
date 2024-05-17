@@ -55,3 +55,4 @@ You will then end up with a URL similar to `https://MYPORTAL.loophole.site`.
 Then request OAuth credentials from a clyde admin for the staging server. (You will be providing the Clyde
 server a callback that looks like `https://MYPORTAL.loophole.site/clyde`).
 
+FYI: information about loophole can be found at [https://loophole.cloud/]
