@@ -2,26 +2,15 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once getenv('CONFIG_LIB_DIR') . '/vendor/autoload.php';
 
-# Table name: oauth_identities
-#
-#  id           :uuid             not null, primary key
-#  email        :string
-#  lock_version :integer
-#  provider     :string
-#  raw_info     :jsonb            not null
-#  reg_number   :string
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  reg_id       :string
-#
-
+// Class to provide the services for CLYDE
 class ClydeService {
   public $provider;
   public $token;
 
   function __construct() {
+    $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? _SERVER['HTTP_X_FORWARDED_HOST'];
     $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
-      'redirectUri'             => 'https://g24portal.loophole.site/clyde',
+      'redirectUri'             => 'https://' . $host . '/clyde',
       'clientId'                => CLYDE_CLIENT_ID,
       'clientSecret'            => CLYDE_CLIENT_SECRET,
       'urlAuthorize'            => CLYDE_SERVER_ENDPOINT . '/oauth/authorize',
@@ -31,6 +20,10 @@ class ClydeService {
   }
 
   // 
+  // Eventually we want to pass a path here that is
+  // passed by via the OAuth state and provides the redirect
+  // to where the user really wants to go
+  //
   function authorize_url($path = null) {
     // Set the state in the auth request
     $authUrl = $this->provider->getAuthorizationUrl();

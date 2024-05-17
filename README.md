@@ -41,13 +41,17 @@ See the Phinx documentation for more details [https://book.cakephp.org/phinx/0/e
 
 Add clyde credentials to the web_secrets.ini file. To get these you will need a valid
 publically accesible URL for the portal. You can do this by using a servivce such
-as loophole and issuing a command like:
+as loophole and issuing a command such as the following (where the string MYPORTAL is
+going to be whatever unique hostname you want for your server):
 
 ```
 loophole http 8080 --hostname MYPORTAL
 ```
 
-Replace MYPORTAL with a name representing your instance. You will end up with a URL similar to
-`https://MYPORTAL.loophole.site`. Then request credentials to from a clyde admin for staging the staging
-site providing a callback as `https://MYPORTAL.loophole.site/clyde`.
+Replace MYPORTAL with a name representing your server. It should not clash with any name that
+other developers are using.
+You will then end up with a URL similar to `https://MYPORTAL.loophole.site`.
+
+Then request OAuth credentials from a clyde admin for the staging server. (You will be providing the Clyde
+server a callback that looks like `https://MYPORTAL.loophole.site/clyde`).
 
