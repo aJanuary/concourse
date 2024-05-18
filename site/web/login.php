@@ -3,6 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
 
 if (is_logged_in()) {
   // NOTE: when we have link to URK+L (RCE etc) and login is needed we should
@@ -11,12 +12,10 @@ if (is_logged_in()) {
   exit;
 }
 
-function render_clyde_login_form($error=false) {
-?>
-  <form action="/login_with_clyde">
-    <input type="submit" value="Login with Glasgow Registration" data-loading-disable>
-  </form>
-<?php
+function render_clyde_login_form() {
+  $clyde = new ClydeService();
+
+  print '<a href="' . $clyde->authorize_url() . '" class="button">Login with Glasgow Registration</a>';
 }
 
 function render_login_form($error=false) {
@@ -92,7 +91,7 @@ render_header();
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
     <?php render_login_form($error); ?>
     <p> This will replace the "magic" link ...</p>
-    <?php render_clyde_login_form($error); ?>
+    <?php render_clyde_login_form(); ?>
 </article>
 
 <?php
