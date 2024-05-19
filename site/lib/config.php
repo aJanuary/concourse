@@ -2,6 +2,7 @@
 
 define('ROOT_URL', 'http://portal.glasgow2024.org/');
 define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
+define('CON_SHORT_NAME', 'Glasgow 2024');
 define('DISCORD_CHANNEL_ID', '1214240728184787013');
 define("EMAIL", "info@eastercon2024.co.uk");
 

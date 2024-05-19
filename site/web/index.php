@@ -14,7 +14,7 @@ render_header();
     <div class="hero"></div>
     <h3>Readme</h3>
     <h4>&nbsp;</h4>
-    <p>Find out all the key information you need to know for Levitation 2024.</p>
+    <p>Find out all the key information you need to know for <?php echo CON_SHORT_NAME; ?>.</p>
   </a>
 <?php
   }
@@ -112,11 +112,11 @@ render_header();
   }
 ?>
 
-  <a href="https://eastercon2024.co.uk" class="card website">
+  <a href="https://glasgow2024.org/" class="card website">
     <div class="hero"></div>
     <h3>Website</h3>
     <h4>&nbsp;</h4>
-    <p>Find out the latest news and other information about Levitation 2024.</p>
+    <p>Find out the latest news and other information about <?php echo CON_NAME; ?>.</p>
   </a>
 
 <?php
