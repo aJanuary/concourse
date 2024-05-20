@@ -1,27 +1,32 @@
 body {
   box-sizing: border-box;
-  font-family: Rubik;
+  font-family: "Roboto", sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  font-size: 18px;
+  color: #4B4F58;
 }
 
 [data-loading] {
   display: none;
 }
 
+h1, h2, h3, h4 {
+  font-family: "Gruppo", display;
+}
+
 a {
-  color: #1e72bd;
-  text-decoration: none;
+  color: #0170B9;
 }
 
 a:hover {
-  color: #087232;
+  color: #3a3a3a;
 }
 
 p {
   line-height: 1.5;
-  margin-bottom: 20px;
+  margin-bottom: 1.6em;
 }
 
 em {
@@ -39,17 +44,43 @@ img {
   max-width: 100%;
 }
 
-header, footer {
-  background-color: #087232;
-  color: white;
+header {
+  background-color: #eee;
 }
 
 footer {
   margin-top: auto;
+  background-color: #424242;
+  border-top: solid 1px #E5E5E5;
+  color: #F5F5F5;
+}
+
+footer .container {
+  display: flex;
+}
+
+footer .container p {
+  width: inherit;
+  flex-grow: 1;
+}
+
+footer ul {
+  display: flex;
+  column-gap: 1em;
+  row-gap: 0.25em;
+  flex-wrap: wrap;
+}
+
+footer li {
+  display: inline;
+}
+
+footer a, footer a:hover {
+  color: #F5F5F5;
 }
 
 .container {
-  max-width: 1020px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 20px 40px;
   display: flex;
@@ -90,28 +121,18 @@ footer {
   width: 100%;
 }
 
-.container a {
-  color: white;
-}
-
-.container a:hover {
-  color: #f3e600;
-}
 
 .site-branding a, .site-branding a:hover {
-  color: #ffffff;
+  color: black;
+  text-decoration: none;
 }
 
 .username {
   text-align: right;
 }
 
-footer p {
-  text-align: center;
-}
-
 main {
-  max-width: 1020px;
+  max-width: 1240px;
   width: 100%;
   margin: 0 auto;
   padding: 20px 40px;
@@ -198,10 +219,12 @@ main {
 .card h3 {
   font-weight: bold;
   margin-bottom: 5px;
+  font-size: 24px;
 }
 
 .card h4 {
   margin-bottom: 20px;
+  font-size: 18px;
 }
 
 article {
@@ -209,16 +232,15 @@ article {
   margin-top: 1em;
 }
 
-article a {
-  font-weight: bold;
-}
-
 article h3 {
-  font-size: 1.5rem;
+  font-size: 28px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
 article h4 {
+  font-size: 25px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
@@ -230,14 +252,16 @@ article ul {
 .button {
   display: inline-flex;
   padding: 10px 20px;
-  background-color: #087232;
+  background-color: #0170B9;
+  text-decoration: none;
   color: #ffffff;
+  border-radius: 3px;
   transition: color .1s ease-in-out, background-color .1s ease-in-out;
 }
 
 .button:hover {
-  background-color: #f3e600;
-  color: #087232;
+  background-color: #2b3990;
+  color: #ffffff;
 }
 
 .button.disabled {
