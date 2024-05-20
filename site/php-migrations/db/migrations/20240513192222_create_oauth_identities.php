@@ -14,7 +14,7 @@ final class CreateOauthIdentities extends AbstractMigration
             ->addColumn('identity_id', 'string', ['limit' => 100, 'null' => false])
             ->addColumn('email', 'string', ['limit' => 100])
             ->addColumn('raw_info', 'json')
-            ->addColumn('create_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
+            ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
             ->create();
 
       $table->addIndex(['identity_id'], ['unique' => true])

@@ -36,13 +36,6 @@ function render_login_form($error=false) {
 <?php
 }
 
-function make_session($email) {
-    $session_id = sha1(rand());
-    $expires_at = time() + 60*60*24*30;
-    db_insert_session($session_id, $email, $expires_at);
-    setcookie("session", $session_id, $expires_at, '/', '', true, true);
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
 
@@ -79,6 +72,7 @@ if (isset($_GET['email']) && isset($_GET['login_code'])) {
 }
 
 if (isset($_GET['error']) && ($_GET['error'] == 'clyde')) {
+  // TODO - fill out details of who to contact
   $error = "Sorry, it appears you do not have a membership to access the online convention. Please contact XXXXX";
 }
 

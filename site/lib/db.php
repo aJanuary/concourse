@@ -117,14 +117,10 @@ function db_create_member($badge_id, $name, $email, $invite_url) {
     $members_stmt->execute();
     $members_stmt->close();
 
-    // If we came from OAuth then there is no invite URL ...
-    // and invite_url passed in will be null
-    if ($invite_url) {
-      $invites_stmt = $mysqli->prepare("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)");
-      $invites_stmt->bind_param("ss", $badge_id, $invite_url);
-      $invites_stmt->execute();
-      $invites_stmt->close();
-    }
+    $invites_stmt = $mysqli->prepare("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)");
+    $invites_stmt->bind_param("ss", $badge_id, $invite_url);
+    $invites_stmt->execute();
+    $invites_stmt->close();
 
     $mysqli->commit();
   } catch (mysqli_sql_exception $exception) {

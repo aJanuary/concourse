@@ -3,6 +3,13 @@
 require_once('db.php');
 require_once('requests.php');
 
+function make_session($email) {
+    $session_id = sha1(rand());
+    $expires_at = time() + 60*60*24*30;
+    db_insert_session($session_id, $email, $expires_at);
+    setcookie("session", $session_id, $expires_at, '/', '', true, true);
+}
+
 function is_logged_in() {
   if (!isset($_COOKIE['session'])) {
     return false;
