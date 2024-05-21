@@ -1,3 +1,4 @@
 secrets/*
 .envrc
 **/vendor/
+composer.phar
