@@ -16,6 +16,7 @@ return
             'pass' => file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')),
             'port' => '3306',
             'charset' => 'utf8',
+            'collation' => 'utf8mb4_0900_ai_ci'
         ],
         'development' => [
             'adapter' => 'mysql',
@@ -25,6 +26,7 @@ return
             'pass' => file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')),
             'port' => '3306',
             'charset' => 'utf8',
+            'collation' => 'utf8mb4_0900_ai_ci'
         ],
         'testing' => [
             'adapter' => 'mysql',
@@ -34,7 +36,10 @@ return
             'pass' => file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')),
             'port' => '3306',
             'charset' => 'utf8',
+            'collation' => 'utf8mb4_0900_ai_ci'
         ]
     ],
     'version_order' => 'creation'
 ];
+
+// collations utf8mb4_0900_ai_ci

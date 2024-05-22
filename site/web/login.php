@@ -3,10 +3,19 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
 
 if (is_logged_in()) {
-    header('Location: /');
-    exit;
+  // NOTE: when we have link to URK+L (RCE etc) and login is needed we should
+  // redirect to the requested location rather then the "home" after authentication
+  header('Location: /');
+  exit;
+}
+
+function render_clyde_login_form() {
+  $clyde = new ClydeService();
+
+  print '<a href="' . $clyde->authorize_url() . '" class="button">Login with Glasgow Registration</a>';
 }
 
 function render_login_form($error=false) {
@@ -25,13 +34,6 @@ function render_login_form($error=false) {
         <p><input type="submit" value="Get log in link" data-loading-disable></p>
     </form>
 <?php
-}
-
-function make_session($email) {
-    $session_id = sha1(rand());
-    $expires_at = time() + 60*60*24*30;
-    db_insert_session($session_id, $email, $expires_at);
-    setcookie("session", $session_id, $expires_at, '/', '', true, true);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -69,6 +71,11 @@ if (isset($_GET['email']) && isset($_GET['login_code'])) {
     }
 }
 
+if (isset($_GET['error']) && ($_GET['error'] == 'clyde')) {
+  // TODO - fill out details of who to contact
+  $error = "Sorry, it appears you do not have a membership to access the online convention. Please contact XXXXX";
+}
+
 render_header();
 
 ?>
@@ -77,6 +84,8 @@ render_header();
     <h3>Log in</h3>
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
     <?php render_login_form($error); ?>
+    <p> This will replace the "magic" link ...</p>
+    <?php render_clyde_login_form(); ?>
 </article>
 
 <?php

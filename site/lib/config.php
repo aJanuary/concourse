@@ -18,6 +18,11 @@ define('DISCORD_BOT_TOKEN', $config_file['discord']['bot_token']);
 define('DISCORD_CLIENT_ID', $config_file['discord']['client_id']);
 define('DISCORD_CLIENT_SECRET', $config_file['discord']['client_secret']);
 
+// 
+define('CLYDE_CLIENT_ID', $config_file['clyde']['client_id']);
+define('CLYDE_CLIENT_SECRET', $config_file['clyde']['client_secret']);
+define('CLYDE_SERVER_ENDPOINT', $config_file['clyde']['server_endpoint']);
+
 function log_exception(Throwable $exception) {
   $err_code = bin2hex(random_bytes(8));
   $indented_trace = preg_replace('/^/m', '  ', $exception->getTraceAsString());

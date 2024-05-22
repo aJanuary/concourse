@@ -90,6 +90,23 @@ function db_delete_session($session_token) {
   $stmt->close();
 }
 
+function db_create_oauth_identity($badge_id, $provider,  $identity_id, $email, $raw_info) {
+  $mysqli = db_connect();
+
+  $mysqli->begin_transaction();
+  try {
+    $identity_stmt = $mysqli->prepare("INSERT INTO oauth_identities (badge_no, provider, identity_id, email, raw_info) VALUES (?, ?, ?, ?, ?)");
+    $identity_stmt->bind_param("sssss", $badge_id, $provider,  $identity_id, $email, $raw_info);
+    $identity_stmt->execute();
+    $identity_stmt->close();
+
+    $mysqli->commit();
+  } catch (mysqli_sql_exception $exception) {
+    $mysqli->rollback();
+    throw $exception;
+  }
+}
+
 function db_create_member($badge_id, $name, $email, $invite_url) {
   $mysqli = db_connect();
 
@@ -137,11 +154,37 @@ function db_set_discord_id($badge_no, $discord_id, $discord_username) {
   $stmt->close();
 }
 
+function db_identity_exists($email) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM oauth_identities WHERE email = ?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->bind_result($exists);
+  $stmt->fetch();
+  $stmt->close();
+
+  return $exists;
+}
+
 function db_member_exists($email) {
   $mysqli = db_connect();
 
   $stmt = $mysqli->prepare("SELECT 1 FROM members WHERE email = ?");
   $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->bind_result($exists);
+  $stmt->fetch();
+  $stmt->close();
+
+  return $exists;
+}
+
+function db_validate_member_identity($email, $provider) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM members left join oauth_identities on oauth_identities.email = members.email and oauth_identities.provider = ? WHERE members.email = ? and oauth_identities.badge_no = members.badge_no");
+  $stmt->bind_param("ss", $provider, $email);
   $stmt->execute();
   $stmt->bind_result($exists);
   $stmt->fetch();
