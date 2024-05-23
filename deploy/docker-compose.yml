@@ -1,0 +1,63 @@
+# 
+# 1. To create the volume portal-mysqldata
+#   docker volume create --name=portal-mysqldata
+# 2. To start dev env using docker compose
+#   docker-compose -p portal-dev -f docker-compose.yml up
+# 
+version: '3.7'
+
+volumes:
+  # Have a store for the DB data that persists across restarts
+  portal-mysqldata:
+    external: true
+
+services:
+  db:
+    image: mysql:8.0.37-debian
+    secrets:
+      - db_root_password
+      - db_dba_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: &db-name members
+      MYSQL_USER: &db-user dba
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_dba_password
+    volumes:
+      # Make sure we have peristent data between restarts
+      - portal-mysqldata:/var/lib/mysql
+      # Optional: we can tune the MySQL config
+      # - /opt/portal/etc/mysql/conf.d/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+    ports:
+      # map to local 53306 in case there are other MySQL instances
+      - "127.0.0.1:53306:3306"
+
+  web:
+    image: ghcr.io/glasgow2024/member-portal:latest
+    # The script will wait for db to be ready, run migrations and then start web server
+    command: "/var/scripts/start.sh"
+    restart: always
+    secrets:
+      - db_dba_password
+      - web_secrets
+    ports:
+      # map to local 8080
+      - "127.0.0.1:8080:80"
+    environment:
+      CONFIG_DB_HOST: db
+      CONFIG_DB_NAME: *db-name
+      CONFIG_DB_USER: *db-user
+      CONFIG_DB_PASSWORD_FILE: /run/secrets/db_dba_password
+      CONFIG_SECRETS_FILE: /run/secrets/web_secrets
+      RUNTIME_ENV: production
+    depends_on:
+      - db
+
+# Assuming portal files are put in /opt/portal ...
+secrets:
+  db_root_password:
+    file: /opt/portal/secrets/db_root_password.txt
+  db_dba_password:
+    file: /opt/portal/secrets/db_dba_password.txt
+  web_secrets:
+    file: /opt/portal/secrets/web_secrets.ini

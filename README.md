@@ -1,5 +1,47 @@
 # Members page for Glasgow 2024
 
+## Releases
+
+All release for production will be based on the `main` branch. First use create a releass,
+all releases should be tagged following the pattern vNN.NN.NN when 'N' is a number. When a release
+is published a github action should start to build the docker images and the release will
+be available in the gitbub registry for this project and tagged.
+
+## Deployment for Production
+Requirements:
+* [https://docs.docker.com/compose/](docker-compose)
+* A webserver to be proxy to the container (such as caddy)
+
+### Deployment and Directory Stucture on Host
+
+The files in the `deploy` directory provide working examples for a deployment. Those files
+assume the following directory structure on the host machine:
+
+```
+/opt
+|__ portal
+    |__ app
+    |__ secrets
+```
+
+To deploy
+
+1. Copy both the files from the `deploy` directory to `/opt/portal/app`
+2. Create files for the secrets in `/opt/portal/secrest`
+
+To start the server run `/opt/app/redeploy.sh`. This will pull the docker
+containers and the application will be available on port `8080` for the web server.
+
+NOTE: the MySQL database for the portal will also be available on `53306` if needed (only accesible from the host machine).
+
+### Secrets files
+
+When you deploy the applicaton as above the secrets files should places in `/opt/portal/secrets`. There are three files
+
+- db_root_password.txt: file with single line containing a string to use for the DB root password
+- db_dba_password.txt: file with single line containing a string to use for the DB DBA/Application password
+- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as RCE, Discord, Clyde etc)
+
 ## Development
 
 ### Deployment for Development
