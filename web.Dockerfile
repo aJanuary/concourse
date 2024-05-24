@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Default the runtime to prod. Can e over-ridden by passing in a env vars
+# Default the runtime to prod. Can be overridden by passing in env vars
 ARG RUNTIME_ENV=production
 ARG CONFIG_LIB_DIR=/srv/lib
 ARG CONFIG_WEB_DIR=/var/www/html
