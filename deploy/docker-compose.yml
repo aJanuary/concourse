@@ -21,6 +21,7 @@ services:
     environment:
       MYSQL_DATABASE: &db-name members
       MYSQL_USER: &db-user dba
+      MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_PASSWORD_FILE: /run/secrets/db_dba_password
     volumes:
@@ -44,6 +45,8 @@ services:
       # map to local 8080
       - "127.0.0.1:8080:80"
     environment:
+      CONFIG_LIB_DIR: /srv/lib
+      CONFIG_WEB_DIR: /var/www/html
       CONFIG_DB_HOST: db
       CONFIG_DB_NAME: *db-name
       CONFIG_DB_USER: *db-user

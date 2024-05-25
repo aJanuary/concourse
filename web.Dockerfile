@@ -6,7 +6,8 @@ ARG CONFIG_LIB_DIR=/srv/lib
 ARG CONFIG_WEB_DIR=/var/www/html
 
 # Need zip and client for migrations and start script
-RUN apt-get update -y && apt-get install -y libmariadb-dev zip mariadb-client
+RUN apt-get update -y && apt-get install -y libmariadb-dev zip mariadb-client vim
+
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN a2enmod rewrite
 

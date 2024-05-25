@@ -13,7 +13,7 @@ return
             'host' => 'db',
             'name' => getenv('CONFIG_DB_NAME'),
             'user' => getenv('CONFIG_DB_USER'),
-            'pass' => file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')),
+            'pass' => trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"),
             'port' => '3306',
             'charset' => 'utf8',
             'collation' => 'utf8mb4_0900_ai_ci'
@@ -23,7 +23,7 @@ return
             'host' => 'db',
             'name' => getenv('CONFIG_DB_NAME'),
             'user' => getenv('CONFIG_DB_USER'),
-            'pass' => file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')),
+            'pass' => trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"),
             'port' => '3306',
             'charset' => 'utf8',
             'collation' => 'utf8mb4_0900_ai_ci'
@@ -33,7 +33,7 @@ return
             'host' => 'localhost',
             'name' => getenv('CONFIG_DB_NAME'),
             'user' => getenv('CONFIG_DB_USER'),
-            'pass' => file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')),
+            'pass' => trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"),
             'port' => '3306',
             'charset' => 'utf8',
             'collation' => 'utf8mb4_0900_ai_ci'
@@ -41,5 +41,3 @@ return
     ],
     'version_order' => 'creation'
 ];
-
-// collations utf8mb4_0900_ai_ci
