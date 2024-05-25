@@ -9,7 +9,7 @@ define("EMAIL", "info@eastercon2024.co.uk");
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
 define('DB_NAME', getenv('CONFIG_DB_NAME'));
 define('DB_USER', getenv('CONFIG_DB_USER'));
-define('DB_PASSWORD', file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')));
+define('DB_PASSWORD', trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"));
 
 $config_file = parse_ini_file(getenv('CONFIG_SECRETS_FILE'), true);
 define('RCE_API_KEY', $config_file['rce']['api_key']);
