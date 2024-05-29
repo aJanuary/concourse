@@ -227,6 +227,19 @@ main {
   font-size: 18px;
 }
 
+.other {
+  margin-top: 1rem;
+}
+
+.other h2 {
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+.other li {
+  font-size: 1.2rem;
+}
+
 article {
   line-height: 1.5;
   margin-top: 1em;

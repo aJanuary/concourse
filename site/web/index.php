@@ -118,31 +118,33 @@ render_header();
     <h4>&nbsp;</h4>
     <p>Find out the latest news and other information about <?php echo CON_NAME; ?>.</p>
   </a>
+</div>
 
 <?php
-  if (current_user_has_permission('manage-roles')) {
+$has_manage_roles = current_user_has_permission('manage-roles');
+$has_manage_discord = current_user_has_permission('manage-discord-ids');
+$has_other = $has_manage_roles || $has_manage_discord;
+if ($has_other) {
 ?>
-  <a href="/admin/roles" class="card manage-roles">
-    <div class="hero"></div>
-    <h3>Manage roles</h3>
-    <h4>Admin area</h4>
-    <p>Create roles and set what permissions those roles have.</p>
-  </a>
+<div class="other">
+  <h2>Other</h2>
+  <ul>
+<?php
+  if ($has_manage_roles) {
+?>
+    <li><a href="/admin/roles">Manage roles</a></li>
 <?php
   }
 ?>
-
 <?php
-  if (current_user_has_permission('manage-discord-ids')) {
+  if ($has_manage_discord) {
 ?>
-  <a href="/admin/discord" class="card discord-mod">
-    <div class="hero"></div>
-    <h3>Discord ids</h3>
-    <h4>Admin area</h4>
-    <p>See what member's discord ids are.</p>
-  </a>
+    <li><a href="/admin/discord">Discord ids</a></li>
 <?php
   }
+?>
+<?php
+}
 ?>
 
 </div>
