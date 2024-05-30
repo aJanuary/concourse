@@ -15,12 +15,10 @@ function render_form_body($role_id = 1) {
 <?php
       $roles = db_get_roles();
       foreach ($roles as $role) {
-        if ($role['name'] !== 'admin') {
-          $selected = ($role['role_id'] == $role_id) ? 'selected' : '';
+        $selected = ($role['role_id'] == $role_id) ? 'selected' : '';
 ?>
-            <option value="<?php echo $role['role_id']; ?>"<?php echo $selected; ?>><?php echo $role['name']; ?></option>
+          <option value="<?php echo $role['role_id']; ?>"<?php echo $selected; ?>><?php echo $role['name']; ?></option>
 <?php
-       }
       }
 ?>
     </select>
