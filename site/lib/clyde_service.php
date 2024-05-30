@@ -8,9 +8,8 @@ class ClydeService {
   public $token;
 
   function __construct() {
-    $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? _SERVER['HTTP_X_FORWARDED_HOST'];
     $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
-      'redirectUri'             => 'https://' . $host . '/clyde_callback',
+      'redirectUri'             => ROOT_URL . '/clyde_callback',
       'clientId'                => CLYDE_CLIENT_ID,
       'clientSecret'            => CLYDE_CLIENT_SECRET,
       'urlAuthorize'            => CLYDE_SERVER_ENDPOINT . '/oauth/authorize',
