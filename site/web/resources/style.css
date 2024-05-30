@@ -172,6 +172,15 @@ main {
   background-size: cover;
 }
 
+.card.time .hero {
+  font-size: 4em;
+  color: #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #EEE;
+}
+
 .card.readme .hero {
   background-image: url('/resources/readme.jpg');
 }
