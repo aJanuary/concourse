@@ -3,10 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-if (!current_user_has_permission('see-newsletter')) {
-  header('Location: /');
-  exit;
-}
+check_permission('see-newsletter');
 
 render_header();
 ?>

@@ -1,5 +1,6 @@
 <?php
   require_once('config.php');
+  require_once('auth_functions.php');
 
   function get_internal_url($script) {
     return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
@@ -63,5 +64,19 @@
   </body>
 </html>
 <?php
+  }
+
+  function render_404() {
+    http_response_code(404);
+    render_header();
+?>
+    <a href="/" class="back">&lt; Back to member portal</a>
+    <article>
+      <h3>Page not found</h3>
+      <p>The page you are looking for does not exist.</p>
+    </article>
+<?php
+    render_footer();
+    exit;
   }
 ?>

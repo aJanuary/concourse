@@ -3,10 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-if (!current_user_has_permission('see-vote')) {
-  header('Location: /');
-  exit;
-}
+check_permission('see-vote');
 
 $doc_vote_open = strtotime('2024-03-29 12:00');
 $doc_vote_close = strtotime('2024-04-01 11:00');
