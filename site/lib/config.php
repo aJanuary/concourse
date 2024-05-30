@@ -5,6 +5,7 @@ define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
 define('CON_SHORT_NAME', 'Glasgow 2024');
 define('DISCORD_CHANNEL_ID', '1214240728184787013');
 define("EMAIL", "info@eastercon2024.co.uk");
+define('TIMEZONE', 'Europe/London');
 
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
 define('DB_NAME', getenv('CONFIG_DB_NAME'));

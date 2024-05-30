@@ -421,4 +421,301 @@ function db_get_role_id($role_name) {
   return $role_id;
 }
 
+function db_get_stages() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT room_id FROM prog_stages");
+  $stages = [];
+  while ($row = $result->fetch_assoc()) {
+    $stages[] = $row;
+  }
+  $result->close();
+
+  return $stages;
+}
+
+function db_get_stage($room_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT viewer_url, type, participant_url FROM prog_stages WHERE room_id = ?");
+  $stmt->bind_param("s", $room_id);
+  $stmt->execute();
+  $stmt->bind_result($viewer_url, $type, $participant_url);
+  $stmt->fetch();
+  $stmt->close();
+
+  return ['viewer_url' => $viewer_url, 'type' => $type, 'participant_url' => $participant_url];
+}
+
+function db_add_stage($room_id, $viewer_url, $type, $participant_url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("INSERT INTO prog_stages (room_id, viewer_url, type, participant_url) VALUES (?, ?, ?, ?)");
+  $stmt->bind_param("ssss", $room_id, $viewer_url, $type, $participant_url);
+  $stmt->execute();
+  $stmt->close();
+
+  return $mysqli->insert_id;
+}
+
+function db_edit_stage($room_id, $viewer_url, $type, $participant_url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("UPDATE prog_stages SET viewer_url = ?, type = ?, participant_url = ? WHERE room_id = ?");
+  $stmt->bind_param("ssss", $viewer_url, $type, $participant_url, $room_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_delete_stage($room_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("DELETE FROM prog_stages WHERE room_id = ?");
+  $stmt->bind_param("s", $room_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_get_prog_sessions() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT item_id FROM prog_sessions ORDER BY item_id");
+  $items = [];
+  while ($row = $result->fetch_assoc()) {
+    $items[] = $row;
+  }
+  $result->close();
+
+  return $items;
+}
+
+function db_get_prog_session($item_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT rce_url FROM prog_sessions WHERE item_id = ?");
+  $stmt->bind_param("s", $item_id);
+  $stmt->execute();
+  $stmt->bind_result($rce_url);
+  $stmt->fetch();
+  $stmt->close();
+
+  return [
+    'rce_url' => $rce_url,
+  ];
+}
+
+function db_edit_prog_session($item_id, $rce_url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("UPDATE prog_sessions SET rce_url = ? WHERE item_id = ?");
+  $stmt->bind_param("ss", $rce_url, $item_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_add_prog_session($item_id, $rce_url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("INSERT INTO prog_sessions (item_id, rce_url) VALUES (?, ?)");
+  $stmt->bind_param("ss", $item_id, $rce_url);
+  $stmt->execute();
+  $stmt->close();
+
+  return $mysqli->insert_id;
+}
+
+function db_delete_prog_session($item_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("DELETE FROM prog_sessions WHERE item_id = ?");
+  $stmt->bind_param("s", $item_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_get_discord_posts() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT item_id FROM prog_discord_posts ORDER BY item_id");
+  $items = [];
+  while ($row = $result->fetch_assoc()) {
+    $items[] = $row;
+  }
+  $result->close();
+
+  return $items;
+}
+
+function db_get_discord_post($item_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT start, duration, room_id, post_url FROM prog_discord_posts WHERE item_id = ?");
+  $stmt->bind_param("s", $item_id);
+  $stmt->execute();
+  $stmt->bind_result($start_time, $duration_secs, $room_id, $post_url);
+  $stmt->fetch();
+  $stmt->close();
+
+  $start_time_formatted = $start_time ? (new DateTime('@' . $start_time))->setTimezone(new DateTimeZone(TIMEZONE))->format('Y-m-d H:i') : null;
+
+  return [
+    'start' => $start_time_formatted,
+    'duration' => $duration_secs ? $duration_secs / 60 : null,
+    'room_id' => $room_id,
+    'post_url' => $post_url,
+  ];
+}
+
+function db_get_discord_post_by_room_and_time($room_id, $utc_time) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT start, duration, room_id, post_url FROM prog_discord_posts WHERE room_id = ? AND start <= ? AND start + duration >= ?");
+  $stmt->bind_param("sii", $room_id, $utc_time, $utc_time);
+  $stmt->execute();
+  $stmt->bind_result($start_time, $duration_secs, $room_id, $post_url);
+  $stmt->fetch();
+  $stmt->close();
+
+  $start_time_formatted = $start_time ? (new DateTime('@' . $start_time))->setTimezone(new DateTimeZone(TIMEZONE))->format('Y-m-d H:i') : null;
+
+  return [
+    'start' => $start_time_formatted,
+    'duration' => $duration_secs ? $duration_secs / 60 : null,
+    'room_id' => $room_id,
+    'post_url' => $post_url,
+  ];
+}
+
+function db_edit_discord_post($item_id, $start, $duration, $room_id, $post_url) {
+  $mysqli = db_connect();
+
+  if ($start) {
+    $date = new DateTime($start, new DateTimeZone(TIMEZONE));
+    $start_time = $date->getTimestamp();
+  } else {
+    $start_time = null;
+  }
+
+  if ($duration) {
+    $duration_secs = intval($duration) * 60;
+  } else {
+    $duration_secs = null;
+  }
+
+  $stmt = $mysqli->prepare("UPDATE prog_discord_posts SET start = ?, duration = ?, room_id = ?, post_url = ? WHERE item_id = ?");
+  $stmt->bind_param("iisss", $start_time, $duration_secs, $room_id, $post_url, $item_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_add_discord_post($item_id, $start, $duration, $room_id, $post_url) {
+  $mysqli = db_connect();
+
+  if ($start) {
+    $date = new DateTime($start, new DateTimeZone(TIMEZONE));
+    $start_time = $date->getTimestamp();
+  } else {
+    $start_time = null;
+  }
+
+  if ($duration) {
+    $duration_secs = intval($duration) * 60;
+  } else {
+    $duration_secs = null;
+  }
+
+  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?)");
+  $stmt->bind_param("siiss", $item_id, $start_time, $duration_secs, $room_id, $post_url);
+  $stmt->execute();
+  $stmt->close();
+
+  return $mysqli->insert_id;
+}
+
+function db_delete_discord_post($item_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("DELETE FROM prog_discord_posts WHERE item_id = ?");
+  $stmt->bind_param("s", $item_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_get_zoom_url() {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT zoom_url FROM prog_zoom");
+  $stmt->execute();
+  $stmt->bind_result($url);
+  $stmt->fetch();
+  $stmt->close();
+
+  return $url;
+}
+
+function db_set_zoom_url($url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("UPDATE prog_zoom SET zoom_url = ?");
+  $stmt->bind_param("s", $url);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_get_replays() {
+  $mysqli = db_connect();
+
+  $result = $mysqli->query("SELECT item_id FROM prog_replay ORDER BY item_id");
+  $items = [];
+  while ($row = $result->fetch_assoc()) {
+    $items[] = $row;
+  }
+  $result->close();
+
+  return $items;
+}
+
+function db_get_replay($item_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("SELECT replay_url FROM prog_replay WHERE item_id = ?");
+  $stmt->bind_param("s", $item_id);
+  $stmt->execute();
+  $stmt->bind_result($replay_url);
+  $stmt->fetch();
+  $stmt->close();
+
+  return [
+    'replay_url' => $replay_url,
+  ];
+}
+
+function db_edit_replay($item_id, $replay_url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("UPDATE prog_replay SET replay_url = ? WHERE item_id = ?");
+  $stmt->bind_param("ss", $replay_url, $item_id);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_add_replay($item_id, $replay_url) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("INSERT INTO prog_replay (item_id, replay_url) VALUES (?, ?)");
+  $stmt->bind_param("ss", $item_id, $replay_url);
+  $stmt->execute();
+  $stmt->close();
+
+  return $mysqli->insert_id;
+}
+
+function db_delete_replay($item_id) {
+  $mysqli = db_connect();
+
+  $stmt = $mysqli->prepare("DELETE FROM prog_replay WHERE item_id = ?");
+  $stmt->bind_param("s", $item_id);
+  $stmt->execute();
+  $stmt->close();
+}
 ?>

@@ -130,7 +130,8 @@ render_header();
 <?php
 $has_manage_roles = current_user_has_permission('manage-roles');
 $has_manage_discord = current_user_has_permission('manage-discord-ids');
-$has_other = $has_manage_roles || $has_manage_discord;
+$has_manage_programme = current_user_has_permission('manage-programme');
+$has_other = $has_manage_roles || $has_manage_discord || $has_manage_programme;
 if ($has_other) {
 ?>
 <div class="other">
@@ -140,6 +141,13 @@ if ($has_other) {
   if ($has_manage_roles) {
 ?>
     <li><a href="/admin/roles">Manage roles</a></li>
+<?php
+  }
+?>
+<?php
+  if ($has_manage_programme) {
+?>
+    <li><a href="/admin/programme/list">Manage programme</a></li>
 <?php
   }
 ?>

@@ -444,3 +444,21 @@ sup {
   flex-wrap: wrap;
   flex-direction: column;
 }
+
+#error-toast {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #f00c;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+form.vertical label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5em;
+}

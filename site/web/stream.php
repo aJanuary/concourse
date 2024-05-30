@@ -3,7 +3,16 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-$magic_link = db_get_magic_link($_COOKIE['session']);
+if (array_key_exists('invite', $_GET)) {
+  if (!current_user_has_permission('see-rce')) {
+    header('Location: /');
+    exit;
+  }
+  $magic_link = db_get_magic_link($_COOKIE['session']);
+  header('Location: ' . $magic_link);
+  setcookie('seen-rce-invite', '1', time() + 60*60*24*365, '/');
+  exit;
+}
 
 render_header();
 ?>
@@ -21,8 +30,7 @@ render_header();
 <?php
   } else {
 ?>
-  <p><a class="button" target="_blank" href="<?php echo $magic_link; ?>">Go to Ring Central Events</a></p>
-  <p><em>This link is tied to your membership. Please do not share it with other people.</em></p>
+  <p><a class="button" target="_blank" href="?invite">Go to Ring Central Events</a></p>
 <?php
   }
 ?>
