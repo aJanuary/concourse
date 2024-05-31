@@ -7,6 +7,13 @@ render_header();
 ?>
 
 <div class="cards">
+  <a href="https://dateful.com/convert/british-summer-time-bst" class="card time">
+    <div class="hero" id="time"></div>
+    <h3>Current convention time</h3>
+    <h4>BST</h4>
+    <p>Convert between convention time (BST) and your local timezone.</p>
+  </a>
+
 <?php
   if (current_user_has_permission('see-readme')) {
 ?>
@@ -148,6 +155,16 @@ if ($has_other) {
 ?>
 
 </div>
+
+<script>
+  let $time = document.getElementById('time');
+  function updateTime() {
+    let utc = new Date();
+    $time.innerText = utc.toLocaleString('en-GB', { timeZone: 'Europe/London', hour: 'numeric', minute: 'numeric', hour12: false });
+    setTimeout(updateTime, 10000);
+  }
+  updateTime();
+</script>
 
 <?php
 render_footer();
