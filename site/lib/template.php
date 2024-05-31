@@ -35,9 +35,9 @@
 				  </div>
         </div>
         <?php
-          if (is_logged_in()) {
+          if (isset($_SESSION['username'])) {
         ?>
-          <p class="username"><?php echo get_current_user_name(); ?> | <a href="/logout">Logout</a></p>
+          <p class="username"><?php echo $_SESSION['username']; ?> | <a href="/logout">Logout</a></p>
         <?php
           }
         ?>

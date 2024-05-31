@@ -2,13 +2,11 @@
 
 require_once('config.php');
 
-function db_connect() {
-  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-  return new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-}
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
 function db_check_member_creds($email, $password) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT password FROM members WHERE email = ?");
   $stmt->bind_param("s", $email);
@@ -24,7 +22,7 @@ function db_check_member_creds($email, $password) {
 }
 
 function db_insert_session($session_token, $email, $expires_at) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("INSERT INTO sessions (session_id, expires_at, badge_no) SELECT ?, ?, badge_no FROM members WHERE email = ?");
   $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
@@ -34,7 +32,7 @@ function db_insert_session($session_token, $email, $expires_at) {
 }
 
 function db_session_exists($session_token) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT 1 FROM sessions WHERE session_id = ? AND expires_at > NOW()");
   $stmt->bind_param("s", $session_token);
@@ -50,7 +48,7 @@ function db_session_exists($session_token) {
 }
 
 function db_get_badge_no_by_session($session_token) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW()");
   $stmt->bind_param("s", $session_token);
@@ -66,7 +64,7 @@ function db_get_badge_no_by_session($session_token) {
 }
 
 function db_get_user_name_by_session($session_token) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT name FROM members WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())");
   $stmt->bind_param("s", $session_token);
@@ -82,7 +80,7 @@ function db_get_user_name_by_session($session_token) {
 }
 
 function db_delete_session($session_token) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("DELETE FROM sessions WHERE session_id = ?");
   $stmt->bind_param("s", $session_token);
@@ -91,7 +89,7 @@ function db_delete_session($session_token) {
 }
 
 function db_create_oauth_identity($badge_id, $provider,  $identity_id, $email, $raw_info) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $mysqli->begin_transaction();
   try {
@@ -108,7 +106,7 @@ function db_create_oauth_identity($badge_id, $provider,  $identity_id, $email, $
 }
 
 function db_create_member($badge_id, $name, $email, $invite_url) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $mysqli->begin_transaction();
   try {
@@ -130,7 +128,7 @@ function db_create_member($badge_id, $name, $email, $invite_url) {
 }
 
 function db_get_magic_link($session_token) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT invite_url FROM rce_invites WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())");
   $stmt->bind_param("s", $session_token);
@@ -146,7 +144,7 @@ function db_get_magic_link($session_token) {
 }
 
 function db_set_discord_id($badge_no, $discord_id, $discord_username) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("REPLACE INTO discord_ids(badge_no, discord_id, username) VALUES (?, ?, ?)");
   $stmt->bind_param("sss", $badge_no, $discord_id, $discord_username);
@@ -155,7 +153,7 @@ function db_set_discord_id($badge_no, $discord_id, $discord_username) {
 }
 
 function db_identity_exists($email) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT 1 FROM oauth_identities WHERE email = ?");
   $stmt->bind_param("s", $email);
@@ -168,7 +166,7 @@ function db_identity_exists($email) {
 }
 
 function db_member_exists($email) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT 1 FROM members WHERE email = ?");
   $stmt->bind_param("s", $email);
@@ -181,7 +179,7 @@ function db_member_exists($email) {
 }
 
 function db_validate_member_identity($email, $provider) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT 1 FROM members left join oauth_identities on oauth_identities.email = members.email and oauth_identities.provider = ? WHERE members.email = ? and oauth_identities.badge_no = members.badge_no");
   $stmt->bind_param("ss", $provider, $email);
@@ -194,7 +192,7 @@ function db_validate_member_identity($email, $provider) {
 }
 
 function db_insert_login_link($email, $login_code, $expires_at) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
   $stmt = $mysqli->prepare("INSERT INTO login_links (login_code, badge_no, expires_at) SELECT ?, badge_no, ? FROM members WHERE email = ?");
@@ -204,7 +202,7 @@ function db_insert_login_link($email, $login_code, $expires_at) {
 }
 
 function db_get_login_link_expiry($email, $login_code) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = (SELECT badge_no FROM members WHERE email = ?)");
   $stmt->bind_param("ss", $login_code, $email);
@@ -220,7 +218,7 @@ function db_get_login_link_expiry($email, $login_code) {
 }
 
 function db_get_member_discord_data() {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $result = $mysqli->query("SELECT members.badge_no, name, discord_ids.discord_id, discord_ids.username from members LEFT OUTER JOIN discord_ids USING (badge_no) ORDER by badge_no");
   $members = [];
@@ -247,7 +245,7 @@ function db_get_member_discord_data() {
 }
 
 function db_get_all_discord_info() {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $result = $mysqli->query("SELECT badge_no, members.name member_name, discord_id, roles.name role_name FROM discord_ids JOIN members USING (badge_no) LEFT JOIN member_roles USING (badge_no) LEFT JOIN roles USING (role_id)");
   $discord_info = [];
@@ -269,7 +267,7 @@ function db_get_all_discord_info() {
 }
 
 function db_get_rce_links() {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $result = $mysqli->query("SELECT members.badge_no, name, invite_url from members LEFT OUTER JOIN rce_invites USING (badge_no) ORDER by badge_no");
   $members = [];
@@ -282,7 +280,7 @@ function db_get_rce_links() {
 }
 
 function db_get_discord_usernames($session_id) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT discord_ids.username FROM discord_ids JOIN sessions USING (badge_no) WHERE session_id = ?");
   $stmt->bind_param("s", $session_id);
@@ -298,7 +296,7 @@ function db_get_discord_usernames($session_id) {
 }
 
 function db_get_roles() {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $result = $mysqli->query("SELECT role_id, name FROM roles");
   $roles = [];
@@ -311,7 +309,7 @@ function db_get_roles() {
 }
 
 function db_get_role_permissions($role_id) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT permission_id, name, IFNULL(has_permission, 0) has_permission FROM permissions LEFT OUTER JOIN (SELECT permission_id, COUNT(*) has_permission FROM role_permissions WHERE role_id=? GROUP BY permission_id) h_p USING (permission_id) ORDER BY name;");
   $stmt->bind_param("s", $role_id);
@@ -327,7 +325,7 @@ function db_get_role_permissions($role_id) {
 }
 
 function db_set_role_permission($role_id, $permission_id, $has_permission) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   if ($has_permission) {
     $stmt = $mysqli->prepare("REPLACE INTO role_permissions (role_id, permission_id) VALUES (?, ?)");
@@ -343,7 +341,7 @@ function db_set_role_permission($role_id, $permission_id, $has_permission) {
 }
 
 function db_create_role($name) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("INSERT INTO roles (name) VALUES (?)");
   $stmt->bind_param("s", $name);
@@ -354,7 +352,7 @@ function db_create_role($name) {
 }
 
 function db_delete_role($role_id) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("DELETE FROM roles WHERE role_id = ?");
   $stmt->bind_param("s", $role_id);
@@ -363,11 +361,7 @@ function db_delete_role($role_id) {
 }
 
 function db_get_permissions_by_session($session_id) {
-  if (db_session_has_admin_role($session_id)) {
-    return db_get_permissions();
-  }
-
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("(SELECT name FROM permissions JOIN role_permissions USING (permission_id) JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) WHERE session_id = ?) UNION (SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default')");
   $stmt->bind_param("s", $session_id);
@@ -382,34 +376,8 @@ function db_get_permissions_by_session($session_id) {
   return $permissions;
 }
 
-function db_session_has_admin_role($session_id) {
-  $mysqli = db_connect();
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM member_roles JOIN sessions USING (badge_no) JOIN roles USING (role_id) WHERE session_id = ? AND roles.name = 'admin'");
-  $stmt->bind_param("s", $session_id);
-  $stmt->execute();
-  $stmt->bind_result($has_admin_role);
-  $stmt->fetch();
-  $stmt->close();
-
-  return $has_admin_role;
-}
-
-function db_get_permissions() {
-  $mysqli = db_connect();
-
-  $result = $mysqli->query("SELECT name FROM permissions");
-  $permissions = [];
-  while ($row = $result->fetch_assoc()) {
-    $permissions[] = $row['name'];
-  }
-  $result->close();
-
-  return $permissions;
-}
-
 function db_get_role_id($role_name) {
-  $mysqli = db_connect();
+  global $mysqli;
 
   $stmt = $mysqli->prepare("SELECT role_id FROM roles WHERE name = ?");
   $stmt->bind_param("s", $role_name);
