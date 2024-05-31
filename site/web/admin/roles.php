@@ -4,10 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-if (!current_user_has_permission('manage-roles')) {
-  header('Location: /');
-  exit;
-}
+check_permission('manage-roles');
 
 function render_form_body($role_id = 1) {
 ?>

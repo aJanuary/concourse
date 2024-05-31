@@ -3,10 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-if (!current_user_has_permission('see-participant-guides')) {
-  header('Location: /');
-  exit;
-}
+check_permission('see-participant-guides');
 
 $magic_link = db_get_magic_link($_COOKIE['session']);
 

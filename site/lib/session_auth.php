@@ -2,6 +2,13 @@
 require_once('auth_functions.php');
 require_once('db.php');
 
+function check_permission($permission) {
+  if (!current_user_has_permission($permission)) {
+    require_once('template.php');
+    render_404();
+  }
+}
+
 if (!is_logged_in()) {
   header('Location: /login');
   exit;
