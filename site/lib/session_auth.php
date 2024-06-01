@@ -10,7 +10,7 @@ function check_permission($permission) {
 }
 
 if (!is_logged_in()) {
-  header('Location: /login');
+  header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
   exit;
 }
 

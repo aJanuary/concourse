@@ -5,46 +5,61 @@ require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 
+function redirect_to_error($error_code) {
+  $error_url = '/login?error_code=' . $error_code;
+  if (isset($_SESSION['oauth2redirect'])) {
+    $error_url .= '&redirect=' . $_SESSION['oauth2redirect'];
+  }
+  header('Location: ' . $error_url);
+  exit;
+}
+
+session_start();
 $clyde = new ClydeService();
 
 // 1. Get the OAuth token
-$token = $clyde->access_token($_GET['code']);
+try {
+  $token = $clyde->access_token($_GET['code'], $_GET['state']);
+} catch (Exception $e) {
+  log_exception($e);
+  redirect_to_error($e->getMessage());
+}
 
 // 2. Get "me" from Clyde
 $registrant = $clyde->get_registrant();
 
 // 3. Check allowed access
-if ($clyde->registrant_allowed_access($registrant)) {
-  // and if acccess is alllowed create a session etc
-  $badge_id = $registrant['ticket_number'];
-
-  $name = trim($registrant['badge']);
-  $name = ($name && strlen($name) > 0) ? $name : trim($registrant['preferred_name']);
-  $name = ($name && strlen($name) > 0) ? $name : trim($registrant['full_name']);
-  
-  $email = $registrant['email'];
-
-  $member_exists = db_member_exists($email);
-  $identity_exists = db_identity_exists($email);
-
-  if ($identity_exists && $member_exists) {
-    // TODO: this needs to be changed to allow for non-unique emails
-    $matches = db_validate_member_identity($email, 'clyde');
-    if (!$matches) {
-      throw new AuthorizationException("Clyde Information does not match member - possible duplicate email");
-    }
-  }
-
-  if (!$member_exists) {
-    create_member($badge_id, $email, $name);
-  };
-  if (!$identity_exists) {
-    db_create_oauth_identity($badge_id, 'clyde', $registrant['id'], $email, json_encode($registrant));
-  };
-  make_session($email);
-  header('Location: /');
-} else {
-  header('Location: /login?error=clyde');
+if (!$clyde->registrant_allowed_access($registrant)) {
+  redirect_to_error('no-access');
 }
 
+// and if acccess is alllowed create a session etc
+$badge_no = $registrant['ticket_number'];
+
+$name = trim($registrant['badge']);
+$name = ($name && strlen($name) > 0) ? $name : trim($registrant['preferred_name']);
+$name = ($name && strlen($name) > 0) ? $name : trim($registrant['full_name']);
+
+$email = $registrant['email'];
+
+if (!db_member_exists($badge_no)) {
+  create_member($badge_no, $email, $name);
+};
+if (!db_identity_exists($badge_no)) {
+  db_create_oauth_identity($badge_no, 'clyde', $registrant['id'], $email, json_encode($registrant));
+};
+make_session($badge_no);
+
+if (isset($_SESSION['oauth2redirect'])) {
+  $redirect = $_SESSION['oauth2redirect'];
+  unset($_SESSION['oauth2redirect']);
+  if (strpos($redirect, '/') !== 0) {
+    // Don't allow open redirects
+    // https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html
+    $redirect = '/';
+  }
+  header('Location: ' . $redirect);
+} else {
+  header('Location: /');
+}
 ?>

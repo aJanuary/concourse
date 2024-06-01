@@ -3,10 +3,10 @@
 require_once('db.php');
 require_once('requests.php');
 
-function make_session($email) {
+function make_session($badge_no) {
     $session_id = sha1(rand());
     $expires_at = time() + 60*60*24*30;
-    db_insert_session($session_id, $email, $expires_at);
+    db_insert_session($session_id, $badge_no, $expires_at);
     setcookie("session", $session_id, $expires_at, '/', '', true, true);
 }
 
@@ -29,19 +29,6 @@ function get_current_user_name() {
     return null;
   }
   return db_get_user_name_by_session($_COOKIE['session']);
-}
-
-function login($email, $password) {
-  if (!db_check_member_creds($email, $password)) {
-    return false;
-  }
-
-  $session_id = sha1(rand());
-  $expires_at = time() + 60*60*24*30;
-  db_insert_session($session_id, $email, $expires_at);
-  setcookie("session", $session_id, $expires_at, '/', '', true, true);
-
-  return true;
 }
 
 function logout() {
