@@ -45,7 +45,7 @@ if (isset($_GET['error_code'])) {
         'invalid-state' => 'An error occured while logging in with Glasgow Registration. Please try again.',
         'no-code' => 'Unable to log in with Glasgow Registration. Please try again and make sure you click the "Authorize" button after reviewing the permissions.',
         'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
-        'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
+        'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occured.';
 ?>
     <p class="error"><?php echo $error; ?></p>

@@ -40,7 +40,11 @@ $name = trim($registrant['badge']);
 $name = ($name && strlen($name) > 0) ? $name : trim($registrant['preferred_name']);
 $name = ($name && strlen($name) > 0) ? $name : trim($registrant['full_name']);
 
-$email = $registrant['email'];
+$email = trim($registrant['email']);
+
+if (defined('CLYDE_ALLOWLIST') && !in_array($email, CLYDE_ALLOWLIST)) {
+  redirect_to_error('not-in-allowlist');
+}
 
 if (!db_member_exists($badge_no)) {
   create_member($badge_no, $email, $name);
