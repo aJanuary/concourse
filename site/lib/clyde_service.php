@@ -53,8 +53,24 @@ class ClydeService {
 
   function registrant_allowed_access($registrant) {
     if ($registrant['attending_status'] != 'Not Attending') {
-      // TODO: put in check as to whether the registrant is really attending ...
-      // which means looking at the 'product_list_name' as well
+      // Check as to whether the registrant is really attending ...
+      // which means looking at the 'product_list_name' as well.
+      // Exceptions are: 
+      // Teen Attending, Child Attending, Infant Attending, Apocryphal
+      // Under 16 Day Tickets
+
+      $restricted = in_array(
+        $registrant['product_list_name'], 
+        [
+          "Teenager", "Children", "Infant", "Apocryphal",
+          "Thu. <16", "Fri. <16", "Sat. <16", "Sun. <16", "Mon. <16", "WkEnd <16"
+        ]
+      );
+
+      if ($restricted) {
+        return false;
+      };
+
       return true;
     } else {
       return false;
