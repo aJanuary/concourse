@@ -21,12 +21,12 @@ function db_check_member_creds($email, $password) {
   return password_verify($password, $hash);
 }
 
-function db_insert_session($session_token, $email, $expires_at) {
+function db_insert_session($session_token, $badge_no, $expires_at) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("INSERT INTO sessions (session_id, expires_at, badge_no) SELECT ?, ?, badge_no FROM members WHERE email = ?");
+  $stmt = $mysqli->prepare("INSERT INTO sessions (session_id, expires_at, badge_no) VALUES (?, ?, ?)");
   $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
-  $stmt->bind_param("sss", $session_token, $expires_at_ts, $email);
+  $stmt->bind_param("sss", $session_token, $expires_at_ts, $badge_no);
   $stmt->execute();
   $stmt->close();
 }
@@ -152,11 +152,11 @@ function db_set_discord_id($badge_no, $discord_id, $discord_username) {
   $stmt->close();
 }
 
-function db_identity_exists($email) {
+function db_identity_exists($badge_no) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT 1 FROM oauth_identities WHERE email = ?");
-  $stmt->bind_param("s", $email);
+  $stmt = $mysqli->prepare("SELECT 1 FROM oauth_identities WHERE badge_no = ?");
+  $stmt->bind_param("s", $badge_no);
   $stmt->execute();
   $stmt->bind_result($exists);
   $stmt->fetch();
@@ -165,24 +165,11 @@ function db_identity_exists($email) {
   return $exists;
 }
 
-function db_member_exists($email) {
+function db_member_exists($badge_no) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT 1 FROM members WHERE email = ?");
-  $stmt->bind_param("s", $email);
-  $stmt->execute();
-  $stmt->bind_result($exists);
-  $stmt->fetch();
-  $stmt->close();
-
-  return $exists;
-}
-
-function db_validate_member_identity($email, $provider) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM members left join oauth_identities on oauth_identities.email = members.email and oauth_identities.provider = ? WHERE members.email = ? and oauth_identities.badge_no = members.badge_no");
-  $stmt->bind_param("ss", $provider, $email);
+  $stmt = $mysqli->prepare("SELECT 1 FROM members WHERE badge_no = ?");
+  $stmt->bind_param("s", $badge_no);
   $stmt->execute();
   $stmt->bind_result($exists);
   $stmt->fetch();

@@ -21,20 +21,23 @@ class ClydeService {
   // Eventually we want to pass a path here that is
   // passed by via the OAuth state and provides the redirect
   // to where the user really wants to go
-  function authorize_url($path = null) {
-    // Set the state in the auth request
+  function authorize_url() {
     $authUrl = $this->provider->getAuthorizationUrl();
-
-    // TODO: check $_SESSION
-    // $_SESSION['oauth2state'] = $provider->getState();
-    
-    // Redirect the browset to the auth URL
-    // header('Location: ' . $authUrl);
+    $_SESSION['oauth2state'] = $this->provider->getState();
     return $authUrl;
   }
 
   // From the call back
-  function access_token($code) {
+  function access_token($code, $state) {
+    if (empty($code)) {
+      throw new Exception('no-code');
+    }
+    if (empty($state) || ($state !== $_SESSION['oauth2state'])) {
+      if (isset($_SESSION['oauth2state'])) {
+        unset($_SESSION['oauth2state']);
+      }
+      throw new Exception('invalid-state');
+    }
     $this->token = $this->provider->getAccessToken('authorization_code', [
       'code' => $code
     ]);
