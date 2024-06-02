@@ -59,21 +59,25 @@ class ClydeService {
       // Teen Attending, Child Attending, Infant Attending, Apocryphal
       // Under 16 Day Tickets
 
-      $restricted = in_array(
+      $under_age = in_array(
         $registrant['product_list_name'], 
         [
-          "Teenager", "Children", "Infant", "Apocryphal",
+          "Teenager", "Children", "Infant",
           "Thu. <16", "Fri. <16", "Sat. <16", "Sun. <16", "Mon. <16", "WkEnd <16"
         ]
       );
 
-      if ($restricted) {
-        return false;
+      if ($under_age) {
+        return 1;
       };
 
-      return true;
+      if ($registrant['product_list_name'] == "Apocryphal") {
+        return 2;
+      }
+
+      return 0;
     } else {
-      return false;
+      return 3;
     }
   }
 }
