@@ -48,6 +48,7 @@ if (isset($_GET['error_code'])) {
         'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
         'apocraphyl' => 'Your membership indcates that you are nt human! If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
+        'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occured.';
 ?>
     <p class="error"><?php echo $error; ?></p>

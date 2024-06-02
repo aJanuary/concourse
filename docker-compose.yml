@@ -119,6 +119,9 @@ secrets:
     # client_secret =
     # ; The server endpoint of the clyde system (test is https://worldcon.staxotest.net)
     # server_endpoint =
+    # ; List of emails that are allowed to log into the portal.
+    # ; If not specified, then anyone can log in.
+    # allowlist[] =
     # 
     file: ./secrets/web_secrets.ini
 
