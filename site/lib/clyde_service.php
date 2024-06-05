@@ -52,33 +52,33 @@ class ClydeService {
   }
 
   function registrant_allowed_access($registrant) {
-    if ($registrant['attending_status'] != 'Not Attending') {
-      // Check as to whether the registrant is really attending ...
-      // which means looking at the 'product_list_name' as well.
-      // Exceptions are: 
-      // Teen Attending, Child Attending, Infant Attending, Apocryphal
-      // Under 16 Day Tickets
-
-      $under_age = in_array(
-        $registrant['product_list_name'], 
-        [
-          "Teenager", "Children", "Infant",
-          "Thu. <16", "Fri. <16", "Sat. <16", "Sun. <16", "Mon. <16", "WkEnd <16"
-        ]
-      );
-
-      if ($under_age) {
-        return 1;
-      };
-
-      if ($registrant['product_list_name'] == "Apocryphal") {
-        return 2;
-      }
-
-      return 0;
-    } else {
-      return 3;
+    if ($registrant['attending_status'] == 'Not Attending') {
+      return "no-access";
     }
+
+    // Check as to whether the registrant is really attending ...
+    // which means looking at the 'product_list_name' as well.
+    // Exceptions are:
+    // Teen Attending, Child Attending, Infant Attending, Apocryphal
+    // Under 16 Day Tickets
+
+    $under_age = in_array(
+      $registrant['product_list_name'],
+      [
+        "Teenager", "Children", "Infant",
+        "Thu. <16", "Fri. <16", "Sat. <16", "Sun. <16", "Mon. <16", "WkEnd <16"
+      ]
+    );
+
+    if ($under_age) {
+      return "under-age";
+    };
+
+    if ($registrant['product_list_name'] == "Apocryphal") {
+      return "apocryphal";
+    }
+
+    return null;
   }
 }
 

@@ -29,19 +29,9 @@ try {
 $registrant = $clyde->get_registrant();
 
 // 3. Check allowed access
-$access_code = registrant_allowed_access($registrant);
-if ($access_code > 0) {
-  switch ($access_code) {
-    case 1:
-      redirect_to_error('under-age');
-      break;
-    case 2:
-      redirect_to_error('apocraphyl');
-      break;
-    default:
-      redirect_to_error('no-access');
-      break;
-  }
+$access_code = $clyde->registrant_allowed_access($registrant);
+if ($access_code != null) {
+  redirect_to_error($access_code);
 }
 
 // and if acccess is alllowed create a session etc
