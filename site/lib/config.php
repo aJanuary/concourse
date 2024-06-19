@@ -3,7 +3,8 @@
 define('ROOT_URL', 'https://' . $_SERVER['HTTP_X_FORWARDED_HOST'] ?? _SERVER['HTTP_HOST']);
 define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
 define('CON_SHORT_NAME', 'Glasgow 2024');
-define('DISCORD_CHANNEL_ID', '1214240728184787013');
+define('DISCORD_INVITE_CHANNEL_ID', '1214240728184787013');
+define('DISCORD_API_CHANNEL_ID', '1248917066807775232');
 define("EMAIL", "info@eastercon2024.co.uk");
 define('TIMEZONE', 'Europe/London');
 

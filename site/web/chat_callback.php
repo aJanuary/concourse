@@ -61,7 +61,7 @@ if (!$discord_id || !$discord_username) {
 db_set_discord_id(get_current_user_badge_no(), $discord_id, $discord_username);
 
 // Create invite
-$invite_resp = api_call('https://discord.com/api/channels/' . DISCORD_CHANNEL_ID . '/invites', [
+$invite_resp = api_call('https://discord.com/api/channels/' . DISCORD_INVITE_CHANNEL_ID . '/invites', [
   'Authorization: Bot ' . DISCORD_BOT_TOKEN,
   'Content-Type: application/json'
 ], json_encode([
