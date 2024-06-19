@@ -16,17 +16,41 @@ h1, h2, h3, h4 {
   font-family: "Gruppo", display;
 }
 
-a {
+a, summary {
   color: #0170B9;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-a:hover {
+a:hover, summary:hover {
   color: #3a3a3a;
+}
+
+a:not([href]) {
+  color: #4B4F58;
+  text-decoration: none;
+  cursor: text;
+}
+
+summary {
+  float: left;
+}
+
+details {
+  display: inline-block;
+}
+
+details *:nth-child(2) {
+  clear: left;
 }
 
 p {
   line-height: 1.5;
-  margin-bottom: 1.6em;
+  margin-bottom: 0.5em;
+}
+
+p + h2, p + h3, p + h4 {
+  margin-top: 1em;
 }
 
 em {
@@ -142,12 +166,33 @@ main {
   display: grid;
   column-gap: 20px;
   row-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-auto-rows: 1fr;
+  grid-template-columns: 1fr;
+}
+
+@media only screen and (min-width: 475px) {
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media only screen and (min-width: 650px) {
+  .cards {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media only screen and (min-width: 950px) {
+  .cards {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 }
 
 .card {
-  display: block;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid [image-start][image-end title-start] [title-end subtitle-start] [subtitle-end description-start] [description-end];
+  grid-template-columns: subgrid;
+  row-gap: 0;
   padding: 0 20px;
   text-decoration: none;
   color: rgb(34, 34, 34);
@@ -164,12 +209,14 @@ main {
 }
 
 .card .hero {
+  grid-area: image;
   content: ' ';
   margin: 0 -20px 20px -20px;
   aspect-ratio: 1.5 / 1;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   background-size: cover;
+  background-image: url('/resources/unknown.png');
 }
 
 .card.time .hero {
@@ -179,6 +226,10 @@ main {
   justify-content: center;
   align-items: center;
   background-color: #EEE;
+}
+
+.card.time .hero {
+  background-image: none;
 }
 
 .card.readme .hero {
@@ -201,10 +252,6 @@ main {
   background-image: url('/resources/website.png');
 }
 
-.card.discord-mod .hero {
-  background-image: url('/resources/discord-mod.png');
-}
-
 .card.vote .hero {
   background-image: url('/resources/vote.jpg');
 }
@@ -213,27 +260,31 @@ main {
   background-image: url('/resources/partguide.png');
 }
 
-.card.souvenir .hero {
-  background-image: url('/resources/souvenir.png');
-}
-
-.card.newsletter .hero {
-  background-image: url('/resources/newsletter.png');
-}
-
-.card.donate .hero {
-  background-image: url('/resources/donate.jpg');
-}
-
 .card h3 {
+  grid-area: title;
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 24px;
 }
 
 .card h4 {
+  grid-area: subtitle;
   margin-bottom: 20px;
   font-size: 18px;
+}
+
+.card p {
+  grid-area: description;
+}
+
+.card-section {
+  margin-bottom: 3rem;
+}
+
+.card-section h2 {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.5em;
 }
 
 .other {
@@ -289,7 +340,6 @@ article ul {
 .button.disabled {
   background-color: #DDD;
   color: #999;
-  font-weight: bold;
   cursor: default;
 }
 
@@ -413,7 +463,11 @@ th {
 
 ol {
   list-style-type: decimal;
-  margin-left: 1rem;
+  margin: 0 0 1em 1em;
+}
+
+ol ol {
+  list-style-type: lower-latin;
 }
 
 ul#newsletter {
@@ -461,4 +515,37 @@ form.vertical label {
   display: flex;
   flex-direction: column;
   margin-bottom: 0.5em;
+}
+
+.login {
+  margin-bottom: 0.5em;
+}
+
+.wizard .content {
+  margin: 0 1em;
+}
+
+.wizard header {
+  padding-left: 2.5em;
+  background-repeat: no-repeat;
+  background-position: 0.3em 0.5em;
+  background-size: 2em;
+  line-height: 2;
+}
+
+.wizard header.active {
+  background-color: #DDD;
+  color: #202226;
+}
+
+.wizard header.pending, .wizard header.active {
+  background-image: url('/resources/step-pending.svg');
+}
+
+.wizard header.complete {
+  background-image: url('/resources/step-complete.svg');
+}
+
+.instructions img {
+  border: solid 1px #DDD;
 }
