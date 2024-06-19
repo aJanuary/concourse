@@ -602,6 +602,28 @@ function db_add_discord_post($item_id, $start, $duration, $room_id, $post_url) {
   return $mysqli->insert_id;
 }
 
+function db_upsert_discord_post($item_id, $start, $duration, $room_id, $post_url) {
+  global $mysqli;
+
+  if ($start) {
+    $date = new DateTime($start, new DateTimeZone(TIMEZONE));
+    $start_time = $date->getTimestamp();
+  } else {
+    $start_time = null;
+  }
+
+  if ($duration) {
+    $duration_secs = intval($duration) * 60;
+  } else {
+    $duration_secs = null;
+  }
+
+  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE start = VALUES(start), duration = VALUES(duration), room_id = VALUES(room_id), post_url = VALUES(post_url)");
+  $stmt->bind_param("siiss", $item_id, $start_time, $duration_secs, $room_id, $post_url);
+  $stmt->execute();
+  $stmt->close();
+}
+
 function db_delete_discord_post($item_id) {
   global $mysqli;
 
