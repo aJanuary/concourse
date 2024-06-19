@@ -18,6 +18,7 @@ define('RCE_TICKET_ID', $config_file['rce']['ticket_id']);
 define('DISCORD_BOT_TOKEN', $config_file['discord']['bot_token']);
 define('DISCORD_CLIENT_ID', $config_file['discord']['client_id']);
 define('DISCORD_CLIENT_SECRET', $config_file['discord']['client_secret']);
+define('API_KEYS', $config_file['api_keys']);
 
 define('CLYDE_CLIENT_ID', $config_file['clyde']['client_id']);
 define('CLYDE_CLIENT_SECRET', $config_file['clyde']['client_secret']);
