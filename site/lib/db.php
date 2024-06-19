@@ -347,6 +347,21 @@ function db_delete_role($role_id) {
   $stmt->close();
 }
 
+function db_get_default_permissions() {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default'");
+  $stmt->execute();
+  $stmt->bind_result($name);
+  $permissions = [];
+  while ($stmt->fetch()) {
+    $permissions[] = $name;
+  }
+  $stmt->close();
+
+  return $permissions;
+}
+
 function db_get_permissions_by_session($session_id) {
   global $mysqli;
 

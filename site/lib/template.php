@@ -36,11 +36,25 @@
 				  </div>
         </div>
         <?php
-          if (isset($_SESSION['username'])) {
+        if (isset($_REQUEST['username'])) {
         ?>
-          <p class="username"><?php echo $_SESSION['username']; ?> | <a href="/logout">Logout</a></p>
+          <p class="username">
+            <?php echo $_REQUEST['username']; ?>
+            |
+            <?php
+            if (is_anonymous()) {
+            ?>
+              <a href="<?php echo make_login_link(); ?>">Log in</a>
+            <?php
+            } else {
+            ?>
+              <a href="/logout">Log out</a>
+            <?php
+            }
+            ?>
+          </p>
         <?php
-          }
+        }
         ?>
       </div>
     </header>

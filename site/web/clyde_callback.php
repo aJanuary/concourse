@@ -14,7 +14,6 @@ function redirect_to_error($error_code) {
   exit;
 }
 
-session_start();
 $clyde = new ClydeService();
 
 // 1. Get the OAuth token

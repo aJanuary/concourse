@@ -10,9 +10,13 @@ if (is_logged_in()) {
   exit;
 }
 
-session_start();
-
 $error = null;
+
+if (isset($_GET['skip-login'])) {
+    make_anonymous_session();
+    header('Location: ' . $_GET['redirect']);
+    exit();
+}
 
 if (isset($_GET['email']) && isset($_GET['login_code'])) {
     $email = $_GET['email'];
@@ -45,8 +49,7 @@ if (isset($_GET['error_code'])) {
         'invalid-state' => 'An error occured while logging in with Glasgow Registration. Please try again.',
         'no-code' => 'Unable to log in with Glasgow Registration. Please try again and make sure you click the "Authorize" button after reviewing the permissions.',
         'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
-        'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
-        'apocraphyl' => 'Your membership indcates that you are nt human! If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
+        'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',        'apocraphyl' => 'Your membership indcates that you are nt human! If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occured.';
@@ -57,6 +60,7 @@ if (isset($_GET['error_code'])) {
 ?>
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
     <a href="<?php echo $clyde->authorize_url(); ?>" class="button">Login with Glasgow Registration</a>
+    <p><a href="/login?skip-login&redirect=<?php echo urlencode($_SESSION['oauth2redirect']); ?>">Continue without logging in</a></p>
 </article>
 
 <?php

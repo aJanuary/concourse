@@ -10,11 +10,17 @@ function check_permission($permission) {
 }
 
 if (!is_logged_in()) {
-  header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
-  exit;
+  if (is_anonymous()) {
+    $_REQUEST['username'] = 'Anonymous';
+    $_REQUEST['permissions'] = db_get_default_permissions();
+    return;
+  } else {
+    header('Location: ' . make_login_link());
+    exit;
+  }
 }
 
-$_SESSION['username'] = get_current_user_name();
+$_REQUEST['username'] = get_current_user_name();
 
 if (!isset($_COOKIE['session'])) {
   $permissions = [];
@@ -40,6 +46,6 @@ if (!isset($_COOKIE['session'])) {
   }
 }
 
-$_SESSION['permissions'] = $permissions;
+$_REQUEST['permissions'] = $permissions;
 
 ?>

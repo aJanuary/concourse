@@ -10,15 +10,35 @@ function make_session($badge_no) {
     setcookie("session", $session_id, $expires_at, '/', '', true, true);
 }
 
+function make_anonymous_session() {
+  $expires_at = time() + 60*60*24;
+  setcookie('session', 'anonymous', $expires_at, '/', '', true, true);
+}
+
 function is_logged_in() {
   if (!isset($_COOKIE['session'])) {
+    return false;
+  }
+  if ($_COOKIE['session'] == 'anonymous') {
     return false;
   }
   return db_session_exists($_COOKIE['session']);
 }
 
+function is_anonymous() {
+  $implicit = isset($_REQUEST['allow_implicit_anonymous']) && $_REQUEST['allow_implicit_anonymous'];
+  return (
+    (isset($_COOKIE['session']) && $_COOKIE['session'] == 'anonymous') ||
+    ($implicit && !isset($_COOKIE['session']))
+  );
+}
+
+function make_login_link() {
+  return '/login?redirect=' . urlencode($_SERVER['REQUEST_URI']);
+}
+
 function get_current_user_badge_no() {
-  if (!isset($_COOKIE['session'])) {
+  if (!isset($_COOKIE['session']) || $_COOKIE['session'] == 'anonymous') {
     return null;
   }
   return db_get_badge_no_by_session($_COOKIE['session']);
@@ -27,6 +47,9 @@ function get_current_user_badge_no() {
 function get_current_user_name() {
   if (!isset($_COOKIE['session'])) {
     return null;
+  }
+  if ($_COOKIE['session'] == 'anonymous') {
+    return 'Anonymous';
   }
   return db_get_user_name_by_session($_COOKIE['session']);
 }
@@ -93,7 +116,7 @@ function get_login_link_status($email, $login_code) {
 }
 
 function current_user_has_permission($permission) {
-  return in_array($permission, $_SESSION['permissions']);
+  return in_array($permission, $_REQUEST['permissions']);
 }
 
 ?>

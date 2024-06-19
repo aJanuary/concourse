@@ -40,6 +40,8 @@ function exception_handler(Throwable $exception) {
   exit();
 }
 
+session_start();
+
 set_exception_handler('exception_handler');
 
 ?>
