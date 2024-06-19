@@ -58,9 +58,21 @@ if (isset($_GET['error_code'])) {
 <?php
 }
 ?>
-    <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
-    <a href="<?php echo $clyde->authorize_url(); ?>" class="button">Login with Glasgow Registration</a>
+    <a href="<?php echo $clyde->authorize_url(); ?>" class="button login">Log in with Glasgow Registration</a>
     <p><a href="/login?skip-login&redirect=<?php echo urlencode($_SESSION['oauth2redirect']); ?>">Continue without logging in</a></p>
+    <p>Logging in to the members portal allows us to customise the experience to your membership and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
+    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.
+<?php
+    if (time() < strtotime("2024-08-13")) {
+?>
+    <h4>Not a member?</h4>
+    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">become a member</a>.</p>
+<?php
+    }
+?>
+    <h4>Problems</h4>
+    <p>Read the <a href="/login-instructions" target="_blank">instructions on how to log in</a>.</p>
+    <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
 </article>
 
 <?php
