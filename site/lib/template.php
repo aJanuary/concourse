@@ -28,7 +28,7 @@
       <div class="container">
         <div class="site-branding-container">
           <div class="site-logo">
-					  <a href="/" rel="home"><img width="36" height="36" data-src="https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-36x36.png" class="custom-logo lazyloaded" alt="Glasgow 2024" decoding="async" data-srcset="https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-36x36.png 36w, https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-300x300.png 300w, https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-150x150.png 150w, https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1.png 512w" data-sizes="(max-width: 36px) 100vw, 36px" src="https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-36x36.png" style="--smush-placeholder-width: 36px; --smush-placeholder-aspect-ratio: 36/36;" sizes="(max-width: 36px) 100vw, 36px" srcset="https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-36x36.png 36w, https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-300x300.png 300w, https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1-150x150.png 150w, https://glasgow2024.org/wp-content/uploads/2022/07/glasgow2024_logo-512sq-1.png 512w"></a>
+					  <a href="/" rel="home"><img width="36" height="36" src="/resources/logo.png"></a>
 				  </div>
           <div class="site-branding">
 						<h1><a href="/" rel="home"><?php echo CON_SHORT_NAME; ?></a></h1>
