@@ -18,13 +18,13 @@ if (!$code) {
     <p>It looks like you did not click "Authorize" to give us permission to access and store your Discord username.</p>
     <p>For safety reasons, we require this to be able to associate your membership with your Discord account.</p>
     <p>Please go back to the <a href="/chat">chat page</a> and try again.</p>
-    <p>If you think you are seeing this page in error, please contact <a href="mailto:<?php echo EMAIL; ?>?subject=Problem with member portal&body=Problem: Access denied in chat_callback.php"><?php echo EMAIL; ?></a>.</p>
+    <p>If you think you are seeing this page in error, please contact <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Problem with member portal&body=Problem: Access denied in chat_callback.php"><?php echo SUPPORT_EMAIL; ?></a>.</p>
   </article>
 <?php
     render_footer();
     exit();
   } else {
-    die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . EMAIL . "?subject=Problem with member portal&body=Problem: No code in chat_callback.php\">". EMAIL . "</a>");
+    die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . SUPPORT_EMAIL . "?subject=Problem with member portal&body=Problem: No code in chat_callback.php\">". SUPPORT_EMAIL . "</a>");
   }
 }
 
@@ -42,7 +42,7 @@ $token_resp = api_call('https://discord.com/api/oauth2/token', [
 $access_token = $token_resp['access_token'];
 if (!$access_token) {
   error_log("Missing access_token for " . get_current_user_badge_no() . ": " . print_r($token_resp, true));
-  die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . EMAIL . "?subject=Problem with member portal&body=Problem: No access token in chat_callback.php\">". EMAIL . "</a>");
+  die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . SUPPORT_EMAIL . "?subject=Problem with member portal&body=Problem: No access token in chat_callback.php\">". SUPPORT_EMAIL . "</a>");
 }
 
 // Store username
@@ -55,7 +55,7 @@ $discord_username = $me_resp['username'];
 
 if (!$discord_id || !$discord_username) {
   error_log("Missing discord_id or discord_username for " . get_current_user_badge_no() . ": " . print_r($me_resp, true));
-  die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . EMAIL . "?subject=Problem with member portal&body=Problem: No Discord ID or username in chat_callback.php\">". EMAIL . "</a>");
+  die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . SUPPORT_EMAIL . "?subject=Problem with member portal&body=Problem: No Discord ID or username in chat_callback.php\">". SUPPORT_EMAIL . "</a>");
 }
 
 db_set_discord_id(get_current_user_badge_no(), $discord_id, $discord_username);
@@ -73,7 +73,7 @@ $invite_code = $invite_resp['code'];
 
 if (!$invite_code) {
   error_log("Missing invite_code for " . get_current_user_badge_no() . ": " . print_r($invite_resp, true));
-  die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . EMAIL . "?subject=Problem with member portal&body=Problem: No invite code in chat_callback.php\">". EMAIL . "</a>");
+  die("Sorry, something went wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . SUPPORT_EMAIL . "?subject=Problem with member portal&body=Problem: No invite code in chat_callback.php\">". SUPPORT_EMAIL . "</a>");
 }
 
 header('Location: https://discord.gg/' . $invite_code);

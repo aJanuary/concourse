@@ -54,7 +54,7 @@ render_header();
   <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
 
   <h4>Problems</h4>
-  <p>If you have any problems, email <a href="mailto:info@eastercon2024.co.uk">info@eastercon2024.co.uk</a> from the e-mail you signed up with and include your discord username, if you know it.</p>
+  <p>If you have any problems, email <a href="mailto:<?php echo SUPPORT_EMAIL; ?>"><?php echo SUPPORT_EMAIL; ?></a> from the e-mail you signed up with and include your discord username, if you know it.</p>
 
   <h4>How to join the Discord Server</h4>
   <ol>

@@ -5,7 +5,7 @@ define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
 define('CON_SHORT_NAME', 'Glasgow 2024');
 define('DISCORD_INVITE_CHANNEL_ID', '1214240728184787013');
 define('DISCORD_API_CHANNEL_ID', '1248917066807775232');
-define("EMAIL", "info@eastercon2024.co.uk");
+define("SUPPORT_EMAIL", "online-support@glasgow2024.org");
 define('TIMEZONE', 'Europe/London');
 
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
@@ -37,7 +37,7 @@ function log_exception(Throwable $exception) {
 
 function exception_handler(Throwable $exception) {
   $err_code = log_exception($exception);
-  echo "Sorry, something has gone wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . EMAIL . "?subject=Problem with member portal&body=Code: $err_code%0D%0A%0D%0AProblem:%0D%0A\">" . EMAIL . "</a> quoting the code \"$err_code\"\n";
+  echo "Sorry, something has gone wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . SUPPORT_EMAIL . "?subject=Problem with member portal&body=Code: $err_code%0D%0A%0D%0AProblem:%0D%0A\">" . SUPPORT_EMAIL . "</a> quoting the code \"$err_code\"\n";
   exit();
 }
 
