@@ -12,12 +12,12 @@ done
 
 # Setup and install vendor libs
 cd /srv/lib
-composer update
+composer install
 
 # Setup and run migrations
 cd /var/php-migrations
 # ensure phinx etc is installed
-composer update
+composer install
 
 # run the migrations
 # NOTE: RUNTIME_ENV is set to developmen or production ...

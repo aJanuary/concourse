@@ -64,6 +64,10 @@ Requirements:
 5. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
    phpMyAdmin.
 
+### Updating dependencies
+1. Add the dependency to `site/lib/composer.json`
+2. Run `docker exec web bash -c 'cd /srv/lib; composer update'`
+
 ### Database changes
 1. All migrations use phinx for database changes. The migrations are in the folder
    `sites/php-migrations`
