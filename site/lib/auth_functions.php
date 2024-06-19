@@ -104,8 +104,8 @@ function create_member($badge_no, $email, $name) {
   db_create_member($badge_no, $name, $email, $magic_link);
 }
 
-function get_login_link_status($email, $login_code) {
-  $expires = db_get_login_link_expiry($email, $login_code);
+function get_login_link_status($badge_no, $login_code) {
+  $expires = db_get_login_link_expiry($badge_no, $login_code);
   if ($expires == null) {
     return "no-found";
   }

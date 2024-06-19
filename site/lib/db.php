@@ -188,11 +188,11 @@ function db_insert_login_link($email, $login_code, $expires_at) {
   $stmt->close();
 }
 
-function db_get_login_link_expiry($email, $login_code) {
+function db_get_login_link_expiry($badge_no, $login_code) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = (SELECT badge_no FROM members WHERE email = ?)");
-  $stmt->bind_param("ss", $login_code, $email);
+  $stmt = $mysqli->prepare("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = ?");
+  $stmt->bind_param("ss", $login_code, $badge_no);
   $stmt->execute();
   $stmt->bind_result($expires_at);
   if (!$stmt->fetch()) {
@@ -307,7 +307,7 @@ function db_get_role_permissions($role_id) {
     $permissions[] = ['permission_id' => $permission_id, 'name' => $name, 'has_permission' => $has_permission];
   }
   $stmt->close();
-  
+
   return $permissions;
 }
 

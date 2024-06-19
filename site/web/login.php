@@ -18,13 +18,13 @@ if (isset($_GET['skip-login'])) {
     exit();
 }
 
-if (isset($_GET['email']) && isset($_GET['login_code'])) {
-    $email = $_GET['email'];
+if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
+    $badge_no = $_GET['badge_no'];
     $login_code = $_GET['login_code'];
 
-    $link_status = get_login_link_status($email, $login_code);
+    $link_status = get_login_link_status($badge_no, $login_code);
     if ($link_status === "ok") {
-        make_session($email);
+        make_session($badge_no);
         header('Location: /');
         exit();
     } else if ($link_status === "expired") {
