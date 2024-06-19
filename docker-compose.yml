@@ -102,8 +102,13 @@ secrets:
     # ; This comes from the Discord Developer Portal.
     # client_secret =
     #
+    # ; The shared secrets to use for the apis. The keys are the name of the
+    # ; client, and the value is the shared secret. This should be a random
+    # ; string.
+    # [api_keys]
+    #
     # [rce]
-    # 
+    #
     # ; The API key for the RingCentral Events API.
     # ; This comes from RingCentral.
     # api_key =
@@ -111,7 +116,7 @@ secrets:
     # ; The id of the ticket to generate magic links for.
     # ; This comes from the RingCentral event config.
     # ticket_id =
-    # 
+    #
     # [clyde]
     # ; The if of the clyde client
     # client_id =
@@ -122,7 +127,7 @@ secrets:
     # ; List of emails that are allowed to log into the portal.
     # ; If not specified, then anyone can log in.
     # allowlist[] =
-    # 
+    #
     file: ./secrets/web_secrets.ini
 
 networks:
