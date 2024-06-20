@@ -8,7 +8,7 @@ check_permission('manage-roles');
 
 function render_form_body($role_id = 1) {
 ?>
-    <select id="role_id" name="role_id" hx-get="/admin/roles" hx-trigger="change" hx-push-url="true" hx-target="closest form">
+    <label>Role: <select id="role_id" name="role_id" hx-get="/admin/roles" hx-trigger="change" hx-push-url="true" hx-target="closest form">
 <?php
       $roles = db_get_roles();
       foreach ($roles as $role) {
@@ -18,9 +18,10 @@ function render_form_body($role_id = 1) {
 <?php
       }
 ?>
-    </select>
+    </select></label>
     <a href="#" hx-on:click="addRole(event)">New role...</a>
     <fieldset id="permissions">
+      <legend>Permissions</legend>
 <?php
     $permissions = db_get_role_permissions($role_id);
     foreach ($permissions as $permission) {
@@ -63,18 +64,20 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
   exit;
 }
 
-  render_header();
+  render_header("Manage roles.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>
 
 <article>
-  <h3>Manage roles</h3>  
+  <h2>Manage roles</h2>
   <form id="roles-form" autocomplete="off">
 <?php
     render_form_body($_GET['role_id'] ?? 1);
 ?>
   </form>
+  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
   <script>
     function addRole(e) {
       e.preventDefault();

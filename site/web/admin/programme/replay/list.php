@@ -8,13 +8,13 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header();
+render_header("Manage RCE replays.");
 ?>
   
   <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
   
   <article>
-    <h3>Manage RCE replays</h3>  
+    <h2>Manage RCE replays</h2>
     <ul>
       <li><a href="/admin/programme/replay/edit">Add replay...</a></li>
 <?php

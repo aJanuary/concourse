@@ -12,7 +12,7 @@ $item_id = $_GET['item_id'];
 $replay = db_get_replay($item_id);
 
 if (!$replay['replay_url']) {
-  render_header();
+  render_header("Replay not available.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 

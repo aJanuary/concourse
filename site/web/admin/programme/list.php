@@ -8,13 +8,13 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
 
-render_header();
+render_header("Manage programme.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>
 
 <article>
-  <h3>Manage programme</h3>
+  <h2>Manage programme</h2>
   <ul>
     <li><a href="/admin/programme/replay/list">Manage RCE replays</a></li>
     <li><a href="/admin/programme/zoom/edit">Manage Zoom link</a></li>

@@ -44,7 +44,7 @@ if (array_key_exists('item_id', $_GET)) {
   $session = db_get_prog_session($item_id);
 }
 
-render_header();
+render_header("Manage RCE sessions.");
 ?>
   
   <a href="/admin/programme/sessions/list" class="back">&lt; Back to List RCE sessions</a>
@@ -53,16 +53,17 @@ render_header();
 <?php
 if (array_key_exists('item_id', $_GET)) {
 ?>
-    <h3>Edit <?php echo $item_id; ?></h3>
+    <h2>Edit <?php echo $item_id; ?></h2>
 <?php
 } else {
 ?>
-    <h3>Add session</h3>
+    <h2>Add session</h2>
 <?php
 }
 ?>
     <form action="/admin/programme/sessions/edit" method="POST" class="vertical">
       <fieldset>
+        <legend>Session details</legend>
       <?php
 if (array_key_exists('item_id', $_GET)) {
 ?>

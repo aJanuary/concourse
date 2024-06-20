@@ -3,7 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header();
+render_header("The Member Portal for Glasgow 2024, A Worldcon for Our Futures.");
 
 $cards = [
   [
@@ -18,21 +18,21 @@ $cards = [
     'title' => 'Programme guide',
     'subtitle' => 'ConClár',
     'description' => 'See what\'s on where and when. Bookmark items to make sure you don\'t miss them.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Programme+guide',
     'card-permission' => 'see-guide',
   ], [
     'name' => 'maps',
     'title' => 'Maps',
     'subtitle' => '',
     'description' => 'Find your way around the convention venues.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Maps',
     'card-permission' => 'see-maps',
   ], [
     'name' => 'readme',
     'title' => 'Pocket guide',
     'subtitle' => 'Readme',
     'description' => 'Find out all the key information you need to know for ' . CON_SHORT_NAME . '.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?paghe=Pocket+guide',
     'card-permission' => 'see-readme',
   ], [
     'name' => 'stream',
@@ -53,27 +53,27 @@ $cards = [
     'title' => 'Sign-ups',
     'subtitle' => '',
     'description' => 'Sign up for workshops, table talks and more.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Sign-ups',
     'card-permission' => 'see-signups',
   ], [
     'name' => 'newsletter',
     'title' => 'Newsletter',
     'subtitle' => 'Get the latest news.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Newsletter',
     'card-permission' => 'see-help',
   ], [
     'name' => 'volunteer',
     'title' => 'Volunteer',
     'subtitle' => '',
     'description' => 'Find out how you can help out at ' . CON_NAME . '.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Volunteer',
     'card-permission' => 'see-website',
   ], [
     'name' => 'gallery',
     'title' => 'Artist&apos;s alley',
     'subtitle' => '',
     'description' => 'View a gallary of our exhibitor\'s art.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Artist%27s+alley',
     'card-permission' => 'see-gallery',
   ], [
     'name' => 'hugos',
@@ -87,14 +87,14 @@ $cards = [
     'title' => 'Site selection',
     'subtitle' => 'Voting',
     'description' => 'Vote in the site selection for the 2026 World Science Fiction Convention.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Site+selection',
     'card-permission' => 'see-site-selection',
   ], [
     'name' => 'itinerary',
     'title' => 'Your participant schedule',
     'subtitle' => 'Planorama',
     'description' => 'Find the time and room for the programme items you are on. Get links to join remotely if you are participating online.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Your+participant+schedule',
     'card-permission' => 'see-itinerary',
     'link-permission' => 'see-itinerary-other',
   ], [
@@ -110,7 +110,7 @@ $cards = [
     'title' => 'Get help',
     'subtitle' => 'Info desk, help desks and contacts',
     'description' => 'If you have a problem or question, you can reach out to us in-person, or online through Discord and e-mail.',
-    'link' => '/under-construction',
+    'link' => '/under-construction?page=Get+help',
     'card-permission' => 'see-help',
   ], [
     'name' => 'website',
@@ -150,12 +150,18 @@ $cards = [
 foreach ($cards as $card) {
   if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
 ?>
-  <a href="<?php echo $card['link']; ?>" class="card <?php echo $card['name']; ?>">
+  <div class="card <?php echo $card['name']; ?>">
     <div class="hero"></div>
-    <h3><?php echo $card['title']; ?></h3>
-    <h4><?php echo $card['subtitle']; ?></h4>
+    <h2><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h2>
+    <?php
+    if ($card['subtitle']) {
+    ?>
+    <h3><?php echo $card['subtitle']; ?></h3>
+    <?php
+    }
+    ?>
     <p><?php echo $card['description']; ?></p>
-  </a>
+  </div>
 <?php
   }
 }

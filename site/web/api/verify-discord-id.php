@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 
-render_header();
+render_header("Verify Discord ID.");
 
 $token = $_GET['token'];
 if (!$token) {

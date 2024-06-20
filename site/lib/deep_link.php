@@ -10,7 +10,7 @@ function render_rce_wizard($url) {
     exit;
   }
 
-  render_header();
+  render_header("Link to an item in the Glasgoe 2024 RingCentral Events event.");
 
   $clyde = new ClydeService();
   $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];

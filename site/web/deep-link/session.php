@@ -12,7 +12,7 @@ $item_id = $_GET['item_id'];
 $session = db_get_prog_session($item_id);
 
 if (!$session['rce_url']) {
-  render_header();
+  render_header("Unknown item.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 

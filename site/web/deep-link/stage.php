@@ -12,7 +12,7 @@ $room_id = $_GET['room_id'];
 $stage = db_get_stage($room_id);
 
 if (!$stage['viewer_url']) {
-  render_header();
+  render_header("Unknown item.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 

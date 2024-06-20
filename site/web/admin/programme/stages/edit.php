@@ -46,7 +46,7 @@ if (array_key_exists('room_id', $_GET)) {
   $stage = db_get_stage($room_id);
 }
 
-render_header();
+render_header("Manage RCE stages.");
 ?>
   
   <a href="/admin/programme/stages/list" class="back">&lt; Back to List RCE stages</a>
@@ -55,16 +55,17 @@ render_header();
 <?php
 if (array_key_exists('room_id', $_GET)) {
 ?>
-    <h3>Edit <?php echo $room_id; ?></h3>
+    <h2>Edit <?php echo $room_id; ?></h2>
 <?php
 } else {
 ?>
-    <h3>Add stage</h3>
+    <h2>Add stage</h2>
 <?php
 }
 ?>
     <form action="/admin/programme/stages/edit" method="POST" class="vertical">
       <fieldset>
+        <legend>Stage details</legend>
       <?php
 if (array_key_exists('room_id', $_GET)) {
 ?>

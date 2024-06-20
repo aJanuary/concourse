@@ -6,13 +6,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 $usernames = db_get_discord_usernames($_COOKIE['session']);
 
-render_header();
+render_header("Join the Discord server for Glasgow 2024, A Worldcon for Our Futures.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>
 
 <article>
-  <h3>Online Chat</h3>
+  <h2>Online Chat</h2>
   <p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
 <?php
   if (empty($usernames)) {
@@ -53,7 +53,7 @@ render_header();
 ?>
   <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
 
-  <h4>Problems</h4>
+  <h3>Problems</h3>
   <p>Read the <a href="/discord-instructions" target="_blank">instructions on how to join the Discord server</a>.</p>
   <p>If you have any problems, email <a href="mailto:<?php echo SUPPORT_EMAIL; ?>"><?php echo SUPPORT_EMAIL; ?></a> from the e-mail you signed up with and include your discord username, if you know it.</p>
   <p>You can read through our <a href="https://www.google.co.uk">Guide to using Discord</a> for more information on how to use Discord.</p>

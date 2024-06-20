@@ -44,7 +44,7 @@ if (array_key_exists('item_id', $_GET)) {
   $replay = db_get_replay($item_id);
 }
 
-render_header();
+render_header("Manage RCE replays.");
 ?>
   
   <a href="/admin/programme/replay/list" class="back">&lt; Back to List RCE replay links</a>
@@ -53,16 +53,17 @@ render_header();
 <?php
 if (array_key_exists('item_id', $_GET)) {
 ?>
-    <h3>Edit <?php echo $item_id; ?></h3>
+    <h2>Edit <?php echo $item_id; ?></h2>
 <?php
 } else {
 ?>
-    <h3>Add replay</h3>
+    <h2>Add replay</h2>
 <?php
 }
 ?>
     <form action="/admin/programme/replay/edit" method="POST" class="vertical">
       <fieldset>
+        <legend>Replay details</legend>
       <?php
 if (array_key_exists('item_id', $_GET)) {
 ?>

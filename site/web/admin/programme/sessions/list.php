@@ -8,13 +8,13 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header();
+render_header("Manage RCE sessions.");
 ?>
   
   <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
   
   <article>
-    <h3>Manage RCE sessions</h3>  
+    <h2>Manage RCE sessions</h2>
     <ul>
       <li><a href="/admin/programme/sessions/edit">Add session...</a></li>
 <?php

@@ -29,7 +29,7 @@ if (array_key_exists('item_id', $_GET)) {
 }
 
 if (is_anonymous()) {
-  render_header();
+  render_header("Log in to participate.");
 ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -44,7 +44,7 @@ if (is_anonymous()) {
 }
 
 if (!$participant_url) {
-  render_header();
+  render_header("Unknown item.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 

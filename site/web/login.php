@@ -37,12 +37,12 @@ if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
 $clyde = new ClydeService();
 $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
 
-render_header();
+render_header("Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.");
 
 ?>
 
 <article>
-    <h3>Log in</h3>
+    <h2>Log in</h2>
 <?php
 if (isset($_GET['error_code'])) {
     $error = [
@@ -65,12 +65,12 @@ if (isset($_GET['error_code'])) {
 <?php
     if (time() < strtotime("2024-08-13")) {
 ?>
-    <h4>Not a member?</h4>
+    <h3>Not a member?</h3>
     <p>If you&apos;re not yet a member of the convention, you can still <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">become a member</a>.</p>
 <?php
     }
 ?>
-    <h4>Problems</h4>
+    <h3>Problems</h3>
     <p>Read the <a href="/login-instructions" target="_blank">instructions on how to log in</a>.</p>
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
 </article>

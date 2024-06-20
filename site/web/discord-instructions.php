@@ -4,13 +4,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header();
+render_header("Instructions on how to join the Glasgow 2024 Discord server.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>
 
 <article>
-  <h3>How to join the Discord Server</h3>
+  <h2>How to join the Discord Server</h2>
   <ol class="instructions">
     <li>
       <p>Click the <kbd>Join the Discord Server</kbd> button. This will open a new tab.</p>

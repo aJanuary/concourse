@@ -12,8 +12,20 @@ body {
   display: none;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, .site-branding p {
   font-family: "Gruppo", display;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 1.875rem;
+}
+
+h4 {
+  font-size: 1.5rem;
 }
 
 a, summary {
@@ -66,6 +78,8 @@ kbd:after  { content: close-quote; }
 
 img {
   max-width: 100%;
+  width: auto;
+  height: auto;
 }
 
 header {
@@ -116,6 +130,8 @@ footer a, footer a:hover {
   align-items: center;
   text-align: left;
   flex-shrink: 0;
+  color: black;
+  text-decoration: none;
 }
 
 .site-logo {
@@ -188,18 +204,30 @@ main {
 }
 
 .card {
+  position: relative;
   display: grid;
   grid-row: span 4;
   grid-template-rows: subgrid [image-start][image-end title-start] [title-end subtitle-start] [subtitle-end description-start] [description-end];
   grid-template-columns: subgrid;
   row-gap: 0;
   padding: 0 20px;
-  text-decoration: none;
-  color: rgb(34, 34, 34);
   border-radius: 10px;
   box-shadow: hsla(0, 0%, 39%, 0.2) 0px 2px 8px 0px;
   transition: all 0.2s ease-in;
   font-weight: normal;
+}
+
+.card h2 a {
+  color: rgb(34, 34, 34);
+  text-decoration: none;
+}
+
+.card h2 a::before {
+  content: ' ';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 10px;
 }
 
 .card:hover {
@@ -260,14 +288,14 @@ main {
   background-image: url('/resources/partguide.png');
 }
 
-.card h3 {
+.card h2 {
   grid-area: title;
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 24px;
 }
 
-.card h4 {
+.card h3 {
   grid-area: subtitle;
   margin-bottom: 20px;
   font-size: 18px;
@@ -298,6 +326,7 @@ main {
 
 .other li {
   font-size: 1.2rem;
+  line-height: 1.5;
 }
 
 article {
@@ -379,12 +408,12 @@ form input[type='submit'] {
 
 form input[type='button'] {
   background-color: #d0d6d3;
-  color: #087232;
+  color: #04421d;
 }
 
 form input[type='submit']:hover {
   background-color: #f3e600;
-  color: #087232;
+  color: #04421d;
 }
 
 form input[type='button']:hover {
@@ -403,6 +432,10 @@ form input[type='input']:disabled:hover {
   background-repeat: no-repeat;
   background-position: center right 10px;
   padding-right: 38px;
+}
+
+legend {
+  display: none;
 }
 
 .filled-in-field {
