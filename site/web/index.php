@@ -3,7 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header("The Member Portal for Glasgow 2024, A Worldcon for Our Futures.");
+render_header("The Member Portal for Glasgow 2024, A Worldcon for Our Futures.", true);
 
 $cards = [
   [
@@ -35,6 +35,19 @@ $cards = [
     'link' => '/under-construction?paghe=Pocket+guide',
     'card-permission' => 'see-readme',
   ], [
+    'name' => 'newsletter',
+    'title' => 'Newsletter',
+    'subtitle' => '',
+    'link' => '/under-construction?page=Newsletter',
+    'card-permission' => 'see-help',
+  ], [
+    'name' => 'signups',
+    'title' => 'Sign-ups',
+    'subtitle' => '',
+    'description' => 'Sign up for workshops, table talks and more.',
+    'link' => '/under-construction?page=Sign-ups',
+    'card-permission' => 'see-signups',
+  ], [
     'name' => 'stream',
     'title' => 'Stream and replay',
     'subtitle' => 'RingCentral Events',
@@ -48,19 +61,6 @@ $cards = [
     'description' => 'Chat with other members online in Discord. Talk about panel items, your fannish interests, and catch up with friends.',
     'link' => '/chat',
     'card-permission' => 'see-discord',
-  ], [
-    'name' => 'signups',
-    'title' => 'Sign-ups',
-    'subtitle' => '',
-    'description' => 'Sign up for workshops, table talks and more.',
-    'link' => '/under-construction?page=Sign-ups',
-    'card-permission' => 'see-signups',
-  ], [
-    'name' => 'newsletter',
-    'title' => 'Newsletter',
-    'subtitle' => 'Get the latest news.',
-    'link' => '/under-construction?page=Newsletter',
-    'card-permission' => 'see-help',
   ], [
     'name' => 'volunteer',
     'title' => 'Volunteer',
@@ -152,15 +152,16 @@ foreach ($cards as $card) {
 ?>
   <div class="card <?php echo $card['name']; ?>">
     <div class="hero"></div>
-    <h2><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h2>
-    <?php
-    if ($card['subtitle']) {
-    ?>
-    <h3><?php echo $card['subtitle']; ?></h3>
-    <?php
-    }
-    ?>
-    <p><?php echo $card['description']; ?></p>
+    <hgroup>
+      <h2><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h2>
+      <?php
+      if ($card['subtitle']) {
+      ?>
+      <h3><?php echo $card['subtitle']; ?></h3>
+      <?php
+      }
+      ?>
+    </hgroup>
   </div>
 <?php
   }

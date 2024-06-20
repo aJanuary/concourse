@@ -6,7 +6,7 @@
     return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
   }
 
-  function render_header($description) {
+  function render_header($description, $is_home = false) {
 ?>
 <!doctype html>
 <html lang="en">
@@ -80,7 +80,7 @@
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/reset.css"); ?>">
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/style.css"); ?>">
   </head>
-  <body>
+  <body <?php echo $is_home ? 'class="home"' : ''; ?>>
     <header>
       <div class="container">
         <a href="/" class="site-branding-container" rel="home">

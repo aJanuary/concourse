@@ -8,6 +8,22 @@ body {
   color: #4B4F58;
 }
 
+body.home {
+  background-image: url('/resources/background.webp');
+  background-size: cover;
+  background-position: bottom right;
+}
+
+@media (prefers-contrast: more) {
+  body {
+    color: black;
+  }
+
+  body.home {
+    background-image: none;
+  }
+}
+
 [data-loading] {
   display: none;
 }
@@ -83,7 +99,9 @@ img {
 }
 
 header {
-  background-color: #eee;
+  background-color: #eeeeeebf;
+  backdrop-filter: blur(10px);
+  border-bottom: solid 1px #fff5;
 }
 
 footer {
@@ -182,41 +200,24 @@ main {
   display: grid;
   column-gap: 20px;
   row-gap: 20px;
-  grid-template-columns: 1fr;
-}
-
-@media only screen and (min-width: 475px) {
-  .cards {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media only screen and (min-width: 650px) {
-  .cards {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-@media only screen and (min-width: 950px) {
-  .cards {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  grid-auto-rows: auto 1fr;
+  text-align: center;
 }
 
 .card {
   position: relative;
   display: grid;
-  grid-row: span 4;
-  grid-template-rows: subgrid [image-start][image-end title-start] [title-end subtitle-start] [subtitle-end description-start] [description-end];
+  grid-row: span 2;
+  grid-template-rows: subgrid [image-start][image-end title-start] [title-end];
   grid-template-columns: subgrid;
   row-gap: 0;
   padding: 0 20px;
   border-radius: 10px;
   box-shadow: hsla(0, 0%, 39%, 0.2) 0px 2px 8px 0px;
-  transition: all 0.2s ease-in;
+  transition: all 0.1s ease-in;
   font-weight: normal;
 }
-
 .card h2 a {
   color: rgb(34, 34, 34);
   text-decoration: none;
@@ -230,79 +231,233 @@ main {
   border-radius: 10px;
 }
 
-.card:hover {
+.card:hover, .card:focus-within {
   background-color: rgb(245, 245, 245);
-  box-shadow: hsla(0, 0%, 39%, 0.3) 0px 4px 8px 0px;
-  color: rgb(34, 34, 34);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  transform: scale(1.02, 1.02);
+  outline: solid 4px #0170B988;
+}
+
+@media (prefers-reduced-motion) {
+  .card:hover, .card:focus-within {
+    transition: none;
+    transform: none;
+    outline: solid 4px #0170B988;
+  }
 }
 
 .card .hero {
+  position: relative;
   grid-area: image;
-  content: ' ';
-  margin: 0 -20px 20px -20px;
+  margin: 0 -20px 5px -20px;
   aspect-ratio: 1.5 / 1;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  background-size: cover;
-  background-image: url('/resources/unknown.png');
 }
 
+.card.time {
+  background-color: var(--info-color-light);
+}
 .card.time .hero {
-  font-size: 4em;
-  color: #444;
+  font-size: 3em;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #EEE;
+  background-color: var(--info-color);
 }
 
-.card.time .hero {
+.card.time .hero::after {
   background-image: none;
 }
 
+.card .hero::after {
+  content: ' ';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('/resources/unknown.png');
+}
+
+:root {
+  --info-color: #1b80bd;
+  --info-color-light: #f0feff;
+  --prog-color: #056940;
+  --prog-color-light: #ecfaf5;
+  --part-color: #323884;
+  --part-color-light: #f2f4ff;
+  --events-color: #8bab68;
+  --events-color-light: #fffeed;
+}
+
+.card.readme {
+  background-color: var(--info-color-light);
+}
 .card.readme .hero {
-  background-image: url('/resources/readme.jpg');
+  background-color: var(--info-color);
+}
+.card.readme .hero::after {
+  background-image: url('/resources/readme.svg');
 }
 
+.card.guide {
+  background-color: var(--prog-color-light);
+}
 .card.guide .hero {
-  background-image: url('/resources/guide.jpg');
+  background-color: var(--prog-color);
+}
+.card.guide .hero::after {
+  background-image: url('/resources/guide.svg');
 }
 
+.card.maps {
+  background-color: var(--info-color-light);
+}
+.card.maps .hero {
+  background-color: var(--info-color);
+}
+.card.maps .hero::after {
+  background-image: url('/resources/maps.svg');
+}
+
+.card.stream {
+  background-color: var(--prog-color-light);
+}
 .card.stream .hero {
-  background-image: url('/resources/stream.png');
+  background-color: var(--prog-color);
+}
+.card.stream .hero::after {
+  background-image: url('/resources/stream.svg');
 }
 
+.card.chat {
+  background-color: var(--prog-color-light);
+}
 .card.chat .hero {
-  background-image: url('/resources/chat.png');
+  background-color: var(--prog-color);
+}
+.card.chat .hero::after {
+  background-image: url('/resources/chat.svg');
 }
 
+.card.signups {
+  background-color: var(--prog-color-light);
+}
+.card.signups .hero {
+  background-color: var(--prog-color);
+}
+.card.signups .hero::after {
+  background-image: url('/resources/signups.svg');
+}
+
+.card.newsletter {
+  background-color: var(--info-color-light);
+}
+.card.newsletter .hero {
+  background-color: var(--info-color);
+}
+.card.newsletter .hero::after {
+  background-image: url('/resources/newsletter.svg');
+}
+
+.card.volunteer {
+  background-color: var(--part-color-light);
+}
+.card.volunteer .hero {
+  background-color: var(--part-color);
+}
+.card.volunteer .hero::after {
+  background-image: url('/resources/volunteer.svg');
+}
+
+.card.gallery {
+  background-color: var(--events-color-light);
+}
+.card.gallery .hero {
+  background-color: var(--events-color);
+}
+.card.gallery .hero::after {
+  background-image: url('/resources/gallery.svg');
+}
+
+.card.hugos {
+  background-color: var(--events-color-light);
+}
+.card.hugos .hero {
+  background-color: var(--events-color);
+}
+.card.hugos .hero::after {
+  background-image: url('/resources/hugos.svg');
+}
+
+.card.site-selection {
+  background-color: var(--events-color-light);
+}
+.card.site-selection .hero {
+  background-color: var(--events-color);
+}
+.card.site-selection .hero::after {
+  background-image: url('/resources/site-selection.svg');
+}
+
+.card.card.itinerary {
+  background-color: var(--part-color-light);
+}
+.card.itinerary .hero {
+  background-color: var(--part-color);
+}
+.card.itinerary .hero::after {
+  background-image: url('/resources/itinerary.svg');
+}
+
+.card.childcare {
+  background-color: var(--info-color-light);
+}
+.card.childcare .hero {
+  background-color: var(--info-color);
+}
+.card.childcare .hero::after {
+  background-image: url('/resources/childcare.svg');
+}
+
+.card.help {
+  background-color: var(--info-color-light);
+}
+.card.help .hero {
+  background-color: var(--info-color);
+}
+.card.help .hero::after {
+  background-image: url('/resources/help.svg');
+}
+
+.card.website {
+  background-color: var(--info-color-light);
+}
 .card.website .hero {
-  background-image: url('/resources/website.png');
+  background-color: var(--info-color);
+}
+.card.website .hero::after {
+  background-image: url('/resources/website.svg');
 }
 
-.card.vote .hero {
-  background-image: url('/resources/vote.jpg');
-}
-
-.card.partguide .hero {
-  background-image: url('/resources/partguide.png');
+.card hgroup {
+  grid-area: title;
 }
 
 .card h2 {
-  grid-area: title;
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 24px;
 }
 
 .card h3 {
-  grid-area: subtitle;
-  margin-bottom: 20px;
   font-size: 18px;
-}
-
-.card p {
-  grid-area: description;
+  margin-bottom: 10px;
 }
 
 .card-section {
@@ -315,13 +470,38 @@ main {
   margin-bottom: 0.5em;
 }
 
+@media screen and (max-width: 465px) {
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(137px, 0.5fr));
+  }
+
+  .card.time .hero {
+    font-size: 2.5em;
+  }
+
+  .card h2 a {
+    font-size: 80%;
+  }
+}
+
+@media screen and (max-width: 388px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
 .other {
+  background-color: #eeeeeebf;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 0.5em 1em;
   margin-top: 1rem;
 }
 
 .other h2 {
   font-size: 1.5rem;
   line-height: 1.5;
+  color: black;
 }
 
 .other li {
