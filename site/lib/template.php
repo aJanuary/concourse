@@ -143,7 +143,7 @@
 
   function render_404() {
     http_response_code(404);
-    render_header("Page not found.");
+    render_header("Page not found", "Page not found.");
 ?>
     <a href="/" class="back">&lt; Back to member portal</a>
     <article>
