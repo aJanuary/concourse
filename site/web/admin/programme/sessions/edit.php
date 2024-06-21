@@ -44,10 +44,10 @@ if (array_key_exists('item_id', $_GET)) {
   $session = db_get_prog_session($item_id);
 }
 
-render_header("Manage RCE sessions.");
+render_header("Add/edit an RCE session", "Manage RCE sessions.");
 ?>
   
-  <a href="/admin/programme/sessions/list" class="back">&lt; Back to List RCE sessions</a>
+  <a href="/admin/programme/sessions/list" class="back">&lt; Back to List <abbr title="RingCentral Events">RCE</abbr> sessions</a>
   
   <article>
 <?php

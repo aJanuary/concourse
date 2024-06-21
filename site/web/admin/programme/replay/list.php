@@ -8,36 +8,40 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header("Manage RCE replays.");
+render_header("Manage RCE replays", "Manage RCE replays.");
 ?>
   
   <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
   
   <article>
-    <h2>Manage RCE replays</h2>
+    <h2>Manage <abbr title="RingCentral Events">RCE</abbr> replays</h2>
+    <script>
+      if (window.location.search.includes('error')) {
+        var $toast = document.createElement('p');
+        $toast.classList = ['error'];
+        $toast.textContent = new URLSearchParams(window.location.search).get('error');
+      
+        var $img = document.createElement('img');
+        $img.src = '/resources/error.svg';
+        $img.alt = 'error';
+        $img.ariaLabel = 'error';
+        $toast.prepend($img);
+
+        document.write($toast.outerHTML);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    </script>
     <ul>
       <li><a href="/admin/programme/replay/edit">Add replay...</a></li>
 <?php
         $replays = db_get_replays();
         foreach ($replays as $replay) {
 ?>
-          <li><a href="/admin/programme/replay/edit?item_id=<?php echo $replay['item_id']; ?>"><?php echo $replay['item_id']; ?></a></li>
+          <li><a aria-label="Edit item <?php echo $replay['item_id']; ?>" href="/admin/programme/replay/edit?item_id=<?php echo $replay['item_id']; ?>"><?php echo $replay['item_id']; ?></a></li>
 <?php
         }
 ?>
     </ul>
-    <script>
-      if (window.location.search.includes('error')) {
-        var $toast = document.createElement('p');
-        $toast.id = 'error-toast';
-        $toast.textContent = 'Error: ' + new URLSearchParams(window.location.search).get('error');
-        $toast.addEventListener('click', e => {
-          e.target.remove();
-        });
-        document.body.appendChild($toast);
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    </script>
   <?php
   render_footer();
   ?>

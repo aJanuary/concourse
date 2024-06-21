@@ -12,7 +12,7 @@ $item_id = $_GET['item_id'];
 $session = db_get_prog_session($item_id);
 
 if (!$session['rce_url']) {
-  render_header("Unknown item.");
+  render_header("Go to a session", "Unknown item.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -25,5 +25,5 @@ if (!$session['rce_url']) {
   exit;
 }
 
-render_rce_wizard($session['rce_url']);
+render_rce_wizard("Go to a session", $session['rce_url']);
 ?>

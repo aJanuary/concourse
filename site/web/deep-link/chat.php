@@ -16,7 +16,7 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post($item_id);
 
   if (!$post['post_url']) {
-    render_header("Unknown item in the Glasgow 2024 Discord.");
+    render_header("Go to a Discord chat for an item", "Unknown item in the Glasgow 2024 Discord.");
     ?>
     <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -33,7 +33,7 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post_by_room_and_time($room_id, time());
 
   if (!$post['post_url']) {
-    render_header("Nothing scheduled in that room in the Glasgow 2024 Discord.");
+    render_header("Go to a Discord chat for an item", "Nothing scheduled in that room in the Glasgow 2024 Discord.");
     ?>
     <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -57,7 +57,7 @@ if (!empty($usernames)) {
 
 $invite_url = 'https://discord.com/oauth2/authorize?client_id=' . DISCORD_CLIENT_ID . '&response_type=code&redirect_uri=' . urlencode(ROOT_URL) . '%2Fchat_callback&scope=identify';
 
-render_header("Join the Glasgow 2024 Discord server.");
+render_header("Go to a Discord chat for an item", "Join the Glasgow 2024 Discord server.");
 
 $clyde = new ClydeService();
 $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];

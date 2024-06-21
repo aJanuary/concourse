@@ -3,7 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header("Under construction.");
+render_header("Under constructions", "Under construction.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>

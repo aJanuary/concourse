@@ -6,7 +6,7 @@
     return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
   }
 
-  function render_header($description, $is_home = false) {
+  function render_header($title, $description, $is_home = false) {
 ?>
 <!doctype html>
 <html lang="en">
@@ -14,7 +14,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?php echo $description; ?>">
-    <title><?php echo CON_NAME; ?> Member Portal</title>
+    <title><?php echo CON_NAME; ?> Member Portal<?php echo $title ? ' - ' . $title : ''; ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
@@ -128,6 +128,8 @@
       <div class="container">
         <p>&copy; <?php echo date('Y'); ?> <?php echo CON_SHORT_NAME; ?></p>
         <ul>
+          <li><a href="/under-construction?Help">Help</a></li>
+          <li><a href="/site-map">Site map</a></li>
           <li><a href="https://glasgow2024.org/cookie-policy-eu/">Cookie Policy (EU)</a></li>
           <li><a href="https://glasgow2024.org/about/policies/code-of-conduct/">Code of Conduct</a></li>
           <li><a href="https://glasgow2024.org/about/policies/">All Policies</a></li>

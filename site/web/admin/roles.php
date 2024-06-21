@@ -28,7 +28,7 @@ function render_form_body($role_id = 1) {
       $checked = $permission['has_permission'] ? 'checked' : '';
 ?>
       <label>
-        <input type="checkbox" name="permission_<?php echo $permission['permission_id']; ?>" <?php echo $checked; ?>>
+        <input type="checkbox" name="permission_<?php echo $permission['name']; ?>_<?php echo $permission['permission_id']; ?>" <?php echo $checked; ?>>
         <?php echo $permission['name']; ?>
       </label>
 <?php
@@ -53,7 +53,7 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
       $role_id = $_POST['role_id'];
       $permissions = db_get_role_permissions($role_id);
       foreach ($permissions as $permission) {
-        $has_permission = array_key_exists('permission_' . $permission['permission_id'], $_POST);
+        $has_permission = array_key_exists('permission_' . $permission['name'] . '_' . $permission['permission_id'], $_POST);
         db_set_role_permission($role_id, $permission['permission_id'], $has_permission);
       }
     }
@@ -64,7 +64,7 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
   exit;
 }
 
-  render_header("Manage roles.");
+  render_header("Manage roles", "Manage roles.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>

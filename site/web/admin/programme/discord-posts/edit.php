@@ -47,7 +47,7 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post($item_id);
 }
 
-render_header("Manage Discord posts.");
+render_header("Add/edit a Discord post", "Manage Discord posts.");
 ?>
   
   <a href="/admin/programme/discord-posts/list" class="back">&lt; Back to List Discord posts</a>

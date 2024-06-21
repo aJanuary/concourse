@@ -29,7 +29,7 @@ if (array_key_exists('item_id', $_GET)) {
 }
 
 if (is_anonymous()) {
-  render_header("Log in to participate.");
+  render_header("Participate in an item", "Log in to participate.");
 ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -44,7 +44,7 @@ if (is_anonymous()) {
 }
 
 if (!$participant_url) {
-  render_header("Unknown item.");
+  render_header("Participate in an item", "Unknown item.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -62,5 +62,5 @@ if ($type == 'zoom' || array_key_exists('seen-rce-invite', $_COOKIE)) {
   exit;
 }
 
-render_rce_wizard($participant_url);
+render_rce_wizard("Participate in an item", $participant_url);
 ?>

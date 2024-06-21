@@ -37,7 +37,7 @@ if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
 $clyde = new ClydeService();
 $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
 
-render_header("Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.");
+render_header("Log in", "Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.");
 
 ?>
 
@@ -54,7 +54,7 @@ if (isset($_GET['error_code'])) {
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occured.';
 ?>
-    <p class="error"><?php echo $error; ?></p>
+    <p class="error"><img src="resources/error.svg" alt="error" aria-label="error"><?php echo $error; ?></p>
 <?php
 }
 ?>

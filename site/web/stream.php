@@ -13,7 +13,7 @@ if (array_key_exists('invite', $_GET)) {
   exit;
 }
 
-render_header("Watch stream and replays of programme items at Glasgow 2024, A Worldcon for Our Futures through RingCentral Events.");
+render_header("Stream", "Watch stream and replays of programme items at Glasgow 2024, A Worldcon for Our Futures through RingCentral Events.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>

@@ -3,7 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header("The Member Portal for Glasgow 2024, A Worldcon for Our Futures.", true);
+render_header(null, "The Member Portal for Glasgow 2024, A Worldcon for Our Futures.", true);
 
 $cards = [
   [
@@ -13,6 +13,7 @@ $cards = [
     'description' => 'Convert between convention time (BST) and your local timezone.',
     'link' => 'https://dateful.com/convert/british-summer-time-bst',
     'card-permission' => 'see-time',
+    'live-card' => true,
   ], [
     'name' => 'guide',
     'title' => 'Programme guide',
@@ -144,30 +145,36 @@ $cards = [
 ];
 ?>
 
-
-<div class="cards">
-<?php
-foreach ($cards as $card) {
-  if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
-?>
-  <div class="card <?php echo $card['name']; ?>">
-    <div class="hero"></div>
-    <hgroup>
-      <h2><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h2>
-      <?php
-      if ($card['subtitle']) {
-      ?>
-      <h3><?php echo $card['subtitle']; ?></h3>
-      <?php
-      }
-      ?>
-    </hgroup>
-  </div>
+<nav>
+  <div class="cards">
+  <?php
+  foreach ($cards as $card) {
+    if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
+  ?>
+    <div class="card <?php echo $card['name']; ?>">
+      <div class="hero"
+      <?php if ($card['live-card']) { ?>
+          aria-live="polite" aria-label="<?php echo $card['title']; ?>"
+      <?php } else { ?>
+          aria-hidden="true"
+      <?php } ?>
+      ></div>
+      <hgroup>
+        <h2><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h2>
+        <?php
+        if ($card['subtitle']) {
+        ?>
+        <h3><?php echo $card['subtitle']; ?></h3>
+        <?php
+        }
+        ?>
+      </hgroup>
+    </div>
 <?php
   }
 }
 ?>
-</div>
+  </div>
 
 <?php
 $others = array_filter($cards, function($card) {
@@ -177,26 +184,33 @@ $others = array_filter($cards, function($card) {
 
 if (!empty($others)) {
 ?>
-<div class="other">
-  <h2>Other</h2>
-  <ul>
+  <div class="other">
+    <h2>Other</h2>
+    <ul>
 <?php
   foreach ($others as $link) {
 ?>
-    <li><a href="<?php echo $link['link']; ?>"><?php echo $link['title']; ?></a></li>
+      <li><a href="<?php echo $link['link']; ?>"><?php echo $link['title']; ?></a></li>
 <?php
   }
 }
 ?>
-  </ul>
-</div>
+    </ul>
+  </div>
+</nav>
 
 <script>
   let $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
   function updateTime() {
     let utc = new Date();
     for (let $time of $times) {
-      $time.innerText = utc.toLocaleString('en-GB', { timeZone: '<?php echo TIMEZONE; ?>', hour: 'numeric', minute: 'numeric', hour12: false });
+      var newTime = utc.toLocaleString('en-GB', { timeZone: '<?php echo TIMEZONE; ?>', hour: 'numeric', minute: 'numeric', hour12: false });
+      if (newTime != $time.innerText) {
+        // Only update the time if it has changed.
+        // More importantly than an optimization not to change the DOM, it
+        // prevents screen readers from announcing the time every 10 seconds.
+        $time.innerText = newTime;
+      }
     }
     setTimeout(updateTime, 10000);
   }

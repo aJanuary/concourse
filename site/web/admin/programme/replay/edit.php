@@ -44,10 +44,10 @@ if (array_key_exists('item_id', $_GET)) {
   $replay = db_get_replay($item_id);
 }
 
-render_header("Manage RCE replays.");
+render_header("Add/edit a RCE replay", "Manage RCE replays.");
 ?>
   
-  <a href="/admin/programme/replay/list" class="back">&lt; Back to List RCE replay links</a>
+  <a href="/admin/programme/replay/list" class="back">&lt; Back to List <abbr title="RingCentral Events">RCE</abbr> replay links</a>
   
   <article>
 <?php

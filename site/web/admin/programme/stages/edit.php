@@ -46,10 +46,10 @@ if (array_key_exists('room_id', $_GET)) {
   $stage = db_get_stage($room_id);
 }
 
-render_header("Manage RCE stages.");
+render_header("Add/edit an RCE stage", "Manage RCE stages.");
 ?>
   
-  <a href="/admin/programme/stages/list" class="back">&lt; Back to List RCE stages</a>
+  <a href="/admin/programme/stages/list" class="back">&lt; Back to List <abbr title="RingCentral Events">RCE</abbr> stages</a>
   
   <article>
 <?php

@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 $usernames = db_get_discord_usernames($_COOKIE['session']);
 
-render_header("Join the Discord server for Glasgow 2024, A Worldcon for Our Futures.");
+render_header("Chat", "Join the Discord server for Glasgow 2024, A Worldcon for Our Futures.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>

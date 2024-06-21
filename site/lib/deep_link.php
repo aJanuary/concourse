@@ -4,13 +4,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
 
-function render_rce_wizard($url) {
+function render_rce_wizard($title, $url) {
   if (array_key_exists('seen-rce-invite', $_COOKIE)) {
     header('Location: ' . $url);
     exit;
   }
 
-  render_header("Link to an item in the Glasgoe 2024 RingCentral Events event.");
+  render_header($title, "Link to an item in the Glasgoe 2024 RingCentral Events event.");
 
   $clyde = new ClydeService();
   $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];

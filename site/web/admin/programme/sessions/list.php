@@ -8,36 +8,40 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header("Manage RCE sessions.");
+render_header("Manafge RCE sessions", "Manage RCE sessions.");
 ?>
   
   <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
   
   <article>
-    <h2>Manage RCE sessions</h2>
+    <h2>Manage <abbr title="RingCentral Events">RCE</abbr> sessions</h2>
+    <script>
+      if (window.location.search.includes('error')) {
+        var $toast = document.createElement('p');
+        $toast.classList = ['error'];
+        $toast.textContent = new URLSearchParams(window.location.search).get('error');
+      
+        var $img = document.createElement('img');
+        $img.src = '/resources/error.svg';
+        $img.alt = 'error';
+        $img.ariaLabel = 'error';
+        $toast.prepend($img);
+
+        document.write($toast.outerHTML);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    </script>
     <ul>
       <li><a href="/admin/programme/sessions/edit">Add session...</a></li>
 <?php
         $sessions = db_get_prog_sessions();
         foreach ($sessions as $session) {
 ?>
-          <li><a href="/admin/programme/sessions/edit?item_id=<?php echo $session['item_id']; ?>"><?php echo $session['item_id']; ?></a></li>
+          <li><a aria-label="Edit item <?php echo $session['item_id']; ?>" href="/admin/programme/sessions/edit?item_id=<?php echo $session['item_id']; ?>"><?php echo $session['item_id']; ?></a></li>
 <?php
         }
 ?>
     </ul>
-    <script>
-      if (window.location.search.includes('error')) {
-        var $toast = document.createElement('p');
-        $toast.id = 'error-toast';
-        $toast.textContent = 'Error: ' + new URLSearchParams(window.location.search).get('error');
-        $toast.addEventListener('click', e => {
-          e.target.remove();
-        });
-        document.body.appendChild($toast);
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    </script>
   <?php
   render_footer();
   ?>

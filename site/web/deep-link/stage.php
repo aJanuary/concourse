@@ -12,7 +12,7 @@ $room_id = $_GET['room_id'];
 $stage = db_get_stage($room_id);
 
 if (!$stage['viewer_url']) {
-  render_header("Unknown item.");
+  render_header("Go to a stage", "Unknown item.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -25,5 +25,5 @@ if (!$stage['viewer_url']) {
   exit;
 }
 
-render_rce_wizard($stage['viewer_url']);
+render_rce_wizard("Go to a stage", $stage['viewer_url']);
 ?>

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $zoom_url = db_get_zoom_url();
 
-render_header("Manage Zoom link.");
+render_header("Manage Zoom link", "Manage Zoom link.");
 ?>
   
   <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
@@ -42,6 +42,7 @@ render_header("Manage Zoom link.");
     <script>
       if (window.location.search.includes('error')) {
           var $toast = document.createElement('p');
+          $toast.role = 'alert';
           $toast.id = 'error-toast';
           $toast.textContent = 'Error: ' + new URLSearchParams(window.location.search).get('error');
           $toast.addEventListener('click', e => {

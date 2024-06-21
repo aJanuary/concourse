@@ -4,7 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header("Instructions on how to log in to the Glasgow 2024 member portal.");
+render_header("Log in instructions", "Instructions on how to log in to the Glasgow 2024 member portal.");
 ?>
 
 <a href="/" class="back">&lt; Back to member portal</a>

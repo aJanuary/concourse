@@ -12,7 +12,7 @@ $item_id = $_GET['item_id'];
 $replay = db_get_replay($item_id);
 
 if (!$replay['replay_url']) {
-  render_header("Replay not available.");
+  render_header("Go to an item replay", "Replay not available.");
   ?>
   <a href="/" class="back">&lt; Back to member portal</a>
 
@@ -25,5 +25,5 @@ if (!$replay['replay_url']) {
   exit;
 }
 
-render_rce_wizard($replay['replay_url']);
+render_rce_wizard("Go to an item replay", $replay['replay_url']);
 ?>
