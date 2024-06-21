@@ -8,11 +8,12 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
 
-render_header("Manage programme", "Manage programme.");
+render_header(
+  'Manage programme',
+  'Manage programme.',
+  ['Home' => '/', 'Manage programme']
+);
 ?>
-
-<a href="/" class="back">&lt; Back to member portal</a>
-
 <article>
   <h2>Manage programme</h2>
   <ul>

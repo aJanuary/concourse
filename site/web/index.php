@@ -3,7 +3,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header(null, "The Member Portal for Glasgow 2024, A Worldcon for Our Futures.", true);
+render_header(
+  null,
+  'The Member Portal for Glasgow 2024, A Worldcon for Our Futures.',
+  null,
+  true
+);
 
 $cards = [
   [

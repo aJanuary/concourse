@@ -6,7 +6,7 @@
     return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
   }
 
-  function render_header($title, $description, $is_home = false) {
+  function render_header($title, $description, $breadcrumbs, $is_home = false) {
 ?>
 <!doctype html>
 <html lang="en">
@@ -119,6 +119,32 @@
     </header>
     <main>
 <?php
+    if ($breadcrumbs) {
+?>
+      <nav class="breadcrumbs">
+        <ul>
+          <?php
+          foreach ($breadcrumbs as $name => $url) {
+          ?>
+            <li>
+          <?php  
+            if ($name) {
+          ?>
+            <a href="<?php echo $url; ?>"><?php echo $name; ?></a></li>
+          <?php } else {
+          ?>
+            <?php echo $url; ?>
+          <?php
+            }
+          ?>
+            </li>
+          <?php
+          }
+          ?>
+        </ul>
+      </nav>
+<?php
+    }
   }
 
   function render_footer() {
@@ -143,9 +169,12 @@
 
   function render_404() {
     http_response_code(404);
-    render_header("Page not found", "Page not found.");
+    render_header(
+      'Page not found',
+      'Page not found.',
+      ['Home' => '/', 'Page not found']
+    );
 ?>
-    <a href="/" class="back">&lt; Back to member portal</a>
     <article>
       <h3>Page not found</h3>
       <p>The page you are looking for does not exist.</p>

@@ -4,11 +4,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header("Site map", "A list of the pages on the portal.");
+render_header(
+  'Site map',
+  'A list of the pages on the portal.',
+  ['Home' => '/', 'Site map']
+);
 ?>
-
-<a href="/" class="back">&lt; Back to member portal</a>
-
 <article>
   <h2>Site map</h2>
   <ul>
@@ -16,7 +17,7 @@ render_header("Site map", "A list of the pages on the portal.");
     <li>
       <p><a href="/chat">Chat</a></p>
       <ul>
-        <li><p><a href="/discord-instructions">Discord instructions</a></p></li>
+        <li><p><a href="/discord-instructions">How to join the Discord Server</a></p></li>
       </ul>
     </li>
     <li><p><a href="/login-instructions">Log in instructions</a></p></li>

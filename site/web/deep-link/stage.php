@@ -12,10 +12,12 @@ $room_id = $_GET['room_id'];
 $stage = db_get_stage($room_id);
 
 if (!$stage['viewer_url']) {
-  render_header("Go to a stage", "Unknown item.");
+  render_header(
+    'Go to a stage',
+    'Unknown item.',
+    ['Home' => '/', 'Go to a stage']
+  );
   ?>
-  <a href="/" class="back">&lt; Back to member portal</a>
-
   <article>
     <h2>Unknown room</h2>
     <p>Sorry, we don&apos;t know about that room.</p>

@@ -5,11 +5,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 check_permission('manage-discord-ids');
 
-render_header("Manage discord ids", "Manage discord ids.");
+render_header(
+  'Manage discord ids',
+  'Manage discord ids.',
+  ['Home' => '/', 'Manage discord ids']
+);
 ?>
-
-<a href="/" class="back">&lt; Back to member portal</a>
-
 <article>
   <h3>Manage discord ids</h3>
   

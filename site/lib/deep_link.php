@@ -10,14 +10,16 @@ function render_rce_wizard($title, $url) {
     exit;
   }
 
-  render_header($title, "Link to an item in the Glasgoe 2024 RingCentral Events event.");
+  render_header(
+    $title,
+    'Link to an item in the Glasgoe 2024 RingCentral Events event.',
+    ['Home' => '/', 'Log in to RingCentral Events']
+  );
 
   $clyde = new ClydeService();
   $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
 
   ?>
-    <a href="/" class="back">&lt; Back to member portal</a>
-
     <article>
       <h2>Log in to RingCentral Events</h2>
       <p>Before we can take you to the item in RingCentral Events, you'll need to first visit the landing page of RingCentral Events on this device.</p>

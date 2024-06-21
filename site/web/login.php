@@ -37,7 +37,11 @@ if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
 $clyde = new ClydeService();
 $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
 
-render_header("Log in", "Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.");
+render_header(
+    'Log in',
+    'Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.',
+    ['Home' => '/', 'Log in']
+);
 
 ?>
 

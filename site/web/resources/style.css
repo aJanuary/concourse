@@ -221,6 +221,15 @@ ul ul {
   text-align: right;
 }
 
+.breadcrumbs li {
+  display: inline;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  content: '/';
+  margin-left: 0.5em;
+}
+
 main {
   max-width: 1240px;
   width: 100%;

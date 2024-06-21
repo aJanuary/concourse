@@ -13,11 +13,12 @@ if (array_key_exists('invite', $_GET)) {
   exit;
 }
 
-render_header("Stream", "Watch stream and replays of programme items at Glasgow 2024, A Worldcon for Our Futures through RingCentral Events.");
+render_header(
+  'Stream',
+  'Watch stream and replays of programme items at Glasgow 2024, A Worldcon for Our Futures through RingCentral Events.',
+  ['Home' => '/', 'Stream and replay']
+);
 ?>
-
-<a href="/" class="back">&lt; Back to member portal</a>
-
 <article>
   <h2>Stream and replay</h2>
   <p>We are using a platform called RingCentral Events to stream our programme items. You can watch the live streams of programme items, or watch the recorded videos afterwards. It works on both desktop and mobile.</p>

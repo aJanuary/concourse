@@ -44,23 +44,25 @@ if (array_key_exists('item_id', $_GET)) {
   $session = db_get_prog_session($item_id);
 }
 
-render_header("Add/edit an RCE session", "Manage RCE sessions.");
-?>
-  
-  <a href="/admin/programme/sessions/list" class="back">&lt; Back to List <abbr title="RingCentral Events">RCE</abbr> sessions</a>
-  
-  <article>
-<?php
 if (array_key_exists('item_id', $_GET)) {
-?>
-    <h2>Edit <?php echo $item_id; ?></h2>
-<?php
+  $title = 'Edit ' . $item_id;
 } else {
-?>
-    <h2>Add session</h2>
-<?php
+  $title = 'Add session';
 }
+
+render_header(
+  'Add/edit an RCE session',
+  'Manage RCE sessions.',
+  [
+    'Home' => '/',
+    'Manage programme' => '/admin/programme/list',
+    'Manage RCE sessions' => '/admin/programme/sessions/list',
+    $title
+  ]
+);
 ?>
+  <article>
+    <h2><?php echo $title; ?></h2>
     <form action="/admin/programme/sessions/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Session details</legend>

@@ -46,23 +46,25 @@ if (array_key_exists('room_id', $_GET)) {
   $stage = db_get_stage($room_id);
 }
 
-render_header("Add/edit an RCE stage", "Manage RCE stages.");
-?>
-  
-  <a href="/admin/programme/stages/list" class="back">&lt; Back to List <abbr title="RingCentral Events">RCE</abbr> stages</a>
-  
-  <article>
-<?php
 if (array_key_exists('room_id', $_GET)) {
-?>
-    <h2>Edit <?php echo $room_id; ?></h2>
-<?php
+  $title = 'Edit ' . $room_id;
 } else {
-?>
-    <h2>Add stage</h2>
-<?php
+  $title = 'Add stage';
 }
+
+render_header(
+  'Add/edit an RCE stage',
+  'Manage RCE stages.',
+  [
+    'Home' => '/',
+    'Manage programme' => '/admin/programme/list',
+    'Manage RCE stages' => '/admin/programme/stages/list',
+    $title
+  ]
+);
 ?>
+  <article>
+    <h2><?php echo $title; ?></h2>
     <form action="/admin/programme/stages/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Stage details</legend>

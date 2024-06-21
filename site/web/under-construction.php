@@ -4,11 +4,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-render_header("Under constructions", "Under construction.");
+render_header(
+  'Under constructions',
+  'Under construction.',
+  ['Home' => '/', $_GET['page']]
+);
 ?>
-
-<a href="/" class="back">&lt; Back to member portal</a>
-
 <article>
   <h2><?php echo $_GET['page']; ?></h2>
   <p>We&apos;re still working on this page.</p>

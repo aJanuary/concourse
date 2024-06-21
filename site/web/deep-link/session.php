@@ -12,10 +12,12 @@ $item_id = $_GET['item_id'];
 $session = db_get_prog_session($item_id);
 
 if (!$session['rce_url']) {
-  render_header("Go to a session", "Unknown item.");
+  render_header(
+    'Go to a session',
+    'Unknown item.',
+    ['Home' => '/', 'Go to a session']
+  );
   ?>
-  <a href="/" class="back">&lt; Back to member portal</a>
-
   <article>
     <h2>Unknown item</h2>
     <p>Sorry, we don&apos;t know about that item.</p>

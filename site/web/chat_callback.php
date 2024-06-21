@@ -11,7 +11,11 @@ if (!$code) {
   error_log("No code in chat_callback.php for " . get_current_user_badge_no() . ": " . print_r($_GET, true));
 
   if ($_GET['error'] == 'access_denied') {
-    render_header("Chat", "Access denied when trying to link Discord account for the Glasgow 2024 member portal.");
+    render_header(
+      'Chat',
+      'Access denied when trying to link Discord account for the Glasgow 2024 member portal.',
+      ['Home' => '/', 'Online Chat' => '/chat', 'Something went wrong']
+    );
 ?>
   <article>
     <h3>Something went wrong</h3>

@@ -8,11 +8,12 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header("Manage RCE replays", "Manage RCE replays.");
+render_header(
+  'Manage RCE replays',
+  'Manage RCE replays.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage RCE replays']
+);
 ?>
-  
-  <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
-  
   <article>
     <h2>Manage <abbr title="RingCentral Events">RCE</abbr> replays</h2>
     <script>

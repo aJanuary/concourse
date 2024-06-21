@@ -24,11 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $zoom_url = db_get_zoom_url();
 
-render_header("Manage Zoom link", "Manage Zoom link.");
+render_header(
+  'Manage Zoom link',
+  'Manage Zoom link.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Edit Zoom link']
+);
 ?>
-  
-  <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
-  
   <article>
     <h2>Edit Zoom link</h2>
     <form action="/admin/programme/zoom/edit" method="POST" class="vertical">

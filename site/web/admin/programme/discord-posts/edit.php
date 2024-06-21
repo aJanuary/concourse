@@ -47,23 +47,25 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post($item_id);
 }
 
-render_header("Add/edit a Discord post", "Manage Discord posts.");
-?>
-  
-  <a href="/admin/programme/discord-posts/list" class="back">&lt; Back to List Discord posts</a>
-  
-  <article>
-<?php
 if (array_key_exists('item_id', $_GET)) {
-?>
-    <h2>Edit <?php echo $item_id; ?></h2>
-<?php
+  $title = 'Edit ' . $item_id;
 } else {
-?>
-    <h2>Add Discord post</h2>
-<?php
+  $title = 'Add Discord post';
 }
+
+render_header(
+  'Add/edit a Discord post',
+  'Manage Discord posts.',
+  [
+    'Home' => '/',
+    'Manage programme' => '/admin/programme/list',
+    'Manage Discord posts' => '/admin/programme/discord-posts/list',
+    $title
+  ]
+);
 ?>
+  <article>
+    <h2><?php echo $title; ?></h2>
     <p>Warning: These may be overriden by Watson</p>
     <form action="/admin/programme/discord-posts/edit" method="POST" class="vertical">
       <fieldset>

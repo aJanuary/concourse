@@ -8,11 +8,12 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header("Manage RCE stages", "Manage RCE stages.");
+render_header(
+  'Manage RCE stages',
+  'Manage RCE stages.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage RCE stages']
+);
 ?>
-  
-  <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
-  
   <article>
     <h2>Manage <abbr title="RingCentral Events">RCE</abbr> stages</h2>
     <script>

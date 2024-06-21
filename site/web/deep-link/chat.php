@@ -16,10 +16,12 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post($item_id);
 
   if (!$post['post_url']) {
-    render_header("Go to a Discord chat for an item", "Unknown item in the Glasgow 2024 Discord.");
+    render_header(
+      'Go to a Discord chat for an item',
+      'Unknown item in the Glasgow 2024 Discord.',
+      ['Home' => '/', 'Go to Discord chat for an item']
+    );
     ?>
-    <a href="/" class="back">&lt; Back to member portal</a>
-
     <article>
       <h2>Unknown item</h2>
       <p>Sorry, we don&apos;t know about that item.</p>
@@ -33,10 +35,12 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post_by_room_and_time($room_id, time());
 
   if (!$post['post_url']) {
-    render_header("Go to a Discord chat for an item", "Nothing scheduled in that room in the Glasgow 2024 Discord.");
+    render_header(
+      'Go to a Discord chat for an item',
+      'Nothing scheduled in that room in the Glasgow 2024 Discord.',
+      ['Home' => '/', 'Go to Discord chat for an item']
+    );
     ?>
-    <a href="/" class="back">&lt; Back to member portal</a>
-
     <article>
       <h2>Nothing scheduled</h2>
       <p>We don&apos;t think anything is happening in that room at the moment. Check back later.</p>
@@ -57,14 +61,16 @@ if (!empty($usernames)) {
 
 $invite_url = 'https://discord.com/oauth2/authorize?client_id=' . DISCORD_CLIENT_ID . '&response_type=code&redirect_uri=' . urlencode(ROOT_URL) . '%2Fchat_callback&scope=identify';
 
-render_header("Go to a Discord chat for an item", "Join the Glasgow 2024 Discord server.");
+render_header(
+  'Go to a Discord chat for an item',
+  'Join the Glasgow 2024 Discord server.',
+  ['Home' => '/', 'Go to Discord chat for an item']
+);
 
 $clyde = new ClydeService();
 $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
 
 ?>
-  <a href="/" class="back">&lt; Back to member portal</a>
-
   <article>
     <h2>Join the Discord</h2>
     <p>Before we can take you to the Discord conversation for this item, you'll need to join the Discord.</p>

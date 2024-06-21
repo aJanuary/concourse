@@ -64,11 +64,12 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
   exit;
 }
 
-  render_header("Manage roles", "Manage roles.");
+  render_header(
+    'Manage roles',
+    'Manage roles.',
+    ['Home' => '/', 'Manage roles']
+  );
 ?>
-
-<a href="/" class="back">&lt; Back to member portal</a>
-
 <article>
   <h2>Manage roles</h2>
   <form id="roles-form" autocomplete="off">

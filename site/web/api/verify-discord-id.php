@@ -6,7 +6,11 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 
-render_header("Verify Discord ID", "Verify Discord ID.");
+render_header(
+  'Verify Discord ID',
+  'Verify Discord ID.',
+  ['Home' => '/', 'Verify Discord ID']
+);
 
 $token = $_GET['token'];
 if (!$token) {
@@ -35,7 +39,6 @@ if ($verification_result["result"] != "alread-verified") {
 }
 
 ?>
-  <a href="/" class="back">&lt; Back to member portal</a>
   <article>
     <h3>Success!</h3>
     <p>Thank you, we have now associated this membership with the Discord account <?php echo $verification_result["username"]; ?>. You may close this tab.</p>

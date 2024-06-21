@@ -8,11 +8,12 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
   
-render_header("Manage discord posts", "Manage Discord posts.");
+render_header(
+  'Manage discord posts',
+  'Manage Discord posts.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage Discord posts']
+);
 ?>
-  
-  <a href="/admin/programme/list" class="back">&lt; Back to Manage programme</a>
-  
   <article>
     <h2>Manage Discord posts</h2>
     <p>Warning: These may be overriden by Watson</p>

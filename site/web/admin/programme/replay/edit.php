@@ -44,23 +44,25 @@ if (array_key_exists('item_id', $_GET)) {
   $replay = db_get_replay($item_id);
 }
 
-render_header("Add/edit a RCE replay", "Manage RCE replays.");
-?>
-  
-  <a href="/admin/programme/replay/list" class="back">&lt; Back to List <abbr title="RingCentral Events">RCE</abbr> replay links</a>
-  
-  <article>
-<?php
 if (array_key_exists('item_id', $_GET)) {
-?>
-    <h2>Edit <?php echo $item_id; ?></h2>
-<?php
+  $title = 'Edit ' . $item_id;
 } else {
-?>
-    <h2>Add replay</h2>
-<?php
+  $title = 'Add replay';
 }
+
+render_header(
+  'Add/edit a RCE replay',
+  'Manage RCE replays.',
+  [
+    'Home' => '/',
+    'Manage programme' => '/admin/programme/list',
+    'Manage RCE replays' => '/admin/programme/replay/list',
+    $title
+  ]
+);
 ?>
+  <article>
+    <h2><?php echo $title; ?></h2>
     <form action="/admin/programme/replay/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Replay details</legend>

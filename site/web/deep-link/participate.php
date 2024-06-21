@@ -29,10 +29,12 @@ if (array_key_exists('item_id', $_GET)) {
 }
 
 if (is_anonymous()) {
-  render_header("Participate in an item", "Log in to participate.");
+  render_header(
+    'Participate in an item',
+    'Log in to participate.',
+    ['Home' => '/', 'Participate in an item']
+  );
 ?>
-  <a href="/" class="back">&lt; Back to member portal</a>
-
   <article>
     <h2>Log in to participate</h2>
     <p>You need to be logged in to participate in this item. Please log in to the members portal to continue.</p>
@@ -44,10 +46,12 @@ if (is_anonymous()) {
 }
 
 if (!$participant_url) {
-  render_header("Participate in an item", "Unknown item.");
+  render_header(
+    'Participate in an item',
+    'Unknown item.',
+    ['Home' => '/', 'Participate in an item']
+  );
   ?>
-  <a href="/" class="back">&lt; Back to member portal</a>
-
   <article>
     <h2>Unknown item</h2>
     <p>Oops, something wen&apos;t wrong and we don&apos;t know where you should be going. Please get in touch with the programme team to find out. TODO: How?</p>
