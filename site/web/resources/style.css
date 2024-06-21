@@ -129,7 +129,6 @@ img {
 
 header {
   background-color: var(--header-bg-color);
-  backdrop-filter: blur(10px);
   border-bottom: solid 1px var(--header-border-color);
 }
 
@@ -744,6 +743,7 @@ form.vertical label {
   background-position: 0.3em 0.5em;
   background-size: 2em;
   line-height: 2;
+  border-bottom: none;
 }
 
 .wizard header.active {
