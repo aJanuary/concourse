@@ -19,7 +19,7 @@ function render_rce_wizard($title, $url) {
     <a href="/" class="back">&lt; Back to member portal</a>
 
     <article>
-      <h3>Log in to RingCentral Events</h3>
+      <h2>Log in to RingCentral Events</h2>
       <p>Before we can take you to the item in RingCentral Events, you'll need to first visit the landing page of RingCentral Events on this device.</p>
       <p>Once you have done this once on this device, you will be able to go directly to the item in the future.</p>
 

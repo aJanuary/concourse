@@ -17,7 +17,7 @@ if (!$replay['replay_url']) {
   <a href="/" class="back">&lt; Back to member portal</a>
 
   <article>
-    <h3>No replay available yet</h3>
+    <h2>No replay available yet</h2>
     <p>Replay isn&apos;t available for this item yet. We&apos;re working to get replays up as soon as we can, so check back soon.</p>
   </article>
   <?php

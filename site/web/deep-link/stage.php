@@ -17,7 +17,7 @@ if (!$stage['viewer_url']) {
   <a href="/" class="back">&lt; Back to member portal</a>
 
   <article>
-    <h3>Unknown room</h3>
+    <h2>Unknown room</h2>
     <p>Sorry, we don&apos;t know about that room.</p>
   </article>
   <?php

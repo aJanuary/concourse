@@ -34,7 +34,7 @@ if (is_anonymous()) {
   <a href="/" class="back">&lt; Back to member portal</a>
 
   <article>
-    <h3>Log in to participate</h3>
+    <h2>Log in to participate</h2>
     <p>You need to be logged in to participate in this item. Please log in to the members portal to continue.</p>
     <p><a href="<?php echo make_login_link(); ?>" class="button">Log in</a></p>
   </article>
@@ -49,7 +49,7 @@ if (!$participant_url) {
   <a href="/" class="back">&lt; Back to member portal</a>
 
   <article>
-    <h3>Unknown item</h3>
+    <h2>Unknown item</h2>
     <p>Oops, something wen&apos;t wrong and we don&apos;t know where you should be going. Please get in touch with the programme team to find out. TODO: How?</p>
   </article>
   <?php

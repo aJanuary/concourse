@@ -21,7 +21,7 @@ if (array_key_exists('item_id', $_GET)) {
     <a href="/" class="back">&lt; Back to member portal</a>
 
     <article>
-      <h3>Unknown item</h3>
+      <h2>Unknown item</h2>
       <p>Sorry, we don&apos;t know about that item.</p>
     </article>
     <?php
@@ -38,7 +38,7 @@ if (array_key_exists('item_id', $_GET)) {
     <a href="/" class="back">&lt; Back to member portal</a>
 
     <article>
-      <h3>Nothing scheduled</h3>
+      <h2>Nothing scheduled</h2>
       <p>We don&apos;t think anything is happening in that room at the moment. Check back later.</p>
     </article>
     <?php
@@ -66,7 +66,7 @@ $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
   <a href="/" class="back">&lt; Back to member portal</a>
 
   <article>
-    <h3>Join the Discord</h3>
+    <h2>Join the Discord</h2>
     <p>Before we can take you to the Discord conversation for this item, you'll need to join the Discord.</p>
     <div class="wizard">
     <section id="step1">

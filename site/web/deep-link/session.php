@@ -17,7 +17,7 @@ if (!$session['rce_url']) {
   <a href="/" class="back">&lt; Back to member portal</a>
 
   <article>
-    <h3>Unknown item</h3>
+    <h2>Unknown item</h2>
     <p>Sorry, we don&apos;t know about that item.</p>
   </article>
   <?php
