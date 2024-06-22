@@ -95,7 +95,7 @@
         <ul>
           <li><a href="/under-construction?Help">Help</a></li>
           <li><a href="/site-map">Site map</a></li>
-          <li><a href="https://glasgow2024.org/cookie-policy-eu/">Cookie Policy (EU)</a></li>
+          <li><a href="/cookie-policy">Cookie Policy</a></li>
           <li><a href="https://glasgow2024.org/about/policies/code-of-conduct/">Code of Conduct</a></li>
           <li><a href="https://glasgow2024.org/about/policies/">All Policies</a></li>
         </ul>
