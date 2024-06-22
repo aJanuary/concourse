@@ -57,7 +57,8 @@ body.home {
   display: none;
 }
 
-h1, h2, h3, h4, .site-branding p {
+
+.site-branding, h2 {
   font-family: "Gruppo", display;
 }
 
@@ -489,7 +490,7 @@ main {
 }
 
 .card h2 {
-  font-weight: bold;
+  font-family: "Roboto", sans-serif;
   margin-bottom: 5px;
   font-size: 24px;
 }
@@ -556,13 +557,11 @@ article {
 article h3 {
   font-size: 28px;
   margin-bottom: 10px;
-  font-weight: bold;
 }
 
 article h4 {
   font-size: 25px;
   margin-bottom: 10px;
-  font-weight: bold;
 }
 
 article ul {
