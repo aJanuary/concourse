@@ -116,7 +116,7 @@ $cards = [
     'title' => 'Get help',
     'subtitle' => 'Info desk, help desks and contacts',
     'description' => 'If you have a problem or question, you can reach out to us in-person, or online through Discord and e-mail.',
-    'link' => '/under-construction?page=Get+help',
+    'link' => '/help',
     'card-permission' => 'see-help',
   ], [
     'name' => 'website',
@@ -159,7 +159,7 @@ $cards = [
     <div class="card <?php echo $card['name']; ?>">
       <div class="hero"
       <?php if ($card['live-card']) { ?>
-          aria-live="polite" aria-label="<?php echo $card['title']; ?>"
+          aria-label="<?php echo $card['title']; ?>"
       <?php } else { ?>
           aria-hidden="true"
       <?php } ?>

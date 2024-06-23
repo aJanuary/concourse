@@ -21,6 +21,7 @@ render_header(
       </ul>
     </li>
     <li><p><a href="/cookie-policy">Cookie policy</a></p></li>
+    <li><p><a href="/help">Help</a></p></li>
     <li><p><a href="/login-instructions">Log in instructions</a></p></li>
     <li><p><a href="/site-map">Site map</a></p></li>
     <li><p><a href="/stream">Stream</a></p></li>

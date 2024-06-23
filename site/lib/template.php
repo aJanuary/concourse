@@ -93,7 +93,7 @@
       <div class="container">
         <p>&copy; <?php echo date('Y'); ?> <?php echo CON_SHORT_NAME; ?></p>
         <ul>
-          <li><a href="/under-construction?Help">Help</a></li>
+          <li><a href="/help">Help</a></li>
           <li><a href="/site-map">Site map</a></li>
           <li><a href="/cookie-policy">Cookie Policy</a></li>
           <li><a href="https://glasgow2024.org/about/policies/code-of-conduct/">Code of Conduct</a></li>
