@@ -394,7 +394,7 @@ function db_get_role_id($role_name) {
 function db_get_stages() {
   global $mysqli;
 
-  $result = $mysqli->query("SELECT room_id FROM prog_stages");
+  $result = $mysqli->query("SELECT room_id, title FROM prog_stages ORDER BY title, room_id");
   $stages = [];
   while ($row = $result->fetch_assoc()) {
     $stages[] = $row;
@@ -407,32 +407,37 @@ function db_get_stages() {
 function db_get_stage($room_id) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT viewer_url, type, participant_url FROM prog_stages WHERE room_id = ?");
+  $stmt = $mysqli->prepare("SELECT title, viewer_url, type, participant_url FROM prog_stages WHERE room_id = ?");
   $stmt->bind_param("s", $room_id);
   $stmt->execute();
-  $stmt->bind_result($viewer_url, $type, $participant_url);
+  $stmt->bind_result($title, $viewer_url, $type, $participant_url);
   $stmt->fetch();
   $stmt->close();
 
-  return ['viewer_url' => $viewer_url, 'type' => $type, 'participant_url' => $participant_url];
+  return [
+    'title' => $title,
+    'viewer_url' => $viewer_url,
+    'type' => $type,
+    'participant_url' => $participant_url
+  ];
 }
 
-function db_add_stage($room_id, $viewer_url, $type, $participant_url) {
+function db_add_stage($room_id, $title, $viewer_url, $type, $participant_url) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_stages (room_id, viewer_url, type, participant_url) VALUES (?, ?, ?, ?)");
-  $stmt->bind_param("ssss", $room_id, $viewer_url, $type, $participant_url);
+  $stmt = $mysqli->prepare("INSERT INTO prog_stages (room_id, title, viewer_url, type, participant_url) VALUES (?, ?, ?, ?, ?)");
+  $stmt->bind_param("sssss", $room_id, $title, $viewer_url, $type, $participant_url);
   $stmt->execute();
   $stmt->close();
 
   return $mysqli->insert_id;
 }
 
-function db_edit_stage($room_id, $viewer_url, $type, $participant_url) {
+function db_edit_stage($room_id, $title, $viewer_url, $type, $participant_url) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("UPDATE prog_stages SET viewer_url = ?, type = ?, participant_url = ? WHERE room_id = ?");
-  $stmt->bind_param("ssss", $viewer_url, $type, $participant_url, $room_id);
+  $stmt = $mysqli->prepare("UPDATE prog_stages SET title = ?, viewer_url = ?, type = ?, participant_url = ? WHERE room_id = ?");
+  $stmt->bind_param("sssss", $title, $viewer_url, $type, $participant_url, $room_id);
   $stmt->execute();
   $stmt->close();
 }
@@ -449,7 +454,7 @@ function db_delete_stage($room_id) {
 function db_get_prog_sessions() {
   global $mysqli;
 
-  $result = $mysqli->query("SELECT item_id FROM prog_sessions ORDER BY item_id");
+  $result = $mysqli->query("SELECT item_id, title FROM prog_sessions ORDER BY title, item_id");
   $items = [];
   while ($row = $result->fetch_assoc()) {
     $items[] = $row;
@@ -462,32 +467,33 @@ function db_get_prog_sessions() {
 function db_get_prog_session($item_id) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT rce_url FROM prog_sessions WHERE item_id = ?");
+  $stmt = $mysqli->prepare("SELECT title, rce_url FROM prog_sessions WHERE item_id = ?");
   $stmt->bind_param("s", $item_id);
   $stmt->execute();
-  $stmt->bind_result($rce_url);
+  $stmt->bind_result($title, $rce_url);
   $stmt->fetch();
   $stmt->close();
 
   return [
+    'title' => $title,
     'rce_url' => $rce_url,
   ];
 }
 
-function db_edit_prog_session($item_id, $rce_url) {
+function db_edit_prog_session($item_id, $title, $rce_url) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("UPDATE prog_sessions SET rce_url = ? WHERE item_id = ?");
-  $stmt->bind_param("ss", $rce_url, $item_id);
+  $stmt = $mysqli->prepare("UPDATE prog_sessions SET title = ?, rce_url = ? WHERE item_id = ?");
+  $stmt->bind_param("sss", $title, $rce_url, $item_id);
   $stmt->execute();
   $stmt->close();
 }
 
-function db_add_prog_session($item_id, $rce_url) {
+function db_add_prog_session($item_id, $title, $rce_url) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_sessions (item_id, rce_url) VALUES (?, ?)");
-  $stmt->bind_param("ss", $item_id, $rce_url);
+  $stmt = $mysqli->prepare("INSERT INTO prog_sessions (item_id, title, rce_url) VALUES (?, ?, ?)");
+  $stmt->bind_param("sss", $item_id, $title, $rce_url);
   $stmt->execute();
   $stmt->close();
 
@@ -506,7 +512,7 @@ function db_delete_prog_session($item_id) {
 function db_get_discord_posts() {
   global $mysqli;
 
-  $result = $mysqli->query("SELECT item_id FROM prog_discord_posts ORDER BY item_id");
+  $result = $mysqli->query("SELECT item_id, title FROM prog_discord_posts ORDER BY title, item_id");
   $items = [];
   while ($row = $result->fetch_assoc()) {
     $items[] = $row;
@@ -519,10 +525,10 @@ function db_get_discord_posts() {
 function db_get_discord_post($item_id) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT start, duration, room_id, post_url FROM prog_discord_posts WHERE item_id = ?");
+  $stmt = $mysqli->prepare("SELECT start, title, duration, room_id, post_url FROM prog_discord_posts WHERE item_id = ?");
   $stmt->bind_param("s", $item_id);
   $stmt->execute();
-  $stmt->bind_result($start_time, $duration_secs, $room_id, $post_url);
+  $stmt->bind_result($start_time, $title, $duration_secs, $room_id, $post_url);
   $stmt->fetch();
   $stmt->close();
 
@@ -530,6 +536,7 @@ function db_get_discord_post($item_id) {
 
   return [
     'start' => $start_time_formatted,
+    'title' => $title,
     'duration' => $duration_secs ? $duration_secs / 60 : null,
     'room_id' => $room_id,
     'post_url' => $post_url,
@@ -539,10 +546,10 @@ function db_get_discord_post($item_id) {
 function db_get_discord_post_by_room_and_time($room_id, $utc_time) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT start, duration, room_id, post_url FROM prog_discord_posts WHERE room_id = ? AND start <= ? AND start + duration >= ?");
+  $stmt = $mysqli->prepare("SELECT title, start, duration, room_id, post_url FROM prog_discord_posts WHERE room_id = ? AND start <= ? AND start + duration >= ?");
   $stmt->bind_param("sii", $room_id, $utc_time, $utc_time);
   $stmt->execute();
-  $stmt->bind_result($start_time, $duration_secs, $room_id, $post_url);
+  $stmt->bind_result($title, $start_time, $duration_secs, $room_id, $post_url);
   $stmt->fetch();
   $stmt->close();
 
@@ -550,13 +557,14 @@ function db_get_discord_post_by_room_and_time($room_id, $utc_time) {
 
   return [
     'start' => $start_time_formatted,
+    'title' => $title,
     'duration' => $duration_secs ? $duration_secs / 60 : null,
     'room_id' => $room_id,
     'post_url' => $post_url,
   ];
 }
 
-function db_edit_discord_post($item_id, $start, $duration, $room_id, $post_url) {
+function db_edit_discord_post($item_id, $title, $start, $duration, $room_id, $post_url) {
   global $mysqli;
 
   if ($start) {
@@ -572,13 +580,13 @@ function db_edit_discord_post($item_id, $start, $duration, $room_id, $post_url) 
     $duration_secs = null;
   }
 
-  $stmt = $mysqli->prepare("UPDATE prog_discord_posts SET start = ?, duration = ?, room_id = ?, post_url = ? WHERE item_id = ?");
-  $stmt->bind_param("iisss", $start_time, $duration_secs, $room_id, $post_url, $item_id);
+  $stmt = $mysqli->prepare("UPDATE prog_discord_posts SET title = ?, start = ?, duration = ?, room_id = ?, post_url = ? WHERE item_id = ?");
+  $stmt->bind_param("siisss", $title, $start_time, $duration_secs, $room_id, $post_url, $item_id);
   $stmt->execute();
   $stmt->close();
 }
 
-function db_add_discord_post($item_id, $start, $duration, $room_id, $post_url) {
+function db_add_discord_post($item_id, $title, $start, $duration, $room_id, $post_url) {
   global $mysqli;
 
   if ($start) {
@@ -594,15 +602,15 @@ function db_add_discord_post($item_id, $start, $duration, $room_id, $post_url) {
     $duration_secs = null;
   }
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?)");
-  $stmt->bind_param("siiss", $item_id, $start_time, $duration_secs, $room_id, $post_url);
+  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, title, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssiiss", $item_id, $title, $start_time, $duration_secs, $room_id, $post_url);
   $stmt->execute();
   $stmt->close();
 
   return $mysqli->insert_id;
 }
 
-function db_upsert_discord_post($item_id, $start, $duration, $room_id, $post_url) {
+function db_upsert_discord_post($item_id, $title, $start, $duration, $room_id, $post_url) {
   global $mysqli;
 
   if ($start) {
@@ -618,8 +626,8 @@ function db_upsert_discord_post($item_id, $start, $duration, $room_id, $post_url
     $duration_secs = null;
   }
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE start = VALUES(start), duration = VALUES(duration), room_id = VALUES(room_id), post_url = VALUES(post_url)");
-  $stmt->bind_param("siiss", $item_id, $start_time, $duration_secs, $room_id, $post_url);
+  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, title, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE start = VALUES(start), duration = VALUES(duration), room_id = VALUES(room_id), post_url = VALUES(post_url)");
+  $stmt->bind_param("ssiiss", $item_id, $title, $start_time, $duration_secs, $room_id, $post_url);
   $stmt->execute();
   $stmt->close();
 }
@@ -657,7 +665,7 @@ function db_set_zoom_url($url) {
 function db_get_replays() {
   global $mysqli;
 
-  $result = $mysqli->query("SELECT item_id FROM prog_replay ORDER BY item_id");
+  $result = $mysqli->query("SELECT item_id, title FROM prog_replay ORDER BY title, item_id");
   $items = [];
   while ($row = $result->fetch_assoc()) {
     $items[] = $row;
@@ -670,32 +678,33 @@ function db_get_replays() {
 function db_get_replay($item_id) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT replay_url FROM prog_replay WHERE item_id = ?");
+  $stmt = $mysqli->prepare("SELECT title, replay_url FROM prog_replay WHERE item_id = ?");
   $stmt->bind_param("s", $item_id);
   $stmt->execute();
-  $stmt->bind_result($replay_url);
+  $stmt->bind_result($title, $replay_url);
   $stmt->fetch();
   $stmt->close();
 
   return [
+    'title' => $title,
     'replay_url' => $replay_url,
   ];
 }
 
-function db_edit_replay($item_id, $replay_url) {
+function db_edit_replay($item_id, $title, $replay_url) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("UPDATE prog_replay SET replay_url = ? WHERE item_id = ?");
-  $stmt->bind_param("ss", $replay_url, $item_id);
+  $stmt = $mysqli->prepare("UPDATE prog_replay SET title = ?, replay_url = ? WHERE item_id = ?");
+  $stmt->bind_param("sss", $title, $replay_url, $item_id);
   $stmt->execute();
   $stmt->close();
 }
 
-function db_add_replay($item_id, $replay_url) {
+function db_add_replay($item_id, $title, $replay_url) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_replay (item_id, replay_url) VALUES (?, ?)");
-  $stmt->bind_param("ss", $item_id, $replay_url);
+  $stmt = $mysqli->prepare("INSERT INTO prog_replay (item_id, title, replay_url) VALUES (?, ?, ?)");
+  $stmt->bind_param("sss", $item_id, $title, $replay_url);
   $stmt->execute();
   $stmt->close();
 

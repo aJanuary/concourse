@@ -37,12 +37,18 @@ render_header(
 <?php
         $replays = db_get_replays();
         foreach ($replays as $replay) {
+          if ($replay['title']) {
+            $label = $replay['title'] . ' (' . $replay['item_id'] . ')';
+          } else {
+            $label = $replay['item_id'];
+          }
 ?>
-          <li><a aria-label="Edit item <?php echo $replay['item_id']; ?>" href="/admin/programme/replay/edit?item_id=<?php echo $replay['item_id']; ?>"><?php echo $replay['item_id']; ?></a></li>
+          <li><a aria-label="Edit item <?php echo $label; ?>" href="/admin/programme/replay/edit?item_id=<?php echo $replay['item_id']; ?>"><?php echo $label; ?></a></li>
 <?php
         }
 ?>
     </ul>
+  <article>
   <?php
   render_footer();
   ?>

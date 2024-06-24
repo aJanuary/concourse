@@ -37,12 +37,18 @@ render_header(
 <?php
         $stages = db_get_stages();
         foreach ($stages as $stage) {
+          if ($stage['title']) {
+            $label = $stage['title'] . ' (' . $stage['room_id'] . ')';
+          } else {
+            $label = $stage['room_id'];
+          }
 ?>
-          <li><a aria-label="Edit stage <?php echo $stage['room_id']; ?>" href="/admin/programme/stages/edit?room_id=<?php echo $stage['room_id']; ?>"><?php echo $stage['room_id']; ?></a></li>
+          <li><a aria-label="Edit stage <?php echo $label; ?>" href="/admin/programme/stages/edit?room_id=<?php echo $stage['room_id']; ?>"><?php echo $label; ?></a></li>
 <?php
         }
 ?>
     </ul>
+  </article>
   <?php
   render_footer();
   ?>

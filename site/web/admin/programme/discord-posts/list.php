@@ -38,12 +38,18 @@ render_header(
 <?php
         $posts = db_get_discord_posts();
         foreach ($posts as $post) {
+          if ($post['title']) {
+            $label = $post['title'] . ' (' . $post['item_id'] . ')';
+          } else {
+            $label = $post['item_id'];
+          }
 ?>
-          <li><a aria-label="Edit item <?php echo $post['item_id']; ?>" href="/admin/programme/discord-posts/edit?item_id=<?php echo $post['item_id']; ?>"><?php echo $post['item_id']; ?></a></li>
+          <li><a aria-label="Edit item <?php echo $label; ?>" href="/admin/programme/discord-posts/edit?item_id=<?php echo $post['item_id']; ?>"><?php echo $label; ?></a></li>
 <?php
         }
 ?>
     </ul>
+  <article>
   <?php
   render_footer();
   ?>

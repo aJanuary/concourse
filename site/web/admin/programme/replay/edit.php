@@ -11,11 +11,12 @@ if (!current_user_has_permission('manage-programme')) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $item_id = $_POST['item_id'] ?: null;
+  $title = $_POST['title'] ?: null;
   $replay_url = $_POST['replay_url'];
 
   if ($action == "add") {
     try {
-      db_add_replay($item_id, $replay_url);
+      db_add_replay($item_id, $title, $replay_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/replay/list?error=' . $e->getMessage());
       throw $e;
@@ -29,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } else if ($action == "edit") {
     try {
-      db_edit_replay($item_id, $replay_url);
+      db_edit_replay($item_id, $title, $replay_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/feplay/list?error=' . $e->getMessage());
       throw $e;
@@ -70,6 +71,7 @@ render_header(
 if (array_key_exists('item_id', $_GET)) {
 ?>
         <input type="hidden" name="item_id" value="<?php echo $item_id; ?>">
+        
         <input type="hidden" name="action" value="edit">
 <?php
 } else {
@@ -79,6 +81,7 @@ if (array_key_exists('item_id', $_GET)) {
 <?php
 }
 ?>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $replay['title']; ?>"></label></p>
         <p><label>Replay URL: <input type="text" name="replay_url" value="<?php echo $replay['replay_url']; ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
@@ -116,6 +119,7 @@ if (array_key_exists('item_id', $_GET)) {
         });
       }
     </script>
+    <article>
   <?php
   render_footer();
   ?>

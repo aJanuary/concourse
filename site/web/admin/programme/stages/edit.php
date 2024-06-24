@@ -11,20 +11,21 @@ if (!current_user_has_permission('manage-programme')) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $room_id = $_POST['room_id'] ?: null;
+  $title = $_POST['title'] ?: null;
   $viewer_url = $_POST['viewer_url'] ?: null;
   $type = $_POST['type'] ?: null;
   $participant_url = $_POST['participant_url'] ?: null;
 
   if ($action == "add") {
     try {
-      db_add_stage($room_id, $viewer_url, $type, $participant_url);
+      db_add_stage($room_id, $title, $viewer_url, $type, $participant_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
       throw $e;
     }
   } else if ($action == "edit") {
     try {
-      db_edit_stage($room_id, $viewer_url, $type, $participant_url);
+      db_edit_stage($room_id, $title, $viewer_url, $type, $participant_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
       throw $e;
@@ -81,6 +82,7 @@ if (array_key_exists('room_id', $_GET)) {
 <?php
 }
 ?>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $stage['title']; ?>"></label></p>
         <p><label>Viewer URL: <input name="viewer_url" value="<?php echo $stage['viewer_url']; ?>"></label></p>
         <p><label>Type: <select name="type">
           <option value="hybrid" <?php if ($stage['type'] == 'hybrid') { echo 'selected'; } ?>>Hybrid</option>
@@ -131,6 +133,7 @@ if (array_key_exists('room_id', $_GET)) {
         });
       }
     </script>
+    <article>
   <?php
   render_footer();
   ?>

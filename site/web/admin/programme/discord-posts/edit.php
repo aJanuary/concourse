@@ -11,6 +11,7 @@ if (!current_user_has_permission('manage-programme')) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $item_id = $_POST['item_id'] ?: null;
+  $title = $_POST['title'] ?: null;
   $start = $_POST['start'] ?: null;
   $duration = $_POST['duration'] ?: null;
   $room_id = $_POST['room_id'] ?: null;
@@ -18,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if ($action == "add") {
     try {
-      db_add_discord_post($item_id, $start, $duration, $room_id, $post_url);
+      db_add_discord_post($item_id, $title, $start, $duration, $room_id, $post_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/discord-posts/list?error=' . $e->getMessage());
       throw $e;
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } else if ($action == "edit") {
     try {
-      db_edit_discord_post($item_id, $start, $duration, $room_id, $post_url);
+      db_edit_discord_post($item_id, $title, $start, $duration, $room_id, $post_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/discord-posts/list?error=' . $e->getMessage());
       throw $e;
@@ -83,6 +84,7 @@ if (array_key_exists('item_id', $_GET)) {
 <?php
 }
 ?>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $post['title']; ?>"></label></p>
         <p><label>Start date/time (yyyy-mm-dd hh:mm in 24h BST): <input name="start" pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$" value="<?php echo $post['start']; ?>"></label></p>
         <p><label>Duration (mins): <input name="duration" value="<?php echo $post['duration']; ?>" pattern="^\d*$"></label></p>
         <p><label>Plano Room ID: <input name="room_id" value="<?php echo $post['room_id']; ?>" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
@@ -123,6 +125,7 @@ if (array_key_exists('item_id', $_GET)) {
         });
       }
     </script>
+  <article>
   <?php
   render_footer();
   ?>

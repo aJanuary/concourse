@@ -53,6 +53,7 @@ render_header(
           window.history.replaceState({}, document.title, window.location.pathname);
         }
     </script>
+  <article>
   <?php
   render_footer();
   ?>

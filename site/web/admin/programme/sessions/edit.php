@@ -11,11 +11,12 @@ if (!current_user_has_permission('manage-programme')) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $item_id = $_POST['item_id'] ?: null;
+  $title = $_POST['title'] ?: null;
   $rce_url = $_POST['rce_url'];
 
   if ($action == "add") {
     try {
-      db_add_prog_session($item_id, $rce_url);
+      db_add_prog_session($item_id, $title, $rce_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
       throw $e;
@@ -29,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } else if ($action == "edit") {
     try {
-      db_edit_prog_session($item_id, $rce_url);
+      db_edit_prog_session($item_id, $title, $rce_url);
     } catch (Exception $e) {
       header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
       throw $e;
@@ -79,6 +80,7 @@ if (array_key_exists('item_id', $_GET)) {
 <?php
 }
 ?>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $session['title']; ?>"></label></p>
         <p><label>Session URL: <input type="text" name="rce_url" value="<?php echo $session['rce_url']; ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
@@ -116,6 +118,7 @@ if (array_key_exists('item_id', $_GET)) {
         });
       }
     </script>
+    <article>
   <?php
   render_footer();
   ?>
