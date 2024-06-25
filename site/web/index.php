@@ -24,7 +24,7 @@ $cards = [
     'title' => 'Programme guide',
     'subtitle' => 'ConClár',
     'description' => 'See what\'s on where and when. Bookmark items to make sure you don\'t miss them.',
-    'link' => '/under-construction?page=Programme+guide',
+    'link' => 'https://ajanuary.com/static/glasgow2024-conclar/',
     'card-permission' => 'see-guide',
   ], [
     'name' => 'maps',
