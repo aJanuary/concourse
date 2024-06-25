@@ -72,7 +72,7 @@ $cards = [
     'title' => 'Volunteer',
     'subtitle' => '',
     'description' => 'Find out how you can help out at ' . CON_NAME . '.',
-    'link' => '/under-construction?page=Volunteer',
+    'link' => 'https://glasgow2024.org/for-members/volunteering/',
     'card-permission' => 'see-website',
   ], [
     'name' => 'gallery',
