@@ -38,12 +38,20 @@ render_header(
         $sessions = db_get_prog_sessions();
         foreach ($sessions as $session) {
           if ($session['title']) {
-            $label = $session['title'] . ' (' . $session['item_id'] . ')';
+            $label = $session['title'];
+            $subtitle = $session['item_id'];
           } else {
             $label = $session['item_id'];
           }
 ?>
-          <li><a aria-label="Edit item <?php echo $label; ?>" href="/admin/programme/sessions/edit?item_id=<?php echo $session['item_id']; ?>"><?php echo $label; ?></a></li>
+          <li>
+            <a aria-label="Edit item <?php echo $label; ?>" href="/admin/programme/sessions/edit?item_id=<?php echo $session['item_id']; ?>"><?php echo $label; ?></a>
+            <?php
+            if ($subtitle) {
+              echo '<br>' . $subtitle;
+            }
+            ?>
+          </li>
 <?php
         }
 ?>
