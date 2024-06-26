@@ -614,7 +614,7 @@ function db_upsert_discord_post($item_id, $title, $start, $duration, $room_id, $
   global $mysqli;
 
   if ($start) {
-    $date = new DateTime($start, new DateTimeZone(TIMEZONE));
+    $date = new DateTime($start, new DateTimeZone("UTC"));
     $start_time = $date->getTimestamp();
   } else {
     $start_time = null;
