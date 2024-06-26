@@ -23,7 +23,7 @@ def escape_sql(str)
   # Rather than trusting we've managed to escape everything, reject anything suspicious.
   # Because we are running this interactively, we can then decide whether to allow the character
   # or find out how to escape it.
-  allowlist = "a-zA-Z0-9 .-@+()-_\"éöÅ'ï�ëäüø”íÖńłò!âåóð#ŠůáćžúØŁźŚżśèŻÚÍßÉšÁ’ñ—&–\t"
+  allowlist = "a-zA-Z0-9 .-@+()-_\"éöÅ'ï�ëäüø”íÖńłò!âåóð#ŠůáćžúØŁźŚżśèŻÚÍßÉšÁ’ñ—&–…\t"
   if !str.match?(/^[#{allowlist}]*$/)
     raise "Suspicious string #{str}: " + str.scan(/[^#{allowlist}]/).uniq.join('') 
   end
@@ -41,15 +41,16 @@ program_url, event_id, cookie = ARGV
 program = JSON.parse(URI.open(program_url).read)
 sessions = get_sessions(event_id, cookie)
 
-day1 = Date.parse(program.map {|item| item['date']}.min)
+day1 = Date.parse(program.map {|item| item['datetime']}.min)
 
 stages = []
 puts "START TRANSACTION;"
 program.each do |item|
   # Format as Mon, Tue, Wed etc.
-  date = Date.parse(item['date'])
+  date = Date.parse(item['datetime'])
   day_idx = ((date - day1) + 1).to_i
-  title = "Day #{day_idx} - #{date.strftime('%a')} #{item['time']} - #{item['title']}"
+  time = DateTime.parse(item['datetime']).to_time.getlocal('+01:00').strftime('%H:%M')
+  title = "Day #{day_idx} - #{date.strftime('%a')} #{time} - #{item['title']}"
   if item['links'].has_key?('replay')
     puts "INSERT INTO prog_replay (item_id, title) VALUES ('#{item['id']}', '#{escape_sql(title)}');"
   end
