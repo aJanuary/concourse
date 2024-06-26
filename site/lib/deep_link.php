@@ -12,7 +12,7 @@ function render_rce_wizard($title, $url) {
 
   render_header(
     $title,
-    'Link to an item in the Glasgoe 2024 RingCentral Events event.',
+    'Link to an item in the Glasgow 2024 RingCentral Events event.',
     ['Home' => '/', 'Log in to RingCentral Events']
   );
 
