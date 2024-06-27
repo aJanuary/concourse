@@ -158,7 +158,7 @@ $cards = [
   ?>
     <div class="card <?php echo $card['name']; ?>">
       <div class="hero"
-      <?php if ($card['live-card']) { ?>
+      <?php if (array_key_exists('live-card', $card) && $card['live-card']) { ?>
           aria-label="<?php echo $card['title']; ?>"
       <?php } else { ?>
           aria-hidden="true"
