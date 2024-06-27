@@ -25,7 +25,7 @@ render_header(
     } else {
 
 ?>
-  <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify">Join the Discord server</a></p>
+  <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify+guilds.join">Join the Discord server</a></p>
 <?php
     }
   } else {
@@ -49,7 +49,7 @@ render_header(
     }
 ?>
   <p><a class="button" target="_blank" href="https://discord.com/channels/1214240728130256926/1214240728583118871">Go to Discord in your browser</a> or log in as <?php echo $usernames[0]; ?> in the <a href="https://discord.com/download">Discord app</a></p>
-  <p><a target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify">Join the Discord server as a different user</a></p>
+  <p><a target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify+guilds.join">Join the Discord server as a different user</a></p>
 <?php
   }
 ?>

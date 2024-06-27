@@ -59,7 +59,7 @@ if (!empty($usernames)) {
   exit;
 }
 
-$invite_url = 'https://discord.com/oauth2/authorize?client_id=' . DISCORD_CLIENT_ID . '&response_type=code&redirect_uri=' . urlencode(ROOT_URL) . '%2Fchat_callback&scope=identify';
+$invite_url = 'https://discord.com/oauth2/authorize?client_id=' . DISCORD_CLIENT_ID . '&response_type=code&redirect_uri=' . urlencode(ROOT_URL) . '%2Fchat_callback&scope=identify+guilds.join';
 
 render_header(
   'Go to a Discord chat for an item',

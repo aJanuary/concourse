@@ -41,7 +41,7 @@ $token_resp = api_call('https://discord.com/api/oauth2/token', [
   'grant_type' => 'authorization_code',
   'code' => $code,
   'redirect_uri' => ROOT_URL . '/chat_callback',
-  'scope' => 'identify'
+  'scope' => 'identify guilds.join'
 ]));
 $access_token = $token_resp['access_token'];
 if (!$access_token) {
@@ -64,6 +64,19 @@ if (!$discord_id || !$discord_username) {
 
 db_set_discord_id(get_current_user_badge_no(), $discord_id, $discord_username);
 
+
+// Join server
+$join_resp = api_call('https://discord.com/api/guilds/' . DISCORD_GUILD_ID . '/members/' . $discord_id, [
+  'Authorization: Bot ' . DISCORD_BOT_TOKEN,
+  'Content-Type: application/json'
+], json_encode([
+  'access_token' => $access_token,
+  'nick' => get_current_user_name(),
+]), 'PUT');
+
+// Note that we don't actually care about the response. If it fails, we'll just hope the invite path works.
+error_log("Join response for " . get_current_user_badge_no() . ": " . print_r($join_resp, true));
+
 // Create invite
 $invite_resp = api_call('https://discord.com/api/channels/' . DISCORD_INVITE_CHANNEL_ID . '/invites', [
   'Authorization: Bot ' . DISCORD_BOT_TOKEN,
@@ -73,6 +86,9 @@ $invite_resp = api_call('https://discord.com/api/channels/' . DISCORD_INVITE_CHA
   'max_uses' => 1,
   'unique' => true
 ]));
+
+error_log("Invite response for " . get_current_user_badge_no() . ": " . print_r($invite_resp, true));
+
 $invite_code = $invite_resp['code'];
 
 if (!$invite_code) {
