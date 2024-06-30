@@ -57,7 +57,7 @@ program.each do |item|
   if item['links'].has_key?('session')
     if sessions.has_key?(item['title'])
       url = sessions[item['title']]
-      puts "INSERT INTO prog_sessions (item_id, title, url) VALUES ('#{item['id']}', '#{escape_sql(title)}', '#{url}');"
+      puts "INSERT INTO prog_sessions (item_id, title, rce_url) VALUES ('#{item['id']}', '#{escape_sql(title)}', '#{url}');"
     else
       puts "INSERT INTO prog_sessions (item_id, title) VALUES ('#{item['id']}', '#{escape_sql(title)}');"
     end
