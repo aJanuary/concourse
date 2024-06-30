@@ -35,10 +35,10 @@ $cards = [
     'card-permission' => 'see-maps',
   ], [
     'name' => 'readme',
-    'title' => 'Pocket guide',
+    'title' => 'Convention guide',
     'subtitle' => 'Readme',
     'description' => 'Find out all the key information you need to know for ' . CON_SHORT_NAME . '.',
-    'link' => '/under-construction?paghe=Pocket+guide',
+    'link' => '/under-construction?page=Convention+guide',
     'card-permission' => 'see-readme',
   ], [
     'name' => 'newsletter',
