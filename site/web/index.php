@@ -93,7 +93,7 @@ $cards = [
     'title' => 'Site selection',
     'subtitle' => 'Voting',
     'description' => 'Vote in the site selection for the 2026 World Science Fiction Convention.',
-    'link' => '/under-construction?page=Site+selection',
+    'link' => 'https://glasgow2024.org/for-members/wsfs-site-selection/',
     'card-permission' => 'see-site-selection',
   ], [
     'name' => 'itinerary',
