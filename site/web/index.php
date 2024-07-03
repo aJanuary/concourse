@@ -84,9 +84,9 @@ $cards = [
   ], [
     'name' => 'hugos',
     'title' => 'Hugos',
-    'subtitle' => 'Voting',
-    'description' => 'Vote for the Hugos.',
-    'link' => 'https://glasgow2024.org/hugo-awards/hugo-awards-final-ballot/',
+    'subtitle' => 'Results and stats',
+    'description' => 'See the Hugo results and stats.',
+    'link' => 'https://glasgow2024.org/hugo-awards/2024-hugo-award-winners/',
     'card-permission' => 'see-hugos',
   ], [
     'name' => 'site-selection',
