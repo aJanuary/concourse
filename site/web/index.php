@@ -31,7 +31,7 @@ $cards = [
     'title' => 'Maps',
     'subtitle' => '',
     'description' => 'Find your way around the convention venues.',
-    'link' => '/under-construction?page=Maps',
+    'link' => '/maps',
     'card-permission' => 'see-maps',
   ], [
     'name' => 'readme',
