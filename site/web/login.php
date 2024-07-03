@@ -12,7 +12,7 @@ if (is_logged_in()) {
 
 $error = null;
 
-if (isset($_GET['skip-login'])) {
+if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {
     make_anonymous_session();
     header('Location: ' . $_GET['redirect']);
     exit();
@@ -63,9 +63,21 @@ if (isset($_GET['error_code'])) {
 }
 ?>
     <a href="<?php echo $clyde->authorize_url(); ?>" class="button login">Log in with Glasgow Registration</a>
+<?php
+if (ALLOW_ANONYMOUS_ACCESS) {
+?>
     <p><a href="/login?skip-login&redirect=<?php echo urlencode($_SESSION['oauth2redirect']); ?>">Continue without logging in</a></p>
+<?php
+}
+?>
     <p>Logging in to the members portal allows us to customise the experience to your membership and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
-    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.
+    <?php
+if (ALLOW_ANONYMOUS_ACCESS) {
+?>
+    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.</p>
+<?php
+}
+?>
 <?php
     if (time() < strtotime("2024-08-13")) {
 ?>

@@ -8,6 +8,7 @@ define('DISCORD_INVITE_CHANNEL_ID', '1229126688277926008');
 define('DISCORD_API_CHANNEL_ID', '1248917066807775232');
 define("SUPPORT_EMAIL", "online-support@glasgow2024.org");
 define('TIMEZONE', 'Europe/London');
+define('ALLOW_ANONYMOUS_ACCESS', false);
 
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
 define('DB_NAME', getenv('CONFIG_DB_NAME'));

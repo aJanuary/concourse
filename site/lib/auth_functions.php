@@ -26,7 +26,7 @@ function is_logged_in() {
 }
 
 function is_anonymous() {
-  $implicit = isset($_REQUEST['allow_implicit_anonymous']) && $_REQUEST['allow_implicit_anonymous'];
+  $implicit = ALLOW_ANONYMOUS_ACCESS && isset($_REQUEST['allow_implicit_anonymous']) && $_REQUEST['allow_implicit_anonymous'];
   return (
     (isset($_COOKIE['session']) && $_COOKIE['session'] == 'anonymous') ||
     ($implicit && !isset($_COOKIE['session']))
