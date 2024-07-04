@@ -2,6 +2,7 @@
 
 require_once('db.php');
 require_once('requests.php');
+require_once('discord.php');
 
 function make_session($badge_no) {
     $session_id = sha1(rand());
@@ -102,6 +103,22 @@ function create_member($badge_no, $email, $name) {
   $magic_link = $magic_link_resp['data']['attributes']['magicLink'];
 
   db_create_member($badge_no, $name, $email, $magic_link);
+}
+
+function update_member($badge_no, $email, $name) {
+  $existing = db_get_member($badge_no);
+  if ($existing['email'] == $email && $existing['name'] == $name) {
+    return;
+  }
+
+  db_update_member($badge_no, $email, $name);
+
+  if ($existing['name'] != $name) {
+    $discord_ids = db_get_discord_ids($badge_no);
+    foreach ($discord_ids as $discord_id) {
+      request_discord_recheck_user($discord_id);
+    }
+  }
 }
 
 function get_login_link_status($badge_no, $login_code) {

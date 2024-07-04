@@ -48,10 +48,12 @@ if (defined('CLYDE_ALLOWLIST') && !in_array($email, CLYDE_ALLOWLIST)) {
 
 if (!db_member_exists($badge_no)) {
   create_member($badge_no, $email, $name);
-};
+} else {
+  update_member($badge_no, $email, $name);
+}
 if (!db_identity_exists($badge_no)) {
   db_create_oauth_identity($badge_no, 'clyde', $registrant['id'], $email, json_encode($registrant));
-};
+}
 make_session($badge_no);
 
 if (isset($_SESSION['oauth2redirect'])) {

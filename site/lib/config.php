@@ -5,7 +5,7 @@ define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
 define('CON_SHORT_NAME', 'Glasgow 2024');
 define('DISCORD_GUILD_ID', '1229093507835101204');
 define('DISCORD_INVITE_CHANNEL_ID', '1229126688277926008');
-define('DISCORD_API_CHANNEL_ID', '1248917066807775232');
+define('DISCORD_API_CHANNEL_ID', '1256912513572929596');
 define("SUPPORT_EMAIL", "online-support@glasgow2024.org");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', false);

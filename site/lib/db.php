@@ -21,6 +21,22 @@ function db_check_member_creds($email, $password) {
   return password_verify($password, $hash);
 }
 
+function db_get_member($badge_no) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT name, email FROM members WHERE badge_no = ?");
+  $stmt->bind_param("s", $badge_no);
+  $stmt->execute();
+  $stmt->bind_result($name, $email);
+  $stmt->fetch();
+  $stmt->close();
+
+  return [
+    'name' => $name,
+    'email' => $email,
+  ];
+}
+
 function db_insert_session($session_token, $badge_no, $expires_at) {
   global $mysqli;
 
@@ -125,6 +141,15 @@ function db_create_member($badge_id, $name, $email, $invite_url) {
     $mysqli->rollback();
     throw $exception;
   }
+}
+
+function db_update_member($badge_id, $email, $name) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("UPDATE members SET name = ?, email = ? WHERE badge_no = ?");
+  $stmt->bind_param("sss", $name, $email, $badge_id);
+  $stmt->execute();
+  $stmt->close();
 }
 
 function db_get_magic_link($session_token) {
@@ -280,6 +305,22 @@ function db_get_discord_usernames($session_id) {
   $stmt->close();
 
   return $usernames;
+}
+
+function db_get_discord_ids($badge_no) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT discord_id FROM discord_ids WHERE badge_no = ?");
+  $stmt->bind_param("s", $badge_no);
+  $stmt->execute();
+  $stmt->bind_result($discord_id);
+  $discord_ids = [];
+  while ($stmt->fetch()) {
+    $discord_ids[] = $discord_id;
+  }
+  $stmt->close();
+
+  return $discord_ids;
 }
 
 function db_get_roles() {

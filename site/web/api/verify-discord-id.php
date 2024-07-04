@@ -4,7 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
 
 render_header(
   'Verify Discord ID',
@@ -24,18 +24,7 @@ if ($verification_result["result"] === "no-token") {
 }
 
 if ($verification_result["result"] != "alread-verified") {
-  $message_resp = api_call('https://discord.com/api/channels/' . DISCORD_API_CHANNEL_ID . '/messages', [
-    'Authorization: Bot ' . DISCORD_BOT_TOKEN,
-    'Content-Type: application/json'
-  ], json_encode([
-    'content' => json_encode([
-      'action' => 'recheck-user',
-      'user-id' => $verification_result["id"]
-    ]),
-  ]));
-  if (!array_key_exists('id', $message_resp)) {
-    throw new Exception('Failed to send recheck message for ' . $verification_result["id"] . '\n' . print_r($message_resp, true));
-  }
+  request_discord_recheck_user($verification_result["id"]);
 }
 
 ?>
