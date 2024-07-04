@@ -104,16 +104,9 @@ body {
   background: var(--body-bg-color);
 }
 
-body.home {
-  background-image: url('/resources/background.webp');
-  background-size: cover;
-  background-position: bottom right;
-}
-
 [data-loading] {
   display: none;
 }
-
 
 .site-branding {
   font-family: "Gruppo", display;
@@ -316,6 +309,7 @@ main {
   box-shadow: hsla(0, 0%, 39%, 0.2) 0px 2px 8px 0px;
   transition: all 0.1s ease-in;
   font-weight: normal;
+  border: solid 1px #CCC;
 }
 .card h2 a {
   color: rgb(34, 34, 34);
