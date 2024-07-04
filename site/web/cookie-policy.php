@@ -28,6 +28,7 @@ render_header(
     <li>PHPSESSID - Stores the user&apos;s temporary log in session id. Required for log in functionality to work. Expires when the browser session ends.</li>
     <li>session - Stores the user&apos;s session id. Required for log in functionality to work. Expires after 30 days.</li>
     <li>seen_rce_invite - Stores whether the user has seen the RingCentral Events invite. Required for deep-linking into RingCentral Event items. Expires after 30 days.</li>
+    <li>favs_[ticket id] - Stores the user&apos;s favourite items. Required for the quick links functionality to work. Expires after 1 year.</li>
   </ul>
   <h3>6. Consent</h3>
   <p>Because we only make use of cookies to provide essential functionality, we do not require your consent to set these cookies. You can still block or delete them by changing your browser settings.</p>

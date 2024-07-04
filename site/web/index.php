@@ -11,205 +11,198 @@ render_header(
 );
 
 $cards = [
-  [
-    'name' => 'time',
-    'title' => 'Convention time',
-    'subtitle' => 'BST',
-    'description' => 'Convert between convention time (BST) and your local timezone.',
-    'link' => 'https://dateful.com/convert/british-summer-time-bst',
-    'card-permission' => 'see-time',
-    'live-card' => true,
-  ], [
-    'name' => 'guide',
-    'title' => 'Programme guide',
-    'subtitle' => 'ConClár',
-    'description' => 'See what\'s on where and when. Bookmark items to make sure you don\'t miss them.',
-    'link' => 'https://ajanuary.com/static/glasgow2024-conclar/',
-    'card-permission' => 'see-guide',
-  ], [
-    'name' => 'maps',
-    'title' => 'Maps',
-    'subtitle' => '',
-    'description' => 'Find your way around the convention venues.',
-    'link' => '/maps',
-    'card-permission' => 'see-maps',
-  ], [
-    'name' => 'readme',
-    'title' => 'Convention guide',
-    'subtitle' => 'Readme',
-    'description' => 'Find out all the key information you need to know for ' . CON_SHORT_NAME . '.',
-    'link' => '/under-construction?page=Convention+guide',
-    'card-permission' => 'see-readme',
-  ], [
-    'name' => 'newsletter',
-    'title' => 'Newsletter',
-    'subtitle' => '',
-    'link' => '/under-construction?page=Newsletter',
-    'card-permission' => 'see-help',
-  ], [
-    'name' => 'signups',
-    'title' => 'Sign-ups',
-    'subtitle' => '',
-    'description' => 'Sign up for workshops, table talks and more.',
-    'link' => '/under-construction?page=Sign-ups',
-    'card-permission' => 'see-signups',
-  ], [
-    'name' => 'stream',
-    'title' => 'Stream and replay',
-    'subtitle' => 'RingCentral Events',
-    'description' => 'Watch the live streams of programme items, or watch the recorded videos afterwards.',
-    'link' => '/stream',
-    'card-permission' => 'see-rce',
-  ], [
-    'name' => 'chat',
-    'title' => 'Chat online',
-    'subtitle' => 'Discord',
-    'description' => 'Chat with other members online in Discord. Talk about panel items, your fannish interests, and catch up with friends.',
-    'link' => '/chat',
-    'card-permission' => 'see-discord',
-  ], [
-    'name' => 'volunteer',
-    'title' => 'Volunteer',
-    'subtitle' => '',
-    'description' => 'Find out how you can help out at ' . CON_NAME . '.',
-    'link' => 'https://glasgow2024.org/for-members/volunteering/',
-    'card-permission' => 'see-website',
-  ], [
-    'name' => 'gallery',
-    'title' => 'Artist&apos;s alley',
-    'subtitle' => '',
-    'description' => 'View a gallary of our exhibitor\'s art.',
-    'link' => '/under-construction?page=Artist%27s+alley',
-    'card-permission' => 'see-gallery',
-  ], [
-    'name' => 'hugos',
-    'title' => 'Hugos',
-    'subtitle' => 'Results and stats',
-    'description' => 'See the Hugo results and stats.',
-    'link' => 'https://glasgow2024.org/hugo-awards/2024-hugo-award-winners/',
-    'card-permission' => 'see-hugos',
-  ], [
-    'name' => 'site-selection',
-    'title' => 'Site selection',
-    'subtitle' => 'Voting',
-    'description' => 'Vote in the site selection for the 2026 World Science Fiction Convention.',
-    'link' => 'https://glasgow2024.org/for-members/wsfs-site-selection/',
-    'card-permission' => 'see-site-selection',
-  ], [
-    'name' => 'itinerary',
-    'title' => 'Your participant schedule',
-    'subtitle' => 'Planorama',
-    'description' => 'Find the time and room for the programme items you are on. Get links to join remotely if you are participating online.',
-    'link' => '/under-construction?page=Your+participant+schedule',
-    'card-permission' => 'see-itinerary',
-    'link-permission' => 'see-itinerary-other',
-  ], [
-    'name' => 'childcare',
-    'title' => 'Childcare',
-    'subtitle' => '',
-    'description' => 'Opening hours and location for childcare.',
-    'link' => 'https://glasgow2024.org/for-members/childcare/',
-    'card-permission' => 'has-childcare',
-    'link-permission' => 'see-childcare',
-  ], [
-    'name' => 'help',
-    'title' => 'Get help',
-    'subtitle' => 'Info desk, help desks and contacts',
-    'description' => 'If you have a problem or question, you can reach out to us in-person, or online through Discord and e-mail.',
-    'link' => '/help',
-    'card-permission' => 'see-help',
-  ], [
-    'name' => 'website',
-    'title' => 'Website',
-    'subtitle' => '',
-    'description' => 'Find out the latest news and other information about ' . CON_NAME . '.',
-    'link' => 'https://glasgow2024.org/',
-    'card-permission' => 'see-website',
-  ], [
-    'name' => 'manage-roles',
-    'title' => 'Manage roles',
-    'subtitle' => 'Admin',
-    'description' => 'Manage the roles of members.',
-    'link' => '/admin/roles',
-    'link-permission' => 'manage-roles',
-  ], [
-    'name' => 'manage-discord',
-    'title' => 'Discord ids',
-    'subtitle' => 'Admin',
-    'description' => 'Manage the Discord ids of members.',
-    'link' => '/admin/discord',
-    'link-permission' => 'manage-discord-ids',
-  ], [
-    'name' => 'manage-programme',
-    'title' => 'Manage programme',
-    'subtitle' => 'Admin',
-    'description' => 'Manage the programme items.',
-    'link' => '/admin/programme/list',
-    'link-permission' => 'manage-programme',
+  'Info' => [
+    [
+      'name' => 'time',
+      'title' => 'Convention time',
+      'subtitle' => 'BST',
+      'link' => 'https://dateful.com/convert/british-summer-time-bst',
+      'card-permission' => 'see-time',
+      'live-card' => true,
+    ], [
+      'name' => 'maps',
+      'title' => 'Maps',
+      'subtitle' => '',
+      'link' => '/maps',
+      'card-permission' => 'see-maps',
+    ], [
+      'name' => 'readme',
+      'title' => 'Convention guide',
+      'subtitle' => 'Readme',
+      'link' => '/under-construction?page=Convention+guide',
+      'card-permission' => 'see-readme',
+    ], [
+      'name' => 'newsletter',
+      'title' => 'Newsletter',
+      'subtitle' => '',
+      'link' => '/under-construction?page=Newsletter',
+      'card-permission' => 'see-help',
+    ], [
+      'name' => 'childcare',
+      'title' => 'Childcare',
+      'subtitle' => '',
+      'link' => 'https://glasgow2024.org/for-members/childcare/',
+      'card-permission' => 'has-childcare',
+      'link-permission' => 'see-childcare',
+    ], [
+      'name' => 'help',
+      'title' => 'Get help',
+      'subtitle' => 'Info desk, help desks and contacts',
+      'link' => '/help',
+      'card-permission' => 'see-help',
+    ], [
+      'name' => 'website',
+      'title' => 'Website',
+      'subtitle' => '',
+      'link' => 'https://glasgow2024.org/',
+      'card-permission' => 'see-website',
+    ]
+  ],
+  'Programme' => [
+    [
+      'name' => 'guide',
+      'title' => 'Programme guide',
+      'subtitle' => 'ConClár',
+      'link' => 'https://ajanuary.com/static/glasgow2024-conclar/',
+      'card-permission' => 'see-guide',
+    ], [
+      'name' => 'stream',
+      'title' => 'Stream and replay',
+      'subtitle' => 'RingCentral Events',
+      'link' => '/stream',
+      'card-permission' => 'see-rce',
+    ], [
+      'name' => 'signups',
+      'title' => 'Sign-ups',
+      'subtitle' => '',
+      'link' => '/under-construction?page=Sign-ups',
+      'card-permission' => 'see-signups',
+    ], [
+      'name' => 'chat',
+      'title' => 'Chat online',
+      'subtitle' => 'Discord',
+      'link' => '/chat',
+      'card-permission' => 'see-discord',
+    ],
+  ],
+  'Participate' => [
+    [
+      'name' => 'volunteer',
+      'title' => 'Volunteer',
+      'subtitle' => '',
+      'link' => 'https://glasgow2024.org/for-members/volunteering/',
+      'card-permission' => 'see-website',
+    ], [
+      'name' => 'itinerary',
+      'title' => 'Your participant schedule',
+      'subtitle' => 'Planorama',
+      'link' => '/under-construction?page=Your+participant+schedule',
+      'card-permission' => 'see-itinerary',
+      'link-permission' => 'see-itinerary-other',
+    ]
+  ],
+  'Other' => [
+    [
+      'name' => 'gallery',
+      'title' => 'Artist&apos;s alley',
+      'subtitle' => '',
+      'link' => '/under-construction?page=Artist%27s+alley',
+      'card-permission' => 'see-gallery',
+    ], [
+      'name' => 'hugos',
+      'title' => 'Hugos',
+      'subtitle' => 'Results and stats',
+      'link' => 'https://glasgow2024.org/hugo-awards/2024-hugo-award-winners/',
+      'card-permission' => 'see-hugos',
+    ], [
+      'name' => 'site-selection',
+      'title' => 'Site selection',
+      'subtitle' => 'Voting',
+      'link' => 'https://glasgow2024.org/for-members/wsfs-site-selection/',
+      'card-permission' => 'see-site-selection',
+    ], [
+      'name' => 'manage-roles',
+      'title' => 'Manage roles',
+      'subtitle' => 'Admin',
+      'link' => '/admin/roles',
+      'link-permission' => 'manage-roles',
+    ], [
+      'name' => 'manage-discord',
+      'title' => 'Discord ids',
+      'subtitle' => 'Admin',
+      'link' => '/admin/discord',
+      'link-permission' => 'manage-discord-ids',
+    ], [
+      'name' => 'manage-programme',
+      'title' => 'Manage programme',
+      'subtitle' => 'Admin',
+      'link' => '/admin/programme/list',
+      'link-permission' => 'manage-programme',
+    ]
   ]
 ];
 ?>
 
 <nav>
-  <div class="cards">
+  <div id="favs" class="category">
+    <h2><img src="/resources/fav-text.svg" alt="" width="20px" height="20px"> Quick links</h2>
+    <p id="fav-hint"><em>Click the heart icon on a card to add or remove it from this quick links section.</em></p>
+    <div class="cards"></div>
+  </div>
   <?php
-  foreach ($cards as $card) {
-    if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
+  foreach ($cards as $category => $category_cards) {
+    $category_cards = array_filter($category_cards, function($card) {
+      return !array_key_exists('card-permission', $card) || current_user_has_permission($card['card-permission']);
+    });
+    if (empty($category_cards)) {
+      continue;
+    }
   ?>
-    <div class="card <?php echo $card['name']; ?>">
-      <div class="hero"
-      <?php if (array_key_exists('live-card', $card) && $card['live-card']) { ?>
-          aria-label="<?php echo $card['title']; ?>"
-      <?php } else { ?>
-          aria-hidden="true"
-      <?php } ?>
-      ></div>
-      <hgroup>
-        <h2><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h2>
-        <?php
-        if ($card['subtitle']) {
-        ?>
-        <h3><?php echo $card['subtitle']; ?></h3>
-        <?php
+    <div class="category">
+      <h2><?php echo $category; ?></h2>
+      <div class="cards">
+      <?php
+      foreach ($category_cards as $card) {
+        if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
+      ?>
+        <div class="card <?php echo $card['name']; ?>">
+          <div class="hero"
+          <?php if (array_key_exists('live-card', $card) && $card['live-card']) { ?>
+              aria-label="<?php echo $card['title']; ?>"
+          <?php } else { ?>
+              aria-hidden="true"
+          <?php } ?>
+          ></div>
+          <hgroup>
+            <h3><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h3>
+            <?php
+            if ($card['subtitle']) {
+            ?>
+            <h4><?php echo $card['subtitle']; ?></h4>
+            <?php
+            }
+            ?>
+          </hgroup>
+          <button class="fav <?php echo $faved_class; ?>" aria-label="<?php echo $aria_label . ' ' . $card['title']; ?>"></button>
+        </div>
+      <?php
         }
-        ?>
-      </hgroup>
+      }
+      ?>
+      </div>
     </div>
-<?php
+  <?php
   }
-}
-?>
-  </div>
-
-<?php
-$others = array_filter($cards, function($card) {
-  return (array_key_exists('link-permission', $card) && current_user_has_permission($card['link-permission'])) &&
-         (!array_key_exists('card-permission', $card) || !current_user_has_permission($card['card-permission']));
-});
-
-if (!empty($others)) {
-?>
-  <div class="other">
-    <h2>Other</h2>
-    <ul>
-<?php
-  foreach ($others as $link) {
-?>
-      <li><a href="<?php echo $link['link']; ?>"><?php echo $link['title']; ?></a></li>
-<?php
-  }
-}
-?>
-    </ul>
-  </div>
+  ?>
 </nav>
 
 <script>
-  let $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
+  const badgeNo = '<?php echo get_current_user_badge_no(); ?>';
+  const $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
   function updateTime() {
-    let utc = new Date();
+    const utc = new Date();
     for (let $time of $times) {
-      var newTime = utc.toLocaleString('en-GB', { timeZone: '<?php echo TIMEZONE; ?>', hour: 'numeric', minute: 'numeric', hour12: false });
+      const newTime = utc.toLocaleString('en-GB', { timeZone: '<?php echo TIMEZONE; ?>', hour: 'numeric', minute: 'numeric', hour12: false });
       if (newTime != $time.innerText) {
         // Only update the time if it has changed.
         // More importantly than an optimization not to change the DOM, it
@@ -221,6 +214,89 @@ if (!empty($others)) {
   }
   if ($times.length > 0) {
     updateTime();
+  }
+
+  const favOrder = [
+    'time',
+    'chat',
+    'maps',
+    'guide',
+    'stream',
+    'signups',
+    'newsletter',
+    'itinerary',
+    'readme',
+    'gallery',
+    'hugos',
+    'site-selection',
+    'childcare',
+    'volunteer',
+    'website',
+    'help',
+  ];
+
+  function cardName($card) {
+    return $card.className.split(' ')[1];
+  }
+
+  function handleFavClick(e) {
+      if (e.x !== 0 || e.y !== 0) {
+        e.target.blur();
+      }
+      e.target.classList.toggle('faved');
+
+      const $card = e.target.closest('.card');
+      if (e.target.classList.contains('faved')) {
+        const $cards = [...$favsList.getElementsByClassName('card')];
+        const $nextCard = $cards.find($c => {
+          return favOrder.indexOf(cardName($c)) > favOrder.indexOf(cardName($card));
+        });
+        const $newCard = $card.cloneNode(true);
+        if ($nextCard) {
+          $favsList.insertBefore($newCard, $nextCard);
+        } else {
+          $favsList.appendChild($newCard);
+        }
+        $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
+      } else {
+        const cardSelector = '.' + cardName($card);
+        const $favedCard = $favsList.querySelector(cardSelector);
+        $favsList.removeChild($favedCard);
+        document.querySelector(cardSelector).getElementsByClassName('fav')[0].classList.remove('faved');
+      }
+
+      // Set cookie with name of faved cards.
+      const favedCards = [...$favsList.getElementsByClassName('card')].map($c => cardName($c));
+      document.cookie = 'favs_' + badgeNo + '=' + favedCards.join(',') + '; path=/;SameSite=Strict;max-age=31560000000;';
+  }
+
+  const $favsList = document.getElementById('favs').getElementsByClassName('cards')[0];
+  const $favs = [...document.getElementsByClassName('fav')];
+  let favedCards;
+  if (document.cookie.includes('favs_' + badgeNo)) {
+    favedCards = document.cookie.split('; ').find(c => c.startsWith('favs_' + badgeNo)).split('=')[1].split(',');
+  } else {
+<?php
+    $faved_cards = [];
+    if (current_user_has_permission('online')) {
+      $faved_cards = ['chat', 'newsletter', 'guide', 'signups', 'stream'];
+    } else {
+      $faved_cards = ['chat', 'maps', 'guide', 'signups'];
+    }
+    if (current_user_has_permission('programme-participant')) {
+      $faved_cards.push('itinerary');
+    }
+    if (current_user_has_permission('childcare')) {
+      $faved_cards.push('childcare');
+    }
+    echo "favedCards = " . json_encode($faved_cards) . ";\n";
+?>
+  }
+  for (let $fav of $favs) {
+    $fav.addEventListener('click', handleFavClick);
+    if (favedCards.includes(cardName($fav.closest('.card')))) {
+      $fav.click();
+    }
   }
 </script>
 
