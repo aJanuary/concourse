@@ -18,7 +18,7 @@ render_header(
     <li><a href="/resources/maps/hall4.jpg"><img src="/resources/maps/hall4-thumb.png" alt="">Hall 4</a></li>
     <li><a href="/resources/maps/hall5.jpg"><img src="/resources/maps/hall5-thumb.png" alt="">Hall 5</a></li>
     <li><a href="/resources/maps/village.pdf"><img src="/resources/maps/village-thumb.png" alt="">The Village</a></li>
-    <li><a href="/resources/maps/crown-plaza.pdf"><img src="/resources/maps/crown-plaza-thumb.png" alt="">Crown Plaza</a></li>
+    <li><a href="/resources/maps/crowne-plaza.pdf"><img src="/resources/maps/crowne-plaza-thumb.png" alt="">Crowne Plaza</a></li>
   </ul>
 </article>
 <?php
