@@ -259,13 +259,12 @@ function db_get_member_discord_data() {
 function db_get_all_discord_info() {
   global $mysqli;
 
-  $result = $mysqli->query("SELECT badge_no, members.name member_name, discord_id, roles.name role_name FROM discord_ids JOIN members USING (badge_no) LEFT JOIN member_roles USING (badge_no) LEFT JOIN roles USING (role_id)");
+  $result = $mysqli->query("SELECT members.name member_name, discord_id, roles.name role_name FROM discord_ids JOIN members USING (badge_no) LEFT JOIN member_roles USING (badge_no) LEFT JOIN roles USING (role_id)");
   $discord_info = [];
   while ($row = $result->fetch_assoc()) {
     if (!isset($discord_info[$row['discord_id']])) {
       $discord_info[$row['discord_id']] = [
         "name" => $row['member_name'],
-        "badge_no" => $row['badge_no'],
         "roles" => [],
       ];
     }

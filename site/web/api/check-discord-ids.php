@@ -3,7 +3,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/api.php');
 
 handle_request(function($data) {
-  $recorded_discord_info = db_get_all_discord_info();
+  $recorded_discord_info = array_merge(db_get_all_discord_info(), DISCORD_SERVICE_ACCOUNTS);
   $response = [];
 
   foreach ($data["discordUsers"] as $discord_user) {

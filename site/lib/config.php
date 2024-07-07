@@ -10,6 +10,30 @@ define("SUPPORT_EMAIL", "online-support@glasgow2024.org");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', false);
 
+define('DISCORD_SERVICE_ACCOUNTS', [
+  '1259068933491789854' => [
+    'name' => 'Con Ops (SEC)',
+    'roles' => ['conops'],
+  ],
+  # TODO: Make the rest of these service accounts and swap usernames for IDs
+  'conops_crowne_palza' => [
+    'name' => 'Con Ops (Crowne Plaza)',
+    'roles' => ['conops'],
+  ],
+  'teaminfo_hall_4' => [
+    'name' => 'Team Info (Hall 4)',
+    'roles' => ['teaminfo'],
+  ],
+  'techops_sec' => [
+    'name' => 'Tech Ops (SEC)',
+    'roles' => ['techops'],
+  ],
+  'techops_crowne_palza' => [
+    'name' => 'Tech Ops (Crowne Plaza)',
+    'roles' => ['techops'],
+  ],
+]);
+
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
 define('DB_NAME', getenv('CONFIG_DB_NAME'));
 define('DB_USER', getenv('CONFIG_DB_USER'));
