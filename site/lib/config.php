@@ -19,11 +19,11 @@ define('DISCORD_SERVICE_ACCOUNTS', [
     'name' => 'Con Ops (Crowne Plaza)',
     'roles' => ['conops'],
   ],
-  # TODO: Make the rest of these service accounts and swap usernames for IDs
-  'teaminfo_hall4' => [
+  '1259503664934948867' => [
     'name' => 'Team Info (Hall 4)',
     'roles' => ['teaminfo'],
   ],
+  # TODO: Make the rest of these service accounts and swap usernames for IDs
   'techops_sec' => [
     'name' => 'Tech Ops (SEC)',
     'roles' => ['techops'],
