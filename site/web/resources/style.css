@@ -552,6 +552,18 @@ main {
   background-image: url('/resources/website.svg');
 }
 
+.card.manage-roles, .card.manage-discord, .card.manage-programme {
+  background-color: var(--events-color-light);
+}
+.card.manage-roles .hero, .card.manage-discord .hero, .card.manage-programme .hero {
+  background: var(--events-bg);
+  background-size: var(--events-bg-size);
+}
+.card.manage-roles .hero::after, .card.manage-discord .hero::after, .card.manage-programme .hero::after {
+  background-image: url('/resources/manage.svg');
+}
+
+
 .card hgroup {
   grid-area: title;
 }

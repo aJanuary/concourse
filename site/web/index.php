@@ -125,19 +125,19 @@ $cards = [
       'title' => 'Manage roles',
       'subtitle' => 'Admin',
       'link' => '/admin/roles',
-      'link-permission' => 'manage-roles',
+      'card-permission' => 'manage-roles',
     ], [
       'name' => 'manage-discord',
       'title' => 'Discord ids',
       'subtitle' => 'Admin',
       'link' => '/admin/discord',
-      'link-permission' => 'manage-discord-ids',
+      'card-permission' => 'manage-discord-ids',
     ], [
       'name' => 'manage-programme',
       'title' => 'Manage programme',
       'subtitle' => 'Admin',
       'link' => '/admin/programme/list',
-      'link-permission' => 'manage-programme',
+      'card-permission' => 'manage-programme',
     ]
   ]
 ];
