@@ -1,6 +1,6 @@
 <?php
-  require_once('config.php');
-  require_once('auth_functions.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 
   function get_internal_url($script) {
     return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);

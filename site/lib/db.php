@@ -1,6 +1,6 @@
 <?php
 
-require_once('config.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);

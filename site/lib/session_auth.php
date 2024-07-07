@@ -1,6 +1,6 @@
 <?php
-require_once('auth_functions.php');
-require_once('db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 
 function check_permission($permission) {
   if (!current_user_has_permission($permission)) {

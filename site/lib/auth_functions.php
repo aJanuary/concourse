@@ -1,8 +1,8 @@
 <?php
 
-require_once('db.php');
-require_once('requests.php');
-require_once('discord.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
 
 function make_session($badge_no) {
     $session_id = sha1(rand());
