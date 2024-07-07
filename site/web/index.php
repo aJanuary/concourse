@@ -183,7 +183,7 @@ $cards = [
             }
             ?>
           </hgroup>
-          <button class="fav <?php echo $faved_class; ?>" aria-label="<?php echo $aria_label . ' ' . $card['title']; ?>"></button>
+          <button class="fav" aria-label="Add <?php echo $card['title']; ?> to quick links"></button>
         </div>
       <?php
         }
@@ -246,7 +246,9 @@ $cards = [
       e.target.classList.toggle('faved');
 
       const $card = e.target.closest('.card');
+      const title = $card.getElementsByTagName('h3')[0].innerText;
       if (e.target.classList.contains('faved')) {
+        e.target.ariaLabel = 'Remove ' + title + ' from quick links';
         const $cards = [...$favsList.getElementsByClassName('card')];
         const $nextCard = $cards.find($c => {
           return favOrder.indexOf(cardName($c)) > favOrder.indexOf(cardName($card));
@@ -259,6 +261,7 @@ $cards = [
         }
         $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
       } else {
+        e.target.ariaLabel = 'Add ' + title + ' to quick links';
         const cardSelector = '.' + cardName($card);
         const $favedCard = $favsList.querySelector(cardSelector);
         $favsList.removeChild($favedCard);
