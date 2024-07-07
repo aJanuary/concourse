@@ -140,6 +140,11 @@ a:not([href]) {
   cursor: text;
 }
 
+h3 a {
+  color: var(--body-fg-color);
+  text-decoration: none;
+}
+
 summary {
   float: left;
 }
@@ -421,6 +426,16 @@ main {
 }
 .card.maps .hero::after {
   background-image: url('/resources/maps.svg');
+}
+
+.card.times {
+  background-color: var(--info-color-light);
+}
+.card.times .hero {
+  background: var(--info-pattern);
+}
+.card.times .hero::after {
+  background-image: url('/resources/times.svg');
 }
 
 .card.stream {
@@ -906,6 +921,26 @@ ul.maps {
 ul.maps li a {
   display: flex;
   flex-direction: column;
+}
+
+#times-toc {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17em, 1fr));
+}
+
+#times-toc li {
+  margin-right: 1em;
+}
+
+.times-list {
+  width: auto;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.times-list .date {
+  text-align: right;
+  width: 10em;
 }
 
 @media (prefers-contrast: more) {

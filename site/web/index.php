@@ -26,6 +26,12 @@ $cards = [
       'link' => '/maps',
       'card-permission' => 'see-maps',
     ], [
+      'name' => 'times',
+      'title' => 'Opening times',
+      'subtitle' => '',
+      'link' => '/times',
+      'card-permission' => 'see-times',
+    ], [
       'name' => 'readme',
       'title' => 'Convention guide',
       'subtitle' => 'Readme',
