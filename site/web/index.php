@@ -210,9 +210,9 @@ $cards = [
 
 <script>
   const badgeNo = '<?php echo get_current_user_badge_no(); ?>';
-  const $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
   function updateTime() {
     const utc = new Date();
+    const $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
     for (let $time of $times) {
       const newTime = utc.toLocaleString('en-GB', { timeZone: '<?php echo TIMEZONE; ?>', hour: 'numeric', minute: 'numeric', hour12: false });
       if (newTime != $time.innerText) {
@@ -224,9 +224,7 @@ $cards = [
     }
     setTimeout(updateTime, 10000);
   }
-  if ($times.length > 0) {
-    updateTime();
-  }
+  updateTime();
 
   const favOrder = [
     'time',
