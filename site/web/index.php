@@ -144,6 +144,12 @@ $cards = [
       'subtitle' => 'Admin',
       'link' => '/admin/programme/list',
       'card-permission' => 'manage-programme',
+    ], [
+      'name' => 'manage-login-sessions',
+      'title' => 'Manage login sessions',
+      'subtitle' => 'Admin',
+      'link' => '/admin/login-sessions',
+      'card-permission' => 'manage-login-sessions',
     ]
   ]
 ];

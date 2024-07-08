@@ -95,6 +95,19 @@ function db_get_user_name_by_session($session_token) {
   return $name;
 }
 
+function db_get_sessions() {
+  global $mysqli;
+
+  $result = $mysqli->query("SELECT badge_no, name, session_id FROM sessions JOIN members USING (badge_no) ORDER BY badge_no, session_id");
+  $sessions = [];
+  while ($row = $result->fetch_assoc()) {
+    $sessions[] = $row;
+  }
+  $result->close();
+
+  return $sessions;
+}
+
 function db_delete_session($session_token) {
   global $mysqli;
 
