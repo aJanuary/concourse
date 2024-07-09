@@ -283,11 +283,13 @@ $cards = [
       $newCard.querySelector('a').addEventListener('click', handleCardClick);
       $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
     } else {
-      target.ariaLabel = 'Add ' + title + ' to quick links';
+      target.ariaLabel = 'Removed';
       const cardSelector = '.' + cardName($card);
       const $favedCard = $favsList.querySelector(cardSelector);
       $favsList.removeChild($favedCard);
-      document.querySelector(cardSelector).getElementsByClassName('fav')[0].classList.remove('faved');
+      const $normalCardFav = document.querySelector(cardSelector).getElementsByClassName('fav')[0];
+      $normalCardFav.classList.remove('faved');
+      $normalCardFav.ariaLabel = 'Add ' + title + ' to quick links';
     }
     return { mode: mode, card: cardName($card) };
   }
