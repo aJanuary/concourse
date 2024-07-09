@@ -56,6 +56,7 @@ render_header(
     <?php
     }
     ?>
+    <li><p><a href="/times">Opening times</a></p></li>
   </ul>
 </article>
 <?php
