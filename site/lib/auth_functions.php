@@ -85,24 +85,7 @@ function get_registration_status($email) {
 }
 
 function create_member($badge_no, $email, $name) {
-  $magic_link_resp = api_call('https://api.events.ringcentral.com/v1/tickets/' . RCE_TICKET_ID . '/magicLinks', [
-    'Authorization: Bearer ' . RCE_API_KEY,
-    'Content-Type: application/json'
-  ], json_encode([
-    'data' => [
-      'type' => 'magicLink',
-      'attributes' => [
-        'email' => $email,
-        'firstName' => $name,
-        'headline' => $badge_no,
-        'lastName' => '-',
-        'registrationId' => $badge_no
-      ]
-    ]
-  ]));
-  $magic_link = $magic_link_resp['data']['attributes']['magicLink'];
-
-  db_create_member($badge_no, $name, $email, $magic_link);
+  db_create_member($badge_no, $email, $name);
 }
 
 function update_member($badge_no, $email, $name) {

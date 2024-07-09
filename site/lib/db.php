@@ -117,13 +117,13 @@ function db_delete_session($session_token) {
   $stmt->close();
 }
 
-function db_create_oauth_identity($badge_id, $provider,  $identity_id, $email, $raw_info) {
+function db_create_oauth_identity($badge_no, $provider,  $identity_id, $email, $raw_info) {
   global $mysqli;
 
   $mysqli->begin_transaction();
   try {
     $identity_stmt = $mysqli->prepare("INSERT INTO oauth_identities (badge_no, provider, identity_id, email, raw_info) VALUES (?, ?, ?, ?, ?)");
-    $identity_stmt->bind_param("sssss", $badge_id, $provider,  $identity_id, $email, $raw_info);
+    $identity_stmt->bind_param("sssss", $badge_no, $provider,  $identity_id, $email, $raw_info);
     $identity_stmt->execute();
     $identity_stmt->close();
 
@@ -134,33 +134,29 @@ function db_create_oauth_identity($badge_id, $provider,  $identity_id, $email, $
   }
 }
 
-function db_create_member($badge_id, $name, $email, $invite_url) {
+function db_create_member($badge_no, $email, $name) {
   global $mysqli;
 
-  $mysqli->begin_transaction();
-  try {
-    $members_stmt = $mysqli->prepare("INSERT INTO members (badge_no, name, email) VALUES (?, ?, ?)");
-    $members_stmt->bind_param("sss", $badge_id, $name, $email);
-    $members_stmt->execute();
-    $members_stmt->close();
-
-    $invites_stmt = $mysqli->prepare("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)");
-    $invites_stmt->bind_param("ss", $badge_id, $invite_url);
-    $invites_stmt->execute();
-    $invites_stmt->close();
-
-    $mysqli->commit();
-  } catch (mysqli_sql_exception $exception) {
-    $mysqli->rollback();
-    throw $exception;
-  }
+  $stmt = $mysqli->prepare("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?)");
+  $stmt->bind_param("sss", $badge_no, $email, $name);
+  $stmt->execute();
+  $stmt->close();
 }
 
-function db_update_member($badge_id, $email, $name) {
+function db_create_invite($badge_no, $invite_url) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)");
+  $stmt->bind_param("ss", $badge_no, $invite_url);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_update_member($badge_no, $email, $name) {
   global $mysqli;
 
   $stmt = $mysqli->prepare("UPDATE members SET name = ?, email = ? WHERE badge_no = ?");
-  $stmt->bind_param("sss", $name, $email, $badge_id);
+  $stmt->bind_param("sss", $name, $email, $badge_no);
   $stmt->execute();
   $stmt->close();
 }
@@ -288,19 +284,6 @@ function db_get_all_discord_info() {
   $result->close();
 
   return $discord_info;
-}
-
-function db_get_rce_links() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT members.badge_no, name, invite_url from members LEFT OUTER JOIN rce_invites USING (badge_no) ORDER by badge_no");
-  $members = [];
-  while ($row = $result->fetch_assoc()) {
-    $members[] = ['badge_no' => $row['badge_no'], 'name' => $row['name'], 'invite_url' => $row['invite_url']];
-  }
-  $result->close();
-
-  return $members;
 }
 
 function db_get_discord_usernames($session_id) {

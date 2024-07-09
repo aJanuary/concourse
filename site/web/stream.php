@@ -3,11 +3,12 @@ $_REQUEST['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/rce.php');
 
 if (array_key_exists('invite', $_GET)) {
   check_permission('see-rce-link');
 
-  $magic_link = db_get_magic_link($_COOKIE['session']);
+  $magic_link = get_magic_rce_link($_COOKIE['session']);
   header('Location: ' . $magic_link);
   setcookie('seen-rce-invite', '1', time() + 60*60*24*365, '/');
   exit;
