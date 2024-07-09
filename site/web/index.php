@@ -243,6 +243,7 @@ $cards = [
     'chat',
     'maps',
     'guide',
+    'times',
     'stream',
     'signups',
     'newsletter',
