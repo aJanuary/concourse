@@ -261,42 +261,46 @@ $cards = [
     return $card.className.split(' ')[1];
   }
 
+  function toggleFav(target) {
+    target.classList.toggle('faved');
+
+    const $card = target.closest('.card');
+    const title = $card.getElementsByTagName('h3')[0].innerText;
+    const mode = target.classList.contains('faved') ? 'added' : 'removed';
+    if (mode == 'added') {
+      target.ariaLabel = 'Remove ' + title + ' from quick links';
+      const $cards = [...$favsList.getElementsByClassName('card')];
+      const $nextCard = $cards.find($c => {
+        return favOrder.indexOf(cardName($c)) > favOrder.indexOf(cardName($card));
+      });
+      const $newCard = $card.cloneNode(true);
+      if ($nextCard) {
+        $favsList.insertBefore($newCard, $nextCard);
+      } else {
+        $favsList.appendChild($newCard);
+      }
+      $newCard.querySelector('a').addEventListener('click', handleCardClick);
+      $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
+    } else {
+      target.ariaLabel = 'Add ' + title + ' to quick links';
+      const cardSelector = '.' + cardName($card);
+      const $favedCard = $favsList.querySelector(cardSelector);
+      $favsList.removeChild($favedCard);
+      document.querySelector(cardSelector).getElementsByClassName('fav')[0].classList.remove('faved');
+    }
+    return { mode: mode, card: cardName($card) };
+  }
+
   function handleFavClick(e) {
       if (e.x !== 0 || e.y !== 0) {
         e.target.blur();
       }
-      e.target.classList.toggle('faved');
-
-      const $card = e.target.closest('.card');
-      const title = $card.getElementsByTagName('h3')[0].innerText;
-      const mode = e.target.classList.contains('faved') ? 'added' : 'removed';
-      if (mode == 'added') {
-        e.target.ariaLabel = 'Remove ' + title + ' from quick links';
-        const $cards = [...$favsList.getElementsByClassName('card')];
-        const $nextCard = $cards.find($c => {
-          return favOrder.indexOf(cardName($c)) > favOrder.indexOf(cardName($card));
-        });
-        const $newCard = $card.cloneNode(true);
-        if ($nextCard) {
-          $favsList.insertBefore($newCard, $nextCard);
-        } else {
-          $favsList.appendChild($newCard);
-        }
-        $newCard.querySelector('a').addEventListener('click', handleCardClick);
-        $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
-      } else {
-        e.target.ariaLabel = 'Add ' + title + ' to quick links';
-        const cardSelector = '.' + cardName($card);
-        const $favedCard = $favsList.querySelector(cardSelector);
-        $favsList.removeChild($favedCard);
-        document.querySelector(cardSelector).getElementsByClassName('fav')[0].classList.remove('faved');
-      }
-
+      const result = toggleFav(e.target);
       // Set cookie with name of faved cards.
       const favedCards = [...$favsList.getElementsByClassName('card')].map($c => cardName($c));
       document.cookie = 'favs_' + badgeNo + '=' + favedCards.join(',') + '; path=/;SameSite=Strict;max-age=31560000000;';
       if (navigator.sendBeacon) {
-        navigator.sendBeacon('/analytics?event=favs&data=' + (mode == 'added' ? '%2B' : '-') + cardName($card));
+        navigator.sendBeacon('/analytics?event=favs&data=' + (result.mode == 'added' ? '%2B' : '-') + result.card);
       }
   }
 
@@ -325,7 +329,7 @@ $cards = [
   for (let $fav of $favs) {
     $fav.addEventListener('click', handleFavClick);
     if (favedCards.includes(cardName($fav.closest('.card')))) {
-      $fav.click();
+      toggleFav($fav);
     }
   }
 </script>
