@@ -1,12 +1,14 @@
 <?php
   require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
-  require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 
   function get_internal_url($script) {
     return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
   }
 
   function render_header($title, $description, $breadcrumbs, $is_home = false) {
+    db_record_analytics(member_type(), 'request', $_SERVER['REQUEST_URI']);  
 ?>
 <!doctype html>
 <html lang="en">
@@ -95,7 +97,7 @@
         <ul>
           <li><a href="/help">Help</a></li>
           <li><a href="/site-map">Site map</a></li>
-          <li><a href="/cookie-policy">Cookie Policy</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
           <li><a href="https://glasgow2024.org/about/policies/code-of-conduct/">Code of Conduct</a></li>
           <li><a href="https://glasgow2024.org/about/policies/">All Policies</a></li>
         </ul>

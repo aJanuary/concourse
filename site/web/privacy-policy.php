@@ -5,14 +5,14 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
-  'Cookie policy',
+  'Privacy policy',
   'An explanation of the cookies we set and what they are used for',
-  ['Home' => '/', 'Cookie policy']
+  ['Home' => '/', 'Privacy policy']
 );
 ?>
 <article>
-  <h2>Cookie policy</h2>
-  <em>This Cookie Policy was last updated on 23<sup>rd</sup> June 2024 and applies to citizens and legal permanent residents of the European Economic Area and Switzerland.</em>
+  <h2>Privacy policy</h2>
+  <em>This Privacy Policy was last updated on 9<sup>th</sup> July 2024 and applies to citizens and legal permanent residents of the European Economic Area and Switzerland.</em>
   <h3>1. Introduction</h3>
   <p>Our website, <?php echo $ROOT_URL; ?> (hereinafter: "the website") uses cookies and other related technologies (for convenience all technologies are referred to as "cookies"). In the document below we inform you about the use of cookies on our website.</p>
   <h3>2. What are cookies?</h3>
@@ -30,12 +30,21 @@ render_header(
     <li>seen_rce_invite - Stores whether the user has seen the RingCentral Events invite. Required for deep-linking into RingCentral Event items. Expires after 30 days.</li>
     <li>favs_[ticket id] - Stores the user&apos;s favourite items. Required for the quick links functionality to work. Expires after 1 year.</li>
   </ul>
-  <h3>6. Consent</h3>
+  <h3>6. Analytics data</h3>
+  <p>We store the following analytics data to help us understand how the website is being used. It does not contain any personal identifying information. This data may be published publicly to help other conventions understand how best to structure their own sites.</p>
+  <ul>
+    <li>Date - The date the event occurred.</li>
+    <li>Member type - The type of ticket help by the member who performed the event. One of "online", "in-person", "anonymous" or "not-logged-in".</li>
+    <li>Event - The type of event. One of "navigation", "card-click" or "favs".</li>
+    <li>Data - The data for the event. For "navigation", the path of the page being loaded. For "card-click", the name of the card that was clicked. For "favs", the quick links configured.</li>
+  </ul>
+  <h3>7. Consent</h3>
   <p>Because we only make use of cookies to provide essential functionality, we do not require your consent to set these cookies. You can still block or delete them by changing your browser settings.</p>
-  <h3>7. Enabling/disabling and deleting cookies</h3>
+  <p>Because the analytics does not contains any personal identifying information, we do not require your consent to store this data. You can still block the client-side collection by blocking requests to <?php echo ROOT_URL; ?>/analytics.</p>
+  <h3>8. Enabling/disabling and deleting cookies</h3>
   <p>You can use your internet browser to automatically or manually delete cookies. You can also specify that certain cookies may not be placed. Another option is to change the settings of your internet browser so that you receive a message each time a cookie is placed. For more information about these options, please refer to the instructions in the Help section of your browser.</p>
   <p>Please note that our website may not work properly if all cookies are disabled. If you do delete the cookies in your browser, they will be placed again after your consent when you visit our website again.</p>
-  <h3>8. Your rights with respect to personal data</h3>
+  <h3>9. Your rights with respect to personal data</h3>
   <p>You have the following rights with respect to your personal data:</p>
   <ul>
     <li>You have the right to know why your personal data is needed, what will happen to it, and how long it will be retained for.</li>
@@ -46,7 +55,7 @@ render_header(
     <li>Right to object: you may object to the processing of your data. We comply with this, unless there are justified grounds for processing.</li>
   </ul>
   <p>To exercise these rights, please contact us. Please refer to the contact details at the bottom of this Cookie Policy. If you have a complaint about how we handle your data, we would like to hear from you, but you also have the right to submit a complaint to the supervisory authority (the Data Protection Authority).</p>
-  <h3>9. Contact details</h3>
+  <h3>10. Contact details</h3>
   <p>For questions and/or comments about our Cookie Policy and this statement, please contact us by using the following contact details:</p>
   <p>Glasgow 2024 - A Worldcon for Our Futures<br>
   The Scottish Event Campus (SEC) and the connected Crowne Plaza Hotel<br>

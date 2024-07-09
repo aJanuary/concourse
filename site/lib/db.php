@@ -815,4 +815,13 @@ function db_set_discord_id_from_token($badge_no, $token) {
     throw $exception;
   }
 }
+
+function db_record_analytics($member_type, $event, $data) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO analytics (member_type, event, data) VALUES (?, ?, ?)");
+  $stmt->bind_param("sss", $member_type, $event, $data);
+  $stmt->execute();
+  $stmt->close();
+}
 ?>

@@ -226,6 +226,18 @@ $cards = [
   }
   updateTime();
 
+  function handleCardClick(e) {
+    if (navigator.sendBeacon) {
+      const $card = e.target.closest('.card');
+      const cardName = [...$card.classList].find(c => c != 'card');
+      navigator.sendBeacon('/analytics?event=card-click&data=' + cardName);
+    }
+  }
+
+  for (let $card of [...document.querySelectorAll('.card a')]) {
+    $card.addEventListener('click', handleCardClick);
+  }
+
   const favOrder = [
     'time',
     'chat',
@@ -257,7 +269,8 @@ $cards = [
 
       const $card = e.target.closest('.card');
       const title = $card.getElementsByTagName('h3')[0].innerText;
-      if (e.target.classList.contains('faved')) {
+      const mode = e.target.classList.contains('faved') ? 'added' : 'removed';
+      if (mode == 'added') {
         e.target.ariaLabel = 'Remove ' + title + ' from quick links';
         const $cards = [...$favsList.getElementsByClassName('card')];
         const $nextCard = $cards.find($c => {
@@ -269,6 +282,7 @@ $cards = [
         } else {
           $favsList.appendChild($newCard);
         }
+        $newCard.querySelector('a').addEventListener('click', handleCardClick);
         $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
       } else {
         e.target.ariaLabel = 'Add ' + title + ' to quick links';
@@ -281,6 +295,9 @@ $cards = [
       // Set cookie with name of faved cards.
       const favedCards = [...$favsList.getElementsByClassName('card')].map($c => cardName($c));
       document.cookie = 'favs_' + badgeNo + '=' + favedCards.join(',') + '; path=/;SameSite=Strict;max-age=31560000000;';
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/analytics?event=favs&data=' + (mode == 'added' ? '%2B' : '-') + cardName($card));
+      }
   }
 
   const $favsList = document.getElementById('favs').getElementsByClassName('cards')[0];

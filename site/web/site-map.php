@@ -20,7 +20,7 @@ render_header(
         <li><p><a href="/discord-instructions">How to join the Discord Server</a></p></li>
       </ul>
     </li>
-    <li><p><a href="/cookie-policy">Cookie policy</a></p></li>
+    <li><p><a href="/privacy-policy">Privacy policy</a></p></li>
     <li><p><a href="/help">Help</a></p></li>
     <li><p><a href="/login-instructions">Log in instructions</a></p></li>
     <li><p><a href="/maps">Maps</a></p></li>

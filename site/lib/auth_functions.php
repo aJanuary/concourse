@@ -136,4 +136,16 @@ function current_user_has_permission($permission) {
   return in_array($permission, $_REQUEST['permissions']);
 }
 
+function member_type() {
+  if (is_anonymous()) {
+    return 'anonymous';
+  }
+  if (!is_logged_in()) {
+    return 'not-logged-in';
+  }
+  if (current_user_has_permission('online')) {
+    return 'online';
+  }
+  return 'in-person';
+}
 ?>
