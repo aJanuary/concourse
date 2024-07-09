@@ -400,6 +400,15 @@ function db_delete_role($role_id) {
   $stmt->close();
 }
 
+function db_add_member_role($badge_no, $role_name) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?");
+  $stmt->bind_param("ss", $badge_no, $role_name);
+  $stmt->execute();
+  $stmt->close();
+}
+
 function db_get_default_permissions() {
   global $mysqli;
 

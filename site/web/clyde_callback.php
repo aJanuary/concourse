@@ -48,6 +48,14 @@ if (defined('CLYDE_ALLOWLIST') && !in_array($email, CLYDE_ALLOWLIST)) {
 
 if (!db_member_exists($badge_no)) {
   create_member($badge_no, $email, $name);
+  if ($registrant['attending_status'] == 'Virtual') {
+    db_add_member_role($badge_no, 'online');
+  } else {
+    db_add_member_role($badge_no, 'in-person');
+  }
+  if (str_contains(strtolower($registrant['wsfs_status']), 'vote')) {
+    db_add_member_role($badge_no, 'wsfs');
+  }
 } else {
   update_member($badge_no, $email, $name);
 }
