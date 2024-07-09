@@ -14,7 +14,7 @@ render_header(
   <h2>Privacy policy</h2>
   <em>This Privacy Policy was last updated on 9<sup>th</sup> July 2024 and applies to citizens and legal permanent residents of the European Economic Area and Switzerland.</em>
   <h3>1. Introduction</h3>
-  <p>Our website, <?php echo $ROOT_URL; ?> (hereinafter: "the website") uses cookies and other related technologies (for convenience all technologies are referred to as "cookies"). In the document below we inform you about the use of cookies on our website.</p>
+  <p>Our website, <?php echo ROOT_URL; ?> (hereinafter: "the website") uses cookies and other related technologies (for convenience all technologies are referred to as "cookies"). In the document below we inform you about the use of cookies on our website.</p>
   <h3>2. What are cookies?</h3>
   <p>A cookie is a small simple file that is sent along with pages of this website and stored by your browser on the hard drive of your computer or another device. The information stored therein may be returned to our servers during a subsequent visit.</p>
   <h3>3. What are scripts?</h3>
