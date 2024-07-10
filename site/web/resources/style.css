@@ -933,14 +933,34 @@ ul.maps li a {
 }
 
 .times-list {
-  width: auto;
-  margin-top: 0;
-  margin-bottom: 20px;
+  list-style: none;
 }
 
-.times-list .date {
-  text-align: right;
-  width: 10em;
+.times-list li {
+  position: relative;
+  margin-bottom: 0.5em;
+}
+
+.times-list p {
+  margin: 0;
+}
+
+.times-list p:first-of-type {
+  font-weight: bold;
+}
+
+.times-list p:last-of-type {
+  position: absolute;
+  top: 0;
+  left: 20ch;
+}
+
+@media (max-width: 500px) {
+  .times-list p:last-of-type {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
 }
 
 @media (prefers-contrast: more) {
