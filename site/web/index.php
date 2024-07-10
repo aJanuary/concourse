@@ -241,10 +241,10 @@ $cards = [
   const favOrder = [
     'time',
     'chat',
+    'stream',
     'maps',
     'guide',
     'times',
-    'stream',
     'signups',
     'newsletter',
     'itinerary',
