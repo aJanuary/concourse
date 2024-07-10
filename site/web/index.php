@@ -110,9 +110,9 @@ $cards = [
   'Other' => [
     [
       'name' => 'gallery',
-      'title' => 'Artist&apos;s alley',
+      'title' => 'Art show',
       'subtitle' => '',
-      'link' => '/under-construction?page=Artist%27s+alley',
+      'link' => '/under-construction?page=Art show',
       'card-permission' => 'see-gallery',
     ], [
       'name' => 'hugos',
