@@ -11,6 +11,23 @@ if (array_key_exists('check_has_joined_discord', $_GET)) {
   exit;
 }
 
+if (!current_user_has_permission('see-discord-posts')) {
+  render_header(
+    'Go to a Discord chat for an item',
+    'Discord chat for programme is not yet open.',
+    ['Home' => '/', 'Go to Discord chat for an item']
+  );
+  ?>
+  <article>
+    <h2>Programme chat not yet open</h2>
+    <p>The discord chat for specific programme items is not yet open. Please check back a few days before the convention.</p>
+    <p>In the meantime you can still <a href="/chat">join the Glasgow 2024 Discord</a> to socialise with other members ahead of the convention.</p>
+  </article>
+  <?php
+  render_footer();
+  exit;
+}
+
 if (array_key_exists('item_id', $_GET)) {
   $item_id = $_GET['item_id'];
   $post = db_get_discord_post($item_id);
