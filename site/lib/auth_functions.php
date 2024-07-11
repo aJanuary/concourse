@@ -1,5 +1,6 @@
 <?php
 
+require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
@@ -27,7 +28,10 @@ function is_logged_in() {
 }
 
 function is_anonymous() {
-  $implicit = ALLOW_ANONYMOUS_ACCESS && isset($_REQUEST['allow_implicit_anonymous']) && $_REQUEST['allow_implicit_anonymous'];
+  $implicit = false;
+  if (isset($_REQUEST['allow_implicit_anonymous'])) {
+    $implicit = $_REQUEST['allow_implicit_anonymous'] === 'always' || (ALLOW_ANONYMOUS_ACCESS && $_REQUEST['allow_implicit_anonymous']);
+  }
   return (
     (isset($_COOKIE['session']) && $_COOKIE['session'] == 'anonymous') ||
     ($implicit && !isset($_COOKIE['session']))
