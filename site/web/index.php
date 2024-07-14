@@ -35,7 +35,7 @@ $cards = [
       'name' => 'readme',
       'title' => 'Convention guide',
       'subtitle' => 'Readme',
-      'link' => '/under-construction?page=Convention+guide',
+      'link' => '/convention-guide',
       'card-permission' => 'see-readme',
     ], [
       'name' => 'newsletter',
