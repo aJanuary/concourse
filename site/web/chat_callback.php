@@ -14,7 +14,7 @@ if (!$code) {
     render_header(
       'Chat',
       'Access denied when trying to link Discord account for the Glasgow 2024 member portal.',
-      ['Home' => '/', 'Online Chat' => '/chat', 'Something went wrong']
+      ['Home' => '/', 'Chat Online' => '/chat', 'Something went wrong']
     );
 ?>
   <article>

@@ -9,12 +9,12 @@ $usernames = db_get_discord_usernames($_COOKIE['session']);
 render_header(
   'Chat',
   'Join the Discord server for Glasgow 2024, A Worldcon for Our Futures.',
-  ['Home' => '/', 'Online Chat']
+  ['Home' => '/', 'Chat online']
 );
 ?>
 
 <article>
-  <h2>Online Chat</h2>
+  <h2>Chat online</h2>
   <p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
 <?php
   if (empty($usernames)) {

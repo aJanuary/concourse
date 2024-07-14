@@ -7,7 +7,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 render_header(
   'Discord instructions',
   'Instructions on how to join the Glasgow 2024 Discord server.',
-  ['Home' => '/', 'Online Chat' => '/chat', 'How to join the Discord Server']
+  ['Home' => '/', 'Chat online' => '/chat', 'How to join the Discord Server']
 );
 ?>
 <article>
