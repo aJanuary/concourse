@@ -59,7 +59,7 @@ render_header(
   <p><img src="/resources/help/accessibility.png" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
 
   <h4>Listeners desk</h4>
-  <p>To talk to someone about a sensitive topic, including reporting potential Code of Conduct violations.</p>
+  <p>Talk to someone privately about a sensitive topic, including potential Code of Conduct violations.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
   <p><a href="/times#listeners-desk">Open hours</a></p>
   <p><img src="/resources/help/listeners.png" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
