@@ -588,6 +588,18 @@ main {
   background-image: url('/resources/manage.svg');
 }
 
+.card.card.upload-presentation {
+  background-color: var(--part-color-light);
+}
+.card.upload-presentation .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.upload-presentation .hero::after {
+  background-image: url('/resources/upload-presentation.svg');
+}
 
 .card hgroup {
   grid-area: title;
@@ -971,6 +983,10 @@ ul.maps li a {
     top: auto;
     left: auto;
   }
+}
+
+.dt {
+  font-weight: bold;  
 }
 
 @media (prefers-contrast: more) {

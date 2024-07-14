@@ -54,8 +54,7 @@ $cards = [
       'title' => 'Childcare',
       'subtitle' => '',
       'link' => 'https://glasgow2024.org/for-members/childcare/',
-      'card-permission' => 'has-childcare',
-      'link-permission' => 'see-childcare',
+      'card-permission' => 'has-childcare'
     ], [
       'name' => 'help',
       'title' => 'Get help',
@@ -109,8 +108,13 @@ $cards = [
       'title' => 'Your participant schedule',
       'subtitle' => 'Planorama',
       'link' => 'https://planorama.glasgow2024.org',
-      'card-permission' => 'see-itinerary',
-      'link-permission' => 'see-itinerary-other',
+      'card-permission' => 'see-itinerary'
+    ], [
+      'name' => 'upload-presentation',
+      'title' => 'Upload presentation',
+      'subtitle' => 'Programme participants and presenters',
+      'link' => '/upload-presentation',
+      'card-permission' => 'see-upload-presentation'
     ]
   ],
   'Other' => [
@@ -257,6 +261,7 @@ $cards = [
     'itinerary',
     'readme',
     'gallery',
+    'upload-presentation',
     'hugos',
     'site-selection',
     'accessibility',
