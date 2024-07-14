@@ -44,6 +44,12 @@ $cards = [
       'link' => '/under-construction?page=Newsletter',
       'card-permission' => 'see-help',
     ], [
+      'name' => 'accessibility',
+      'title' => 'Accessibility',
+      'subtitle' => '',
+      'link' => 'https://glasgow2024.org/for-members/accessibility/',
+      'card-permission' => 'see-accessibility',
+    ], [
       'name' => 'childcare',
       'title' => 'Childcare',
       'subtitle' => '',
@@ -252,6 +258,7 @@ $cards = [
     'gallery',
     'hugos',
     'site-selection',
+    'accessibility',
     'childcare',
     'volunteer',
     'website',

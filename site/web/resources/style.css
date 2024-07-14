@@ -478,6 +478,16 @@ main {
   background-image: url('/resources/newsletter.svg');
 }
 
+.card.accessibility {
+  background-color: var(--info-color-light);
+}
+.card.accessibility .hero {
+  background: var(--info-pattern);
+}
+.card.accessibility .hero::after {
+  background-image: url('/resources/accessibility.svg');
+}
+
 .card.volunteer {
   background-color: var(--part-color-light);
 }
