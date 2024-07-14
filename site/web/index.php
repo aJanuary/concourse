@@ -87,7 +87,7 @@ $cards = [
       'name' => 'signups',
       'title' => 'Sign-ups',
       'subtitle' => '',
-      'link' => '/under-construction?page=Sign-ups',
+      'link' => '/sign-ups',
       'card-permission' => 'see-signups',
     ], [
       'name' => 'chat',
