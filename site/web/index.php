@@ -75,7 +75,7 @@ $cards = [
       'name' => 'guide',
       'title' => 'Programme guide',
       'subtitle' => 'ConClár',
-      'link' => 'https://ajanuary.com/static/glasgow2024-conclar/',
+      'link' => '/programme-guide',
       'card-permission' => 'see-guide',
     ], [
       'name' => 'stream',
