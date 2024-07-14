@@ -71,7 +71,7 @@ render_header(
 
   <h3><a name="e-mail">E-mail</a></h3>
   <p><a href="mailto:info@glasgow2024.org">info@glasgow2024.org</a> &mdash; General information and questions</p>
-  <p><a href="mailto:online-support@glasgow2024.org">online-support@glasgow2024.org</a> &mdash; Get help with this member portal, Discord, or RingCentral Events</p>
+  <p><a href="mailto:online-convention-help@glasgow2024.org">online-convention-help@glasgow2024.org</a> &mdash; Get help with this member portal, Discord, or RingCentral Events</p>
   <p><a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a> &mdash; Registration questions and problems</p>
   <p><a href="mailto:accessibility@glasgow2024.org">accessibility@glasgow2024.org</a> &mdash; Accessibility Services</p>
   <p><a href="mailto:coc@glasgow2024.org">coc@glasgow2024.org</a> &mdash; To report a potential <a href="https://glasgow2024.org/about/policies/code-of-conduct/">Code of Conduct</a> violation.</p>
