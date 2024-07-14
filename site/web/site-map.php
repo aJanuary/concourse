@@ -22,6 +22,7 @@ render_header(
     </li>
     <li><p><a href="/privacy-policy">Privacy policy</a></p></li>
     <li><p><a href="/help">Help</a></p></li>
+    <li><p><a href="/attributions">Icon attributions</a></p></li>
     <li><p><a href="/login-instructions">Log in instructions</a></p></li>
     <li><p><a href="/maps">Maps</a></p></li>
     <li><p><a href="/site-map">Site map</a></p></li>
