@@ -15,6 +15,7 @@ render_header(
   <p>There are many ways to get help, using whatever route is most convenient for you.</p>
   <ul>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="#reporting">Reporting potential Code of Conduct violations</a></li>
     <li><a href="#discord">Discord</a></li>
     <li><a href="#rce">RingCentral Events</a></li>
     <li><a href="#in-person">In person</a></li>
@@ -24,6 +25,9 @@ render_header(
 
   <h3><a name="faq">FAQ</a></h3>
   <p>We have assembled the answers to some frequently asked questions on the <a href="/under-construction?page=faq">FAQ</a> page.</p>
+
+  <h3><a name="reporting">Reporting potential Code of Conduct violations</a></h3>
+  <p>The <a href="https://glasgow2024.org/about/policies/code-of-conduct/cocv-reporting-methods/">methods of reporting</a> page outlines the many routes available to report a potential Code of Conduct violation.</p>
 
   <h3><a name="discord">Discord</a></h3>
   <p>After <a href="/chat">joining our Discord server</a>, you can ask for help in the #help-desk channel.</p>
@@ -36,29 +40,33 @@ render_header(
   <p><img src="/resources/help/rce.png" alt="A screenshot of RingCentral Events"></p>
 
   <h3><a name="in-person">In person</a></h3>
-  <h4>Information Desk</h4>
+  <h4>Information desk</h4>
   <p>For general information and questions.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
+  <p><a href="/times#information-desk">Open hours</a></p>
   <p><img src="/resources/help/info.png" alt="Map of Hall 4 with the Information Desk circled"></p>
 
-  <h4>Convention Ops</h4>
+  <h4>Convention operations</h4>
   <p>General help and assistance, lost property and out-of-hours cover.</p>
-  <p>Locatied in <em>TODO</em>.</p>
+  <p>Located in the concourse of the SEC and Rockhall in the Crowne Plaza.</p>
+  <p><a href="/times#con-ops">Open hours</a></p>
   <p><em>TODO: Insert a map here</em></p>
 
-  <h4>Accessibility Desk</h4>
+  <h4>Accessibility desk</h4>
   <p>For help with accommodating accessibility needs.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
+  <p><a href="/times#accessibility-desk">Open hours</a></p>
   <p><img src="/resources/help/accessibility.png" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
 
-  <h4>Listeners Desk</h4>
-  <p><em>TODO. Waiting on reply from coc@</em>.</p>
+  <h4>Listeners desk</h4>
+  <p>To talk to someone about a sensitive topic, including reporting potential Code of Conduct violations.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
+  <p><a href="/times#listeners-desk">Open hours</a></p>
   <p><img src="/resources/help/listeners.png" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
 
-  <h4>Registration Desk</h4>
+  <h4>Registration desk</h4>
   <p>For registration questions and problems.</p>
-  <p>Located <em>TODO</em>.</p>
+  <p>Located in the concourse of the SEC.</p>
   <p><em>TODO: Insert a map here</em></p>
 
   <h3><a name="e-mail">E-mail</a></h3>
@@ -70,7 +78,7 @@ render_header(
   <p>You can find other, more specialised e-mail addresses on the <a href="https://glasgow2024.org/about/contact/">Contact</a> page.</p>
 
   <h3><a name="telephone">Telephone</a></h3>
-  <p><em>TODO</em></p>
+  <p>There is a telephone number on the back of your badge that you can call for help.</p>
 </article>
 <?php
 render_footer();
