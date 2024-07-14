@@ -108,7 +108,7 @@ $cards = [
       'name' => 'itinerary',
       'title' => 'Your participant schedule',
       'subtitle' => 'Planorama',
-      'link' => '/under-construction?page=Your+participant+schedule',
+      'link' => 'https://planorama.glasgow2024.org',
       'card-permission' => 'see-itinerary',
       'link-permission' => 'see-itinerary-other',
     ]
