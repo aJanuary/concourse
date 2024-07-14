@@ -182,6 +182,7 @@ $cards = [
       <?php
       foreach ($category_cards as $card) {
         if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
+          $open_in_new_tab = str_starts_with($card['link'], 'http');
       ?>
         <div class="card <?php echo $card['name']; ?>">
           <div class="hero"
@@ -192,7 +193,7 @@ $cards = [
           <?php } ?>
           ></div>
           <hgroup>
-            <h3><a href="<?php echo $card['link']; ?>"><?php echo $card['title']; ?></a></h3>
+            <h3><a href="<?php echo $card['link']; ?>" <?php echo $open_in_new_tab ? 'target="_blank"' : ''; ?>><?php echo $card['title']; ?></a></h3>
             <?php
             if ($card['subtitle']) {
             ?>
