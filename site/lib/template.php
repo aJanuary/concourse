@@ -100,9 +100,8 @@
         <ul>
           <li><a href="/help">Help</a></li>
           <li><a href="/site-map">Site map</a></li>
-          <li><a href="/privacy-policy">Privacy Policy</a></li>
-          <li><a href="https://glasgow2024.org/about/policies/code-of-conduct/">Code of Conduct</a></li>
-          <li><a href="https://glasgow2024.org/about/policies/">All Policies</a></li>
+          <li><a href="/privacy-policy">Privacy policy</a></li>
+          <li><a href="https://glasgow2024.org/about/policies/">All policies</a></li>
         </ul>
       </div>
     </footer>

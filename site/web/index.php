@@ -56,6 +56,12 @@ $cards = [
       'link' => 'https://glasgow2024.org/for-members/childcare/',
       'card-permission' => 'has-childcare'
     ], [
+      'name' => 'coc',
+      'title' => 'Code of Conduct',
+      'subtitle' => '',
+      'link' => 'https://glasgow2024.org/about/policies/code-of-conduct/',
+      'card-permission' => 'see-coc',
+    ], [
       'name' => 'help',
       'title' => 'Get help',
       'subtitle' => 'Info desk, help desks and contacts',
@@ -268,6 +274,7 @@ $cards = [
     'childcare',
     'volunteer',
     'website',
+    'code-of-conduct',
     'help',
   ];
 

@@ -557,6 +557,16 @@ main {
   background-image: url('/resources/childcare.svg');
 }
 
+.card.coc {
+  background-color: var(--info-color-light);
+}
+.card.coc .hero {
+  background: var(--info-pattern);
+}
+.card.coc .hero::after {
+  background-image: url('/resources/coc.svg');
+}
+
 .card.help {
   background-color: var(--info-color-light);
 }
