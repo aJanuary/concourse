@@ -41,7 +41,7 @@ $cards = [
       'name' => 'newsletter',
       'title' => 'Newsletter',
       'subtitle' => '',
-      'link' => '/under-construction?page=Newsletter',
+      'link' => '/newsletter',
       'card-permission' => 'see-help',
     ], [
       'name' => 'accessibility',
