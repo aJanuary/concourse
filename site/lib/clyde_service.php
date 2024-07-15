@@ -14,7 +14,8 @@ class ClydeService {
       'clientSecret'            => CLYDE_CLIENT_SECRET,
       'urlAuthorize'            => CLYDE_SERVER_ENDPOINT . '/oauth/authorize',
       'urlAccessToken'          => CLYDE_SERVER_ENDPOINT . '/api/v1/oauth/token',
-      'urlResourceOwnerDetails' => CLYDE_SERVER_ENDPOINT . '/api/v1/me'
+      'urlResourceOwnerDetails' => CLYDE_SERVER_ENDPOINT . '/api/v1/me',
+      'scopes'                  => ['view-participant']
     ]);
   }
 
