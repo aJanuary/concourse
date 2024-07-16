@@ -17,6 +17,7 @@ class ClydeService {
       'urlResourceOwnerDetails' => CLYDE_SERVER_ENDPOINT . '/api/v1/me',
       'scopes'                  => ['view-participant']
     ]);
+    session_start();
   }
 
   // Eventually we want to pass a path here that is
