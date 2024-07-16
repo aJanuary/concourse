@@ -1,6 +1,6 @@
 <?php
 
-define('ROOT_URL', 'https://' . $_SERVER['HTTP_X_FORWARDED_HOST'] ?? _SERVER['HTTP_HOST']);
+define('ROOT_URL', 'https://' . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
 define('CON_SHORT_NAME', 'Glasgow 2024');
 define('DISCORD_GUILD_ID', '1229093507835101204');
