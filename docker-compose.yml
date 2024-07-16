@@ -62,6 +62,7 @@ services:
       CONFIG_DB_PASSWORD_FILE: /run/secrets/db_dba_password
       CONFIG_SECRETS_FILE: /run/secrets/web_secrets
       RUNTIME_ENV: development
+      XDEBUG_MODE: "${XDEBUG_MODE}"
     depends_on:
       - db
   

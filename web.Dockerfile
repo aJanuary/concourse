@@ -10,6 +10,8 @@ RUN apt-get update -y && apt-get install -y libmariadb-dev zip mariadb-client vi
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN a2enmod rewrite
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+COPY docker/90-xdebug.ini "${PHP_INI_DIR}/config.d"
 
 # Using the default php ini file for now
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
