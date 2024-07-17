@@ -25,4 +25,4 @@ vendor/bin/phinx migrate -e $RUNTIME_ENV
 
 # Then start the server
 cd
-apache2-foreground
+php-fpm

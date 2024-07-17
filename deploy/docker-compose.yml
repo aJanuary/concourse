@@ -33,6 +33,14 @@ services:
       # map to local 53306 in case there are other MySQL instances
       - "127.0.0.1:53306:3306"
 
+  nginx:
+    image: ghcr.io/glasgow2024/nginx:latest
+    ports:
+      # map to local 8080
+      - "127.0.0.1:8080:80"
+    links:
+      - web
+
   web:
     image: ghcr.io/glasgow2024/member-portal:latest
     # The script will wait for db to be ready, run migrations and then start web server
@@ -41,9 +49,6 @@ services:
     secrets:
       - db_dba_password
       - web_secrets
-    ports:
-      # map to local 8080
-      - "127.0.0.1:8080:80"
     environment:
       CONFIG_LIB_DIR: /srv/lib
       CONFIG_WEB_DIR: /var/www/html
