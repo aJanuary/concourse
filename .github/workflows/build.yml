@@ -102,8 +102,23 @@ jobs:
       #
       # Push the image to GHRC
       #
-      - name: Push the image
-        id: docker_push
+      - name: Push the nginx image
+        id: docker_push_nginx
+        uses: docker/build-push-action@v4
+        with:
+          context: ./
+          file: ./nginx.Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          build-args: |
+            RUNTIME_ENV=production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Push the web image
+        id: docker_push_web
         uses: docker/build-push-action@v4
         with:
           context: ./
