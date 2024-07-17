@@ -3,6 +3,10 @@
   require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 
+  function get_internal_url($script) {
+    return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
+  }
+
   function render_header($title, $description, $breadcrumbs, $is_home = false) {
 ?>
 <!doctype html>
@@ -13,8 +17,8 @@
     <meta name="description" content="<?php echo $description; ?>">
     <title><?php echo CON_NAME; ?> Member Portal<?php echo $title ? ' - ' . $title : ''; ?></title>
     <link rel="shortcut icon" href="/resources/favicon.png">
-    <link rel="stylesheet" href="<?php echo "/resources/reset.css"; ?>">
-    <link rel="stylesheet" href="<?php echo "/resources/style.css"; ?>">
+    <link rel="stylesheet" href="<?php echo get_internal_url("/resources/reset.css"); ?>">
+    <link rel="stylesheet" href="<?php echo get_internal_url("/resources/style.css"); ?>">
   </head>
   <body <?php echo $is_home ? 'class="home"' : ''; ?>>
     <header>
@@ -30,6 +34,27 @@
             </hgroup>
           </div>
         </a>
+        <?php
+        if (isset($_REQUEST['username'])) {
+        ?>
+          <p class="username">
+            <?php echo $_REQUEST['username']; ?>
+            |
+            <?php
+            if (is_anonymous()) {
+            ?>
+              <a href="<?php echo make_login_link(); ?>">Log in</a>
+            <?php
+            } else {
+            ?>
+              <a href="/logout">Log out</a>
+            <?php
+            }
+            ?>
+          </p>
+        <?php
+        }
+        ?>
       </div>
     </header>
     <main>

@@ -8,6 +8,7 @@
   }
 
   function render_header($title, $description, $breadcrumbs, $is_home = false) {
+    db_record_analytics('online', 'request', $_SERVER['REQUEST_URI']);  
 ?>
 <!doctype html>
 <html lang="en">
