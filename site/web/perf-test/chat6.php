@@ -4,7 +4,7 @@
   require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 
   function get_internal_url($script) {
-    return $script . '?v=' . hash_file('md5', getenv('CONFIG_WEB_DIR') . $script);
+    return $script . '?v=' . filemtime(getenv('CONFIG_WEB_DIR') . $script);
   }
 
   function render_header($title, $description, $breadcrumbs, $is_home = false) {
