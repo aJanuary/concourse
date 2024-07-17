@@ -29,7 +29,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
 
     steps:
       - name: Maximize build space
@@ -59,19 +58,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      #
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern=latest
-
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
@@ -99,10 +85,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      #
-      # Push the image to GHRC
-      #
-      - name: Push the nginx image
+      - name: nginx - Extract metadata (tags, labels) for Docker
+        id: meta_nginx
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/glasgow2024/nginx
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern=latest
+
+      - name: nginx - Push the image
         id: docker_push_nginx
         uses: docker/build-push-action@v4
         with:
@@ -112,12 +107,24 @@ jobs:
           build-args: |
             RUNTIME_ENV=production
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_nginx.outputs.tags }}
+          labels: ${{ steps.meta_nginx.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
-      - name: Push the web image
+      - name: portal - Extract metadata (tags, labels) for Docker
+        id: meta_web
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/glasgow2024/member-portal
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern=latest
+
+      - name: portal - Push the web image
         id: docker_push_web
         uses: docker/build-push-action@v4
         with:
@@ -127,8 +134,8 @@ jobs:
           build-args: |
             RUNTIME_ENV=production
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_web.outputs.tags }}
+          labels: ${{ steps.meta_web.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 

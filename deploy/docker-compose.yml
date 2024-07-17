@@ -35,6 +35,7 @@ services:
 
   nginx:
     image: ghcr.io/glasgow2024/nginx:latest
+    restart: always
     ports:
       # map to local 8080
       - "127.0.0.1:8080:80"
