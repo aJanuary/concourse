@@ -5,6 +5,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
 
+if (isset($_GET['dologin'])) {
+    $clyde = new ClydeService();
+    $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
+    header('Location: ' . $clyde->authorize_url());
+    exit();
+}
+
 if (is_logged_in()) {
   header('Location: /');
   exit;
@@ -34,9 +41,6 @@ if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
     }
 }
 
-$clyde = new ClydeService();
-$_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
-
 render_header(
     'Log in',
     'Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.',
@@ -62,11 +66,11 @@ if (isset($_GET['error_code'])) {
 <?php
 }
 ?>
-    <a href="<?php echo $clyde->authorize_url(); ?>" class="button login">Log in with Glasgow Registration</a>
+    <a href="?dologin" class="button login">Log in with Glasgow Registration</a>
 <?php
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
-    <p><a href="/login?skip-login&redirect=<?php echo urlencode($_SESSION['oauth2redirect']); ?>">Continue without logging in</a></p>
+    <p><a href="/login?skip-login&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>">Continue without logging in</a></p>
 <?php
 }
 ?>

@@ -66,7 +66,7 @@ make_session($badge_no);
 
 if (isset($_SESSION['oauth2redirect'])) {
   $redirect = $_SESSION['oauth2redirect'];
-  unset($_SESSION['oauth2redirect']);
+  session_destroy();
   if (strpos($redirect, '/') !== 0) {
     // Don't allow open redirects
     // https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html
