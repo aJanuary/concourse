@@ -91,7 +91,7 @@ $cards = [
     ], [
       'name' => 'signups',
       'title' => 'Sign-ups',
-      'subtitle' => '',
+      'subtitle' => 'For items with limited space',
       'link' => '/sign-ups',
       'card-permission' => 'see-signups',
     ], [
