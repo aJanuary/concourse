@@ -24,10 +24,13 @@ render_header(
           <h3>Email Log In</h3>
           <ol>
               <li>Enter the email address you used to register for the convention.</li>
-              <li>Enter your ticket number. You will be able to find this on your badge and in the e-mail that announced the opening of the portal.</li>
+              <li>Enter your ticket number. You will be able to find this on your badge and in the e-mail that announced the opening of the portal. Note, this will be the number without the # sign i.e. 0933, not #0933.</li>
               <li>Click "Email Login".</li>
               <li>Check your email for a message from Glasgow 2024 Registration. This email will contain a link that you can use to log in to the portal.</li>
-              <li>Click on the "Login" button in the email.</li>
+              <li>
+                <p>Click on the "Login" button in the email.</p>
+                <p><em>If you aren't able to get to your e-mail inbox in the same browser on the same device as you are using to log in to the portal, then right-click / long press the "Login" and select "Copy Link" (may apepar as "Copy Link Address", depending on your browser), then paste the link into the address bar of the browser you are using to log in to the portal.</em></p>
+              </li>
           </ol>
           <p><img src="/resources/login/email-login.webp" alt="A screenshot of the email log in screen" width="652" height="364" /></p>
           <h3>Direct Log In</h3>
