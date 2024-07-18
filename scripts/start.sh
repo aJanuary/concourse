@@ -23,6 +23,9 @@ composer install
 # NOTE: RUNTIME_ENV is set to developmen or production ...
 vendor/bin/phinx migrate -e $RUNTIME_ENV
 
+# Correct permissions on analytics folder
+chown -R www-data:www-data $CONFIG_ANALYTICS_DIR
+
 # Then start the server
 cd
 php-fpm

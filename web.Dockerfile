@@ -4,6 +4,7 @@ FROM php:8.2-fpm
 ARG RUNTIME_ENV=production
 ARG CONFIG_LIB_DIR=/srv/lib
 ARG CONFIG_WEB_DIR=/var/www/html
+ARG CONFIG_ANALYTICS_DIR=/var/log/analytics
 
 # Need zip and client for migrations and start script
 RUN apt-get update -y && apt-get install -y libmariadb-dev zip mariadb-client vim
@@ -21,6 +22,9 @@ ADD ./site/php-migrations /var/php-migrations
 ADD ./site/lib /srv/lib
 ADD ./site/web /var/www/html
 ADD ./scripts/start.sh /var/scripts/start.sh
+
+# Make analytics dir writable by the web server
+RUN mkdir ${CONFIG_ANALYTICS_DIR} && chown www-data:www-data ${CONFIG_ANALYTICS_DIR}
 
 # Install composer in the docker image, 
 # and put in a place that composer will be in the path

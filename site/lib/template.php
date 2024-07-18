@@ -2,13 +2,14 @@
   require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/analytics.php');
 
   function get_internal_url($script) {
     return $script . '?v=' . filemtime(getenv('CONFIG_WEB_DIR') . $script);
   }
 
   function render_header($title, $description, $breadcrumbs, $is_home = false) {
-    db_record_analytics(member_type(), 'request', $_SERVER['REQUEST_URI']);  
+    record_analytics(member_type(), 'request', $_SERVER['REQUEST_URI']);
 ?>
 <!doctype html>
 <html lang="en">

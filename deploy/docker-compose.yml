@@ -50,9 +50,14 @@ services:
     secrets:
       - db_dba_password
       - web_secrets
+    volumes:
+      - type: bind
+        source: /opt/portal/analytics
+        target: &analytics-dir /var/log/analytics
     environment:
       CONFIG_LIB_DIR: /srv/lib
       CONFIG_WEB_DIR: /var/www/html
+      CONFIG_ANALYTICS_DIR: *analytics-dir
       CONFIG_DB_HOST: db
       CONFIG_DB_NAME: *db-name
       CONFIG_DB_USER: *db-user

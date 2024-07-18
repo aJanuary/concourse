@@ -2,3 +2,4 @@ secrets/*
 .envrc
 **/vendor/
 composer.phar
+analytics/*.log

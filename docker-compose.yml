@@ -65,9 +65,13 @@ services:
       - type: bind
         source: ./site/php-migrations
         target: /var/php-migrations
+      - type: bind
+        source: ./analytics
+        target: /var/log/analytics
     environment:
       CONFIG_LIB_DIR: *lib-dir
       CONFIG_WEB_DIR: *web-dir
+      CONFIG_ANALYTICS_DIR: /var/log/analytics
       CONFIG_DB_HOST: db
       CONFIG_DB_NAME: *db-name
       CONFIG_DB_USER: *db-user
