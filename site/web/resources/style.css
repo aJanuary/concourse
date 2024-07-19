@@ -523,6 +523,17 @@ main {
   background-image: url('/resources/hugos.svg');
 }
 
+.card.consultive-ballot {
+  background-color: var(--events-color-light);
+}
+.card.consultive-ballot .hero {
+  background: var(--events-bg);
+  background-size: var(--events-bg-size);
+}
+.card.consultive-ballot .hero::after {
+  background-image: url('/resources/consultive-ballot.svg');
+}
+
 .card.site-selection {
   background-color: var(--events-color-light);
 }

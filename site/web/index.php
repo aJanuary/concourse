@@ -137,6 +137,12 @@ $cards = [
       'link' => 'https://glasgow2024.org/hugo-awards/2024-hugo-award-winners/',
       'card-permission' => 'see-hugos',
     ], [
+      'name' => 'consultive-ballot',
+      'title' => 'Consultative ballot',
+      'subtitle' => 'Business meeting',
+      'link' => 'https://voting.glasgow2024.org/',
+      'card-permission' => 'see-consultive-ballot',
+    ], [
       'name' => 'site-selection',
       'title' => 'Site selection',
       'subtitle' => 'Voting',
