@@ -517,7 +517,7 @@ render_header(
   <h3><a href="#listeners-desk" name="listeners-desk">Listeners desk</a></h3>
   <ul class="times-list">
     <li>
-      <p>Thursday, 6 Aug</p>
+      <p>Tuesday, 6 Aug</p>
       <p>11:00&ndash;17:00</p>
       <p>SEC, Concourse</p>
     </li>
