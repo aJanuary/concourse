@@ -19,7 +19,7 @@ render_header(
     <li><a href="#discord">Discord</a></li>
     <li><a href="#rce">RingCentral Events</a></li>
     <li><a href="#in-person">In person</a></li>
-    <li><a href="#email">E-mail</a></li>
+    <li><a href="#e-mail">E-mail</a></li>
     <li><a href="#telephone">Telephone</a></li>
   </ul>
 
