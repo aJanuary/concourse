@@ -36,10 +36,6 @@ render_header(
       <p>If you have the Discord app installed, it will open the Discord app. Otherwise, it will take you to the Discord website.</p>
     </li>
     <li>
-      <p>A pop-up will appear inviting you to join the server. Click the <kbd>Accept Invite</kbd> button.</p>
-      <p><img src="/resources/discord/5-join.png" alt="Discord server invite dialog with the Accept Invite button highlighted"></p>
-    </li>
-    <li>
       <p>Fill out the onboarding questions. These are aimed at making sure you see the correct channels. If any of the questions don't apply to you, you can always just click <kbd>Skip</kbd>.</p>
       <p><img src="/resources/discord/6-onboarding.png" alt="Discord onboarding questions"></p>
     </li>
