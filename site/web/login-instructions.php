@@ -12,6 +12,7 @@ render_header(
 ?>
 <article>
   <h2>How to log in</h2>
+  <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/FvJ__J8njK0?si=U73dI0tQS_9x7Wit" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   <ol class="instructions">
       <li>
         <p>Click the "Log in with Glasgow Registration".</p>
