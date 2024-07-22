@@ -977,6 +977,23 @@ function db_set_discord_id_from_token($badge_no, $token) {
   }
 }
 
+function db_get_discord_id_from_token($token) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT username FROM discord_verification_token WHERE token_id = ?");
+  try {
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $stmt->bind_result($username);
+    $stmt->fetch();
+  } finally {
+    $stmt->close();
+  }
+
+  error_log("Got username $username for token $token");
+  return $username;
+}
+
 function db_record_analytics($member_type, $event, $data) {
   global $mysqli;
 
