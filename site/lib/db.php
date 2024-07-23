@@ -1005,4 +1005,16 @@ function db_record_analytics($member_type, $event, $data) {
     $stmt->close();
   }
 }
+
+function db_create_login_link($badge_no, $login_code, $expiry) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO login_links (badge_no, login_code, expires_at) VALUES (?, ?, ?)");
+  try {
+    $stmt->bind_param("ssi", $badge_no, $login_code, $expiry);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
+}
 ?>
