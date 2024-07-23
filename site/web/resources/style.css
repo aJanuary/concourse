@@ -759,17 +759,20 @@ article ul {
   color: var(--button-fg-color);
   border-radius: 3px;
   transition: color .1s ease-in-out, background-color .1s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .button:hover {
   background-color: var(--button-hover-bg-color);
   color: var(--button-fg-color);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 3px 8px;
 }
 
 .button.disabled {
   background-color: var(--button-disabled-bg-color);
   color: var(--button-disabled-fg-color);
   cursor: default;
+  box-shadow: none;
 }
 
 form p {
