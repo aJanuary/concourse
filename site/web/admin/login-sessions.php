@@ -51,7 +51,7 @@ render_header(
           <li>
               <label>
                 <input type="checkbox" name="<?php echo $session['session_id']; ?>">
-                <?php echo $session['badge_no'] . ' ' . $session['name'] . ' (' . $session['session_id'] . ')'; ?>
+                <?php echo $session['badge_no'] . ' ' . htmlspecialchars($session['name']) . ' (' . $session['session_id'] . ')'; ?>
               </label>
           </li>
 <?php

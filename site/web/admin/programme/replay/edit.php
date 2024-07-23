@@ -58,12 +58,12 @@ render_header(
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
     'Manage RCE replays' => '/admin/programme/replay/list',
-    $title
+    htmlspecialchars($title)
   ]
 );
 ?>
   <article>
-    <h2><?php echo $title; ?></h2>
+    <h2><?php echo htmlspecialchars($title); ?></h2>
     <form action="/admin/programme/replay/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Replay details</legend>
@@ -81,8 +81,8 @@ if (array_key_exists('item_id', $_GET)) {
 <?php
 }
 ?>
-        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $replay['title']; ?>"></label></p>
-        <p><label>Replay URL: <input type="text" name="replay_url" value="<?php echo $replay['replay_url']; ?>"></label></p>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($replay['title']); ?>"></label></p>
+        <p><label>Replay URL: <input type="text" name="replay_url" value="<?php echo htmlspecialchars($replay['replay_url']); ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
       <?php

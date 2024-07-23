@@ -60,12 +60,12 @@ render_header(
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
     'Manage RCE stages' => '/admin/programme/stages/list',
-    $title
+    htmlspecialchars($title)
   ]
 );
 ?>
   <article>
-    <h2><?php echo $title; ?></h2>
+    <h2><?php echo htmlspecialchars($title); ?></h2>
     <form action="/admin/programme/stages/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Stage details</legend>
@@ -82,13 +82,13 @@ if (array_key_exists('room_id', $_GET)) {
 <?php
 }
 ?>
-        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $stage['title']; ?>"></label></p>
-        <p><label>Viewer URL: <input name="viewer_url" value="<?php echo $stage['viewer_url']; ?>"></label></p>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($stage['title']); ?>"></label></p>
+        <p><label>Viewer URL: <input name="viewer_url" value="<?php echo htmlspecialchars($stage['viewer_url']); ?>"></label></p>
         <p><label>Type: <select name="type">
           <option value="hybrid" <?php if ($stage['type'] == 'hybrid') { echo 'selected'; } ?>>Hybrid</option>
           <option value="online-only" <?php if ($stage['type'] == 'online-only') { echo 'selected'; } ?>>Online-only</option>
         </select></label></p>
-        <p><label>Stream Yard URL: <input name="participant_url" value="<?php echo $stage['participant_url']; ?>"></label></p>
+        <p><label>Stream Yard URL: <input name="participant_url" value="<?php echo htmlspecialchars($stage['participant_url']); ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
 <?php
@@ -112,7 +112,7 @@ if (array_key_exists('room_id', $_GET)) {
       var $delete = document.getElementById('delete');
       if ($delete) {
         $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete <?php echo $stage['rpom_id']; ?>?')) {
+          if (confirm('Are you sure you want to delete <?php echo $stage['room_id']; ?>?')) {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '/admin/programme/stages/edit';

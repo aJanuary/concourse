@@ -46,10 +46,10 @@ render_header(
           }
 ?>
           <li>
-            <a aria-label="Edit item <?php echo $label; ?>" href="/admin/programme/discord-posts/edit?item_id=<?php echo $post['item_id']; ?>"><?php echo $label; ?></a>
+            <a aria-label="Edit item <?php echo htmlspecialchars($label); ?>" href="/admin/programme/discord-posts/edit?item_id=<?php echo $post['item_id']; ?>"><?php echo htmlspecialchars($label); ?></a>
             <?php
             if ($subtitle) {
-              echo '<br>' . $subtitle;
+              echo '<br>' . htmlspecialchars($subtitle);
             }
             ?>
           </li>

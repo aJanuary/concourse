@@ -11,7 +11,7 @@ render_header(
 );
 ?>
 <article>
-  <h2><?php echo $_GET['page']; ?></h2>
+  <h2><?php echo htmlspecialchars($_GET['page']); ?></h2>
   <p>We&apos;re still working on this page.</p>
   <p>If you are involved in testing the site, this is probably fine. If you are not, please let us know.</p>
 </article>

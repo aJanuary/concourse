@@ -58,12 +58,12 @@ render_header(
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
     'Manage RCE sessions' => '/admin/programme/sessions/list',
-    $title
+    htmlspecialchars($title)
   ]
 );
 ?>
   <article>
-    <h2><?php echo $title; ?></h2>
+    <h2><?php echo htmlspecialchars($title); ?></h2>
     <form action="/admin/programme/sessions/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Session details</legend>
@@ -80,8 +80,8 @@ if (array_key_exists('item_id', $_GET)) {
 <?php
 }
 ?>
-        <p><label>Title: <input name="title" maxlength="256" value="<?php echo $session['title']; ?>"></label></p>
-        <p><label>Session URL: <input type="text" name="rce_url" value="<?php echo $session['rce_url']; ?>"></label></p>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($session['title']); ?>"></label></p>
+        <p><label>Session URL: <input type="text" name="rce_url" value="<?php echo htmlspecialchars($session['rce_url']); ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
       <?php

@@ -32,7 +32,7 @@ if (array_key_exists('confirm', $_GET)) {
 ?>
   <article>
     <h3>Success!</h3>
-    <p>Thank you, we have now associated this membership with the Discord account <?php echo $verification_result["username"]; ?>. You may close this tab.</p>
+    <p>Thank you, we have now associated this membership with the Discord account <?php htmlspecialchars($verification_result["username"]); ?>. You may close this tab.</p>
   </article>
 <?php
 
@@ -49,8 +49,8 @@ if (array_key_exists('confirm', $_GET)) {
 ?>
   <article>
     <h3>Verify Discord ID</h3>
-    <p>Are you sure you want to associate the membership for <?php echo $_REQUEST['username']; ?> with the Discord account <?php echo $discord_id; ?>?</p>
-    <p><a href="/api/verify-discord-id?token=<?php echo $token; ?>&confirm=true" class="button">Yes, this is my Discord account</a></p>
+    <p>Are you sure you want to associate the membership for <?php echo htmlspecialchars($_REQUEST['username']); ?> with the Discord account <?php echo htmlspecialchars($discord_id); ?>?</p>
+    <p><a href="/api/verify-discord-id?token=<?php echo htmlspecialchars($token); ?>&confirm=true" class="button">Yes, this is my Discord account</a></p>
   </article>
 <?php
   

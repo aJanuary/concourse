@@ -14,7 +14,7 @@ function render_form_body($role_id = 1) {
       foreach ($roles as $role) {
         $selected = ($role['role_id'] == $role_id) ? 'selected' : '';
 ?>
-          <option value="<?php echo $role['role_id']; ?>"<?php echo $selected; ?>><?php echo $role['name']; ?></option>
+          <option value="<?php echo $role['role_id']; ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($role['name']); ?></option>
 <?php
       }
 ?>
@@ -29,7 +29,7 @@ function render_form_body($role_id = 1) {
 ?>
       <label>
         <input type="checkbox" name="permission_<?php echo $permission['name']; ?>_<?php echo $permission['permission_id']; ?>" <?php echo $checked; ?>>
-        <?php echo $permission['name']; ?>
+        <?php echo htmlspecialchars($permission['name']); ?>
       </label>
 <?php
     }

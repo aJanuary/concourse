@@ -35,7 +35,7 @@ render_header(
     <form action="/admin/programme/zoom/edit" method="POST" class="vertical">
       <fieldset>
         <legend>Zoom link</legend>
-        <p><label>Zoom URL: <input name="zoom_url" value="<?php echo $zoom_url; ?>"></label></p>
+        <p><label>Zoom URL: <input name="zoom_url" value="<?php echo htmlspecialchars($zoom_url); ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
     </form>

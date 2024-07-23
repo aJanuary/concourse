@@ -31,7 +31,7 @@ render_header(
   } else {
     if (count($usernames) === 1) {
 ?>
-  <p>You have joined the Discord with the username <?php echo $usernames[0]; ?>.</p>
+  <p>You have joined the Discord with the username <?php echo htmlspecialchars($usernames[0]); ?>.</p>
 <?php
     } else {
 ?>
@@ -40,7 +40,7 @@ render_header(
 <?php
       foreach ($usernames as $username) {
 ?>
-    <li><?php echo $username; ?></li>
+    <li><?php echo htmlspecialchars($username); ?></li>
 <?php
       }
 ?>
@@ -48,7 +48,7 @@ render_header(
 <?php
     }
 ?>
-  <p><a class="button" target="_blank" href="https://discord.com/channels/<?php echo DISCORD_GUILD_ID . '/' . DISCORD_INVITE_CHANNEL_ID ?>">Go to Discord in your browser</a> or log in as <?php echo $usernames[0]; ?> in the <a href="https://discord.com/download">Discord app</a></p>
+  <p><a class="button" target="_blank" href="https://discord.com/channels/<?php echo DISCORD_GUILD_ID . '/' . DISCORD_INVITE_CHANNEL_ID ?>">Go to Discord in your browser</a> or log in as <?php echo htmlspecialchars($usernames[0]); ?> in the <a href="https://discord.com/download">Discord app</a></p>
   <p><a target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify+guilds.join">Join the Discord server as a different user</a></p>
 <?php
   }

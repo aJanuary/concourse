@@ -40,7 +40,7 @@
         if (isset($_REQUEST['username'])) {
         ?>
           <p class="username">
-            <?php echo $_REQUEST['username']; ?>
+            <?php echo htmlspecialchars($_REQUEST['username']); ?>
             |
             <?php
             if (is_anonymous()) {

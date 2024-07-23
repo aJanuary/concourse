@@ -30,8 +30,8 @@ render_header(
         $rowspan = max(count($member['discord_ids']), 1);
       ?>
       <tr class="new-badgeno-row">
-        <td rowspan=<?php echo $rowspan; ?>><?php echo $member['badge_no']; ?></td>
-        <td rowspan=<?php echo $rowspan; ?>><?php echo $member['name']; ?></td>
+        <td rowspan=<?php echo $rowspan; ?>><?php echo htmlspecialchars($member['badge_no']); ?></td>
+        <td rowspan=<?php echo $rowspan; ?>><?php echo htmlspecialchars($member['name']); ?></td>
         <?php
         if (count($member['discord_ids']) == 0) {
         ?>
@@ -46,8 +46,8 @@ render_header(
             <?php
             }
             ?>
-            <td><?php echo $discord_id['id']; ?></td>
-            <td><?php echo $discord_id['username']; ?></td>
+            <td><?php echo htmlspecialchars($discord_id['id']); ?></td>
+            <td><?php echo htmlspecialchars($discord_id['username']); ?></td>
           </tr>
           <?php
           }
