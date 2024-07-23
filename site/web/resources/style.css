@@ -1013,6 +1013,20 @@ ul.maps li a {
   font-weight: bold;  
 }
 
+#url {
+  width: 100%;
+  display: flex;
+}
+
+#url input[type=text] {
+  padding: 10px;
+  flex-grow: 1;
+}
+
+#url button {
+  width: 10ch;
+}
+
 @media (prefers-contrast: more) {
   :root {
     --primary-color: #014E82;

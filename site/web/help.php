@@ -32,42 +32,43 @@ render_header(
   <h3><a name="discord">Discord</a></h3>
   <p>After <a href="/chat">joining our Discord server</a>, you can ask for help in the #help-desk channel.</p>
   <p>This can be a good option if you want to have a text conversation with someone.</p>
-  <p><em>TODO: Screenshot</em></p>
+  <p><img src="/resources/help/discord.png?v=1" alt="A screenshot of Discord showing the #help-desk channel"></p>
 
   <h3><a name="rce">RingCentral Events</a></h3>
   <p>After <a href="/stream">joining our RingCentral Events event</a>, you can ask for help by going to the Help Desk tab on the left/bottom and then clicking Help Desk.</p>
   <p>This can be a good option if you want to would like to have a video chat with someone.</p>
-  <p><img src="/resources/help/rce.png" alt="A screenshot of RingCentral Events"></p>
+  <p><img src="/resources/help/rce.png?v=1" alt="A screenshot of RingCentral Events"></p>
 
   <h3><a name="in-person">In person</a></h3>
   <h4>Information desk</h4>
   <p>For general information and questions.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
   <p><a href="/times#information-desk">Open hours</a></p>
-  <p><img src="/resources/help/info.png" alt="Map of Hall 4 with the Information Desk circled"></p>
+  <p><img src="/resources/help/info.png?v=1" alt="Map of Hall 4 with the Information Desk circled"></p>
 
   <h4>Convention operations</h4>
   <p>General help and assistance, lost property and out-of-hours cover.</p>
   <p>Located in the concourse of the SEC and Rockhall in the Crowne Plaza.</p>
   <p><a href="/times#con-ops">Open hours</a></p>
-  <p><em>TODO: Insert a map here</em></p>
+  <p><img src="/resources/help/concourse.png?v=1" alt="Map of the SEC with the concourse circled"></p>
+  <p><img src="/resources/help/rockall.png?v=1" alt="Map of the Crowne Plaza with Rockhall circled"></p>
 
   <h4>Accessibility desk</h4>
   <p>For help with accommodating accessibility needs.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
   <p><a href="/times#accessibility-desk">Open hours</a></p>
-  <p><img src="/resources/help/accessibility.png" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
+  <p><img src="/resources/help/accessibility.png?v=1" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
 
   <h4>Listeners desk</h4>
   <p>Talk to someone privately about a sensitive topic, including potential Code of Conduct violations.</p>
   <p>Located in Hall 4 of the SEC near the 4A entrance.</p>
   <p><a href="/times#listeners-desk">Open hours</a></p>
-  <p><img src="/resources/help/listeners.png" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
+  <p><img src="/resources/help/listeners.png?v=1" alt="Map of Hall 4 with the Accessibility Desk circled"></p>
 
   <h4>Registration desk</h4>
   <p>For registration questions and problems.</p>
   <p>Located in the concourse of the SEC.</p>
-  <p><em>TODO: Insert a map here</em></p>
+  <p><img src="/resources/help/concourse.png?v=1" alt="Map of the SEC with the concourse circled"></p>
 
   <h3><a name="e-mail">E-mail</a></h3>
   <p><a href="mailto:info@glasgow2024.org">info@glasgow2024.org</a> &mdash; General information and questions</p>
