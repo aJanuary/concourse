@@ -86,7 +86,7 @@
     </svg>
     <h1>Start chatting</h1>
     <p>Join in with the chat over in the convention Discord.</p>
-    <p><a href="/deep-link/chat?room_id=<?php echo htmlspecialchars($_GET['room_id']); ?>" target="_blank" id="forumBttn" class="bttn">Chat about this item</a></p>
+    <p><a href="/deep-link/chat?room_id=<?php echo urlencode($_GET['room_id']); ?>" target="_blank" id="forumBttn" class="bttn">Chat about this item</a></p>
   </section>
   <section id="pip">
     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">

@@ -50,7 +50,7 @@ if (array_key_exists('confirm', $_GET)) {
   <article>
     <h3>Verify Discord ID</h3>
     <p>Are you sure you want to associate the membership for <?php echo htmlspecialchars($_REQUEST['username']); ?> with the Discord account <?php echo htmlspecialchars($discord_id); ?>?</p>
-    <p><a href="/api/verify-discord-id?token=<?php echo htmlspecialchars($token); ?>&confirm=true" class="button">Yes, this is my Discord account</a></p>
+    <p><a href="/api/verify-discord-id?token=<?php echo urlencode($token); ?>&confirm=true" class="button">Yes, this is my Discord account</a></p>
   </article>
 <?php
   
