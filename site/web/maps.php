@@ -13,12 +13,12 @@ render_header(
 <article>
   <h2>Maps</h2>
   <ul class="maps">
-    <li><a href="/resources/maps/sec-campus.pdf"><img src="/resources/maps/sec-campus-thumb.png" alt="">Scottish Event Campus</a></li>
-    <li><a href="/resources/maps/sec.pdf"><img src="/resources/maps/sec-thumb.png" alt="">Scottish Event Campus Venues</a></li>
-    <li><a href="/resources/maps/hall4.jpg"><img src="/resources/maps/hall4-thumb.png" alt="">Hall 4</a></li>
-    <li><a href="/resources/maps/hall5.jpg"><img src="/resources/maps/hall5-thumb.png" alt="">Hall 5</a></li>
-    <li><a href="/resources/maps/village.pdf"><img src="/resources/maps/village-thumb.png" alt="">The Village</a></li>
-    <li><a href="/resources/maps/crowne-plaza.pdf"><img src="/resources/maps/crowne-plaza-thumb.png" alt="">Crowne Plaza</a></li>
+    <li><a href="/resources/maps/sec-campus.pdf"><img src="/resources/maps/sec-campus-thumb.webp" width="390" height="195" alt="">Scottish Event Campus</a></li>
+    <li><a href="/resources/maps/sec.pdf"><img src="/resources/maps/sec-thumb.webp" width="390" height="195" alt="">Scottish Event Campus Venues</a></li>
+    <li><a href="/resources/maps/hall4.pdf"><img src="/resources/maps/hall4-thumb.webp" width="390" height="195" alt="">Hall 4</a></li>
+    <li><a href="/resources/maps/hall5.pdf"><img src="/resources/maps/hall5-thumb.webp" width="390" height="195" alt="">Hall 5</a></li>
+    <li><a href="/resources/maps/village.pdf"><img src="/resources/maps/village-thumb.webp" width="390" height="195" alt="">The Village</a></li>
+    <li><a href="/resources/maps/crowne-plaza.pdf"><img src="/resources/maps/crowne-plaza-thumb.webp" width="390" height="195" alt="">Crowne Plaza</a></li>
   </ul>
 </article>
 <?php
