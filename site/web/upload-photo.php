@@ -5,13 +5,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
-  'Upload photo',
+  'Upload your photo',
   'Upload a photo for Glasgow 2024',
-  ['Home' => '/', 'Uploaad photo']
+  ['Home' => '/', 'Upload your photo']
 );
 ?>
 <article>
-  <h2>Upload photo</h2>
+  <h2>Upload your photo</h2>
   <h3>For those not with us in-person</h3>
   <p>In the opening ceremony we will be showing a montage of photos from Glasgow 2024 members who aren't with us on-site.</p>
   <p>If you are a member, and aren't with us on-site (either because you bought an online membership, or you bought an in-person membership but can't make it in person) then we invite you to submit a photo for the montage.</p>
