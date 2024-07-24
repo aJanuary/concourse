@@ -17,8 +17,8 @@ function redirect_to_error($error_code) {
 
 $clyde = new ClydeService();
 
-if (!isset($_SESSION['oauth2redirect'])) {
-  if (isset($_COOKIE['session'])) {
+if (!array_key_exists('oauth2redirect', $_SESSION)) {
+  if (array_key_exists('session', $_COOKIE)) {
     header('Location: /');
     exit;
   }
