@@ -19,6 +19,7 @@ $clyde = new ClydeService();
 
 if (!array_key_exists('oauth2redirect', $_SESSION)) {
   if (array_key_exists('session', $_COOKIE)) {
+    session_destroy();
     header('Location: /');
     exit;
   }

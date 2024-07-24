@@ -66,7 +66,7 @@ if (isset($_GET['error_code'])) {
 <?php
 }
 ?>
-    <a href="?dologin" class="button login">Log in with Glasgow Registration</a>
+    <a href="?dologin&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login">Log in with Glasgow Registration</a>
 <?php
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>

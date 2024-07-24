@@ -64,6 +64,7 @@ function logout() {
     db_delete_session($_COOKIE['session']);
   }
   setcookie('session', '', time() - 3600, '/');
+  session_destroy();
 }
 
 function get_registration_status($email) {
