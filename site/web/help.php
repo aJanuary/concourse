@@ -24,7 +24,7 @@ render_header(
   </ul>
 
   <h3><a name="faq">FAQ</a></h3>
-  <p>We have assembled the answers to some frequently asked questions on the <a href="/under-construction?page=faq">FAQ</a> page.</p>
+  <p>We have assembled the answers to some frequently asked questions on the <a href="https://glasgow2024.org/online-convention/member-portal/online-convention-faq/">FAQ</a> page.</p>
 
   <h3><a name="reporting">Reporting potential Code of Conduct violations</a></h3>
   <p>The <a href="https://glasgow2024.org/about/policies/code-of-conduct/cocv-reporting-methods/">methods of reporting</a> page outlines the many routes available to report a potential Code of Conduct violation.</p>
