@@ -622,6 +622,20 @@ main {
   background-image: url('/resources/upload-presentation.svg');
 }
 
+.card.card.upload-photo {
+  background-color: var(--part-color-light);
+}
+.card.upload-photo .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.upload-photo .hero::after {
+  background-image: url('/resources/upload-photo.svg');
+}
+
+
 .card hgroup {
   grid-area: title;
 }

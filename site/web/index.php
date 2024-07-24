@@ -110,6 +110,12 @@ $cards = [
       'link' => 'https://glasgow2024.org/for-members/volunteering/',
       'card-permission' => 'see-website',
     ], [
+      'name' => 'upload-photo',
+      'title' => 'Upload your photo',
+      'subtitle' => 'For online members',
+      'link' => '/upload-photo',
+      'card-permission' => 'see-upload-photo',
+    ], [
       'name' => 'itinerary',
       'title' => 'Your participant schedule',
       'subtitle' => 'Planorama',
@@ -264,6 +270,7 @@ $cards = [
   const favOrder = [
     'time',
     'chat',
+    'upload-photo',
     'stream',
     'maps',
     'guide',
@@ -342,9 +349,9 @@ $cards = [
 <?php
     $faved_cards = [];
     if (current_user_has_permission('online')) {
-      $faved_cards = ['chat', 'newsletter', 'guide', 'signups', 'stream'];
+      $faved_cards = ['chat', 'upload-photo', 'newsletter', 'guide', 'signups', 'stream'];
     } else {
-      $faved_cards = ['chat', 'maps', 'guide', 'signups'];
+      $faved_cards = ['chat', 'newsletter', 'maps', 'guide', 'signups'];
     }
     if (current_user_has_permission('programme-participant')) {
       $faved_cards.push('itinerary');
