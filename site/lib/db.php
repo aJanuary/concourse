@@ -1017,4 +1017,16 @@ function db_create_login_link($badge_no, $login_code, $expiry) {
     $stmt->close();
   }
 }
+
+function db_get_num_members() {
+  global $mysqli;
+
+  $result = $mysqli->query("SELECT COUNT(*) FROM members");
+  try {
+    $row = $result->fetch_row();
+    return $row[0];
+  } finally {
+    $result->close();
+  }
+}
 ?>
