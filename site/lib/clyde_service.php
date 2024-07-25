@@ -55,6 +55,7 @@ class ClydeService {
 
   function registrant_allowed_access($registrant) {
     if ($registrant['attending_status'] == 'Not Attending') {
+      error_log("Registrant is not attending: " . print_r($registrant, true));
       return "no-access";
     }
 
