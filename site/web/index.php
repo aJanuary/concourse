@@ -134,7 +134,7 @@ $cards = [
       'name' => 'gallery',
       'title' => 'Art show',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/whats-on/art-show/',
+      'link' => 'https://glasgow2024.org/whats-on/art-show/art-show-gallery/',
       'card-permission' => 'see-gallery',
     ], [
       'name' => 'benefits',
