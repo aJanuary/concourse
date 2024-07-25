@@ -137,6 +137,12 @@ $cards = [
       'link' => 'https://glasgow2024.org/whats-on/art-show/',
       'card-permission' => 'see-gallery',
     ], [
+      'name' => 'benefits',
+      'title' => 'Member benefits',
+      'subtitle' => '',
+      'link' => 'https://glasgow2024.org/for-members/member-benefits/',
+      'card-permission' => 'see-benefits',
+    ], [
       'name' => 'hugos',
       'title' => 'Hugos',
       'subtitle' => 'Results and stats',
@@ -273,6 +279,7 @@ $cards = [
     'upload-photo',
     'stream',
     'maps',
+    'benefits',
     'guide',
     'times',
     'signups',

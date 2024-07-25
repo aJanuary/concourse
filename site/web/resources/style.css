@@ -512,6 +512,17 @@ main {
   background-image: url('/resources/gallery.svg');
 }
 
+.card.benefits {
+  background-color: var(--events-color-light);
+}
+.card.benefits .hero {
+  background: var(--events-bg);
+  background-size: var(--events-bg-size);
+}
+.card.benefits .hero::after {
+  background-image: url('/resources/benefits.svg');
+}
+
 .card.hugos {
   background-color: var(--events-color-light);
 }
