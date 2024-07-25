@@ -1,4 +1,6 @@
 <?php
+use chillerlan\QRCode\QRCode;
+
 require getenv('CONFIG_LIB_DIR') . '/vendor/autoload.php';
 require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
@@ -55,6 +57,10 @@ if (!array_key_exists('oauth2redirect', $_SESSION)) {
         $url.appendChild($copy);
       }
     </script>
+    <p>Or, if you are started the log-in process on your mobile device, you can scan the QR code below with your device's camera app:</p>
+    <?php
+      echo '<img id="qr-code" src="'.(new QRCode)->render(ROOT_URL . $_SERVER['REQUEST_URI']).'" alt="QR Code" />';
+    ?>
   </article>
 <?php
   render_footer();

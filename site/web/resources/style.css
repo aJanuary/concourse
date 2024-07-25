@@ -1041,6 +1041,11 @@ ul.maps li a {
   width: 10ch;
 }
 
+#qr-code {
+  max-width: 404px;
+  max-height: 404px;
+}
+
 @media (prefers-contrast: more) {
   :root {
     --primary-color: #014E82;

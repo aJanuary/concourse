@@ -1,6 +1,7 @@
 {
     "require": {
         "league/oauth2-client": "^2.7",
-        "wohali/oauth2-discord-new": "^1.2"
+        "wohali/oauth2-discord-new": "^1.2",
+        "chillerlan/php-qrcode": "5.0.2"
     }
 }
