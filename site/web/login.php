@@ -74,7 +74,7 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 <?php
 }
 ?>
-    <p>Logging in to the members portal allows us to customise the experience to your membership and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
+    <p>Logging in to the members portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
     <?php
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
@@ -86,10 +86,19 @@ if (ALLOW_ANONYMOUS_ACCESS) {
     if (time() < strtotime("2024-08-13")) {
 ?>
     <h3>Not a member?</h3>
-    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">become a member</a>.</p>
+    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">purchase a membership or ticket</a>.</p>
 <?php
     }
 ?>
+    <h3>Who can log in the portal?</h3>
+    <p>People aged 16 and over who have Attending Memberships, Day Tickets, Online Memberships, or Online Tickets can log in the portal.
+    <?php
+    if (time() < strtotime("2024-08-13")) {
+    ?>
+        If you don&apos;t already have one of these and would like to access the portal, you can <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">purchase a membership or ticket</a>.
+    <?php
+    }
+    ?>
     <h3>Problems</h3>
     <p>Read the <a href="/login-instructions" target="_blank">instructions on how to log in</a>.</p>
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
