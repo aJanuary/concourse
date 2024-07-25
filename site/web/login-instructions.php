@@ -46,7 +46,7 @@ render_header(
       </li>
       <li>
         <p>You should now see the Glasgow 2024 member portal.</p>
-        <p><img src="/resources/login/member-portal.webp" alt="A screenshot of the member portal" width="640" height="360" /></p>
+        <p><img src="/resources/login/portal.webp" alt="A screenshot of the member portal" width="640" height="360" /></p>
       </li>
   </ol>
 
