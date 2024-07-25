@@ -53,7 +53,7 @@ render_header(
 <?php
   }
 ?>
-  <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
+  <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. Your server nickname will be visible alongside your Discord username to other people in the server. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
 
   <h3>Problems</h3>
   <p>Read the <a href="/discord-instructions" target="_blank">instructions on how to join the Discord server</a>.</p>
