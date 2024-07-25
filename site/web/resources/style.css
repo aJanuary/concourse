@@ -468,6 +468,16 @@ main {
   background-image: url('/resources/signups.svg');
 }
 
+.card.tours {
+  background-color: var(--prog-color-light);
+}
+.card.tours .hero {
+  background: var(--prog-bg);
+}
+.card.tours .hero::after {
+  background-image: url('/resources/tours.svg');
+}
+
 .card.newsletter {
   background-color: var(--info-color-light);
 }
@@ -645,7 +655,6 @@ main {
 .card.upload-photo .hero::after {
   background-image: url('/resources/upload-photo.svg');
 }
-
 
 .card hgroup {
   grid-area: title;

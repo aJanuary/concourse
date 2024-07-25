@@ -95,6 +95,12 @@ $cards = [
       'link' => '/sign-ups',
       'card-permission' => 'see-signups',
     ], [
+      'name' => 'tours',
+      'title' => 'Tours and activities',
+      'subtitle' => 'Beyond the programme',
+      'link' => 'https://glasgow2024.org/whats-on/beyond-programme/tours-and-activities/',
+      'card-permission' => 'see-tours',
+    ], [
       'name' => 'chat',
       'title' => 'Chat online',
       'subtitle' => 'Discord',
@@ -284,6 +290,7 @@ $cards = [
     'times',
     'signups',
     'newsletter',
+    'tours',
     'itinerary',
     'readme',
     'gallery',
