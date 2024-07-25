@@ -74,14 +74,7 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 <?php
 }
 ?>
-    <p>Logging in to the members portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
-    <?php
-if (ALLOW_ANONYMOUS_ACCESS) {
-?>
-    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.</p>
-<?php
-}
-?>
+    <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
 <?php
     if (time() < strtotime("2024-08-13")) {
 ?>
@@ -99,6 +92,13 @@ if (ALLOW_ANONYMOUS_ACCESS) {
     <?php
     }
     ?>
+    <?php
+if (ALLOW_ANONYMOUS_ACCESS) {
+?>
+    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.</p>
+<?php
+}
+?>
     <h3>Problems</h3>
     <p>Read the <a href="/login-instructions" target="_blank">instructions on how to log in</a>.</p>
     <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
