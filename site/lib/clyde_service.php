@@ -56,6 +56,11 @@ class ClydeService {
   function registrant_allowed_access($registrant) {
     if ($registrant['attending_status'] == 'Not Attending') {
       error_log("Registrant is not attending: " . print_r($registrant, true));
+      if ($registrant['product_list_name'] == 'WSFS Member') {
+        // There is a bug in Clyde where sometimes they are logged in as their WSFS member rather than their ticket.
+        // Unfortunately we can't fix Clyde, so we have to work around it here.
+        return "broken-reg";
+      }
       return "no-access";
     }
 

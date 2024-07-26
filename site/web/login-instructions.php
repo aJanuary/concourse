@@ -73,6 +73,16 @@ render_header(
       <p><img src="/resources/login/paste-url.webp" alt="A screenshot of a browser with a '3' annotation next to the URL bar" width="1920" height="1080" /></p>
     </li>
   </ol>
+
+  <h3><a href="#registration-error" id="registration-error">What to do if you get the "Sorry, there has been a temporary issue with the registration system" error</a></h3>
+  <ol>
+    <li>Go to <a href="https://registration.glasgow2024.org">https://registration.glasgow2024.org</a></li>
+    <li>Click your name in the top right</li>
+    <li>Click "Log out"</li>
+    <li>Close the tab, and any other tabs relating to the Registration dashboard and Member portal</li>
+    <li>Start the log in process again at <a href="https://portal.glasgow2024.org">https://portal.glasgow2024.org</a></li>
+  </ol>
+  <p><img src="/resources/login/registration-dashboard-steps.webp" alt="A screenshot of a screen that says 'Registration dashboard' in the top left" width="1920" height="1080" /></p>
 </article>
 <?php
 render_footer();

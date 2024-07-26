@@ -57,6 +57,7 @@ if (isset($_GET['error_code'])) {
         'invalid-state' => 'An error occured while logging in with Glasgow Registration. Please try again.',
         'no-code' => 'Unable to log in with Glasgow Registration. Please try again and make sure you click the "Authorize" button after reviewing the permissions.',
         'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
+        'broken-reg' => 'Sorry, there has been a temporary issue with the registration system.<br>Please follow <a href="/login-instructions#registration-error">these steps</a> and try again.<br>If you continue to have problems, please e-mail <a href="mailto: ' . SUPPORT_EMAIL . '">' . SUPPORT_EMAIL . '</a>.',
         'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
