@@ -20,12 +20,6 @@ function redirect_to_error($error_code) {
 $clyde = new ClydeService();
 
 if (!array_key_exists('oauth2redirect', $_SESSION)) {
-  if (array_key_exists('session', $_COOKIE)) {
-    session_destroy();
-    header('Location: /');
-    exit;
-  }
-  
   render_header(
     'Log in',
     'Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.',
