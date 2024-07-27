@@ -121,6 +121,9 @@ function get_login_link_status($badge_no, $login_code) {
 }
 
 function current_user_has_permission($permission) {
+  if (!array_key_exists('permissions', $_REQUEST)) {
+    return false;
+  }
   return in_array($permission, $_REQUEST['permissions']);
 }
 
@@ -134,6 +137,9 @@ function member_type() {
   if (current_user_has_permission('online')) {
     return 'online';
   }
-  return 'in-person';
+  if (current_user_has_permission('in-person')) {
+    return 'in-person';
+  }
+  return 'unknown';
 }
 ?>
