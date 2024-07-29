@@ -24,6 +24,7 @@ render_header(
     <li>Newspaper icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Notebook book icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Palm icon by <a href="https://lorcblog.blogspot.com/">Lorc</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
+    <li>Party popper icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Pencil brush upload icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Photo camera icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a></li>
     <li>Play button icon by <a href="https://guard13007.com/">Guard13007</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>

@@ -478,6 +478,17 @@ main {
   background-image: url('/resources/tours.svg');
 }
 
+.card.virtual-gathering {
+  background-color: var(--prog-color-light);
+}
+.card.virtual-gathering .hero {
+  background: var(--prog-bg);
+}
+.card.virtual-gathering .hero::after {
+  background-image: url('/resources/virtual-gathering.svg');
+}
+
+
 .card.newsletter {
   background-color: var(--info-color-light);
 }
@@ -578,6 +589,7 @@ main {
 .card.itinerary .hero::after {
   background-image: url('/resources/itinerary.svg');
 }
+
 
 .card.childcare {
   background-color: var(--info-color-light);

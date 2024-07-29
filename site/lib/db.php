@@ -94,6 +94,25 @@ function db_get_badge_no_by_session($session_token) {
   return $badge_no;
 }
 
+function db_get_email_by_session($session_token) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT email FROM members WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())");
+  try {
+    $stmt->bind_param("s", $session_token);
+    $stmt->execute();
+    $stmt->bind_result($email);
+    if (!$stmt->fetch()) {
+      // No such session
+      return null;
+    }
+  } finally {
+    $stmt->close();
+  }
+
+  return $email;
+}
+
 function db_get_user_name_by_session($session_token) {
   global $mysqli;
 

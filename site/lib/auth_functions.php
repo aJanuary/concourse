@@ -59,6 +59,13 @@ function get_current_user_name() {
   return db_get_user_name_by_session($_COOKIE['session']);
 }
 
+function get_current_user_email() {
+  if (!isset($_COOKIE['session']) || $_COOKIE['session'] == 'anonymous') {
+    return null;
+  }
+  return db_get_email_by_session($_COOKIE['session']);
+}
+
 function logout() {
   if (isset($_COOKIE['session'])) {
     db_delete_session($_COOKIE['session']);

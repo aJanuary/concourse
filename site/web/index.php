@@ -101,6 +101,12 @@ $cards = [
       'link' => 'https://glasgow2024.org/whats-on/beyond-programme/tours-and-activities/',
       'card-permission' => 'see-tours',
     ], [
+      'name' => 'virtual-gathering',
+      'title' => 'Virtual gatherings',
+      'subtitle' => 'In RingCentral Events',
+      'link' => '/virtual-gatherings',
+      'card-permission' => 'see-virtual-gathering'
+    ], [
       'name' => 'chat',
       'title' => 'Chat online',
       'subtitle' => 'Discord',
