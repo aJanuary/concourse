@@ -80,7 +80,7 @@ $cards = [
       'name' => 'guide',
       'title' => 'Programme guide',
       'subtitle' => 'ConClár',
-      'link' => '/programme-guide',
+      'link' => current_user_has_permission('see-guide-redirect') ? 'https://guide.glasgow2024.org/' : '/programme-guide',
       'card-permission' => 'see-guide',
     ], [
       'name' => 'stream',

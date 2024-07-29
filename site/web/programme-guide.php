@@ -4,6 +4,11 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
+if (current_user_has_permission('see-guide-redirect')) {
+  header('Location: ' . 'https://guide.glasgow2024.org/');
+  exit;
+}
+
 render_header(
   'Programme guide',
   'Programme guide for Glasgow 2024',
