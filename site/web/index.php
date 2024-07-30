@@ -35,7 +35,7 @@ $cards = [
       'name' => 'readme',
       'title' => 'Convention guide',
       'subtitle' => 'Readme',
-      'link' => '/convention-guide',
+      'link' => current_user_has_permission('see-readme-redirect') ? 'https://glasgow2024.org/wp-content/uploads/2024/08/convention_guide.pdf' : '/convention-guide',
       'card-permission' => 'see-readme',
     ], [
       'name' => 'newsletter',
