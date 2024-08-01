@@ -20,6 +20,43 @@ render_header(
     <li><a href="/resources/maps/village.pdf"><img src="/resources/maps/village-thumb.webp" width="390" height="195" alt="">The Village</a></li>
     <li><a href="/resources/maps/crowne-plaza.pdf"><img src="/resources/maps/crowne-plaza-thumb.webp" width="390" height="195" alt="">Crowne Plaza</a></li>
   </ul>
+  <h3>Programme rooms</h3>
+  <ul>
+    <li>Alsh 1 &ndash; <a href="/resources/maps/sec.pdf">SEC - Ground floor</a></li>
+    <li>Alsh 2 &ndash; <a href="/resources/maps/sec.pdf">SEC - Ground floor</a></li>
+    <li>ARC Seminar Suite &ndash; <a href="https://maps.app.goo.gl/iF5VT2dfFaNpXnDw6">University of Glasgow campus</a></li>
+    <li>ARC Studio Space &ndash; <a href=https://maps.app.goo.gl/iF5VT2dfFaNpXnDw6>University of Glasgow campus</a></li>
+    <li>Argyll 1 &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - Ground floor</a></li>
+    <li>Argyll 2 &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - Ground floor</a></li>
+    <li>Argyll 3 &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - Ground floor</a></li>
+    <li>Barra &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Carron &ndash; <a href="/resources/maps/sec.pdf">SEC - First floor</a></li>
+    <li>Castle 1 &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Castle 2 &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Castle 3 &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Clyde Auditorium &ndash; <a href="/resources/maps/sec.pdf">SEC Armadillo</a></li>
+    <li>Dochart 1 &ndash; <a href="/resources/maps/sec.pdf">SEC - First floor</a></li>
+    <li>Dochart 2 &ndash; <a href="/resources/maps/sec.pdf">SEC - First floor</a></li>
+    <li>Executive Boardroom (aka E.B.) &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Forth &ndash; <a href="/resources/maps/sec.pdf">SEC Armadillo - Ground level</a></li>
+    <li>Gala &ndash; <a href="/resources/maps/sec.pdf">SEC Armadillo - Upper level</a></li>
+    <li>Hall 1 &ndash; <a href="/resources/maps/sec.pdf">SEC - Ground floor</a></li>
+    <li>Hall 2 &ndash; <a href="/resources/maps/sec.pdf">SEC - Ground floor</a></li>
+    <li>Hall 3 &ndash; <a href="/resources/maps/sec.pdf">SEC - Ground floor</a></li>
+    <li>Hall 4 &ndash; <a href="/resources/maps/hall4.pdf">SEC - Ground floor</a></li>
+    <li>Inspiration &ndash; <a href="/resources/maps/village.pdf">The Village</a></li>
+    <li>Jura &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Keen (Online) &ndash; <a href="/stream">Online (no physical room)</a>
+    <li>Lomond Auditorium &ndash; <a href="/resources/maps/sec.pdf">SEC - Ground floor</a></li>
+    <li>Meeting Acadamy M1 &ndash; <a href="/resources/maps/sec.pdf">SEC - First floor</a></li>
+    <li>Meeting Acadamy M2/M3 &ndash; <a href="/resources/maps/sec.pdf">SEC - First floor</a></li>
+    <li>Meeting Acadamy M4 &ndash; <a href="/resources/maps/sec.pdf">SEC - First floor</a></li>
+    <li>Nevis (Online) &ndash; <a href="/stream">Online (no physical room)</a>
+    <li>Online 1 &ndash; <a href="/stream">Online (no physical room)</a>
+    <li>Online 2 &ndash; <a href="/stream">Online (no physical room)</a>
+    <li>Outside Crowne Plaza &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - Outside</a></li>
+    <li>Staffa/Shuna &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+  </ul>
 </article>
 <?php
 render_footer();
