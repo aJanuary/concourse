@@ -44,6 +44,7 @@ function render_rce_wizard($title, $url) {
           <header class="<?php echo is_logged_in() ? "active": "pending"; ?>"><h3>Step 2 - Visit the RingCentral Events landing page</h3></header>
           <div class="content">
             <p><a class="button <?php echo is_logged_in() ? "" : "disabled"; ?>" target="_blank" <?php echo is_logged_in() ? 'href="/stream?invite"' : ''; ?>>Go to RingCentral Events landing page</a></p>
+            <p>...and then come back to this page</p>
           </div>
         </section>
         <section id="step3">

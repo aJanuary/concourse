@@ -983,6 +983,7 @@ form.vertical label {
   background-size: 2em;
   line-height: 2;
   border-bottom: none;
+  margin-bottom: 1em;
 }
 
 .wizard header.active {
