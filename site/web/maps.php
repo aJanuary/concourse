@@ -56,6 +56,7 @@ render_header(
     <li>Online 2 &ndash; <a href="/stream">Online (no physical room)</a>
     <li>Outside Crowne Plaza &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - Outside</a></li>
     <li>Staffa/Shuna &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
+    <li>Tours &ndash; <a href="https://glasgow2024.org/whats-on/beyond-programme/tours-and-activities/">Various locations</a></li>
   </ul>
 </article>
 <?php
