@@ -33,19 +33,23 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post($item_id);
 
   if (!$post['post_url']) {
-    render_header(
-      'Go to a Discord chat for an item',
-      'Unknown item in the Glasgow 2024 Discord.',
-      ['Home' => '/', 'Go to Discord chat for an item']
-    );
-    ?>
-    <article>
-      <h2>Unknown item</h2>
-      <p>Sorry, we don&apos;t know about that item.</p>
-    </article>
-    <?php
-    render_footer();
-    exit;
+    $room_id = $_GET['room_id'];
+    $post = db_get_discord_post($room_id);
+    if (!$post['post_url']) {
+      render_header(
+        'Go to a Discord chat for an item',
+        'Unknown item in the Glasgow 2024 Discord.',
+        ['Home' => '/', 'Go to Discord chat for an item']
+      );
+      ?>
+      <article>
+        <h2>Unknown item</h2>
+        <p>Sorry, we don&apos;t know about that item.</p>
+      </article>
+      <?php
+      render_footer();
+      exit;
+    }
   }
 } else if (array_key_exists('room_id', $_GET)) {
   $room_id = $_GET['room_id'];
