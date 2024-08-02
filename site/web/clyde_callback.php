@@ -97,6 +97,9 @@ if (!array_key_exists('oauth2redirect', $_SESSION)) {
     } else {
       db_add_member_role($badge_no, 'in-person');
     }
+    if ($registrant['product_list_name'] == 'Hall Pass') {
+      db_add_member_role($badge_no, 'Hall Pass');
+    }
     if (str_contains(strtolower($registrant['wsfs_status']), 'vote')) {
       db_add_member_role($badge_no, 'wsfs');
     }
