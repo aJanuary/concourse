@@ -4,6 +4,11 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
+if (current_user_has_permission('see-newsletter-redirect')) {
+  header('Location: ' . 'https://glasgow2024.org/newsletter');
+  exit;
+}
+
 render_header(
   'Newsletter',
   'Newsletter for Glasgow 2024',

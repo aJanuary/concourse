@@ -41,7 +41,7 @@ $cards = [
       'name' => 'newsletter',
       'title' => 'Newsletter',
       'subtitle' => '',
-      'link' => '/newsletter',
+      'link' => current_user_has_permission('see-newsletter-redirect') ? 'https://glasgow2024.org/newsletter/' : '/newsletter',
       'card-permission' => 'see-help',
     ], [
       'name' => 'accessibility',
