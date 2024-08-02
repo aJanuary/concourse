@@ -29,6 +29,10 @@ render_header(
 ?>
   <p><a class="button" href="<?php echo make_login_link(); ?>">Log in to watch</a></p>
 <?php
+  } else if (current_user_has_permission('hall-pass')) {
+?>
+  <p>Access to RingCentral Events is not available with the Hall Pass ticket.</p>
+<?php
   } else if (!current_user_has_permission('see-rce-link')) {
 ?>
   <p>Our RingCentral Event will open Friday morning. Please check back then.</p>
@@ -40,7 +44,7 @@ render_header(
   }
 ?>
   <h3>How to use RingCentral Events</h3>
-  <p>In <a href="https://eastercon2024.co.uk/guide-to-ringcentral-events/">our guide</a> you will find instructions on how to:</p>
+  <p>We are working on updating our guide to RingCentral Events. In the meantime, you can check out the <a href="https://eastercon2024.co.uk/guide-to-ringcentral-events/">guide from Levitation 2024</a> which contains:</p>
   <ul>
     <li>Watch a live stream</li>
     <li>Watch catch up items</li>
