@@ -4,10 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-if (current_user_has_permission('see-readme-redirect')) {
-  header('Location: ' . 'https://glasgow2024.org/wp-content/uploads/2024/08/convention_guide.pdf');
-  exit;
-}
+check_permission('see-participant-guides');
 
 render_header(
   'Convention guide',

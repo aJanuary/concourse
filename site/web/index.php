@@ -134,6 +134,12 @@ $cards = [
       'link' => 'https://planorama.glasgow2024.org',
       'card-permission' => 'see-itinerary'
     ], [
+      'name' => 'participant-guides',
+      'title' => 'Participant guides',
+      'subtitle' => 'Programme',
+      'link' => '/guides/list',
+      'card-permission' => 'see-participant-guides'
+    ], [
       'name' => 'upload-presentation',
       'title' => 'Upload presentation',
       'subtitle' => 'Programme participants and presenters',

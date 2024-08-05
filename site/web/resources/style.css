@@ -223,6 +223,10 @@ ul ul {
   margin-left: 1em;
 }
 
+li {
+  margin-bottom: 0.25em;
+}
+
 .container {
   max-width: 1240px;
   margin: 0 auto;
@@ -589,6 +593,20 @@ main {
 .card.itinerary .hero::after {
   background-image: url('/resources/itinerary.svg');
 }
+
+.card.card.participant-guides {
+  background-color: var(--part-color-light);
+}
+.card.participant-guides .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.participant-guides .hero::after {
+  background-image: url('/resources/participant-guides.svg');
+}
+
 
 
 .card.childcare {
