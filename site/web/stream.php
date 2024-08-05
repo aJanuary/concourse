@@ -35,7 +35,7 @@ render_header(
 <?php
   } else if (!current_user_has_permission('see-rce-link')) {
 ?>
-  <p>Our RingCentral Event will open Friday morning. Please check back then.</p>
+  <p>Our RingCentral Event will open Wednesday morning. Please check back then.</p>
 <?php
   } else {
 ?>
