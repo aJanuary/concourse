@@ -44,9 +44,10 @@ render_header(
   }
 ?>
   <h3>How to use RingCentral Events</h3>
-  <p>We are working on updating our guide to RingCentral Events. In the meantime, you can check out the <a href="https://eastercon2024.co.uk/guide-to-ringcentral-events/">guide from Levitation 2024</a> which contains:</p>
+  <p>You can check out out <a href="https://glasgow2024.org/online-convention/member-portal/rce-guide/">guide to RingCentral Events</a> which contains:</p>
   <ul>
     <li>Watch a live stream</li>
+    <li>Join sessions</li>
     <li>Watch catch up items</li>
     <li>Turn on captions</li>
     <li>Use Picture in Picture</li>
