@@ -13,25 +13,60 @@ define('ALLOW_ANONYMOUS_ACCESS', true);
 define('DISCORD_SERVICE_ACCOUNTS', [
   '1259068933491789854' => [
     'name' => 'Con Ops (SEC)',
-    'roles' => ['conops'],
+    'roles' => ['Con-Ops'],
   ],
   '1259501220805083147' => [
     'name' => 'Con Ops (Crowne Plaza)',
-    'roles' => ['conops'],
+    'roles' => ['Con-Ops'],
   ],
   '1259503664934948867' => [
     'name' => 'Team Info (Hall 4)',
-    'roles' => ['teaminfo'],
+    'roles' => ['Team-Info'],
   ],
-  # TODO: Make the rest of these service accounts and swap usernames for IDs
-  'techops_sec' => [
+  '1263552405820407960' => [
     'name' => 'Tech Ops (SEC)',
-    'roles' => ['techops'],
+    'roles' => ['AV-Tech'],
   ],
-  'techops_crowne_palza' => [
+  '1263553178549489737' => [
     'name' => 'Tech Ops (Crowne Plaza)',
-    'roles' => ['techops'],
+    'roles' => ['AV-Tech'],
   ],
+  '1264516078046810194' => [
+    'name' => 'Volunteer Desk (Hall 4)',
+    'roles' => ['Volunteer-Desk'],
+  ],
+  '1270307680208158751' => [
+    'name' => 'Green Room (SEC)',
+    'roles' => ['Green-Room'],
+  ],
+  '1270310702875279362' => [
+    'name' => 'Green Room (Crowne Plaza)',
+    'roles' => ['Green-Room'], 
+  ],
+  '1270311931340652564' => [
+    'name' => 'Autographing (Hall 4)',
+    'roles' => [],
+  ],
+  '1269310439616020673' => [
+    'name' => 'Table Talks (Hall 4)',
+    'roles' => []
+  ],
+  '1269738272284872829' => [
+    'name' => 'Social Media (SEC)',
+    'roles' => [],
+  ],
+  '1087801330929766560' => [
+    'name' => 'Press Office (SEC)',
+    'roles' => [],
+  ],
+  '1270065860769353810' => [
+    'name' => 'Con Office (SEC)',
+    'roles' => [],
+  ],
+  '1269312072043466848' => [
+    'name' => 'Merchandise (SEC)',
+    'roles' => [],
+  ]
 ]);
 
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
