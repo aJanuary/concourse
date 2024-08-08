@@ -58,6 +58,11 @@ render_header(
     <li>Staffa/Shuna &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
     <li>Tours &ndash; <a href="https://glasgow2024.org/whats-on/beyond-programme/tours-and-activities/">Various locations</a></li>
   </ul>
+  <h3>Green rooms</h3>
+  <ul>
+    <li>Boisdale &ndash; <a href="/resources/maps/sec2.pdf">SEC - First floor</a></li>
+    <li>Mezzanine &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - Second floor</a></li>
+  </ul>
 </article>
 <?php
 render_footer();
