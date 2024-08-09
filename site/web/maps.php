@@ -15,7 +15,7 @@ render_header(
   <ul class="maps">
     <li><a href="/resources/maps/sec-campus.pdf"><img src="/resources/maps/sec-campus-thumb.webp" width="390" height="195" alt="">Scottish Event Campus</a></li>
     <li><a href="/resources/maps/sec2.pdf"><img src="/resources/maps/sec-thumb.webp" width="390" height="195" alt="">Scottish Event Campus Venues</a></li>
-    <li><a href="/resources/maps/hall4.pdf"><img src="/resources/maps/hall4-thumb.webp" width="390" height="195" alt="">Hall 4</a></li>
+    <li><a href="/resources/maps/hall4-v2.pdf"><img src="/resources/maps/hall4-thumb.webp" width="390" height="195" alt="">Hall 4</a></li>
     <li><a href="/resources/maps/hall5.pdf"><img src="/resources/maps/hall5-thumb.webp" width="390" height="195" alt="">Hall 5</a></li>
     <li><a href="/resources/maps/village.pdf"><img src="/resources/maps/village-thumb.webp" width="390" height="195" alt="">The Village</a></li>
     <li><a href="/resources/maps/crowne-plaza.pdf"><img src="/resources/maps/crowne-plaza-thumb.webp" width="390" height="195" alt="">Crowne Plaza</a></li>
@@ -43,7 +43,7 @@ render_header(
     <li>Hall 1 &ndash; <a href="/resources/maps/sec2.pdf">SEC - Ground floor</a></li>
     <li>Hall 2 &ndash; <a href="/resources/maps/sec2.pdf">SEC - Ground floor</a></li>
     <li>Hall 3 &ndash; <a href="/resources/maps/sec2.pdf">SEC - Ground floor</a></li>
-    <li>Hall 4 &ndash; <a href="/resources/maps/hall4.pdf">SEC - Ground floor</a></li>
+    <li>Hall 4 &ndash; <a href="/resources/maps/hall4-v2.pdf">SEC - Ground floor</a></li>
     <li>Inspiration &ndash; <a href="/resources/maps/village.pdf">The Village</a></li>
     <li>Jura &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
     <li>Keen (Online) &ndash; <a href="/stream">Online (no physical room)</a>
