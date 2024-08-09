@@ -63,6 +63,15 @@ render_header(
     <li>Boisdale &ndash; <a href="/resources/maps/sec2.pdf">SEC - Ground floor</a></li>
     <li>Mezzanine &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First floor</a></li>
   </ul>
+  <h3>Quiet spaces</h3>
+  <ul>
+    <li>M5 &ndash; <a href="/resources/maps/sec2.pdf">SEC - First floor</a></li>
+    <li>Malin &ndash; <a href="/resources/maps/crowne-plaza.pdf">Crowne Plaza - First Floor</a></li>
+  </ul>
+  <h3>Safer spaces</h3>
+  <ul>
+    <li>BIPOC Safer Space &ndash; Room 112 - Crowne Plaza</li>
+    <li>LGBTQ+ Safer Space &ndash; Room 115 - Crowne Plaza</li>
 </article>
 <?php
 render_footer();
