@@ -14,6 +14,12 @@ render_header(
 $cards = [
   'Info' => [
     [
+      'name' => 'btof',
+      'title' => 'Back to Our Futures',
+      'subtitle' => 'A catch-up con',
+      'link' => '/back-to-our-futures',
+      'card-permission' => 'see-btof',
+    ], [
       'name' => 'time',
       'title' => 'Convention time',
       'subtitle' => 'BST',
@@ -238,7 +244,12 @@ $cards = [
           <?php } else { ?>
               aria-hidden="true"
           <?php } ?>
-          ></div>
+          >
+            <?php if ($card['name'] == 'btof') { ?>
+              <div class="warp"></div>
+              <div class="icon"></div>
+            <?php } ?>
+          </div>
           <hgroup>
             <h3><a href="<?php echo $card['link']; ?>" <?php echo $open_in_new_tab ? 'target="_blank"' : ''; ?>><?php echo $card['title']; ?></a></h3>
             <?php
