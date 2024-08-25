@@ -24,7 +24,7 @@ if (!is_anonymous()) {
   <p>Are you missing Glasgow 2024, a Worldcon for Our Futures already? Are you intending to get round to watching all the fabulous online programme but haven&apos;t quite yet? Would you like to meet up online with some of the friends you made at the con?</p>
   <p>Glasgow 2024, Back to Our Futures will be an online catchup convention and party, held from Friday 1<sup>st</sup> &ndash; Sunday 3<sup>rd</sup> November 2024. It&apos;s exclusively for Glasgow 2024 attendees aged 16 or over, and is completely free.</p>
   <p>The programme will be the Glasgow 2024 <a href="/stream">replay programme</a>, and we&apos;ll also have a Discord server for you to hang out, chat and discuss the programme in, and some video social space where we hope some of you will run parties and meetups.</p> 
-  <p>Your committee are Claire Brialey, John Coxon, Andrew January, Emily January, Meg MacDonald and Alison Scott.</p>
+  <p>The team behind it is Claire Brialey, John Coxon, Andrew January, Emily January, Meg MacDonald and Alison Scott.</p>
   <p>We&apos;d like you to indicate if you&apos;re likely to attend (so we have a rough idea of numbers) by filling out the form linked below. We hope to host everyone who wants to come, but we will cap numbers if it&apos;s looking too huge.</p>
   <p><a href="<?php echo $url; ?>" class="button" target="_blank">Register your interest</a></p>
 </article>
