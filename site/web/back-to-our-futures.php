@@ -21,12 +21,14 @@ if (!is_anonymous()) {
 ?>
 <article>
   <h2>Back to Our Futures</h2>
-  <p>Are you missing Glasgow 2024, a Worldcon for Our Futures already? Are you intending to get round to watching all the fabulous online programme but haven&apos;t quite yet? Would you like to meet up online with some of the friends you made at the con?</p>
+  <p>Are you missing Glasgow 2024, a Worldcon for Our Futures already?<br>Are you intending to get around to watching all the fabulous online programme but haven&apos;t quite yet?<br>Would you like to meet up online with some of the friends you made at the con?<br>Then this is the exact event for you!</p>
   <p>Glasgow 2024, Back to Our Futures will be an online catchup convention and party, held from Friday 1<sup>st</sup> &ndash; Sunday 3<sup>rd</sup> November 2024. It&apos;s exclusively for Glasgow 2024 attendees aged 16 or over, and is completely free.</p>
-  <p>The programme will be the Glasgow 2024 <a href="/stream">replay programme</a>, and we&apos;ll also have a Discord server for you to hang out, chat and discuss the programme in, and some video social space where we hope some of you will run parties and meetups.</p> 
-  <p>The team behind it is Claire Brialey, John Coxon, Andrew January, Emily January, Meg MacDonald and Alison Scott.</p>
-  <p>We&apos;d like you to indicate if you&apos;re likely to attend (so we have a rough idea of numbers) by filling out the form linked below. We hope to host everyone who wants to come, but we will cap numbers if it&apos;s looking too huge.</p>
-  <p><a href="<?php echo $url; ?>" class="button" target="_blank">Register your interest</a></p>
+  <p>The programme will be the Glasgow 2024 replay programme accessible via the <a href="https://portal.glasgow2024.org/stream">Stream and replay page</a>. There will also be a Discord server for you to hang out, chat and discuss the programme in, and some video social space where we hope some of you will run parties and meetups.</p>
+  <p>The team behind this event are Claire Brialey, John Coxon, Andrew January, Emily January, Meg MacDonald, and Alison Scott.</p>
+  <p>The team would like you to indicate if you&apos;re likely to attend (so there is a rough idea of numbers) by filling in the <a href="<?php echo $url; ?>" target="_blank">RSVP form</a>.</p>
+  <p>Currently the event is uncapped in terms of potential attendees but in the spirit of being able to deliver the best cosy catch-up con possible a cap may be applied if there is exceptionally high uptake.</p>
+  <p>Glasgow 2024, A Worldcon for Our Futures supports this event, however it is being run by an independent group who are excited to go back to Our Futures with you. </p>
+  <p><a href="<?php echo $url; ?>" class="button" target="_blank">RSVP to register your interest</a></p>
 </article>
 <?php
 render_footer();
