@@ -4,3 +4,4 @@ FROM nginx:1.27.0
 # these will be overlayed with the dev env via compose
 ADD ./docker/nginx.conf /etc/nginx/conf.d/default.conf
 ADD ./site/web/ /var/www/html/
+ADD ./catalogue-app /var/www/html/catalogue-app

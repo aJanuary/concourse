@@ -508,6 +508,16 @@ main {
   background-image: url('/resources/stream.svg');
 }
 
+.card.catalogue {
+  background-color: var(--prog-color-light);
+}
+.card.catalogue .hero {
+  background: var(--prog-bg);
+}
+.card.catalogue .hero::after {
+  background-image: url('/resources/catalogue.svg');
+}
+
 .card.chat {
   background-color: var(--prog-color-light);
 }

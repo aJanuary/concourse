@@ -84,6 +84,11 @@ $cards = [
   ],
   'Programme' => [
     [
+      'name' => 'catalogue',
+      'title' => 'Replay Catalogue',
+      'link' => '/catalogue',
+      'card-permission' => 'see-catalogue',
+    ], [
       'name' => 'guide',
       'title' => 'Programme guide',
       'subtitle' => 'ConClár',
@@ -235,7 +240,7 @@ $cards = [
       <?php
       foreach ($category_cards as $card) {
         if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
-          $open_in_new_tab = str_starts_with($card['link'], 'http');
+          $open_in_new_tab = str_starts_with($card['link'], 'http') || $card['link'] == '/catalogue';
       ?>
         <div class="card <?php echo $card['name']; ?>">
           <div class="hero"
