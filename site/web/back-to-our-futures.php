@@ -7,7 +7,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 check_permission('see-btof');
 
 render_header(
-  'Back to Our Furures',
+  'Back to Our Futures',
   'A catch-up con for Glasgow 2024, A Worldcon for Our Futures.',
   ['Home' => '/', 'Back to Our Futures']
 );
