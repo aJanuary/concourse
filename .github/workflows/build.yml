@@ -65,7 +65,7 @@ jobs:
 
       - name: Define the repository labels
         run: |
-          echo "CONTAINER_DEPLOY_REPOSITORY=ghcr.io/balen/labelr:${{ steps.extract_name.outputs.branch }}" >> $GITHUB_ENV
+          echo "CONTAINER_DEPLOY_REPOSITORY=ghcr.io/${{env.GITHUB_REPOSITORY}}:${{ steps.extract_name.outputs.branch }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
@@ -89,7 +89,7 @@ jobs:
         id: meta_nginx
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/glasgow2024/nginx
+          images: ${{ env.REGISTRY }}/${{env.GITHUB_REPOSITORY_OWNER}}/nginx
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -116,7 +116,7 @@ jobs:
         id: meta_web
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/glasgow2024/member-portal
+          images: ${{ env.REGISTRY }}/${{env.GITHUB_REPOSITORY_OWNER}}/member-portal
           tags: |
             type=ref,event=branch
             type=ref,event=pr
