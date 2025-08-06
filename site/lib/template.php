@@ -94,16 +94,12 @@
     </main>
     <footer>
       <div class="container">
-        <p>&ldquo;World Science Fiction Society&rdquo;, &lsquo;WSFS&rdquo;, &ldquo;World Science Fiction Convention&rdquo;, &ldquo;Worldcon&rdquo;, &ldquo;NASFiC&rdquo;, &ldquo;Lodestar Award&rdquo;, &ldquo;Hugo Award&rdquo;, the Hugo Award Logo, and the distinctive design of the Hugo Award Rocket are service marks of Worldcon Intellectual Property, a California non-profit corporation managed by the Mark Protection Committee of the World Science Fiction Society, an unincorporated literary society.</p>
-      </div>
-      <div class="container">
         <p>&copy; <?php echo date('Y'); ?> <?php echo CON_SHORT_NAME; ?></p>
         <ul>
           <li><a href="/help">Help</a></li>
           <li><a href="/site-map">Site map</a></li>
           <li><a href="/attributions">Icon attributions</a></li>
           <li><a href="/privacy-policy">Privacy policy</a></li>
-          <li><a href="https://glasgow2024.org/about/policies/">All policies</a></li>
         </ul>
       </div>
     </footer>

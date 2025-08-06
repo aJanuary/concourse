@@ -6,13 +6,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
   'Virtual gatherings',
-  'Virtual gatherings for Glasgoe 2024',
+  'Virtual gatherings for ' . CON_NAME . '.',
   ['Home' => '/', 'Virtual gatherings']
 );
 ?>
 <article>
   <h2>Virtual gatherings</h2>
-  <p>Virtual gatherings are a space for you and or your group to host a hangout within <a href="/stream">RingCentral Events</a>. This could be anything from a writers club wanting to meet, to a D&amp;D session being held. The sky &ndash; and the <a href="https://glasgow2024.org/about/policies/code-of-conduct/">code of conduct</a> &ndash; are the limits of what can be hosted in these conference style AV rooms.</p>
+  <p>Virtual gatherings are a space for you and or your group to host a hangout within <a href="/stream">RingCentral Events</a>. This could be anything from a writers club wanting to meet, to a D&amp;D session being held. The sky &ndash; and the <a href="https://example.com/code-of-conduct/">code of conduct</a> &ndash; are the limits of what can be hosted in these conference style AV rooms.</p>
   <p>To join a gathering, go to <a href="/stream">RingCentral Events</a>, select "Sessions" from the sidebar, and then click on the session for the gathering you want to join.</p>
   
   <h3>Requesting a gathering</h3>
@@ -25,7 +25,7 @@ render_header(
         <p><a class="button" href="<?php echo make_login_link(); ?>">Log in to request a virtual gathering</a></p>
   <?php
       } else {
-        $url = "https://docs.google.com/forms/d/e/1FAIpQLSdQd38IkTwsyylmBBnG4-qoCzvI35A761TeS8j19FVcbKzKww/viewform?usp=pp_url&entry.1089632680=" . urlencode($_REQUEST["username"]) . "&entry.1005975804=" . urlencode(get_current_user_email());
+        $url = "https://example.com/request-virtual-gathering?username=" . urlencode($_REQUEST["username"]) . "&email=" . urlencode(get_current_user_email());
   ?>
     <p><a class="button" target="_blank" href="<?php echo $url; ?>">Request a virtual gathering</a></p>
   <?php

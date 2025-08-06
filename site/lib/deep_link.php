@@ -1,8 +1,9 @@
 <?php
 $_REQUEST['allow_implicit_anonymous'] = true;
+require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 
 function render_rce_wizard($title, $url) {
   if (array_key_exists('seen-rce-invite', $_COOKIE)) {
@@ -12,11 +13,11 @@ function render_rce_wizard($title, $url) {
 
   render_header(
     $title,
-    'Link to an item in the Glasgow 2024 RingCentral Events event.',
+    'Link to an item in the ' . CON_SHORT_NAME . ' RingCentral Events event.',
     ['Home' => '/', 'Log in to RingCentral Events']
   );
 
-  $clyde = new ClydeService();
+  $oauth = new OAuthService();
   $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
 
   ?>
@@ -32,7 +33,7 @@ function render_rce_wizard($title, $url) {
           if (!is_logged_in()) {
           ?>
             <div class="content">
-              <a href="<?php echo $clyde->authorize_url(); ?>" class="button login">Log in with Glasgow Registration</a>
+              <a href="<?php echo $oauth->authorize_url(); ?>" class="button login">Log in with <?php echo CON_SHORT_NAME; ?> Registration</a>
               <p><a href="/login-instructions" target="_blank">Log in instructions</a>
               <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
           </div>

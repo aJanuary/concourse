@@ -6,12 +6,16 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
   'Opening times',
-  'Opening times for Glasgow 2024',
+  'Opening times for ' . CON_NAME . '.',
   ['Home' => '/', 'Opening times']
 );
 ?>
 <article>
   <h2>Opening times</h2>
+  <p>The opening times will be updated as we get closer to the event. Please check back regularly for the latest information.</p>
+<?
+// Here is an example of how to structure the opening times.
+/*
   <ul id="times-toc">
     <li><a href="#accessibility-desk">Accessibility desk</a></li>
     <li><a href="#art-show">Art show</a></li>
@@ -40,7 +44,6 @@ render_header(
     <li><a href="#registration-dealers-staff">Registration (dealers & staff only)</a></li>
     <li><a href="#safer-spaces">Safer spaces</a></li>
     <li><a href="#sales-to-members">Sales to members</a></li>
-    <li><a href="#site-selection">Site selection</a></li>
     <li><a href="#table-talks">Table talks</a></li>
     <li><a href="#volunteers-desk">Volunteers desk</a></li>
   </ul>
@@ -843,25 +846,6 @@ render_header(
     </li>
   </ul>
   
-  <h3><a href="#site-selection" name="site-selection">Site selection</a></h3>
-  <ul class="times-list">
-    <li>
-      <p>Thursday, 8 Aug</p>
-      <p>10:00&ndash;17:00</p>
-      <p>SEC, Hall 4</p>
-    </li>
-    <li>
-      <p>Friday, 9 Aug</p>
-      <p>10:00&ndash;17:00</p>
-      <p>SEC, Hall 4</p>
-    </li>
-    <li>
-      <p>Saturday, 10 Aug</p>
-      <p>10:00&ndash;12:00</p>
-      <p>SEC, Hall 4</p>
-    </li>
-  </ul>
-
   <h3><a href="#table-talks" name="table-talks">Table talks</a></h3>
   <ul class="times-list">
     <li>
@@ -929,6 +913,7 @@ render_header(
       <p>SEC, Hall 4</p>
     </li>
   </ul>
+*/
 </article>
 <?php
 render_footer();

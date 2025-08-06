@@ -3,12 +3,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 
 if (isset($_GET['dologin'])) {
-    $clyde = new ClydeService();
+    $oauth = new OAuthService();
     $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
-    header('Location: ' . $clyde->authorize_url());
+    header('Location: ' . $oauth->authorize_url());
     exit();
 }
 
@@ -43,7 +43,7 @@ if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
 
 render_header(
     'Log in',
-    'Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.',
+    'Log in to the member portal for ' . CON_NAME . '.',
     ['Home' => '/', 'Log in']
 );
 
@@ -54,20 +54,19 @@ render_header(
 <?php
 if (isset($_GET['error_code'])) {
     $error = [
-        'invalid-state' => 'An error occured while logging in with Glasgow Registration. Please try again.',
-        'no-code' => 'Unable to log in with Glasgow Registration. Please try again and make sure you click the "Authorize" button after reviewing the permissions.',
-        'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.',
-        'broken-reg' => 'Sorry, there has been a temporary issue with the registration system.<br>Please follow <a href="/login-instructions#registration-error">these steps</a> and try again.<br>If you continue to have problems, please e-mail <a href="mailto: ' . SUPPORT_EMAIL . '">' . SUPPORT_EMAIL . '</a>.',
-        'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:registration@glasgow2024.org">registration@glasgow2024.org</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',
+        'invalid-state' => 'An error occurred while logging in with registration. Please try again.',
+        'no-code' => 'Unable to log in with registration. Please try again and make sure you click the "Authorize" button after reviewing the permissions.',
+        'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.',
+        'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
-    ][$_GET['error_code']] ?? 'An unknown error occured.';
+    ][$_GET['error_code']] ?? 'An unknown error occurred.';
 ?>
     <p class="error"><img src="resources/error.svg" alt="error" aria-label="error"><?php echo $error; ?></p>
 <?php
 }
 ?>
-    <a href="?dologin&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login">Log in with Glasgow Registration</a>
+    <a href="?dologin&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login">Log in</a>
 <?php
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
@@ -77,19 +76,19 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
     <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
 <?php
-    if (time() < strtotime("2024-08-13")) {
+    if (time() < strtotime(CON_START_DATE)) {
 ?>
     <h3>Not a member?</h3>
-    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">purchase a membership or ticket</a>.</p>
+    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://example.com/buy-membership">purchase a membership or ticket</a>.</p>
 <?php
     }
 ?>
     <h3>Who can log in the portal?</h3>
     <p>People aged 16 and over who have Attending Memberships, Day Tickets, Online Memberships, or Online Tickets can log in the portal.
     <?php
-    if (time() < strtotime("2024-08-13")) {
+    if (time() < strtotime(CON_START_DATE)) {
     ?>
-        If you don&apos;t already have one of these and would like to access the portal, you can <a href="https://glasgow2024.org/for-members/memberships-and-tickets/">purchase a membership or ticket</a>.
+        If you don&apos;t already have one of these and would like to access the portal, you can <a href="https://example.com/buy-membership">purchase a membership or ticket</a>.
     <?php
     }
     ?>

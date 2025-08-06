@@ -8,7 +8,7 @@ $usernames = db_get_discord_usernames($_COOKIE['session']);
 
 render_header(
   'Chat',
-  'Join the Discord server for Glasgow 2024, A Worldcon for Our Futures.',
+  'Join the Discord server for ' . CON_NAME,
   ['Home' => '/', 'Chat online']
 );
 ?>

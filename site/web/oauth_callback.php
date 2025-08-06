@@ -2,7 +2,7 @@
 use chillerlan\QRCode\QRCode;
 
 require getenv('CONFIG_LIB_DIR') . '/vendor/autoload.php';
-require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/oauth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
@@ -17,12 +17,12 @@ function redirect_to_error($error_code) {
   exit;
 }
 
-$clyde = new ClydeService();
+$oauth = new OAuthService();
 
 if (!array_key_exists('oauth2redirect', $_SESSION)) {
   render_header(
     'Log in',
-    'Log in to the member portal for Glasgow 2024, A Worldcon for Our Futures.',
+    'Log in to the member portal for ' . CON_NAME . '.',
     ['Home' => '/', 'Log in']
   );
 
@@ -62,17 +62,17 @@ if (!array_key_exists('oauth2redirect', $_SESSION)) {
 } else {
   // 1. Get the OAuth token
   try {
-    $token = $clyde->access_token($_GET['code'], $_GET['state']);
+    $token = $oauth->access_token($_GET['code'], $_GET['state']);
   } catch (Exception $e) {
     log_exception($e);
     redirect_to_error($e->getMessage());
   }
 
-  // 2. Get "me" from Clyde
-  $registrant = $clyde->get_registrant();
+  // 2. Get "me"
+  $registrant = $oauth->get_registrant();
 
   // 3. Check allowed access
-  $access_code = $clyde->registrant_allowed_access($registrant);
+  $access_code = $oauth->registrant_allowed_access($registrant);
   if ($access_code != null) {
     redirect_to_error($access_code);
   }
@@ -86,7 +86,7 @@ if (!array_key_exists('oauth2redirect', $_SESSION)) {
 
   $email = trim($registrant['email']);
 
-  if (defined('CLYDE_ALLOWLIST') && !in_array($email, CLYDE_ALLOWLIST)) {
+  if (defined('OAUTH_ALLOWLIST') && !in_array($email, OAUTH_ALLOWLIST)) {
     redirect_to_error('not-in-allowlist');
   }
 
@@ -107,7 +107,7 @@ if (!array_key_exists('oauth2redirect', $_SESSION)) {
     update_member($badge_no, $email, $name);
   }
   if (!db_identity_exists($badge_no)) {
-    db_create_oauth_identity($badge_no, 'clyde', $registrant['id'], $email, json_encode($registrant));
+    db_create_oauth_identity($badge_no, 'oauth', $registrant['id'], $email, json_encode($registrant));
   }
 
   make_session($badge_no);

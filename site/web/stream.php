@@ -16,14 +16,14 @@ if (array_key_exists('invite', $_GET)) {
 
 render_header(
   'Stream',
-  'Watch stream and replays of programme items at Glasgow 2024, A Worldcon for Our Futures through RingCentral Events.',
+  'Watch stream and replays of programme items at ' . CON_NAME . ' through RingCentral Events.',
   ['Home' => '/', 'Stream and replay']
 );
 ?>
 <article>
   <h2>Stream and replay</h2>
   <p>We are using a platform called RingCentral Events to stream our programme items. You can watch the live streams of programme items, or watch the recorded videos afterwards. It works on both desktop and mobile.</p>
-  <p>Items will be available for catch-up until the end of 2024.</p>
+  <p>Items will be available for catch-up until the end of the year.</p>
 <?php
   if (is_anonymous()) {
 ?>
@@ -44,7 +44,7 @@ render_header(
   }
 ?>
   <h3>How to use RingCentral Events</h3>
-  <p>You can check out out <a href="https://glasgow2024.org/online-convention/member-portal/rce-guide/">guide to RingCentral Events</a> which contains:</p>
+  <p>You can check out out <a href="https://example.com/rce-guide/">guide to RingCentral Events</a> which contains:</p>
   <ul>
     <li>Watch a live stream</li>
     <li>Join sessions</li>

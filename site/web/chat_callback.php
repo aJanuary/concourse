@@ -13,7 +13,7 @@ if (!$code) {
   if ($_GET['error'] == 'access_denied') {
     render_header(
       'Chat',
-      'Access denied when trying to link Discord account for the Glasgow 2024 member portal.',
+      'Access denied when trying to link Discord account for the ' . CON_SHORT_NAME . ' member portal.',
       ['Home' => '/', 'Chat Online' => '/chat', 'Something went wrong']
     );
 ?>

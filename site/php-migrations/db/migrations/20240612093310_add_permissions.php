@@ -16,8 +16,6 @@ final class AddPermissions extends AbstractMigration
             ['name' => 'see-signups'],
             ['name' => 'see-gallery'],
             ['name' => 'see-itinerary'],
-            ['name' => 'see-hugos'],
-            ['name' => 'see-site-selection'],
             ['name' => 'see-childcare'],
             ['name' => 'has-childcare'],
             ['name' => 'see-website'],

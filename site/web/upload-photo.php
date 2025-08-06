@@ -6,14 +6,14 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
   'Upload your photo',
-  'Upload a photo for Glasgow 2024',
+  'Upload a photo for ' . CON_NAME . '.',
   ['Home' => '/', 'Upload your photo']
 );
 ?>
 <article>
   <h2>Upload your photo</h2>
   <h3>For those not with us in-person</h3>
-  <p>In the opening ceremony we will be showing a montage of photos from Glasgow 2024 members who aren't with us on-site.</p>
+  <p>In the opening ceremony we will be showing a montage of photos from <?php echo CON_SHORT_NAME; ?> members who aren't with us on-site.</p>
   <p>If you are a member, and aren't with us on-site (either because you bought an online membership, or you bought an in-person membership but can't make it in person) then we invite you to submit a photo for the montage.</p>
   <?php
       if (is_anonymous()) {
@@ -22,11 +22,11 @@ render_header(
   <?php
       } else {
   ?>
-        <p><a class="button" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScQ_FlySGxlrLS2IMcA8TnAHKsmPjufqQHjV7D8U_DKKHyWkQ/viewform?usp=pp_url&entry.1698201911=<?php echo urlencode($_REQUEST["username"]); ?>">Upload photo</a></p>
+        <p><a class="button" target="_blank" href="https://example.com/upload-photo?username=<?php echo urlencode($_REQUEST["username"]); ?>">Upload photo</a></p>
   <?php
       }
   ?>
-  <p>The photos, and optionally badge name, will be shown in the opening ceremony, which will be live-streamed and made available for replay to Glasgow 2024 members.
+  <p>The photos, and optionally badge name, will be shown in the opening ceremony, which will be live-streamed and made available for replay to <?php echo CON_SHORT_NAME; ?> members.
 </article>
 <?php
 render_footer();

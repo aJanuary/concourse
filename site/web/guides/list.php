@@ -7,7 +7,7 @@ check_permission('see-participant-guides');
 
 render_header(
   'Participant guides',
-  'Participant guides for  Glasgow 2024',
+  'Participant guides for ' . CON_NAME . '.',
   ['Home' => '/', 'Guides']
 );
 ?>

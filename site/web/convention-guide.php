@@ -8,7 +8,7 @@ check_permission('see-participant-guides');
 
 render_header(
   'Convention guide',
-  'Convention guide for Glasgow 2024',
+  'Convention guide for ' . CON_NAME . '.',
   ['Home' => '/', 'Convention guide']
 );
 ?>

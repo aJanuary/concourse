@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
   null,
-  'The Member Portal for Glasgow 2024, A Worldcon for Our Futures.',
+  'The Member Portal for ' . CON_NAME . '.',
   null,
   true
 );
@@ -14,12 +14,6 @@ render_header(
 $cards = [
   'Info' => [
     [
-      'name' => 'btof',
-      'title' => 'Back to Our Futures',
-      'subtitle' => 'A catch-up con',
-      'link' => '/back-to-our-futures',
-      'card-permission' => 'see-btof',
-    ], [
       'name' => 'time',
       'title' => 'Convention time',
       'subtitle' => 'BST',
@@ -42,31 +36,31 @@ $cards = [
       'name' => 'readme',
       'title' => 'Convention guide',
       'subtitle' => 'Readme',
-      'link' => current_user_has_permission('see-readme-redirect') ? 'https://glasgow2024.org/wp-content/uploads/2024/08/convention_guide.pdf' : '/convention-guide',
+      'link' => current_user_has_permission('see-readme-redirect') ? 'https://example.com/convention-readme' : '/convention-guide',
       'card-permission' => 'see-readme',
     ], [
       'name' => 'newsletter',
       'title' => 'Newsletter',
       'subtitle' => '',
-      'link' => current_user_has_permission('see-newsletter-redirect') ? 'https://glasgow2024.org/newsletter/' : '/newsletter',
+      'link' => current_user_has_permission('see-newsletter-redirect') ? 'https://example.com/newsletter' : '/newsletter',
       'card-permission' => 'see-help',
     ], [
       'name' => 'accessibility',
       'title' => 'Accessibility',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/for-members/accessibility/',
+      'link' => 'https://example.com/accessibility/',
       'card-permission' => 'see-accessibility',
     ], [
       'name' => 'childcare',
       'title' => 'Childcare',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/for-members/childcare/',
+      'link' => 'https://example.com/childcare/',
       'card-permission' => 'has-childcare'
     ], [
       'name' => 'coc',
       'title' => 'Code of Conduct',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/about/policies/code-of-conduct/',
+      'link' => 'https://example.com/code-of-conduct/',
       'card-permission' => 'see-coc',
     ], [
       'name' => 'help',
@@ -78,21 +72,16 @@ $cards = [
       'name' => 'website',
       'title' => 'Website',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/',
+      'link' => 'https://example.com/',
       'card-permission' => 'see-website',
     ]
   ],
   'Programme' => [
     [
-      'name' => 'catalogue',
-      'title' => 'Replay Catalogue',
-      'link' => '/catalogue',
-      'card-permission' => 'see-catalogue',
-    ], [
       'name' => 'guide',
       'title' => 'Programme guide',
       'subtitle' => 'ConClár',
-      'link' => current_user_has_permission('see-guide-redirect') ? 'https://guide.glasgow2024.org/' : '/programme-guide',
+      'link' => current_user_has_permission('see-guide-redirect') ? 'https://example.com/programme-guide' : '/programme-guide',
       'card-permission' => 'see-guide',
     ], [
       'name' => 'stream',
@@ -110,7 +99,7 @@ $cards = [
       'name' => 'tours',
       'title' => 'Tours and activities',
       'subtitle' => 'Beyond the programme',
-      'link' => 'https://glasgow2024.org/whats-on/beyond-programme/tours-and-activities/',
+      'link' => 'https://example.com/tours-and-activities',
       'card-permission' => 'see-tours',
     ], [
       'name' => 'virtual-gathering',
@@ -131,7 +120,7 @@ $cards = [
       'name' => 'volunteer',
       'title' => 'Volunteer',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/for-members/volunteering/',
+      'link' => 'https://example.com/volunteer',
       'card-permission' => 'see-website',
     ], [
       'name' => 'upload-photo',
@@ -143,7 +132,7 @@ $cards = [
       'name' => 'itinerary',
       'title' => 'Your participant schedule',
       'subtitle' => 'Planorama',
-      'link' => 'https://planorama.glasgow2024.org',
+      'link' => 'https://example.com/participant-schedule',
       'card-permission' => 'see-itinerary'
     ], [
       'name' => 'participant-guides',
@@ -164,32 +153,14 @@ $cards = [
       'name' => 'gallery',
       'title' => 'Art show',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/whats-on/art-show/art-show-gallery/',
+      'link' => 'https://example.com/art-show',
       'card-permission' => 'see-gallery',
     ], [
       'name' => 'benefits',
       'title' => 'Member benefits',
       'subtitle' => '',
-      'link' => 'https://glasgow2024.org/for-members/member-benefits/',
+      'link' => 'https://example.com/member-benefits',
       'card-permission' => 'see-benefits',
-    ], [
-      'name' => 'hugos',
-      'title' => 'Hugos',
-      'subtitle' => 'Results and stats',
-      'link' => 'https://glasgow2024.org/hugo-awards/2024-hugo-award-winners/',
-      'card-permission' => 'see-hugos',
-    ], [
-      'name' => 'consultive-ballot',
-      'title' => 'Consultative ballot',
-      'subtitle' => 'Business meeting',
-      'link' => 'https://glasgow2024.org/hugo-awards/consultative-vote/',
-      'card-permission' => 'see-consultive-ballot',
-    ], [
-      'name' => 'site-selection',
-      'title' => 'Site selection',
-      'subtitle' => 'Voting',
-      'link' => 'https://glasgow2024.org/for-members/wsfs-site-selection/',
-      'card-permission' => 'see-site-selection',
     ], [
       'name' => 'manage-roles',
       'title' => 'Manage roles',
@@ -240,7 +211,7 @@ $cards = [
       <?php
       foreach ($category_cards as $card) {
         if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
-          $open_in_new_tab = str_starts_with($card['link'], 'http') || $card['link'] == '/catalogue';
+          $open_in_new_tab = str_starts_with($card['link'], 'http');
       ?>
         <div class="card <?php echo $card['name']; ?>">
           <div class="hero"
@@ -250,10 +221,6 @@ $cards = [
               aria-hidden="true"
           <?php } ?>
           >
-            <?php if ($card['name'] == 'btof') { ?>
-              <div class="warp"></div>
-              <div class="icon"></div>
-            <?php } ?>
           </div>
           <hgroup>
             <h3><a href="<?php echo $card['link']; ?>" <?php echo $open_in_new_tab ? 'target="_blank"' : ''; ?>><?php echo $card['title']; ?></a></h3>
@@ -324,8 +291,6 @@ $cards = [
     'readme',
     'gallery',
     'upload-presentation',
-    'hugos',
-    'site-selection',
     'accessibility',
     'childcare',
     'volunteer',

@@ -1,12 +1,16 @@
 <?php
 
 define('ROOT_URL', 'https://' . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
-define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
-define('CON_SHORT_NAME', 'Glasgow 2024');
+define('CON_NAME', 'Example Convention, a great tagline for a great demo');
+define('CON_SHORT_NAME', 'ExampleCon');
+define('CON_START_DATE', '2025-01-01');
 define('DISCORD_GUILD_ID', '1229093507835101204');
 define('DISCORD_INVITE_CHANNEL_ID', '1229126688277926008');
 define('DISCORD_API_CHANNEL_ID', '1256912513572929596');
-define("SUPPORT_EMAIL", "online-convention-help@glasgow2024.org");
+define("SUPPORT_EMAIL", "online-convention-help@example.com");
+define("REGISTRATION_EMAIL", "registration@example.com");
+define("TECH_EMAIL", "tech@example.com");
+define("PROGRAMME_EMAIL", "programme@example.com");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', true);
 
@@ -82,11 +86,11 @@ define('DISCORD_CLIENT_ID', $config_file['discord']['client_id']);
 define('DISCORD_CLIENT_SECRET', $config_file['discord']['client_secret']);
 define('API_KEYS', $config_file['api_keys']);
 
-define('CLYDE_CLIENT_ID', $config_file['clyde']['client_id']);
-define('CLYDE_CLIENT_SECRET', $config_file['clyde']['client_secret']);
-define('CLYDE_SERVER_ENDPOINT', $config_file['clyde']['server_endpoint']);
-if (!empty($config_file['clyde']['allowlist'])) {
-  define('CLYDE_ALLOWLIST', array_map('trim', $config_file['clyde']['allowlist']));
+define('OAUTH_CLIENT_ID', $config_file['oauth']['client_id']);
+define('OAUTH_CLIENT_SECRET', $config_file['oauth']['client_secret']);
+define('OAUTH_SERVER_ENDPOINT', $config_file['oauth']['server_endpoint']);
+if (!empty($config_file['oauth']['allowlist'])) {
+  define('OAUTH_ALLOWLIST', array_map('trim', $config_file['oauth']['allowlist']));
 }
 
 function log_exception(Throwable $exception) {

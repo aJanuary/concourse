@@ -2,19 +2,19 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once getenv('CONFIG_LIB_DIR') . '/vendor/autoload.php';
 
-// Class to provide the services for CLYDE
-class ClydeService {
+// Class to provide the services for authentication
+class AuthService {
   public $provider;
   public $token;
 
   function __construct() {
     $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
-      'redirectUri'             => ROOT_URL . '/clyde_callback',
-      'clientId'                => CLYDE_CLIENT_ID,
-      'clientSecret'            => CLYDE_CLIENT_SECRET,
-      'urlAuthorize'            => CLYDE_SERVER_ENDPOINT . '/oauth/authorize',
-      'urlAccessToken'          => CLYDE_SERVER_ENDPOINT . '/api/v1/oauth/token',
-      'urlResourceOwnerDetails' => CLYDE_SERVER_ENDPOINT . '/api/v1/me',
+      'redirectUri'             => ROOT_URL . '/oauth_callback',
+      'clientId'                => OAUTH_CLIENT_ID,
+      'clientSecret'            => OAUTH_CLIENT_SECRET,
+      'urlAuthorize'            => OAUTH_SERVER_ENDPOINT . '/oauth/authorize',
+      'urlAccessToken'          => OAUTH_SERVER_ENDPOINT . '/api/v1/oauth/token',
+      'urlResourceOwnerDetails' => OAUTH_SERVER_ENDPOINT . '/api/v1/me',
       'scopes'                  => ['view-participant']
     ]);
     session_start();
@@ -56,11 +56,6 @@ class ClydeService {
   function registrant_allowed_access($registrant) {
     if ($registrant['attending_status'] == 'Not Attending') {
       error_log("Registrant is not attending: " . print_r($registrant, true));
-      if ($registrant['product_list_name'] == 'WSFS Member') {
-        // There is a bug in Clyde where sometimes they are logged in as their WSFS member rather than their ticket.
-        // Unfortunately we can't fix Clyde, so we have to work around it here.
-        return "broken-reg";
-      }
       return "no-access";
     }
 

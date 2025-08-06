@@ -20,7 +20,7 @@ cd /var/php-migrations
 composer install
 
 # run the migrations
-# NOTE: RUNTIME_ENV is set to developmen or production ...
+# NOTE: RUNTIME_ENV is set to development or production ...
 vendor/bin/phinx migrate -e $RUNTIME_ENV
 
 # Correct permissions on analytics folder

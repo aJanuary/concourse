@@ -401,62 +401,6 @@ main {
   background-image: none;
 }
 
-.card.btof {
-  background-color: var(--info-color-light);
-}
-.card.btof .hero {
-  position: relative;
-  background: var(--info-pattern);
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.4;
-  }
-  75% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-.card.btof .warp {
-  background-image: url('/resources/warp.gif');
-  background-size: cover;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  opacity: 0;
-  animation: 12s fadeOut;
-}
-.card.btof .icon {
-  background-image: url('/resources/btof.svg');
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.card.btof .hero::after {
-  background-image: none;
-}
-
-@media (prefers-reduced-motion) {
-  .card.btof .warp {
-    background-image: none;
-  }
-}
-
-
 .card.readme {
   background-color: var(--info-color-light);
 }
@@ -506,16 +450,6 @@ main {
 }
 .card.stream .hero::after {
   background-image: url('/resources/stream.svg');
-}
-
-.card.catalogue {
-  background-color: var(--prog-color-light);
-}
-.card.catalogue .hero {
-  background: var(--prog-bg);
-}
-.card.catalogue .hero::after {
-  background-image: url('/resources/catalogue.svg');
 }
 
 .card.chat {
@@ -612,39 +546,6 @@ main {
 }
 .card.benefits .hero::after {
   background-image: url('/resources/benefits.svg');
-}
-
-.card.hugos {
-  background-color: var(--events-color-light);
-}
-.card.hugos .hero {
-  background: var(--events-bg);
-  background-size: var(--events-bg-size);
-}
-.card.hugos .hero::after {
-  background-image: url('/resources/hugos.svg');
-}
-
-.card.consultive-ballot {
-  background-color: var(--events-color-light);
-}
-.card.consultive-ballot .hero {
-  background: var(--events-bg);
-  background-size: var(--events-bg-size);
-}
-.card.consultive-ballot .hero::after {
-  background-image: url('/resources/consultive-ballot.svg');
-}
-
-.card.site-selection {
-  background-color: var(--events-color-light);
-}
-.card.site-selection .hero {
-  background: var(--events-bg);
-  background-size: var(--events-bg-size);
-}
-.card.site-selection .hero::after {
-  background-image: url('/resources/site-selection.svg');
 }
 
 .card.card.itinerary {

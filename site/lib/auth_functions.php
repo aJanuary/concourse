@@ -76,24 +76,7 @@ function logout() {
 
 function get_registration_status($email) {
   $member_exists = db_member_exists($email);
-  if ($member_exists) {
-    return "registered";
-  }
-
-  // Get name and domain from email
-  $email_parts = explode('@', $email);
-  $name = $email_parts[0];
-  $domain = $email_parts[1];
-
-  if ($domain != "glasgow2024.org") {
-    return "unregistered";
-  }
-
-  // Until we have OAuth integration, create a member for anyone with an @glasgow email
-  $badge_no = bin2hex(random_bytes(2));
-  create_member($badge_no, $email, $name);
-
-  return "registered";
+  return $member_exists ? "registered" : "unregistered";
 }
 
 function create_member($badge_no, $email, $name) {

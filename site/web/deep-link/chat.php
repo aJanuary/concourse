@@ -3,7 +3,7 @@ $_REQUEST['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/clyde_service.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 
 if (array_key_exists('check_has_joined_discord', $_GET)) {
   $usernames = db_get_discord_usernames($_COOKIE['session']);
@@ -21,7 +21,7 @@ if (!current_user_has_permission('see-discord-posts')) {
   <article>
     <h2>Programme chat not yet open</h2>
     <p>The discord chat for specific programme items is not yet open. Please check back a few days before the convention.</p>
-    <p>In the meantime you can still <a href="/chat">join the Glasgow 2024 Discord</a> to socialise with other members ahead of the convention.</p>
+    <p>In the meantime you can still <a href="/chat">join the <?php echo CON_NAME; ?> Discord</a> to socialise with other members ahead of the convention.</p>
   </article>
   <?php
   render_footer();
@@ -38,7 +38,7 @@ if (array_key_exists('item_id', $_GET)) {
     if (!$post['post_url']) {
       render_header(
         'Go to a Discord chat for an item',
-        'Unknown item in the Glasgow 2024 Discord.',
+        'Unknown item in the ' . CON_NAME . ' Discord.',
         ['Home' => '/', 'Go to Discord chat for an item']
       );
       ?>
@@ -58,7 +58,7 @@ if (array_key_exists('item_id', $_GET)) {
   if (!$post['post_url']) {
     render_header(
       'Go to a Discord chat for an item',
-      'Nothing scheduled in that room in the Glasgow 2024 Discord.',
+      'Nothing scheduled in that room in the ' . CON_NAME . ' Discord.',
       ['Home' => '/', 'Go to Discord chat for an item']
     );
     ?>
@@ -84,11 +84,11 @@ $invite_url = 'https://discord.com/oauth2/authorize?client_id=' . DISCORD_CLIENT
 
 render_header(
   'Go to a Discord chat for an item',
-  'Join the Glasgow 2024 Discord server.',
+  'Join the ' . CON_NAME . ' Discord server.',
   ['Home' => '/', 'Go to Discord chat for an item']
 );
 
-$clyde = new ClydeService();
+$oauth = new OAuthService();
 $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
 
 ?>
@@ -102,7 +102,7 @@ $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
       if (!is_logged_in()) {
       ?>
         <div class="content">
-          <a href="<?php echo $clyde->authorize_url(); ?>" class="button login">Log in with Glasgow Registration</a>
+          <a href="<?php echo $oauth->authorize_url(); ?>" class="button login">Log in with registration</a>
           <p><a href="/login-instructions" target="_blank">Log in instructions</a>
           <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
       </div>

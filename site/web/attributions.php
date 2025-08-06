@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
   'Icon attributions',
-  'Attributions for the icons used on the Glasgow 2024 site',
+  'Attributions for the icons used on the site.',
   ['Home' => '/', 'Icon attributions']
 );
 ?>
@@ -31,6 +31,7 @@ render_header(
     <li>Photo camera icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a></li>
     <li>Play button icon by <a href="https://guard13007.com/">Guard13007</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Present icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a></li>
+    <li>Portal icon by <a href="https://lorcblog.blogspot.com/">Lorc</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Position upload icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Puzzle icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Spell book icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>

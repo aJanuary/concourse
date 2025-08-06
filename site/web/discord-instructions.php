@@ -6,13 +6,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 render_header(
   'Discord instructions',
-  'Instructions on how to join the Glasgow 2024 Discord server.',
+  'Instructions on how to join the ' . CON_SHORT_NAME . ' Discord server.',
   ['Home' => '/', 'Chat online' => '/chat', 'How to join the Discord Server']
 );
 ?>
 <article>
   <h2>How to join the Discord Server</h2>
-  <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/_dRNcsdYdm4?si=NygsLt_RySY60GFY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   <ol class="instructions">
     <li>
       <p>Click the <kbd>Join the Discord Server</kbd> button. This will open a new tab.</p>
