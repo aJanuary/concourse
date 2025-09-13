@@ -93,6 +93,12 @@ services:
     depends_on:
       - db
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
 secrets:
   db_root_password:
     # The root password for the database.

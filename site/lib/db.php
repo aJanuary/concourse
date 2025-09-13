@@ -43,6 +43,43 @@ function db_get_member($badge_no) {
   ];
 }
 
+function db_any_member_has_email($email) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM members WHERE email = ?");
+  try {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($exists);
+    if (!$stmt->fetch()) {
+      return false;
+    }
+  } finally {
+    $stmt->close();
+  }
+
+  return $exists;
+}
+
+function db_get_members_from_email($email) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT badge_no, name FROM members WHERE email = ?");
+  try {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($badge_no, $name);
+    $members = [];
+    while ($stmt->fetch()) {
+      $members[] = ['badge_no' => $badge_no, 'name' => $name];
+    }
+  } finally {
+    $stmt->close();
+  }
+
+  return $members;
+}
+
 function db_insert_session($session_token, $badge_no, $expires_at) {
   global $mysqli;
 
@@ -1047,5 +1084,55 @@ function db_get_num_members() {
   } finally {
     $result->close();
   }
+}
+
+function db_email_has_password_auth($email) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM password_auth WHERE email = ?");
+  try {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($exists);
+    $stmt->fetch();
+  } finally {
+    $stmt->close();
+  }
+
+  return (bool)$exists;
+}
+
+function db_check_password_auth($email, $password) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT password_hash FROM password_auth WHERE email = ?");
+  try {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($hash);
+    if (!$stmt->fetch()) {
+      // No such user
+      return false;
+    }
+  } finally {
+    $stmt->close();
+  }
+
+  if (!password_verify($password, $hash)) {
+    return false;
+  }
+
+  if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
+    $new_hash = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $mysqli->prepare("UPDATE password_auth SET password_hash = ? WHERE email = ?");
+    try {
+      $stmt->bind_param("ss", $new_hash, $email);
+      $stmt->execute();
+    } finally {
+      $stmt->close();
+    }
+  }
+
+  return true;
 }
 ?>

@@ -4,13 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
-
-if (isset($_GET['dologin'])) {
-    $oauth = new OAuthService();
-    $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
-    header('Location: ' . $oauth->authorize_url());
-    exit();
-}
+require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
 
 if (is_logged_in()) {
   header('Location: /');
@@ -19,26 +13,70 @@ if (is_logged_in()) {
 
 $error = null;
 
-if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {
-    make_anonymous_session();
-    header('Location: ' . $_GET['redirect']);
-    exit();
+$phase = $_POST['phase'] ?? $_GET['phase'] ?? null;
+$email = trim($_POST['email'] ?? $_GET['email'] ?? null);
+$redirect = $_POST['redirect'] ?? $_GET['redirect'] ?? '/';
+
+if (!$phase && $_GET['token']) {
+    $token_data = verify_secure_login_link_token($_GET['token']);
+    if ($token_data === 'expired') {
+        $error = 'Your login has expired. Please try logging in again.';
+    } else if ($token_data === 'invalid') {
+        $error = 'Invalid login link. Please try logging in again.';
+    } else {
+        $phase = $token_data['phase'];
+        $email = trim($token_data['email'] ?? null);
+        $redirect = $token_data['redirect'] ?? '/';
+    }
 }
 
-if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
-    $badge_no = $_GET['badge_no'];
-    $login_code = $_GET['login_code'];
-
-    $link_status = get_login_link_status($badge_no, $login_code);
-    if ($link_status === "ok") {
-        make_session($badge_no);
-        header('Location: /');
-        exit();
-    } else if ($link_status === "expired") {
-        $error = 'This log in link has expired. Please request a new log in link.';
+if ($phase === 'entered-email') {
+    if (db_email_has_password_auth($email)) {
+        $phase = 'enter-password';
     } else {
-        $error = 'Invalid login code';
+        header('Location: /login?phase=requested-magic-link&redirect=' . urlencode($redirect) . '&email=' . urlencode($email));
+        exit();
     }
+} else if ($phase === 'entered-password') {
+    $password = $_POST['password'];
+    if (db_check_password_auth($email, $password)) {
+        header('Location: /login?phase=select-user&redirect=' . urlencode($redirect) . '&email=' . urlencode($email));
+        exit();
+    } else {
+        header('Location: /login?phase=entered-email&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . '&error_code=incorrect-password');
+        exit();
+    }
+} else if ($phase === 'select-user') {
+    $members = db_get_members_from_email($email);
+    if (count($members) == 1) {
+        $badge_no = $members[0]['badge_no'];
+        make_session($badge_no);
+        header('Location: ' . ($redirect ?? '/'));
+        exit();
+    } else if (count($members) == 0) {
+        // Could direct them to registration, but to get here they must have bypassed the first step where
+        // they enter an email, so just do the simple thing and show an error.
+        $error = 'No member found with this e-mail address.';
+    }
+
+} else if ($phase === 'selected-user') {
+    make_session($token_data['badge_no']);
+    header('Location: ' . $token_data['redirect']);
+    exit();
+} else if ($phase === 'requested-magic-link') {
+    $result = send_magic_link($email, $redirect);
+    if ($result !== 'ok') {
+        $error = '&error_code=' . urlencode($result);
+    } else {
+        $error = '';
+    }
+    header('Location: /login?phase=sent-magic-link&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . $error);
+}
+
+if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {
+    make_anonymous_session();
+    header('Location: ' . $redirect);
+    exit();
 }
 
 render_header(
@@ -60,17 +98,75 @@ if (isset($_GET['error_code'])) {
         'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
+        'incorrect-password' => 'The password you entered is incorrect. Please try again.',
     ][$_GET['error_code']] ?? 'An unknown error occurred.';
+?>
+<?php
+}
+if (isset($error)) {
 ?>
     <p class="error"><img src="resources/error.svg" alt="error" aria-label="error"><?php echo $error; ?></p>
 <?php
 }
 ?>
-    <a href="?dologin&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login">Log in</a>
 <?php
+if ($phase === 'enter-password') {
+?>
+    <form method="post" action="/login">
+        <input type="hidden" name="phase" value="entered-password">
+        <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
+        <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
+        <p>Email: <?php echo htmlspecialchars($email); ?> <a href="/login?redirect=<?php echo urlencode($redirect); ?>">Change</a></p>
+        <p><label>Password <input type="password" name="password"></label></p>
+        <p><button type="submit" class="button login">Log in</button></p>
+    </form>
+    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&forgot-password&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Forgotten your password?</a></p>
+    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&send-magic-link&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Log in via email instead</a></p>
+<?php
+} else if ($phase === 'select-user') {
+?>
+    <p>Multiple members are associated with the e-mail address <?php echo htmlspecialchars($email); ?>. Please select your name from the list below to log in.</p>
+    <ul>
+<?php
+    foreach ($members as $member) {
+        $badge_no = $member['badge_no'];
+        $name = $member['name'];
+        $token = create_secure_login_link_token([
+            'phase' => 'selected-user',
+            'badge_no' => $badge_no,
+            'redirect' => $redirect,
+        ]);
+        $link = '/login?token=' . $token;
+?>
+    <li>
+        <a href="<?php echo $link; ?>">
+        <?php echo htmlspecialchars($name); ?></a>
+    </li>
+<?php
+    }
+?>
+    </ul>
+<?php
+} else if ($phase === 'sent-magic-link') {
+?>
+    <p>A magic login link has been sent to <?php echo htmlspecialchars($_GET['email']); ?>. Please check your e-mail and click the link in the e-mail to log in. The link will expire in 15 minutes.</p>
+    <p>If you do not receive the e-mail within a few minutes, please check your spam or junk mail folder.</p>
+    <p><a href="/login?phase=requested-magic-link&redirect=<?php echo urlencode($redirect); ?>&email=<?php echo urlencode($_GET['email']); ?>">Send a new magic link</a></p>
+<?php
+} else {
+?>
+    <form method="get" action="/login">
+        <input type="hidden" name="phase" value="entered-email" />
+        <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
+        <p><label>Email <input type="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>"></label></p>
+        <p><button type="submit" class="button login">Next</button></p>
+    </form>
+<?php
+}
+
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
-    <p><a href="/login?skip-login&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>">Continue without logging in</a></p>
+    <p><a href="/login?skip-login&redirect=<?php echo urlencode($redirect); ?>">Continue without logging in</a></p>
 <?php
 }
 ?>

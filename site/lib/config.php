@@ -1,6 +1,13 @@
 <?php
 
-define('ROOT_URL', 'https://' . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
+require 'vendor/autoload.php';
+
+$is_https = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+    (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+);
+define('ROOT_URL', ($is_https ? 'https://' : 'http://') . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Example Convention, a great tagline for a great demo');
 define('CON_SHORT_NAME', 'ExampleCon');
 define('CON_START_DATE', '2025-01-01');
@@ -92,6 +99,13 @@ define('OAUTH_SERVER_ENDPOINT', $config_file['oauth']['server_endpoint']);
 if (!empty($config_file['oauth']['allowlist'])) {
   define('OAUTH_ALLOWLIST', array_map('trim', $config_file['oauth']['allowlist']));
 }
+define('SMTP_HOST', $config_file['smtp']['host']);
+define('SMTP_PORT', $config_file['smtp']['port']);
+define('SMTP_USERNAME', $config_file['smtp']['username']);
+define('SMTP_PASSWORD', $config_file['smtp']['password']);
+define('SMTP_SECURE', $config_file['smtp']['secure']);
+define('SIGNING_KEY', $config_file['crypto']['signing_key']);
+
 
 function log_exception(Throwable $exception) {
   $err_code = bin2hex(random_bytes(8));

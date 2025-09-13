@@ -1,7 +1,9 @@
 {
-    "require": {
-        "league/oauth2-client": "^2.7",
-        "wohali/oauth2-discord-new": "^1.2",
-        "chillerlan/php-qrcode": "5.0.2"
-    }
+  "require": {
+    "league/oauth2-client": "^2.7",
+    "wohali/oauth2-discord-new": "^1.2",
+    "chillerlan/php-qrcode": "5.0.2",
+    "phpmailer/phpmailer": "^6.10",
+    "firebase/php-jwt": "^6.11.1"
+  }
 }
