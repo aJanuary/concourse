@@ -6,11 +6,6 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
 
-if (is_logged_in()) {
-  header('Location: /');
-  exit;
-}
-
 $error = null;
 
 $phase = $_POST['phase'] ?? $_GET['phase'] ?? null;
@@ -50,6 +45,7 @@ if ($phase === 'entered-email') {
     $members = db_get_members_from_email($email);
     if (count($members) == 1) {
         $badge_no = $members[0]['badge_no'];
+        logout();
         make_session($badge_no);
         header('Location: ' . ($redirect ?? '/'));
         exit();
@@ -58,7 +54,6 @@ if ($phase === 'entered-email') {
         // they enter an email, so just do the simple thing and show an error.
         $error = 'No member found with this e-mail address.';
     }
-
 } else if ($phase === 'selected-user') {
     make_session($token_data['badge_no']);
     header('Location: ' . $token_data['redirect']);
@@ -71,6 +66,11 @@ if ($phase === 'entered-email') {
         $error = '';
     }
     header('Location: /login?phase=sent-magic-link&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . $error);
+}
+
+if (is_logged_in()) {
+  header('Location: /');
+  exit;
 }
 
 if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {

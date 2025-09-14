@@ -58,7 +58,7 @@
                   <?php
                   if (db_user_owns_multiple_members(get_current_user_badge_no())) {
                   ?>
-                  <a href="/switch-user" role="menuitem">Switch User</a>
+                  <a href="/switch-user?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" role="menuitem">Switch User</a>
                   <?php
                   }
                   ?>

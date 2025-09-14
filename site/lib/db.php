@@ -1151,4 +1151,23 @@ function db_user_owns_multiple_members($badge_no) {
 
   return $count > 1;
 }
+
+function db_get_members_owned_by_same_user($badge_no) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT badge_no, name, email FROM members WHERE email = (SELECT email FROM members WHERE badge_no = ?)");
+  try {
+    $stmt->bind_param("s", $badge_no);
+    $stmt->execute();
+    $stmt->bind_result($b_no, $name, $email);
+    $members = [];
+    while ($stmt->fetch()) {
+      $members[] = ['badge_no' => $b_no, 'name' => $name, 'email' => $email];
+    }
+  } finally {
+    $stmt->close();
+  }
+
+  return $members;
+}
 ?>
