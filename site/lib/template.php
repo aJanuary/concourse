@@ -21,6 +21,7 @@
     <link rel="shortcut icon" href="/resources/favicon.png">
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/reset.css"); ?>">
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/style.css"); ?>">
+    <script src="<?php echo get_internal_url("/resources/dropdown.js"); ?>" defer></script>
   </head>
   <body <?php echo $is_home ? 'class="home"' : ''; ?>>
     <header>
@@ -39,9 +40,7 @@
         <?php
         if (isset($_REQUEST['username'])) {
         ?>
-          <p class="username">
-            <?php echo htmlspecialchars($_REQUEST['username']); ?>
-            |
+          <div class="username">
             <?php
             if (is_anonymous()) {
             ?>
@@ -49,11 +48,27 @@
             <?php
             } else {
             ?>
-              <a href="/logout">Log out</a>
+              <div id="user-dropdown">
+                <input type="checkbox" id="user-menu-toggle">
+                <label for="user-menu-toggle" id="user-menu-label">
+                  <?php echo htmlspecialchars($_REQUEST['username']); ?>
+                </label>
+                <div id="user-dropdown-menu" role="menu">
+                  <a href="/profile" role="menuitem">Profile</a>
+                  <?php
+                  if (db_user_owns_multiple_members(get_current_user_badge_no())) {
+                  ?>
+                  <a href="/switch-user" role="menuitem">Switch User</a>
+                  <?php
+                  }
+                  ?>
+                  <a href="/logout" role="menuitem">Log out</a>
+                </div>
+              </div>
             <?php
             }
             ?>
-          </p>
+          </div>
         <?php
         }
         ?>

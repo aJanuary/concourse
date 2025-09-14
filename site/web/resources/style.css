@@ -279,6 +279,7 @@ li {
 
 .username {
   text-align: right;
+  margin-left: auto;
 }
 
 .breadcrumbs li {
@@ -1094,4 +1095,98 @@ ul.maps li a {
   body.home {
     background-image: none;
   }
+}
+
+#user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#user-menu-toggle {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
+
+#user-menu-label {
+  color: var(--link-color);
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+}
+
+#user-menu-label:hover,
+#user-menu-label:focus {
+  color: var(--link-hover-color);
+}
+
+#user-menu-toggle:focus + #user-menu-label {
+  color: var(--link-hover-color);
+  outline: 2px solid highlight;
+  outline-offset: 2px;
+}
+
+#user-menu-label::after {
+  content: ' ▾';
+  font-size: 0.8em;
+  margin-left: 0.25em;
+}
+
+#user-menu-toggle:checked + #user-menu-label::after {
+  content: ' ▴';
+}
+
+#user-dropdown-menu {
+  position: absolute;
+  top: 1.35em;
+  right: -0.5em;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0.5em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  min-width: 18ch;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+}
+
+#user-menu-toggle:checked ~ #user-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#user-dropdown-menu a {
+  display: block;
+  padding: 0.5em 1em;
+  color: var(--body-fg-color);
+  text-decoration: none;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+#user-dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+#user-dropdown-menu a:hover,
+#user-dropdown-menu a:focus {
+  background-color: #f5f5f5;
+  color: var(--link-color);
+}
+
+#user-dropdown-menu a:first-child:hover,
+#user-dropdown-menu a:first-child:focus {
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+
+#user-dropdown-menu a:last-child:hover,
+#user-dropdown-menu a:last-child:focus {
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }

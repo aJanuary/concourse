@@ -1135,4 +1135,20 @@ function db_check_password_auth($email, $password) {
 
   return true;
 }
+
+function db_user_owns_multiple_members($badge_no) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT COUNT(*) FROM members WHERE email = (SELECT email FROM members WHERE badge_no = ?)");
+  try {
+    $stmt->bind_param("s", $badge_no);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+  } finally {
+    $stmt->close();
+  }
+
+  return $count > 1;
+}
 ?>
