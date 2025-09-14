@@ -1,5 +1,5 @@
 <?php
-$_REQUEST['allow_implicit_anonymous'] = false;
+$GLOBALS['app-data']['allow_implicit_anonymous'] = false;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');

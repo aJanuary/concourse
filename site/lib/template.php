@@ -38,7 +38,7 @@
           </div>
         </a>
         <?php
-        if (isset($_REQUEST['username'])) {
+        if (isset($GLOBALS['app-data']['username'])) {
         ?>
           <div class="username">
             <?php
@@ -51,7 +51,7 @@
               <div id="user-dropdown">
                 <input type="checkbox" id="user-menu-toggle">
                 <label for="user-menu-toggle" id="user-menu-label">
-                  <?php echo htmlspecialchars($_REQUEST['username']); ?>
+                  <?php echo htmlspecialchars($GLOBALS['app-data']['username']); ?>
                 </label>
                 <div id="user-dropdown-menu" role="menu">
                   <a href="/profile" role="menuitem">Profile</a>
