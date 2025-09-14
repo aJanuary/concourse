@@ -4,10 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
-
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use Firebase\JWT\ExpiredException;
+require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 
 function make_session($badge_no) {
     $session_id = sha1(rand());
@@ -137,39 +134,18 @@ function member_type() {
   return 'unknown';
 }
 
-function create_secure_login_link_token($data) {
-  return JWT::encode([
-    'iss' => 'Member portal',
-    'iat' => time(),
-    'exp' => time() + 60*15,
-    'aud' => '',
-    'data' => $data
-  ], SIGNING_KEY, 'HS256');
-}
-
-function verify_secure_login_link_token($token) {
-  try {
-    $decoded = JWT::decode($token, new Key(SIGNING_KEY, 'HS256'));
-    return (array) $decoded->data;
-  } catch (ExpiredException $e) {
-    return 'expired';
-  } catch (Exception $e) {
-    return 'invalid';
-  }
-}
-
 function send_magic_link($email, $redirect) {
   if (!db_any_member_has_email($email)) {
     send_email($email, 'No member found', "Hello,\n\nWe received a request to send a magic login link to this email address, but no member is registered with this email address.\n\nIf you believe this is an error, please contact support.\n\nBest regards,\nThe Convention Team");
     return 'ok';
   }
 
-  $token = create_secure_login_link_token([
+  $link = ROOT_URL . create_secure_link(
+    '/login', [
     'phase' => 'select-user',
     'email' => $email,
     'redirect' => $redirect,
   ]);
-  $link = ROOT_URL . '/login?token=' . $token;
   $body = "Hello " . htmlspecialchars($member['name']) . ",\n\n";
   $body .= "Click the link below to log in to the Member Portal:\n\n";
   $body .= $link . "\n\n";
@@ -178,5 +154,34 @@ function send_magic_link($email, $redirect) {
   $body .= "Best regards,\nThe Convention Team";
   send_email($email, 'Your magic login link', $body);
   return 'ok';
+}
+
+function send_password_email($email, $redirect, $subject, $path) {
+  if (!db_any_member_has_email($email)) {
+    send_email($email, 'No member found', "Hello,\n\nWe received a request to send a set password link to this email address, but no member is registered with this email address.\n\nIf you believe this is an error, please contact support.\n\nBest regards,\nThe Convention Team");
+    return 'ok';
+  }
+
+  $link = ROOT_URL . create_secure_link(
+    $path, [
+    'email' => $email,
+    'redirect' => $redirect,
+  ]);
+  $body = "Hello,\n\n";
+  $body .= "Click the link below to set your password for the Member Portal:\n\n";
+  $body .= $link . "\n\n";
+  $body .= "This link will expire in 15 minutes.\n\n";
+  $body .= "If you did not request this link, you can safely ignore this email.\n\n";
+  $body .= "Best regards,\nThe Convention Team";
+  send_email($email, $subject, $body);
+  return 'ok';
+}
+
+function send_set_password_email($email, $redirect) {
+  return send_password_email($email, $redirect, 'Set your password', '/set-password');
+}
+
+function send_forgot_password_email($email, $redirect) {
+  return send_password_email($email, $redirect, 'Reset your password', '/forgot-password');
 }
 ?>

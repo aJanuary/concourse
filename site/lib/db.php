@@ -1102,6 +1102,22 @@ function db_email_has_password_auth($email) {
   return (bool)$exists;
 }
 
+function db_member_has_password_auth($badge_no) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT 1 FROM password_auth JOIN members USING (email) WHERE badge_no = ?");
+  try {
+    $stmt->bind_param("s", $badge_no);
+    $stmt->execute();
+    $stmt->bind_result($exists);
+    $stmt->fetch();
+  } finally {
+    $stmt->close();
+  }
+
+  return (bool)$exists;
+}
+
 function db_check_password_auth($email, $password) {
   global $mysqli;
 
@@ -1134,6 +1150,19 @@ function db_check_password_auth($email, $password) {
   }
 
   return true;
+}
+
+function db_set_password_auth($email, $password) {
+  global $mysqli;
+
+  $hash = password_hash($password, PASSWORD_DEFAULT);
+  $stmt = $mysqli->prepare("REPLACE INTO password_auth (email, password_hash) VALUES (?, ?)");
+  try {
+    $stmt->bind_param("ss", $email, $hash);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
 }
 
 function db_user_owns_multiple_members($badge_no) {

@@ -6,14 +6,24 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
 
+// These phases are protected by the token in the URL.
+// The user should not be able to directly set them.
+$protected_phases = ['select-user'];
+
 $error = null;
 
 $phase = $_POST['phase'] ?? $_GET['phase'] ?? null;
+
+if (in_array($phase, $protected_phases)) {
+    $phase = null;
+}
+
 $email = trim($_POST['email'] ?? $_GET['email'] ?? null);
 $redirect = $_POST['redirect'] ?? $_GET['redirect'] ?? '/';
 
 if (!$phase && $_GET['token']) {
-    $token_data = verify_secure_login_link_token($_GET['token']);
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $token_data = verify_secure_link($path, $_GET['token']);
     if ($token_data === 'expired') {
         $error = 'Your login has expired. Please try logging in again.';
     } else if ($token_data === 'invalid') {
@@ -35,7 +45,12 @@ if ($phase === 'entered-email') {
 } else if ($phase === 'entered-password') {
     $password = $_POST['password'];
     if (db_check_password_auth($email, $password)) {
-        header('Location: /login?phase=select-user&redirect=' . urlencode($redirect) . '&email=' . urlencode($email));
+        $token = create_secure_link('/login', [
+            'phase' => 'select-user',
+            'email' => $email,
+            'redirect' => $redirect,
+        ], 300);
+        header('Location: ' . $token);
         exit();
     } else {
         header('Location: /login?phase=entered-email&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . '&error_code=incorrect-password');
@@ -120,7 +135,13 @@ if ($phase === 'enter-password') {
         <p><label>Password <input type="password" name="password"></label></p>
         <p><button type="submit" class="button login">Log in</button></p>
     </form>
-    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&forgot-password&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Forgotten your password?</a></p>
+    <p>
+        <form method="post" action="/forgot-password">
+            <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
+            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
+            <button type="submit" class="button link">Forgotten your password?</button>
+        </form>
+    </p>
     <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&send-magic-link&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Log in via email instead</a></p>
 <?php
 } else if ($phase === 'select-user') {
@@ -131,12 +152,11 @@ if ($phase === 'enter-password') {
     foreach ($members as $member) {
         $badge_no = $member['badge_no'];
         $name = $member['name'];
-        $token = create_secure_login_link_token([
+        $link = create_secure_link('/login', [
             'phase' => 'selected-user',
             'badge_no' => $badge_no,
             'redirect' => $redirect,
         ]);
-        $link = '/login?token=' . $token;
 ?>
     <li>
         <a href="<?php echo $link; ?>">

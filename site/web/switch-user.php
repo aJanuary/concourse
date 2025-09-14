@@ -24,12 +24,11 @@ if (count($members) <= 1) {
     foreach ($members as $member) {
         $badge_no = $member['badge_no'];
         $name = $member['name'];
-        $token = create_secure_login_link_token([
+        $link = create_secure_link('/login', [
             'phase' => 'selected-user',
             'badge_no' => $badge_no,
             'redirect' => $_REQUEST['redirect'] ?? '/',
         ]);
-        $link = '/login?token=' . $token;
         echo "<li><a href=\"" . htmlspecialchars($link) . "\">" . htmlspecialchars($name) . "</a></li>";
     }
     echo "</ul>";

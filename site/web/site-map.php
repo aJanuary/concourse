@@ -25,7 +25,9 @@ render_header(
     <li><p><a href="/attributions">Icon attributions</a></p></li>
     <li><p><a href="/login-instructions">Log in instructions</a></p></li>
     <li><p><a href="/maps">Maps</a></p></li>
+    <li><p><a href="/profile">Profile</a></p></li>
     <li><p><a href="/site-map">Site map</a></p></li>
+    <li><p><a href="/switch-user">Switch user</a></p></li>
     <li><p><a href="/stream">Stream</a></p></li>
     <?php
     if (current_user_has_permission('manage-roles')) {
