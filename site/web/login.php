@@ -20,6 +20,13 @@ if (in_array($phase, $protected_phases)) {
 
 $email = trim($_POST['email'] ?? $_GET['email'] ?? null);
 $redirect = $_POST['redirect'] ?? $_GET['redirect'] ?? '/';
+// Some URLs will just cause confusion when we redirect back to them.
+// For those, swap it out for / instead.
+if (!str_starts_with($redirect, '/')
+    || str_starts_with($redirect, "/forgot-password")
+    || str_starts_with($redirect, "/login")) {
+    $redirect = '/';
+}
 
 if (!$phase && $_GET['token']) {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
