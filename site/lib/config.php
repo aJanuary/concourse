@@ -8,76 +8,20 @@ $is_https = (
     (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
 );
 define('ROOT_URL', ($is_https ? 'https://' : 'http://') . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
-define('CON_NAME', 'Example Convention, a great tagline for a great demo');
-define('CON_SHORT_NAME', 'ExampleCon');
-define('CON_START_DATE', '2025-01-01');
+define('CON_NAME', 'Iridescence - The 2026 Eastercon');
+define('CON_SHORT_NAME', 'Iridescence');
+define('CON_START_DATE', '2026-04-03');
 define('DISCORD_GUILD_ID', '1229093507835101204');
 define('DISCORD_INVITE_CHANNEL_ID', '1229126688277926008');
 define('DISCORD_API_CHANNEL_ID', '1256912513572929596');
-define("SUPPORT_EMAIL", "online-convention-help@example.com");
-define("REGISTRATION_EMAIL", "registration@example.com");
-define("TECH_EMAIL", "tech@example.com");
-define("PROGRAMME_EMAIL", "programme@example.com");
+define("SUPPORT_EMAIL", "info@eastercon2026.org");
+define("REGISTRATION_EMAIL", "registration@eastercon2026.com");
+define("TECH_EMAIL", "tech@eastercon2026.com");
+define("PROGRAMME_EMAIL", "programme@eastercon2026.com");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', true);
 
 define('DISCORD_SERVICE_ACCOUNTS', [
-  '1259068933491789854' => [
-    'name' => 'Con Ops (SEC)',
-    'roles' => ['Con-Ops'],
-  ],
-  '1259501220805083147' => [
-    'name' => 'Con Ops (Crowne Plaza)',
-    'roles' => ['Con-Ops'],
-  ],
-  '1259503664934948867' => [
-    'name' => 'Team Info (Hall 4)',
-    'roles' => ['Team-Info'],
-  ],
-  '1263552405820407960' => [
-    'name' => 'Tech Ops (SEC)',
-    'roles' => ['AV-Tech'],
-  ],
-  '1263553178549489737' => [
-    'name' => 'Tech Ops (Crowne Plaza)',
-    'roles' => ['AV-Tech'],
-  ],
-  '1264516078046810194' => [
-    'name' => 'Volunteer Desk (Hall 4)',
-    'roles' => ['Volunteer-Desk'],
-  ],
-  '1270307680208158751' => [
-    'name' => 'Green Room (SEC)',
-    'roles' => ['Green-Room'],
-  ],
-  '1270310702875279362' => [
-    'name' => 'Green Room (Crowne Plaza)',
-    'roles' => ['Green-Room'], 
-  ],
-  '1270311931340652564' => [
-    'name' => 'Autographing (Hall 4)',
-    'roles' => [],
-  ],
-  '1269310439616020673' => [
-    'name' => 'Table Talks (Hall 4)',
-    'roles' => []
-  ],
-  '1269738272284872829' => [
-    'name' => 'Social Media (SEC)',
-    'roles' => [],
-  ],
-  '1087801330929766560' => [
-    'name' => 'Press Office (SEC)',
-    'roles' => [],
-  ],
-  '1270065860769353810' => [
-    'name' => 'Con Office (SEC)',
-    'roles' => [],
-  ],
-  '1269312072043466848' => [
-    'name' => 'Merchandise (SEC)',
-    'roles' => [],
-  ]
 ]);
 
 define('DB_HOST', getenv('CONFIG_DB_HOST'));

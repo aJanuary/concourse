@@ -1,13 +1,14 @@
 :root {
-  --primary-color: #0170B9;
+  --primary-color: rgb(77, 74, 186);
 
   --link-color: var(--primary-color);
-  --link-hover-color: #3a3a3a;
+  --link-hover-color: rgb(136, 133, 209);
   --body-bg-color: white;
-  --body-fg-color: #4B4F58;
+  --body-fg-color: rgb(43, 53, 59);
   --header-bg-color: #eee;
+  --header-bg: linear-gradient(48deg, #e3c1f4, #d9d7ed, #dff7f1, #acf0ff, #e3c1f4, #d9d7ed, #dff7f1, #acf0ff, #e3c1f4);
   --header-border-color: #fff5;
-  --footer-bg-color: #424242;
+  --footer-bg-color: hsl(201, 15%, 5%);
   --footer-fg-color: #F5F5F5;
   --footer-border-color: #E5E5E5;
   --card-border-color: #0170B988;
@@ -37,65 +38,29 @@
 }
 
 @font-face {
-  font-family: 'Gruppo';
+  font-family: 'metropolis';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(gruppo-normal-latin.woff2) format('woff2');
+  src: url(Metropolis-Regular.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Roboto';
-  font-style: italic;
+  font-family: 'Suruma';
+  font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(roboto-italic-latin-ext.woff2) format('woff2');
-  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url(roboto-italic-latin.woff2) format('woff2');
+  src: url(Suruma.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(roboto-normal-latin-ext.woff2) format('woff2');
-  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(roboto-normal-latin.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(roboto-bold-latin-ext.woff2) format('woff2');
-  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(roboto-bold-latin.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+
+* {
+  font: inherit;
 }
 
 body {
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
+  font-family: "metropolis", sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
@@ -109,7 +74,11 @@ body {
 }
 
 .site-branding {
-  font-family: "Gruppo", display;
+  font-family: "Suruma", display;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Suruma, sans-srif;
 }
 
 h2 {
@@ -185,6 +154,7 @@ img {
 
 header {
   background-color: var(--header-bg-color);
+  background: var(--header-bg);
   border-bottom: solid 1px var(--header-border-color);
 }
 
@@ -245,7 +215,7 @@ li {
 }
 
 .site-logo {
-  margin-right: 1em;
+  margin-right: 0.75em;
   display: inline-block;
   max-width: 100%;
 }
@@ -258,9 +228,9 @@ li {
 }
 
 .site-branding h1 {
-  margin: 0;
+  margin: 0.75em 0 0 0;
   font-size: 25px;
-  line-height: 1.2em;
+  line-height: 0.5em;
   word-wrap: break-word;
   font-weight: 700;
   text-transform: none;
@@ -272,8 +242,8 @@ li {
 }
 
 
-.site-branding a, .site-branding a:hover {
-  color: black;
+a.site-branding-container, a.site-branding-container:hover {
+  color: rgb(43, 53, 59);
   text-decoration: none;
 }
 
@@ -363,6 +333,7 @@ main {
   width: 0.9em;
   height: 0.9em;
   margin-right: 0.1em;
+  margin-top: -0.35em;
 }
 
 .card .hero {
@@ -792,6 +763,8 @@ article ul {
   border-radius: 3px;
   transition: color .1s ease-in-out, background-color .1s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border: none;
+  cursor: pointer;
 }
 
 .button:hover {
@@ -805,6 +778,12 @@ article ul {
   color: var(--button-disabled-fg-color);
   cursor: default;
   box-shadow: none;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 form p {
