@@ -190,28 +190,28 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 <?php
 }
 ?>
-    <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
+    <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme and chatting via the Discord.</p>
 <?php
     if (time() < strtotime(CON_START_DATE)) {
 ?>
     <h3>Not a member?</h3>
-    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://example.com/buy-membership">purchase a membership or ticket</a>.</p>
+    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://eastercon2026.org/members/register">purchase a membership or ticket</a>.</p>
 <?php
     }
 ?>
     <h3>Who can log in the portal?</h3>
-    <p>People aged 16 and over who have Attending Memberships, Day Tickets, Online Memberships, or Online Tickets can log in the portal.
+    <p>People aged 7 and over who have Attending Membership or Supporting Membership can log in the portal.
     <?php
     if (time() < strtotime(CON_START_DATE)) {
     ?>
-        If you don&apos;t already have one of these and would like to access the portal, you can <a href="https://example.com/buy-membership">purchase a membership or ticket</a>.
+        If you don&apos;t already have one of these and would like to access the portal, you can <a href="https://eastercon2026.org/members/register">purchase a membership or ticket</a>.
     <?php
     }
     ?>
     <?php
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
-    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.</p>
+    <p>If you do not wish to log in, you can click the "Continue without logging in" link to access most of the portal.</p>
 <?php
 }
 ?>
