@@ -1237,3 +1237,31 @@ ul.maps li a {
 #user-select .avatar.color-4 {
   background: #87ABDFff;
 }
+
+.nu-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 40ch;
+}
+
+.nu-form .form-group {
+  display: grid;
+}
+
+.nu-form button, .nu-form input[type=submit] {
+  max-width: fit-content;
+}
+
+.nu-form .form-group:has([required]) label {
+  display: flex;
+  gap: 0.25ch;
+
+  &::after {
+    content: "*";
+    color: var(--primary-color);
+  }
+}
+
+.nu-form .error-message {
+  color: var(--error-fg-color);
+}

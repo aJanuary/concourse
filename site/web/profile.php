@@ -64,11 +64,27 @@ render_header(
   }
   if (db_member_has_password_auth(get_current_user_badge_no())) {
 ?>
-    <form action="/profile" method="POST">
-      <p><label>Current password: <input type="password" name="current_password" placeholder="Current password" required></label></p>
-      <p><label>New password: <input type="password" name="new_password" placeholder="New password" required></label></p>
-      <p><label>Confirm new password: <input type="password" name="confirm_new_password" placeholder="Confirm new password" required></label></p>
+    <form action="/profile" method="POST" class="nu-form">
       <input type="hidden" name="phase" value="change-password">
+
+      <div class="form-group">
+        <label for="current_password">Current password</label>
+        <input id="current_password" name="current_password" type="password" required>
+        <span class="error-message" aria-live="polite"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="new_password">New password</label>
+        <input id="new_password" name="new_password" type="password" required>
+        <span class="error-message" aria-live="polite"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm_new_password">Confirm new password</label>
+        <input id="confirm_new_password" name="confirm_new_password" type="password" required>
+        <span class="error-message" aria-live="polite"></span>
+      </div>
+
       <input type="submit" value="Change password">
     </form>
 <?php

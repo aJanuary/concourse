@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/reset.css"); ?>">
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/style.css"); ?>">
     <script src="<?php echo get_internal_url("/resources/dropdown.js"); ?>" defer></script>
+    <script src="<?php echo get_internal_url("/resources/form.js"); ?>" defer></script>
   </head>
   <body <?php echo $is_home ? 'class="home"' : ''; ?>>
     <header>
