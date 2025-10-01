@@ -6,22 +6,23 @@
     if (!$error) {
       return true;
     }
+    const fieldLabel = $field.parentElement.querySelector(":scope > label").innerText;
 
     let msg;
     if ($field.validity.patternMismatch) {
-      msg = "Value does not match the required pattern";
+      msg = fieldLabel + " does not match the required pattern";
     } else if ($field.validity.tooLong) {
-      msg = "Must be shorter than " + $field.maxlength + " characters";
+      msg = fieldLabel + " must be shorter than " + $field.maxlength + " characters";
     } else if ($field.validity.tooShort) {
-      msg = "Must be longer than " +  $field.minlength + " characters";
+      msg = fieldLabel + " must be longer than " +  $field.minlength + " characters";
     } else if ($field.validity.rangeOverflow) {
-      msg = "Must be less than " + $field.max;
+      msg = fieldLabel + " be less than " + $field.max;
     } else if ($field.validity.rangeUnderflow) {
-      msg = "Must be greater than " + $field.min;
+      msg = fieldLabel + " be greater than " + $field.min;
     } else if ($field.validity.typeMismatch) {
-      msg = "Must be a " + $field.type;
+      msg = fieldLabel + " must be a " + $field.type;
     } else if ($field.validity.valueMissing) {
-      msg = "Field is required";
+      msg = fieldLabel + " is required";
     } else if (!$field.validity.valid) {
       msg = "Invalid value";
     } else {
@@ -39,7 +40,11 @@
 
     $fields.forEach($field => {
       $field.addEventListener("blur", e => {
-        validateField($field);
+        setTimeout(() => {
+          if (document.activeElement !== $field) {
+            validateField($field);
+          }
+        }, 300);
       });
     });
 

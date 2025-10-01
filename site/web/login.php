@@ -43,7 +43,9 @@ if (!$phase && $_GET['token']) {
 }
 
 if ($phase === 'entered-email') {
-    if (db_email_has_password_auth($email)) {
+    if ($email === "") {
+        $error = "You must enter an email";
+    } else if (db_email_has_password_auth($email)) {
         $phase = 'enter-password';
     } else {
         header('Location: /login?phase=requested-magic-link&redirect=' . urlencode($redirect) . '&email=' . urlencode($email));
@@ -134,13 +136,20 @@ if (isset($error)) {
 <?php
 if ($phase === 'enter-password') {
 ?>
-    <form method="post" action="/login">
+    <form method="post" action="/login" class="nu-form">
         <input type="hidden" name="phase" value="entered-password">
         <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
-        <p>Email: <?php echo htmlspecialchars($email); ?> <a href="/login?redirect=<?php echo urlencode($redirect); ?>">Change</a></p>
-        <p><label>Password <input type="password" name="password" autofocus></label></p>
-        <p><button type="submit" class="button login">Log in</button></p>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <p id="email"><?php echo htmlspecialchars($email); ?> <a href="/login?redirect=<?php echo urlencode($redirect); ?>">Change</a></p>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autofocus required>
+            <span class="error-message"></span>
+        </div>
+        <button type="submit" class="button login">Log in</button>
     </form>
     <p>
         <form method="post" action="/forgot-password">
@@ -166,11 +175,15 @@ if ($phase === 'enter-password') {
 <?php
 } else {
 ?>
-    <form method="get" action="/login">
+    <form method="get" action="/login" class="nu-form">
         <input type="hidden" name="phase" value="entered-email" />
         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
-        <p><label>Email <input type="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>" autofocus></label></p>
-        <p><button type="submit" class="button login">Next</button></p>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>" autofocus required></label></p>
+            <span class="error-message"></span>
+        </div>
+        <button type="submit" class="button login">Next</button>
     </form>
 <?php
 }
@@ -182,7 +195,7 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 }
 ?>
 <?php
-if ($phase !== 'select-user') {
+if ($phase === null || $phase === "enter-password") {
 ?>
     <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme and chatting via the Discord.</p>
 <?php

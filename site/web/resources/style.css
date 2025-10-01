@@ -1248,6 +1248,10 @@ ul.maps li a {
   display: grid;
 }
 
+.nu-form label {
+  font-weight: bold;
+}
+
 .nu-form button, .nu-form input[type=submit] {
   max-width: fit-content;
 }
