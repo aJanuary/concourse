@@ -19,6 +19,9 @@
   --button-disabled-fg-color: #202226;
   --error-fg-color: rgb(174, 0, 0);
   --inst-border-color: #DDD;
+  --select-list-bg-color: #EEE;
+  --select-list-hover-bg-color: #DDD;
+  --select-list-fg-color: var(--link-color);
 
   --info-pattern: repeating-linear-gradient( 45deg, #187bb9, #187bb9 5px, #1b80bd 5px, #1b80bd 25px) #1b80bd;
   --info-color-light: #f0feff;
@@ -1185,4 +1188,52 @@ ul.maps li a {
 #user-dropdown-menu a:last-child:focus {
   border-bottom-left-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
+}
+
+#user-select {
+  list-style: none;
+  display: grid;
+}
+
+#user-select li a {
+  display: flex;
+  gap: 0.5em;
+  line-height: 2em;
+  padding: 1em 1em;
+  background: var(--select-list-bg-color);
+  color: var(--select-list-fg-color);
+  text-decoration: none;
+}
+
+#user-select li a:hover {
+  background: var(--select-list-hover-bg-color)
+}
+
+#user-select .avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border-radius: 100em;
+  height: 2em;
+  width: 2em;
+  text-decoration: none;
+  color: #FFFB;
+}
+
+#user-select .avatar.color-1 {
+  background: #F8EE7Aff;
+  color: #0008;
+}
+
+#user-select .avatar.color-2 {
+  background: #D24848ff;
+}
+
+#user-select .avatar.color-3 {
+  background: #EC6B54ff;
+}
+
+#user-select .avatar.color-4 {
+  background: #87ABDFff;
 }

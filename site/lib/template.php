@@ -139,4 +139,26 @@
     render_footer();
     exit;
   }
+
+  function render_user_select($members) {
+    echo "<ul id=\"user-select\">";
+    foreach ($members as $member) {
+        $badge_no = $member['badge_no'];
+        $color_index = ((int) preg_replace('/\D/', '', $badge_no) % 4) + 1;
+        $name = $member['name'];
+        $link = create_secure_link('/login', [
+            'phase' => 'selected-user',
+            'badge_no' => $badge_no,
+            'redirect' => $_REQUEST['redirect'] ?? '/',
+        ]);
+        $name_parts = preg_split('/\s+/', trim($name));
+        if (count($name_parts) == 1) {
+            $initials = strtoupper(substr($name_parts[0], 0, 1));
+        } else {
+            $initials = strtoupper(substr($name_parts[0], 0, 1) . substr($name_parts[count($name_parts) - 1], 0, 1));
+        }
+        echo "<li><a href=\"" . htmlspecialchars($link) . "\"><span class=\"avatar color-" . $color_index . "\">" . htmlspecialchars($initials) . "</span> " . htmlspecialchars($name) . "</a></li>";
+    }
+    echo "</ul>";
+  }
 ?>

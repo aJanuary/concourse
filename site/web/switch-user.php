@@ -19,19 +19,8 @@ $members = db_get_members_owned_by_same_user(get_current_user_badge_no());
 if (count($members) <= 1) {
     echo "<p>Your email is not associated with any other members.</p>";
 } else {
-    echo "<p>Please select which user you would like to switch to:</p>";
-    echo "<ul>";
-    foreach ($members as $member) {
-        $badge_no = $member['badge_no'];
-        $name = $member['name'];
-        $link = create_secure_link('/login', [
-            'phase' => 'selected-user',
-            'badge_no' => $badge_no,
-            'redirect' => $_REQUEST['redirect'] ?? '/',
-        ]);
-        echo "<li><a href=\"" . htmlspecialchars($link) . "\">" . htmlspecialchars($name) . "</a></li>";
-    }
-    echo "</ul>";
+    echo "<p>Select which user you would like to switch to:</p>";
+    render_user_select($members);
 }
 ?>
   

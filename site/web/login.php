@@ -154,25 +154,9 @@ if ($phase === 'enter-password') {
 } else if ($phase === 'select-user') {
 ?>
     <p>Multiple members are associated with the e-mail address <?php echo htmlspecialchars($email); ?>. Please select your name from the list below to log in.</p>
-    <ul>
 <?php
-    foreach ($members as $member) {
-        $badge_no = $member['badge_no'];
-        $name = $member['name'];
-        $link = create_secure_link('/login', [
-            'phase' => 'selected-user',
-            'badge_no' => $badge_no,
-            'redirect' => $redirect,
-        ]);
+    render_user_select($members);
 ?>
-    <li>
-        <a href="<?php echo $link; ?>">
-        <?php echo htmlspecialchars($name); ?></a>
-    </li>
-<?php
-    }
-?>
-    </ul>
 <?php
 } else if ($phase === 'sent-magic-link') {
 ?>
@@ -197,6 +181,9 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 <?php
 }
 ?>
+<?php
+if ($phase !== 'select-user') {
+?>
     <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme and chatting via the Discord.</p>
 <?php
     if (time() < strtotime(CON_START_DATE)) {
@@ -220,6 +207,7 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
     <p>If you do not wish to log in, you can click the "Continue without logging in" link to access most of the portal.</p>
 <?php
+}
 }
 ?>
     <h3>Problems</h3>
