@@ -45,8 +45,13 @@ render_header(
   <h2>Profile</h2>
   <p>If you want to change your badge name or other membership details, you can do so through the registration system.</p>
   <h3>Set password</h3>
+<?php
+  $members = db_get_members_owned_by_same_user(get_current_user_badge_no());
+  if (count($members) > 1) {
+?>
   <p>Note, this will change the password for all members associated with your email address.</p>
 <?php
+  }
   if ($password_error) {
 ?>
     <p class="error"><img src="resources/error.svg" alt="error" aria-label="error"><?php echo htmlspecialchars($password_error); ?></p>
