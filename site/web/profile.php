@@ -43,7 +43,7 @@ render_header(
 ?>
 <article>
   <h2>Profile</h2>
-  <p>If you want to change your badge name or other membership details, you can do so through the registration system.</p>
+  <p>If you want to change your badge name or other membership details, you can do so through the <a href="https://eastercon2026.org/members/portal" target="_blank">registration system</a>.</p>
   <h3>Set password</h3>
 <?php
   $members = db_get_members_owned_by_same_user(get_current_user_badge_no());
