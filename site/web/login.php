@@ -142,7 +142,7 @@ if ($phase === 'enter-password') {
             <button type="submit" class="button link">Forgotten your password?</button>
         </form>
     </p>
-    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&send-magic-link&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Log in via email instead</a></p>
+    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&phase=requested-magic-link&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Log in via email instead</a></p>
 <?php
 } else if ($phase === 'select-user') {
 ?>
