@@ -132,7 +132,7 @@ if ($phase === 'enter-password') {
         <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
         <p>Email: <?php echo htmlspecialchars($email); ?> <a href="/login?redirect=<?php echo urlencode($redirect); ?>">Change</a></p>
-        <p><label>Password <input type="password" name="password"></label></p>
+        <p><label>Password <input type="password" name="password" autofocus></label></p>
         <p><button type="submit" class="button login">Log in</button></p>
     </form>
     <p>
@@ -178,7 +178,7 @@ if ($phase === 'enter-password') {
     <form method="get" action="/login">
         <input type="hidden" name="phase" value="entered-email" />
         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
-        <p><label>Email <input type="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>"></label></p>
+        <p><label>Email <input type="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>" autofocus></label></p>
         <p><button type="submit" class="button login">Next</button></p>
     </form>
 <?php

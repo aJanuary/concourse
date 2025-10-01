@@ -56,6 +56,8 @@
 
 * {
   font: inherit;
+  accent-color: var(--primary-color);
+  outline-offset: 2px;
 }
 
 body {
@@ -754,7 +756,7 @@ article ul {
   margin-bottom: 20px;
 }
 
-.button {
+.button, input[type=submit], input[type=button] {
   display: inline-flex;
   padding: 10px 20px;
   background-color: var(--button-bg-color);
@@ -765,6 +767,7 @@ article ul {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border: none;
   cursor: pointer;
+  max-width: fit-content;
 }
 
 .button:hover {
@@ -778,6 +781,20 @@ article ul {
   color: var(--button-disabled-fg-color);
   cursor: default;
   box-shadow: none;
+}
+
+.button.link {
+  background: none;
+  color: var(--link-color);
+  text-decoration: underline;
+  box-shadow: none;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+.button.link:hover {
+  color: var(--link-hover-color);
 }
 
 form {
