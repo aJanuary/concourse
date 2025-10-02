@@ -158,7 +158,7 @@
         } else {
             $initials = strtoupper(substr($name_parts[0], 0, 1) . substr($name_parts[count($name_parts) - 1], 0, 1));
         }
-        echo "<li><a href=\"" . htmlspecialchars($link) . "\"><span class=\"avatar color-" . $color_index . "\">" . htmlspecialchars($initials) . "</span> " . htmlspecialchars($name) . "</a></li>";
+        echo "<li><a href=\"" . htmlspecialchars($link) . "\"><span class=\"avatar color-" . $color_index . "\">" . htmlspecialchars($initials) . "</span> [" . $badge_no . "] " . htmlspecialchars($name) . "</a></li>";
     }
     echo "</ul>";
   }

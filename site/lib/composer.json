@@ -4,6 +4,9 @@
     "wohali/oauth2-discord-new": "^1.2",
     "chillerlan/php-qrcode": "5.0.2",
     "phpmailer/phpmailer": "^6.10",
-    "firebase/php-jwt": "^6.11.1"
+    "firebase/php-jwt": "^6.11.1",
+    "twig/twig": "^3.0",
+    "twig/markdown-extra": "^3.0",
+    "league/commonmark": "^2.7.1"
   }
 }

@@ -136,7 +136,13 @@ function member_type() {
 
 function send_magic_link($email, $redirect) {
   if (!db_any_member_has_email($email)) {
-    send_email($email, 'No member found', "Hello,\n\nWe received a request to send a magic login link to this email address, but no member is registered with this email address.\n\nIf you believe this is an error, please contact support.\n\nBest regards,\nThe Convention Team");
+    send_email($email, CON_SHORT_NAME . ' login link', 'No member found', [
+      [ 'type' => 'para', 'text' => 'Hello,' ],
+      [ 'type' => 'para', 'text' => 'We received a request to log in, but no member is registered with this email address.' ],
+      [ 'type' => 'para', 'text' => 'If you would like to, you can [buy a membership](https://eastercon2026.org/register).' ],
+      [ 'type' => 'para', 'text' => 'If you believe this is an error, and you should have a membership, please email [membership@eastercon2026.org](mailto:membership@eastercon2026.org).' ],
+      [ 'type' => 'para', 'text' => "Best regards,\n\nThe Convention Team" ]
+    ]);
     return 'ok';
   }
 
@@ -146,19 +152,23 @@ function send_magic_link($email, $redirect) {
     'email' => $email,
     'redirect' => $redirect,
   ]);
-  $body = "Hello " . htmlspecialchars($member['name']) . ",\n\n";
-  $body .= "Click the link below to log in to the Member Portal:\n\n";
-  $body .= $link . "\n\n";
-  $body .= "This link will expire in 15 minutes.\n\n";
-  $body .= "If you did not request this link, you can safely ignore this email.\n\n";
-  $body .= "Best regards,\nThe Convention Team";
-  send_email($email, 'Your magic login link', $body);
+  send_email($email, CON_SHORT_NAME . ' login link', 'Your member portal login link', [
+    [ 'type' => 'para', 'text' => 'Click the button below to log in to the member portal.' ],
+    [ 'type' => 'button', 'href' => $link, 'text' => 'Log in' ],
+    [ 'type' => 'para', 'text' => "This link will expire in 15 minutes.\n\nIf you did not request this link, you can safely ignore this email." ],
+  ]);
   return 'ok';
 }
 
-function send_password_email($email, $redirect, $subject, $path) {
+function send_password_email($email, $redirect, $subject, $task_start, $task_inline, $path) {
   if (!db_any_member_has_email($email)) {
-    send_email($email, 'No member found', "Hello,\n\nWe received a request to send a set password link to this email address, but no member is registered with this email address.\n\nIf you believe this is an error, please contact support.\n\nBest regards,\nThe Convention Team");
+    send_email($email, $subject, 'No member found', [
+      [ 'type' => 'para', 'text' => 'Hello,' ],
+      [ 'type' => 'para', 'text' => 'We received a request to ' . $task_inline . ', but no member is registered with this email address.' ],
+      [ 'type' => 'para', 'text' => 'If you would like to, you can [buy a membership](https://eastercon2026.org/register).' ],
+      [ 'type' => 'para', 'text' => 'If you believe this is an error, and you should have a membership, please email [membership@eastercon2026.org](mailto:membership@eastercon2026.org).' ],
+      [ 'type' => 'para', 'text' => "Best regards,\n\nThe Convention Team" ]
+    ]);
     return 'ok';
   }
 
@@ -167,21 +177,21 @@ function send_password_email($email, $redirect, $subject, $path) {
     'email' => $email,
     'redirect' => $redirect,
   ]);
-  $body = "Hello,\n\n";
-  $body .= "Click the link below to set your password for the Member Portal:\n\n";
-  $body .= $link . "\n\n";
-  $body .= "This link will expire in 15 minutes.\n\n";
-  $body .= "If you did not request this link, you can safely ignore this email.\n\n";
-  $body .= "Best regards,\nThe Convention Team";
-  send_email($email, $subject, $body);
+
+  send_email($email, $subject, $task_start, [
+    [ 'type' => 'para', 'text' => 'Click the button below to ' . $task_inline . '.' ],
+    [ 'type' => 'button', 'href' => $link, 'text' => $task_start ],
+    [ 'type' => 'para', 'text' => "This link will expire in 15 minutes.\n\nIf you did not request this link, you can safely ignore this email." ],
+  ]);
+
   return 'ok';
 }
 
 function send_set_password_email($email, $redirect) {
-  return send_password_email($email, $redirect, 'Set your password', '/set-password');
+  return send_password_email($email, $redirect, 'Set your password for ' . CON_SHORT_NAME, 'Set your password', 'set your password', '/set-password');
 }
 
 function send_forgot_password_email($email, $redirect) {
-  return send_password_email($email, $redirect, 'Reset your password', '/forgot-password');
+  return send_password_email($email, $redirect, CON_SHORT_NAME . ' password reset', 'Reset your password', 'reset your password', '/forgot-password');
 }
 ?>

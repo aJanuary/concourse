@@ -9,6 +9,7 @@ $is_https = (
 );
 define('ROOT_URL', ($is_https ? 'https://' : 'http://') . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Iridescence - The 2026 Eastercon');
+define('CON_WEBSITE', 'https://eastercon2026.org');
 define('CON_SHORT_NAME', 'Iridescence');
 define('CON_START_DATE', '2026-04-03');
 define('DISCORD_GUILD_ID', '1229093507835101204');
