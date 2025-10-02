@@ -84,11 +84,19 @@ if ($error) {
 <?php
 if ($phase === 'enter-password') {
 ?>
-  <form action="<?php echo $path; ?>" method="POST">
+  <form action="<?php echo $path; ?>" method="POST" class="nu-form">
     <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token']); ?>">
     <input type="hidden" name="phase" value="entered-password">
-    <p><label>Password: <input type="password" name="password" required></label></p>
-    <p><label>Confirm password: <input type="password" name="confirm_password" required></label></p>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required>
+      <span class="error-message"></span>
+    </div>
+    <div class="form-group">
+      <label for="confirm_password">Confirm password</label>
+      <input id="confirm_password" name="confirm_password" type="password" required>
+      <span class="error-message"></span>
+    </div>
     <input type="submit" value="<?php echo $title; ?>">
   </form>
 <?php
