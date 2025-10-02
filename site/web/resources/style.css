@@ -23,21 +23,21 @@
   --select-list-hover-bg-color: #DDD;
   --select-list-fg-color: var(--link-color);
 
-  --info-pattern: repeating-linear-gradient( 45deg, #187bb9, #187bb9 5px, #1b80bd 5px, #1b80bd 25px) #1b80bd;
-  --info-color-light: #f0feff;
+  --info-pattern: repeating-linear-gradient( 45deg, #4187f7, #4187f7 5px, #3b82f6 5px, #3b82f6 25px) #3b82f6;
+  --info-color-light: #eff6ff;
 
-  --prog-bg: #056940;
-  --prog-color-light: #ecfaf5;
+  --prog-bg: #ef5e44;
+  --prog-color-light: #fef2f2;
 
-  --part-bg: linear-gradient(135deg, #2d3276 25%, transparent 25%), linear-gradient(225deg, #2d3276 25%, transparent 25%), linear-gradient(45deg, #2d3276 25%, transparent 25%), linear-gradient(315deg, #2d3276 25%, #323884 25%) #323884;
+  --part-bg: linear-gradient(135deg, #f59e0b 25%, transparent 25%), linear-gradient(225deg, #f59e0b 25%, transparent 25%), linear-gradient(45deg, #f59e0b 25%, transparent 25%), linear-gradient(315deg, #f59e0b 25%, #ec9807 25%) #ec9807;
   --part-bg-size: 32px 32px;
   --part-bg-pos: 16px 0, 16px 0, 0 0, 0 0;
   --part-bg-repeat: repeat;
-  --part-color-light: #f2f4ff;
+  --part-color-light: #fffbeb;
 
-  --events-bg: linear-gradient(0deg, #8bab68 50%, #80a856 50%) #8bab68;
+  --events-bg: linear-gradient(0deg, #c084fc 50%, #b679f3 50%) #c084fc;
   --events-bg-size: 10px 10px;
-  --events-color-light: #fffeed;
+  --events-color-light: #fdf4ff;
 }
 
 @font-face {
