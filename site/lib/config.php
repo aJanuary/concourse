@@ -16,9 +16,9 @@ define('DISCORD_GUILD_ID', '1229093507835101204');
 define('DISCORD_INVITE_CHANNEL_ID', '1229126688277926008');
 define('DISCORD_API_CHANNEL_ID', '1256912513572929596');
 define("SUPPORT_EMAIL", "info@eastercon2026.org");
-define("REGISTRATION_EMAIL", "registration@eastercon2026.com");
-define("TECH_EMAIL", "tech@eastercon2026.com");
-define("PROGRAMME_EMAIL", "programme@eastercon2026.com");
+define("REGISTRATION_EMAIL", "registration@eastercon2026.org");
+define("TECH_EMAIL", "tech@eastercon2026.org");
+define("PROGRAMME_EMAIL", "programme@eastercon2026.org");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', true);
 
