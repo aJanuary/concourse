@@ -9,6 +9,12 @@ require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 function make_session($badge_no) {
     $session_id = sha1(rand());
     $expires_at = time() + 60*60*24*30;
+
+    $member = conreg_get_member_by_badge_no($badge_no);
+    if ($member === null) {
+        throw new Exception("No member found with badge no $badge_no");
+    }
+    db_upsert_member($badge_no, $member['email'], $member['name']);
     db_insert_session($session_id, $badge_no, $expires_at);
     setcookie("session", $session_id, $expires_at, '/', '', true, true);
 }
@@ -135,7 +141,7 @@ function member_type() {
 }
 
 function send_magic_link($email, $redirect) {
-  if (!db_any_member_has_email($email)) {
+  if (!conreg_any_member_has_email($email)) {
     send_email($email, CON_SHORT_NAME . ' login link', 'No member found', [
       [ 'type' => 'para', 'text' => 'Hello,' ],
       [ 'type' => 'para', 'text' => 'We received a request to log in, but no member is registered with this email address.' ],
@@ -161,7 +167,7 @@ function send_magic_link($email, $redirect) {
 }
 
 function send_password_email($email, $redirect, $subject, $task_start, $task_inline, $path) {
-  if (!db_any_member_has_email($email)) {
+  if (!conreg_any_member_has_email($email)) {
     send_email($email, $subject, 'No member found', [
       [ 'type' => 'para', 'text' => 'Hello,' ],
       [ 'type' => 'para', 'text' => 'We received a request to ' . $task_inline . ', but no member is registered with this email address.' ],

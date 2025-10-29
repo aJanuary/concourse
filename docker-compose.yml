@@ -19,13 +19,13 @@ services:
       - db_dba_password
     restart: always
     environment:
-      MYSQL_DATABASE: &db-name members
       MYSQL_USER: &db-user dba
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_PASSWORD_FILE: /run/secrets/db_dba_password
     # Make sure we have peristent data between restarts
     volumes:
       - portal-mysqldata:/var/lib/mysql
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
       - 3306:3306
 
@@ -74,7 +74,8 @@ services:
       CONFIG_WEB_DIR: *web-dir
       CONFIG_ANALYTICS_DIR: /var/log/analytics
       CONFIG_DB_HOST: db
-      CONFIG_DB_NAME: *db-name
+      CONFIG_DB_NAME: members
+      CONFIG_CONREG_DB_NAME: conreg
       CONFIG_DB_USER: *db-user
       CONFIG_DB_PASSWORD_FILE: /run/secrets/db_dba_password
       CONFIG_SECRETS_FILE: /run/secrets/web_secrets

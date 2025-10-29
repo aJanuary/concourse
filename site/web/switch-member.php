@@ -15,7 +15,7 @@ render_header(
   <h2>Switch member</h2>
   
 <?php
-$members = db_get_members_owned_by_same_user(get_current_user_badge_no());
+$members = conreg_get_members_owned_by_same_user(get_current_user_badge_no());
 if (count($members) <= 1) {
     echo "<p>Your email is not associated with any other members.</p>";
 } else {

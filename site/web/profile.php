@@ -46,8 +46,7 @@ render_header(
   <p>If you want to change your badge name or other membership details, you can do so through the <a href="https://eastercon2026.org/members/portal" target="_blank">registration system</a>.</p>
   <h3>Set password</h3>
 <?php
-  $members = db_get_members_owned_by_same_user(get_current_user_badge_no());
-  if (count($members) > 1) {
+  if (conreg_user_owns_multiple_members(get_current_user_badge_no())) {
 ?>
   <p>Note, this will change the password for all members associated with your email address.</p>
 <?php

@@ -221,6 +221,18 @@ function db_create_member($badge_no, $email, $name) {
   }
 }
 
+function db_upsert_member($badge_no, $email, $name) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE email = VALUES(email), name = VALUES(name)");
+  try {
+    $stmt->bind_param("sss", $badge_no, $email, $name);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
+}
+
 function db_create_invite($badge_no, $invite_url) {
   global $mysqli;
 

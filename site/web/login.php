@@ -2,6 +2,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/conreg_db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
@@ -66,7 +67,8 @@ if ($phase === 'entered-email') {
         exit();
     }
 } else if ($phase === 'select-user') {
-    $members = db_get_members_from_email($email);
+    $members = conreg_get_members_from_email($email);
+    error_log("Members for $email: " . print_r($members, true));
     if (count($members) == 1) {
         $badge_no = $members[0]['badge_no'];
         logout();

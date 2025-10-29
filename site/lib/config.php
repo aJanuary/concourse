@@ -27,6 +27,7 @@ define('DISCORD_SERVICE_ACCOUNTS', [
 
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
 define('DB_NAME', getenv('CONFIG_DB_NAME'));
+define('CONREG_DB_NAME', getenv('CONFIG_CONREG_DB_NAME'));
 define('DB_USER', getenv('CONFIG_DB_USER'));
 define('DB_PASSWORD', trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"));
 

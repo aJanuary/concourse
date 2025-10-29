@@ -2,6 +2,7 @@
   require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/conreg_db.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/analytics.php');
 
   function get_internal_url($script) {
@@ -57,7 +58,7 @@
                 <div id="user-dropdown-menu" role="menu">
                   <a href="/profile" role="menuitem">Profile</a>
                   <?php
-                  if (db_user_owns_multiple_members(get_current_user_badge_no())) {
+                  if (conreg_user_owns_multiple_members(get_current_user_badge_no())) {
                   ?>
                   <a href="/switch-member?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" role="menuitem">Switch member</a>
                   <?php
