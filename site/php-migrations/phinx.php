@@ -28,7 +28,7 @@ return
             'charset' => 'utf8',
             'collation' => 'utf8mb4_0900_ai_ci'
         ],
-        'testing' => [
+        'staging' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
             'name' => getenv('CONFIG_DB_NAME'),
