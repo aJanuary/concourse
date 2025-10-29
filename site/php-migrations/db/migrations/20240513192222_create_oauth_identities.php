@@ -9,7 +9,7 @@ final class CreateOauthIdentities extends AbstractMigration
     public function change(): void
     {
       $table = $this->table('oauth_identities', ['id' => false, 'primary_key' => ['provider', 'identity_id']]);
-      $table->addColumn('badge_no', 'string', ['limit' => 6])
+      $table->addColumn('badge_no', 'string', ['limit' => 5])
             ->addColumn('provider', 'string', ['limit' => 100, 'null' => false])
             ->addColumn('identity_id', 'string', ['limit' => 100, 'null' => false])
             ->addColumn('email', 'string', ['limit' => 100])
