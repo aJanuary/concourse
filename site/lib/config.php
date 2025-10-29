@@ -39,12 +39,19 @@ define('DISCORD_CLIENT_ID', $config_file['discord']['client_id']);
 define('DISCORD_CLIENT_SECRET', $config_file['discord']['client_secret']);
 define('API_KEYS', $config_file['api_keys']);
 
-define('OAUTH_CLIENT_ID', $config_file['oauth']['client_id']);
-define('OAUTH_CLIENT_SECRET', $config_file['oauth']['client_secret']);
-define('OAUTH_SERVER_ENDPOINT', $config_file['oauth']['server_endpoint']);
-if (!empty($config_file['oauth']['allowlist'])) {
-  define('OAUTH_ALLOWLIST', array_map('trim', $config_file['oauth']['allowlist']));
+if (isset($config_file['oauth'])) {
+  define('OAUTH_CLIENT_ID', $config_file['oauth']['client_id']);
+  define('OAUTH_CLIENT_SECRET', $config_file['oauth']['client_secret']);
+  define('OAUTH_SERVER_ENDPOINT', $config_file['oauth']['server_endpoint']);
+  if (!empty($config_file['oauth']['allowlist'])) {
+    define('OAUTH_ALLOWLIST', array_map('trim', $config_file['oauth']['allowlist']));
+  }
 }
+
+if (!empty($config_file['conreg']['allowlist'])) {
+    define('CONREG_ALLOWLIST', array_map('trim', $config_file['conreg']['allowlist']));
+}
+
 define('SMTP_HOST', $config_file['smtp']['host']);
 define('SMTP_PORT', $config_file['smtp']['port']);
 define('SMTP_USERNAME', $config_file['smtp']['username']);
