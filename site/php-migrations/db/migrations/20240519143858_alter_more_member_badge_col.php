@@ -7,26 +7,16 @@ use Phinx\Migration\AbstractMigration;
 final class AlterMoreMemberBadgeCol extends AbstractMigration
 {
     // Alter the badge_no columns in the rest of the tables to be consistent
-    public function change(): void
+    // Note: All tables including member_roles now handled by previous migrations
+    // This migration is now a no-op but kept for historical compatibility
+    public function up(): void
     {
-      $table = $this->table('discord_ids');
-      $table->changeColumn('badge_no', 'string', ['limit' => 10, 'null' => false])
-            ->save();
+      // All tables already updated by previous migrations
+      // Nothing to do here
+    }
 
-      $table = $this->table('login_links');
-      $table->changeColumn('badge_no', 'string', ['limit' => 10, 'null' => false])
-            ->save();
-
-      $table = $this->table('member_roles');
-      $table->changeColumn('badge_no', 'string', ['limit' => 10, 'null' => false])
-            ->save();
-
-      $table = $this->table('rce_invites');
-      $table->changeColumn('badge_no', 'string', ['limit' => 10, 'null' => false])
-            ->save();
-
-      $table = $this->table('sessions');
-      $table->changeColumn('badge_no', 'string', ['limit' => 10, 'null' => false])
-            ->save();
+    public function down(): void
+    {
+      // Nothing to reverse
     }
 }
