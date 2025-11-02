@@ -221,7 +221,7 @@ function db_create_member($badge_no, $email, $name) {
   }
 }
 
-function db_upsert_member($badge_no, $email, $name) {
+function db_upsert_member($badge_no, $email, $name, $roles = []) {
   global $mysqli;
 
   $stmt = $mysqli->prepare("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE email = VALUES(email), name = VALUES(name)");
@@ -230,6 +230,10 @@ function db_upsert_member($badge_no, $email, $name) {
     $stmt->execute();
   } finally {
     $stmt->close();
+  }
+
+  foreach ($roles as $role_name) {
+    db_add_member_role($badge_no, $role_name);
   }
 }
 
@@ -530,7 +534,7 @@ function db_delete_role($role_id) {
 function db_add_member_role($badge_no, $role_name) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("INSERT INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?");
+  $stmt = $mysqli->prepare("INSERT IGNORE INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?");
   try {
     $stmt->bind_param("ss", $badge_no, $role_name);
     $stmt->execute();

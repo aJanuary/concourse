@@ -61,7 +61,7 @@ function conreg_user_owns_multiple_members($badge_no) {
 function conreg_get_members_owned_by_same_user($badge_no) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name, email FROM conreg_members WHERE is_approve = 1 AND (member_no = ? OR (lead_mid IN (SELECT lead_mid FROM conreg_members WHERE member_no = ? AND (mid = lead_mid OR email = '')) AND (mid = lead_mid OR email = '')))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name, email FROM conreg_members WHERE is_approved = 1 AND (member_no = ? OR (lead_mid IN (SELECT lead_mid FROM conreg_members WHERE member_no = ? AND (mid = lead_mid OR email = '')) AND (mid = lead_mid OR email = '')))");
   try {
     $stmt->bind_param("ss", $badge_no, $badge_no);
     $stmt->execute();
@@ -86,13 +86,19 @@ function conreg_get_member_by_badge_no($badge_no) {
 
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT cur.badge_name as name, COALESCE(NULLIF(cur.email, ''), `lead`.email) as email FROM conreg_members cur JOIN conreg_members `lead` ON cur.lead_mid = `lead`.mid WHERE cur.is_approved = 1 AND cur.member_no = ?");
+  $stmt = $conreg_mysqli->prepare("SELECT cur.badge_name as name, COALESCE(NULLIF(cur.email, ''), `lead`.email) as email, cur.badge_type FROM conreg_members cur JOIN conreg_members `lead` ON cur.lead_mid = `lead`.mid WHERE cur.is_approved = 1 AND cur.member_no = ?");
   try {
     $stmt->bind_param("i", $badge_no);
     $stmt->execute();
-    $stmt->bind_result($name, $email);
+    $stmt->bind_result($name, $email, $badge_type);
     if ($stmt->fetch()) {
-      return ['badge_no' => $badge_no, 'name' => $name, 'email' => $email];
+      $roles = [];
+      if ($badge_type == 'S') {
+        $roles[] = 'online';
+      } else {
+        $roles[] = 'in-person';
+      }
+      return ['badge_no' => $badge_no, 'name' => $name, 'email' => $email, 'roles' => $roles];
     } else {
       return null;
     }

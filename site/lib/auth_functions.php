@@ -14,7 +14,7 @@ function make_session($badge_no) {
     if ($member === null) {
         throw new Exception("No member found with badge no $badge_no");
     }
-    db_upsert_member($badge_no, $member['email'], $member['name']);
+    db_upsert_member($badge_no, $member['email'], $member['name'], $member['roles']);
     db_insert_session($session_id, $badge_no, $expires_at);
     setcookie("session", $session_id, $expires_at, '/', '', true, true);
 }
