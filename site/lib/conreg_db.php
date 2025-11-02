@@ -18,7 +18,7 @@ function conreg_is_allowed($badge_no) {
 function conreg_get_members_from_email($email) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name FROM conreg_members WHERE email = ? OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE email = ?))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name FROM conreg_members WHERE is_approved = 1 AND (email = ? OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE email = ?)))");
 
   try {
     $stmt->bind_param("ss", $email, $email);
@@ -40,7 +40,7 @@ function conreg_get_members_from_email($email) {
 function conreg_user_owns_multiple_members($badge_no) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no FROM conreg_members WHERE member_no=? OR (lead_mid IN (SELECT lead_mid FROM conreg_members WHERE member_no = ? AND (mid = lead_mid OR email = '')) AND (mid = lead_mid OR email = ''))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no FROM conreg_members WHERE is_approved=1 AND (member_no = ? OR (lead_mid IN (SELECT lead_mid FROM conreg_members WHERE member_no = ? AND (mid = lead_mid OR email = '')) AND (mid = lead_mid OR email = '')))");
   try {
     $stmt->bind_param("ss", $badge_no, $badge_no);
     $stmt->execute();
@@ -61,7 +61,7 @@ function conreg_user_owns_multiple_members($badge_no) {
 function conreg_get_members_owned_by_same_user($badge_no) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name, email FROM conreg_members WHERE member_no=? OR (lead_mid IN (SELECT lead_mid FROM conreg_members WHERE member_no = ? AND (mid = lead_mid OR email = '')) AND (mid = lead_mid OR email = ''))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name, email FROM conreg_members WHERE is_approve = 1 AND (member_no = ? OR (lead_mid IN (SELECT lead_mid FROM conreg_members WHERE member_no = ? AND (mid = lead_mid OR email = '')) AND (mid = lead_mid OR email = '')))");
   try {
     $stmt->bind_param("ss", $badge_no, $badge_no);
     $stmt->execute();
@@ -86,7 +86,7 @@ function conreg_get_member_by_badge_no($badge_no) {
 
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT badge_name as name, email FROM conreg_members WHERE member_no = ?");
+  $stmt = $conreg_mysqli->prepare("SELECT badge_name as name, email FROM conreg_members WHERE is_approved = 1 AND member_no = ?");
   try {
     $stmt->bind_param("i", $badge_no);
     $stmt->execute();
@@ -105,7 +105,7 @@ function conreg_get_member_by_badge_no($badge_no) {
 function conreg_any_member_has_email($email) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no FROM conreg_members WHERE email = ? OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE email = ?))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no FROM conreg_members WHERE is_approved = 1 AND (email = ? OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE email = ?)))");
 
   try {
     $stmt->bind_param("ss", $email, $email);
