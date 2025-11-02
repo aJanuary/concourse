@@ -121,7 +121,7 @@ $cards = [
       'title' => 'Volunteer',
       'subtitle' => '',
       'link' => 'https://example.com/volunteer',
-      'card-permission' => 'see-website',
+      'card-permission' => 'see-volunteer',
     ], [
       'name' => 'upload-photo',
       'title' => 'Upload your photo',
