@@ -43,7 +43,18 @@ render_header(
 ?>
 <article>
   <h2>Profile</h2>
-  <p>If you want to change your badge name or other membership details, you can do so through the <a href="https://eastercon2026.org/members/portal" target="_blank">registration system</a>.</p>
+  <form class="nu-form">
+      <div class="form-group">
+        <label for="current_password">Email</label>
+        <input id="email" name="email" type="email" autocomplete="username" value="<?php echo htmlspecialchars(get_current_user_email()); ?>" disabled>
+      </div>
+      <div class="form-group">
+        <label for="name">Badge name</label>
+        <input id="name" name="badge_name" type="text" autocomplete="name" value="<?php echo htmlspecialchars(get_current_user_name()); ?>" disabled>
+      </div>
+  </form>
+  <p>If you want to change your badge name or other membership details, you can do so through the <a href="https://eastercon2026.org/members/portal" target="_blank">registration system</a>. You may have to log out and back in again to the portal for it to pick up the change.</p>
+
   <h3>Set password</h3>
 <?php
   if (conreg_user_owns_multiple_members(get_current_user_badge_no())) {
@@ -68,19 +79,19 @@ render_header(
 
       <div class="form-group">
         <label for="current_password">Current password</label>
-        <input id="current_password" name="current_password" type="password" required>
+        <input id="current_password" name="current_password" type="password" autocomplete="current-password" required>
         <span class="error-message" aria-live="polite"></span>
       </div>
 
       <div class="form-group">
         <label for="new_password">New password</label>
-        <input id="new_password" name="new_password" type="password" required>
+        <input id="new_password" name="new_password" type="password" autocomplete="new-password" required>
         <span class="error-message" aria-live="polite"></span>
       </div>
 
       <div class="form-group">
         <label for="confirm_new_password">Confirm new password</label>
-        <input id="confirm_new_password" name="confirm_new_password" type="password" required>
+        <input id="confirm_new_password" name="confirm_new_password" autocomplete="new-password" type="password" required>
         <span class="error-message" aria-live="polite"></span>
       </div>
 
