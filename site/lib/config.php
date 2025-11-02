@@ -50,6 +50,15 @@ if (isset($config_file['oauth'])) {
 
 if (!empty($config_file['conreg']['allowlist'])) {
     define('CONREG_ALLOWLIST', array_map('trim', $config_file['conreg']['allowlist']));
+    define('CONREG_HARDCODED_MEMBERS', array_map(function($item) {
+        $parts = array_map('trim', explode(',', $item));
+        return [
+            'badge_no' => (int) $parts[0],
+            'email' => $parts[1],
+            'name' => $parts[2],
+            'member_type' => $parts[3],
+        ];
+    }, $config_file['conreg']['hardcoded_members']));
 }
 
 define('SMTP_HOST', $config_file['smtp']['host']);
