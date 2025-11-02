@@ -9,7 +9,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 $path = preg_replace('/\.php$/', '', $_SERVER['PHP_SELF']);
 $title = $path === '/set-password' ? 'Set password' : 'Forgot password';
 
-if ($_REQUEST['token']) {
+if ($_REQUEST['token'] ?? false) {
   $title = 'Set password';
   $token_data = verify_secure_link($path, $_REQUEST['token']);
   if ($token_data === 'invalid') {
@@ -20,9 +20,9 @@ if ($_REQUEST['token']) {
     $email = $token_data['email'] ?? null;
     $redirect = $token_data['redirect'] ?? '/';
 
-    if ($_POST['phase'] === 'entered-password') {
-      $password = $_POST['password'];
-      $confirm_password = $_POST['confirm_password'];
+    if (($_POST['phase'] ?? '') === 'entered-password') {
+      $password = $_POST['password'] ?? '';
+      $confirm_password = $_POST['confirm_password'] ?? '';
       if ($password !== $confirm_password) {
         header('Location: ' . $path . '?token=' . urlencode($_REQUEST['token']) . '&error_code=passwords-did-not-match');
         exit();
@@ -43,10 +43,10 @@ if ($_REQUEST['token']) {
       $phase = 'enter-password';
     }
   }
-} else if ($_POST['email']) {
+} else if ($_POST['email'] ?? false) {
     $email = trim($_POST['email']);
 
-    if ($path == 'set-password') {
+    if ($path == '/set-password') {
       send_set_password_email($email, $_POST['redirect'] ?? '/');
     } else {
       send_forgot_password_email($email, $_POST['redirect'] ?? '/');
@@ -56,7 +56,7 @@ if ($_REQUEST['token']) {
     exit();
 }
 
-if ($_GET['error_code'] === 'passwords-did-not-match') {
+if (($_GET['error_code'] ?? '') === 'passwords-did-not-match') {
   $error = 'The passwords you entered did not match. Please try again.';
 }
 
