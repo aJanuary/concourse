@@ -88,13 +88,17 @@ if ($phase === 'enter-password') {
     <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token']); ?>">
     <input type="hidden" name="phase" value="entered-password">
     <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="<?php echo htmlspecialchars($email); ?>" autocomplete="username" disabled>
+    </div>
+    <div class="form-group">
       <label for="password">Password</label>
-      <input id="password" name="password" type="password" required>
+      <input id="password" name="password" type="password" autocomplete="new-password" required>
       <span class="error-message"></span>
     </div>
     <div class="form-group">
       <label for="confirm_password">Confirm password</label>
-      <input id="confirm_password" name="confirm_password" type="password" required>
+      <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required>
       <span class="error-message"></span>
     </div>
     <input type="submit" value="<?php echo $title; ?>">
