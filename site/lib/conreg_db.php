@@ -86,7 +86,7 @@ function conreg_get_member_by_badge_no($badge_no) {
 
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT badge_name as name, email FROM conreg_members WHERE is_approved = 1 AND member_no = ?");
+  $stmt = $conreg_mysqli->prepare("SELECT cur.badge_name as name, COALESCE(NULLIF(cur.email, ''), `lead`.email) as email FROM conreg_members cur JOIN conreg_members `lead` ON cur.lead_mid = `lead`.mid WHERE cur.is_approved = 1 AND cur.member_no = ?");
   try {
     $stmt->bind_param("i", $badge_no);
     $stmt->execute();
