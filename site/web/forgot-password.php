@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 
-$path = $_SERVER['PHP_SELF'];
+$path = preg_replace('/\.php$/', '', $_SERVER['PHP_SELF']);
 $title = $path === '/set-password' ? 'Set password' : 'Forgot password';
 
 if ($_REQUEST['token']) {
