@@ -166,7 +166,7 @@ if ($phase === 'enter-password') {
 ?>
     <p>Multiple members are associated with the e-mail address <?php echo htmlspecialchars($email); ?>. Please select your name from the list below to log in.</p>
 <?php
-    render_user_select($members);
+    render_user_select($members, $redirect);
 ?>
 <?php
 } else if ($phase === 'sent-magic-link') {

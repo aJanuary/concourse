@@ -142,7 +142,10 @@
     exit;
   }
 
-  function render_user_select($members) {
+  function render_user_select($members, $redirect = null) {
+    if ($redirect === null) {
+        $redirect = $_REQUEST['redirect'] ?? '/';
+    }
     echo "<ul id=\"user-select\">";
     foreach ($members as $member) {
         $badge_no = $member['badge_no'];
@@ -151,7 +154,7 @@
         $link = create_secure_link('/login', [
             'phase' => 'selected-user',
             'badge_no' => $badge_no,
-            'redirect' => $_REQUEST['redirect'] ?? '/',
+            'redirect' => $redirect,
         ]);
         $name_parts = preg_split('/\s+/', trim($name));
         if (count($name_parts) == 1) {
