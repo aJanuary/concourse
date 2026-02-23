@@ -49,7 +49,7 @@ if ($phase === 'entered-email') {
     } else if (db_email_has_password_auth($email)) {
         $phase = 'enter-password';
     } else {
-        header('Location: /login?phase=requested-magic-link&redirect=' . urlencode($redirect) . '&email=' . urlencode($email));
+        header('Location: /login?phase=requested-login-code&redirect=' . urlencode($redirect) . '&email=' . urlencode($email));
         exit();
     }
 } else if ($phase === 'entered-password') {
@@ -84,14 +84,31 @@ if ($phase === 'entered-email') {
     make_session($token_data['badge_no']);
     header('Location: ' . $token_data['redirect']);
     exit();
-} else if ($phase === 'requested-magic-link') {
-    $result = send_magic_link($email, $redirect);
+} else if ($phase === 'requested-login-code') {
+    $result = send_login_code($email, $redirect);
     if ($result !== 'ok') {
         $error = '&error_code=' . urlencode($result);
     } else {
         $error = '';
     }
-    header('Location: /login?phase=sent-magic-link&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . $error);
+    header('Location: /login?phase=enter-code&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . $error);
+    exit();
+} else if ($phase === 'entered-code') {
+    $code = $_POST['code'] ?? '';
+    $redirect_result = db_verify_login_code($email, $code);
+    if ($redirect_result !== null) {
+        db_delete_login_codes_for_email($email);
+        $token = create_secure_link('/login', [
+            'phase' => 'select-user',
+            'email' => $email,
+            'redirect' => $redirect_result,
+        ]);
+        header('Location: ' . $token);
+        exit();
+    } else {
+        header('Location: /login?phase=enter-code&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . '&code=' . urlencode($code) . '&error_code=invalid-code');
+        exit();
+    }
 }
 
 if (is_logged_in()) {
@@ -125,6 +142,7 @@ if (isset($_GET['error_code'])) {
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
         'incorrect-password' => 'The password you entered is incorrect. Please try again.',
+        'invalid-code' => 'The code you entered is invalid or has expired. Please try again or send a new code.',
     ][$_GET['error_code']] ?? 'An unknown error occurred.';
 ?>
 <?php
@@ -160,7 +178,7 @@ if ($phase === 'enter-password') {
             <button type="submit" class="button link">Forgotten your password?</button>
         </form>
     </p>
-    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&phase=requested-magic-link&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Log in via email instead</a></p>
+    <p><a href="/login?redirect=<?php echo urlencode($redirect); ?>&phase=requested-login-code&email=<?php echo isset($email) ? urlencode($email) : ''; ?>">Log in via email instead</a></p>
 <?php
 } else if ($phase === 'select-user') {
 ?>
@@ -169,11 +187,41 @@ if ($phase === 'enter-password') {
     render_user_select($members, $redirect);
 ?>
 <?php
-} else if ($phase === 'sent-magic-link') {
+} else if ($phase === 'enter-code') {
 ?>
-    <p>A magic login link has been sent to <?php echo htmlspecialchars($_GET['email']); ?>. Please check your e-mail and click the link in the e-mail to log in. The link will expire in 15 minutes.</p>
+    <p>A login code has been sent to <?php echo htmlspecialchars($_GET['email']); ?>. Please enter it below.</p>
     <p>If you do not receive the e-mail within a few minutes, please check your spam or junk mail folder.</p>
-    <p><a href="/login?phase=requested-magic-link&redirect=<?php echo urlencode($redirect); ?>&email=<?php echo urlencode($_GET['email']); ?>">Send a new magic link</a></p>
+    <form method="post" action="/login" class="nu-form">
+        <input type="hidden" name="phase" value="entered-code">
+        <input type="hidden" name="email" value="<?php echo htmlspecialchars($_GET['email']); ?>">
+        <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
+        <div class="form-group">
+            <label for="code">Login code</label>
+            <input type="text" id="code" name="code" class="code-input" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" autofocus required value="<?php echo htmlspecialchars($_GET['code'] ?? ''); ?>">
+            <span class="error-message"></span>
+        </div>
+        <button type="submit" class="button login">Log in</button>
+        <script>
+        document.getElementById('code').addEventListener('input', function() {
+            if (/^[0-9]{6}$/.test(this.value)) {
+                this.form.submit();
+            }
+        });
+        (function() {
+            var input = document.getElementById('code');
+            if (input.value.length > 0) {
+                input.setSelectionRange(input.value.length, input.value.length);
+            }
+            var url = new URL(window.location);
+            if (url.searchParams.has('code') || url.searchParams.has('error_code')) {
+                url.searchParams.delete('code');
+                url.searchParams.delete('error_code');
+                history.replaceState(null, '', url);
+            }
+        })();
+        </script>
+    </form>
+    <p><a href="/login?phase=requested-login-code&redirect=<?php echo urlencode($redirect); ?>&email=<?php echo urlencode($_GET['email']); ?>">Send a new code</a></p>
 <?php
 } else {
 ?>

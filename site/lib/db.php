@@ -324,36 +324,47 @@ function db_member_exists($badge_no) {
   return $exists;
 }
 
-function db_insert_login_link($email, $login_code, $expires_at) {
+function db_insert_login_code($email, $code, $redirect, $expires_at) {
   global $mysqli;
 
   $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
-  $stmt = $mysqli->prepare("INSERT INTO login_links (login_code, badge_no, expires_at) SELECT ?, badge_no, ? FROM members WHERE email = ?");
+  $stmt = $mysqli->prepare("INSERT INTO login_codes (code, email, redirect, expires_at) VALUES (?, ?, ?, ?)");
   try {
-    $stmt->bind_param("sss", $login_code, $expires_at_ts, $email);
+    $stmt->bind_param("ssss", $code, $email, $redirect, $expires_at_ts);
     $stmt->execute();
   } finally {
     $stmt->close();
   }
 }
 
-function db_get_login_link_expiry($badge_no, $login_code) {
+function db_verify_login_code($email, $code) {
   global $mysqli;
 
-  $stmt = $mysqli->prepare("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = ?");
+  $stmt = $mysqli->prepare("SELECT redirect FROM login_codes WHERE email = ? AND code = ? AND expires_at > NOW() LIMIT 1");
   try {
-    $stmt->bind_param("ss", $login_code, $badge_no);
+    $stmt->bind_param("ss", $email, $code);
     $stmt->execute();
-    $stmt->bind_result($expires_at);
+    $stmt->bind_result($redirect);
     if (!$stmt->fetch()) {
-      // No such link
       return null;
     }
   } finally {
     $stmt->close();
   }
 
-  return strtotime($expires_at);
+  return $redirect;
+}
+
+function db_delete_login_codes_for_email($email) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("DELETE FROM login_codes WHERE email = ?");
+  try {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
 }
 
 function db_get_member_discord_data() {
@@ -1072,18 +1083,6 @@ function db_record_analytics($member_type, $event, $data) {
   $stmt = $mysqli->prepare("INSERT INTO analytics (member_type, event, data) VALUES (?, ?, ?)");
   try {
     $stmt->bind_param("sss", $member_type, $event, $data);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
-}
-
-function db_create_login_link($badge_no, $login_code, $expiry) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO login_links (badge_no, login_code, expires_at) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("ssi", $badge_no, $login_code, $expiry);
     $stmt->execute();
   } finally {
     $stmt->close();

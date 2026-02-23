@@ -1276,3 +1276,11 @@ ul.maps li a {
 .nu-form .error-message {
   color: var(--error-fg-color);
 }
+
+.code-input {
+  font-family: monospace;
+  font-size: 2rem;
+  letter-spacing: 0.5em;
+  padding: 0.4em 0.5em;
+  width: calc(6ch + 6 * 0.5em + 1.5em);
+}

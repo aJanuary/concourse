@@ -128,17 +128,6 @@ function update_member($badge_no, $email, $name) {
   }
 }
 
-function get_login_link_status($badge_no, $login_code) {
-  $expires = db_get_login_link_expiry($badge_no, $login_code);
-  if ($expires == null) {
-    return "no-found";
-  }
-  if ($expires < time()) {
-    return "expired";
-  }
-  return "ok";
-}
-
 function current_user_has_permission($permission) {
   if (!array_key_exists('permissions', $GLOBALS['app-data'])) {
     return false;
@@ -162,9 +151,9 @@ function member_type() {
   return 'unknown';
 }
 
-function send_magic_link($email, $redirect) {
+function send_login_code($email, $redirect) {
   if (!conreg_any_member_has_email($email)) {
-    send_email($email, CON_SHORT_NAME . ' login link', 'No member found', [
+    send_email($email, CON_SHORT_NAME . ' login code', 'No member found', [
       [ 'type' => 'para', 'text' => 'Hello,' ],
       [ 'type' => 'para', 'text' => 'We received a request to log in, but no member is registered with this email address.' ],
       [ 'type' => 'para', 'text' => 'If you would like to, you can [buy a membership](https://eastercon2026.org/register).' ],
@@ -174,16 +163,13 @@ function send_magic_link($email, $redirect) {
     return 'ok';
   }
 
-  $link = ROOT_URL . create_secure_link(
-    '/login', [
-    'phase' => 'select-user',
-    'email' => $email,
-    'redirect' => $redirect,
-  ]);
-  send_email($email, CON_SHORT_NAME . ' login link', 'Your member portal login link', [
-    [ 'type' => 'para', 'text' => 'Click the button below to log in to the member portal.' ],
-    [ 'type' => 'button', 'href' => $link, 'text' => 'Log in' ],
-    [ 'type' => 'para', 'text' => "This link will expire in 15 minutes.\n\nIf you did not request this link, you can safely ignore this email." ],
+  $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+  db_insert_login_code($email, $code, $redirect, time() + 60 * 15);
+
+  send_email($email, CON_SHORT_NAME . ' login code', 'Your member portal login code', [
+    [ 'type' => 'para', 'text' => 'Your login code is:' ],
+    [ 'type' => 'code', 'text' => $code ],
+    [ 'type' => 'para', 'text' => "This code will expire in 15 minutes.\n\nIf you did not request this code, you can safely ignore this email." ],
   ]);
   return 'ok';
 }
