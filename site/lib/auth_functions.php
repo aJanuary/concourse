@@ -16,12 +16,26 @@ function make_session($badge_no) {
     }
     db_upsert_member($badge_no, $member['email'], $member['name'], $member['roles']);
     db_insert_session($session_id, $badge_no, $expires_at);
-    setcookie("session", $session_id, $expires_at, '/', '', true, true);
+    setcookie("session", $session_id, [
+        'expires' => $expires_at,
+        'path' => '/',
+        'domain' => COOKIE_DOMAIN,
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'None',
+    ]);
 }
 
 function make_anonymous_session() {
   $expires_at = time() + 60*60*24;
-  setcookie('session', 'anonymous', $expires_at, '/', '', true, true);
+  setcookie('session', 'anonymous', [
+      'expires' => $expires_at,
+      'path' => '/',
+      'domain' => COOKIE_DOMAIN,
+      'secure' => true,
+      'httponly' => true,
+      'samesite' => 'None',
+  ]);
 }
 
 function is_logged_in() {
@@ -43,6 +57,14 @@ function is_anonymous() {
     (isset($_COOKIE['session']) && $_COOKIE['session'] == 'anonymous') ||
     ($implicit && !isset($_COOKIE['session']))
   );
+}
+
+function is_valid_redirect($url) {
+  if (str_starts_with($url, '/')) {
+    return true;
+  }
+  $origin = CONCLAR_ALLOWED_ORIGIN;
+  return $url === $origin || str_starts_with($url, $origin . '/');
 }
 
 function make_login_link() {

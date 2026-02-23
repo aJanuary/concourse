@@ -21,6 +21,8 @@ define("TECH_EMAIL", "tech@eastercon2026.org");
 define("PROGRAMME_EMAIL", "programme@eastercon2026.org");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', true);
+define('CONCLAR_VALID_APP_IDS', ['e26']);
+define('CONCLAR_MAX_ITEMS', 300);
 
 define('DISCORD_SERVICE_ACCOUNTS', [
 ]);
@@ -67,6 +69,14 @@ define('SMTP_USERNAME', $config_file['smtp']['username']);
 define('SMTP_PASSWORD', $config_file['smtp']['password']);
 define('SMTP_SECURE', $config_file['smtp']['secure']);
 define('SIGNING_KEY', $config_file['crypto']['signing_key']);
+
+if (isset($config_file['conclar'])) {
+  define('CONCLAR_ALLOWED_ORIGIN', $config_file['conclar']['allowed_origin'] ?? '');
+  define('COOKIE_DOMAIN', $config_file['conclar']['cookie_domain'] ?? '');
+} else {
+  define('CONCLAR_ALLOWED_ORIGIN', '');
+  define('COOKIE_DOMAIN', '');
+}
 
 
 function log_exception(Throwable $exception) {
