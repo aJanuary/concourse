@@ -60,7 +60,7 @@ $cards = [
       'name' => 'coc',
       'title' => 'Code of Conduct',
       'subtitle' => '',
-      'link' => 'https://example.com/code-of-conduct/',
+      'link' => 'https://eastercon2026.org/about/code-of-conduct',
       'card-permission' => 'see-coc',
     ], [
       'name' => 'help',
@@ -81,12 +81,12 @@ $cards = [
       'name' => 'guide',
       'title' => 'Programme guide',
       'subtitle' => 'ConClár',
-      'link' => current_user_has_permission('see-guide-redirect') ? 'https://example.com/programme-guide' : '/programme-guide',
+      'link' => current_user_has_permission('see-guide-redirect') ? 'https://guide.eastercon2026.org' : '/programme-guide',
       'card-permission' => 'see-guide',
     ], [
       'name' => 'stream',
       'title' => 'Stream and replay',
-      'subtitle' => 'RingCentral Events',
+      'subtitle' => 'YouTube',
       'link' => '/stream',
       'card-permission' => 'see-rce',
     ], [
@@ -120,7 +120,7 @@ $cards = [
       'name' => 'volunteer',
       'title' => 'Volunteer',
       'subtitle' => '',
-      'link' => 'https://example.com/volunteer',
+      'link' => 'https://eastercon2026.org/volunteering',
       'card-permission' => 'see-volunteer',
     ], [
       'name' => 'upload-photo',
@@ -132,7 +132,7 @@ $cards = [
       'name' => 'itinerary',
       'title' => 'Your participant schedule',
       'subtitle' => 'Planorama',
-      'link' => 'https://example.com/participant-schedule',
+      'link' => 'https://participants.eastercon2026.org/MySchedule.php',
       'card-permission' => 'see-itinerary'
     ], [
       'name' => 'participant-guides',
@@ -153,7 +153,7 @@ $cards = [
       'name' => 'gallery',
       'title' => 'Art show',
       'subtitle' => '',
-      'link' => 'https://example.com/art-show',
+      'link' => 'https://eastercon2026.org/art-show',
       'card-permission' => 'see-gallery',
     ], [
       'name' => 'benefits',
