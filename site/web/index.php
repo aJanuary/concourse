@@ -17,7 +17,7 @@ $cards = [
       'name' => 'time',
       'title' => 'Convention time',
       'subtitle' => 'BST',
-      'link' => 'https://dateful.com/convert/british-summer-time-bst',
+      'link' => '/convention-time',
       'card-permission' => 'see-time',
       'live-card' => true,
     ], [
