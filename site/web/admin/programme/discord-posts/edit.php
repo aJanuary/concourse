@@ -80,14 +80,14 @@ if (array_key_exists('item_id', $_GET)) {
 } else {
 ?>
         <input type="hidden" name="action" value="add">
-        <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+        <p><label>PlanZ Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 <?php
 }
 ?>
         <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($post['title']); ?>"></label></p>
         <p><label>Start date/time (yyyy-mm-dd hh:mm in 24h BST): <input name="start" pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$" value="<?php echo htmlspecialchars($post['start']); ?>"></label></p>
         <p><label>Duration (mins): <input name="duration" value="<?php echo htmlspecialchars($post['duration']); ?>" pattern="^\d*$"></label></p>
-        <p><label>Plano Room ID: <input name="room_id" value="<?php echo htmlspecialchars($post['room_id']); ?>" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+        <p><label>Plano Room ID: <input name="room_id" value="<?php echo htmlspecialchars($post['room_id']); ?>" required></label></p>
         <p><label>Discord URL: <input type="text" name="post_url" value="<?php echo htmlspecialchars($post['post_url']); ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">

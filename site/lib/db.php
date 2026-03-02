@@ -682,6 +682,77 @@ function db_delete_stage($room_id) {
   }
 }
 
+function db_get_stream_urls() {
+  global $mysqli;
+
+  $result = $mysqli->query("SELECT room_id, title FROM prog_stream_urls ORDER BY title, room_id");
+  try {
+    $items = [];
+    while ($row = $result->fetch_assoc()) {
+      $items[] = $row;
+    }
+  } finally {
+    $result->close();
+  }
+
+  return $items;
+}
+
+function db_get_stream_url($room_id) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("SELECT title, url FROM prog_stream_urls WHERE room_id = ?");
+  try {
+    $stmt->bind_param("s", $room_id);
+    $stmt->execute();
+    $stmt->bind_result($title, $url);
+    $stmt->fetch();
+  } finally {
+    $stmt->close();
+  }
+
+  return [
+    'title' => $title,
+    'url' => $url,
+  ];
+}
+
+function db_add_stream_url($room_id, $title, $url) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO prog_stream_urls (room_id, title, url) VALUES (?, ?, ?)");
+  try {
+    $stmt->bind_param("sss", $room_id, $title, $url);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
+}
+
+function db_edit_stream_url($room_id, $title, $url) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("UPDATE prog_stream_urls SET title = ?, url = ? WHERE room_id = ?");
+  try {
+    $stmt->bind_param("sss", $title, $url, $room_id);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
+}
+
+function db_delete_stream_url($room_id) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("DELETE FROM prog_stream_urls WHERE room_id = ?");
+  try {
+    $stmt->bind_param("s", $room_id);
+    $stmt->execute();
+  } finally {
+    $stmt->close();
+  }
+}
+
 function db_get_prog_sessions() {
   global $mysqli;
 

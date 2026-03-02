@@ -12,63 +12,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $room_id = $_POST['room_id'] ?: null;
   $title = $_POST['title'] ?: null;
-  $viewer_url = $_POST['viewer_url'] ?: null;
-  $type = $_POST['type'] ?: null;
-  $participant_url = $_POST['participant_url'] ?: null;
+  $url = $_POST['url'] ?: null;
 
   if ($action == "add") {
     try {
-      db_add_stage($room_id, $title, $viewer_url, $type, $participant_url);
+      db_add_stream_url($room_id, $title, $url);
     } catch (Exception $e) {
-      header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/stream-urls/list?error=' . $e->getMessage());
       throw $e;
     }
   } else if ($action == "edit") {
     try {
-      db_edit_stage($room_id, $title, $viewer_url, $type, $participant_url);
+      db_edit_stream_url($room_id, $title, $url);
     } catch (Exception $e) {
-      header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/stream-urls/list?error=' . $e->getMessage());
       throw $e;
     }
   } else if ($action == "delete") {
     try {
-      db_delete_stage($room_id);
+      db_delete_stream_url($room_id);
     } catch (Exception $e) {
-      header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/stream-urls/list?error=' . $e->getMessage());
       throw $e;
     }
   }
-  header('Location: /admin/programme/stages/list');
+  header('Location: /admin/programme/stream-urls/list');
   exit;
 }
 
 if (array_key_exists('room_id', $_GET)) {
   $room_id = $_GET['room_id'];
-  $stage = db_get_stage($room_id);
+  $stream_url = db_get_stream_url($room_id);
 }
 
 if (array_key_exists('room_id', $_GET)) {
   $title = 'Edit ' . $room_id;
 } else {
-  $title = 'Add stage';
+  $title = 'Add stream URL';
 }
 
 render_header(
-  'Add/edit an RCE stage',
-  'Manage RCE stages.',
+  'Add/edit a stream URL',
+  'Manage stream URLs.',
   [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
-    'Manage RCE stages' => '/admin/programme/stages/list',
+    'Manage stream URLs' => '/admin/programme/stream-urls/list',
     htmlspecialchars($title)
   ]
 );
 ?>
   <article>
     <h2><?php echo htmlspecialchars($title); ?></h2>
-    <form action="/admin/programme/stages/edit" method="POST" class="vertical">
+    <form action="/admin/programme/stream-urls/edit" method="POST" class="vertical">
       <fieldset>
-        <legend>Stage details</legend>
+        <legend>Stream URL details</legend>
       <?php
 if (array_key_exists('room_id', $_GET)) {
 ?>
@@ -78,17 +76,12 @@ if (array_key_exists('room_id', $_GET)) {
 } else {
 ?>
         <input type="hidden" name="action" value="add">
-        <p><label>Plano Room ID: <input name="room_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+        <p><label>Room ID: <input name="room_id" required></label></p>
 <?php
 }
 ?>
-        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($stage['title']); ?>"></label></p>
-        <p><label>Viewer URL: <input name="viewer_url" value="<?php echo htmlspecialchars($stage['viewer_url']); ?>"></label></p>
-        <p><label>Type: <select name="type">
-          <option value="hybrid" <?php if ($stage['type'] == 'hybrid') { echo 'selected'; } ?>>Hybrid</option>
-          <option value="online-only" <?php if ($stage['type'] == 'online-only') { echo 'selected'; } ?>>Online-only</option>
-        </select></label></p>
-        <p><label>Stream Yard URL: <input name="participant_url" value="<?php echo htmlspecialchars($stage['participant_url']); ?>"></label></p>
+        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($stream_url['title']); ?>"></label></p>
+        <p><label>URL: <input type="text" name="url" value="<?php echo htmlspecialchars($stream_url['url']); ?>"></label></p>
       </fieldset>
       <input type="submit" value="Save">
 <?php
@@ -101,21 +94,13 @@ if (array_key_exists('room_id', $_GET)) {
     </form>
 
     <script>
-      var $type = document.querySelector('select[name="type"]');
-      var $participantUrl = document.querySelector('input[name="participant_url"]');
-      function handleTypeChange() {
-        $participantUrl.disabled = $type.value === 'hybrid';
-      }
-      $type.addEventListener('change', handleTypeChange);
-      handleTypeChange();
-
       var $delete = document.getElementById('delete');
       if ($delete) {
         $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete <?php echo $stage['room_id']; ?>?')) {
+          if (confirm('Are you sure you want to delete <?php echo $room_id; ?>?')) {
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/admin/programme/stages/edit';
+            form.action = '/admin/programme/stream-urls/edit';
             var roomId = '<?php echo $room_id; ?>';
             var input = document.createElement('input');
             input.type = 'hidden';

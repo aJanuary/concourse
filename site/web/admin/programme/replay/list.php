@@ -9,13 +9,13 @@ if (!current_user_has_permission('manage-programme')) {
 }
   
 render_header(
-  'Manage RCE replays',
-  'Manage RCE replays.',
-  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage RCE replays']
+  'Manage replays',
+  'Manage replays.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage replays']
 );
 ?>
   <article>
-    <h2>Manage <abbr title="RingCentral Events">RCE</abbr> replays</h2>
+    <h2>Manage replays</h2>
     <script>
       if (window.location.search.includes('error')) {
         var $toast = document.createElement('p');

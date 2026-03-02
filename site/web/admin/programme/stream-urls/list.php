@@ -7,21 +7,21 @@ if (!current_user_has_permission('manage-programme')) {
   header('Location: /');
   exit;
 }
-  
+
 render_header(
-  'Manage RCE stages',
-  'Manage RCE stages.',
-  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage RCE stages']
+  'Manage stream URLs',
+  'Manage stream URLs.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage stream URLs']
 );
 ?>
   <article>
-    <h2>Manage <abbr title="RingCentral Events">RCE</abbr> stages</h2>
+    <h2>Manage stream URLs</h2>
     <script>
       if (window.location.search.includes('error')) {
         var $toast = document.createElement('p');
         $toast.classList = ['error'];
         $toast.textContent = new URLSearchParams(window.location.search).get('error');
-      
+
         var $img = document.createElement('img');
         $img.src = '/resources/error.svg';
         $img.alt = 'error';
@@ -33,19 +33,20 @@ render_header(
       }
     </script>
     <ul>
-      <li><a href="/admin/programme/stages/edit">Add stage...</a></li>
+      <li><a href="/admin/programme/stream-urls/edit">Add stream URL...</a></li>
 <?php
-        $stages = db_get_stages();
-        foreach ($stages as $stage) {
-          if ($stage['title']) {
-            $label = $stage['title'];
-            $subtitle = $stage['room_id'];
+        $stream_urls = db_get_stream_urls();
+        foreach ($stream_urls as $stream_url) {
+          if ($stream_url['title']) {
+            $label = $stream_url['title'];
+            $subtitle = $stream_url['room_id'];
           } else {
-            $label = $stage['room_id'];
+            $label = $stream_url['room_id'];
+            $subtitle = null;
           }
 ?>
           <li>
-            <a aria-label="Edit stage <?php echo htmlspecialchars($label); ?>" href="/admin/programme/stages/edit?room_id=<?php echo $stage['room_id']; ?>"><?php echo htmlspecialchars($label); ?></a>
+            <a aria-label="Edit stream URL <?php echo htmlspecialchars($label); ?>" href="/admin/programme/stream-urls/edit?room_id=<?php echo $stream_url['room_id']; ?>"><?php echo htmlspecialchars($label); ?></a>
             <?php
             if ($subtitle) {
               echo '<br>' . htmlspecialchars($subtitle);

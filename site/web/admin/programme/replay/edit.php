@@ -52,12 +52,12 @@ if (array_key_exists('item_id', $_GET)) {
 }
 
 render_header(
-  'Add/edit a RCE replay',
-  'Manage RCE replays.',
+  'Add/edit a replay',
+  'Manage replays.',
   [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
-    'Manage RCE replays' => '/admin/programme/replay/list',
+    'Manage replays' => '/admin/programme/replay/list',
     htmlspecialchars($title)
   ]
 );
@@ -77,7 +77,7 @@ if (array_key_exists('item_id', $_GET)) {
 } else {
 ?>
         <input type="hidden" name="action" value="add">
-        <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+        <p><label>PlanZ Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 <?php
 }
 ?>
