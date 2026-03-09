@@ -72,7 +72,7 @@ $cards = [
       'name' => 'website',
       'title' => 'Website',
       'subtitle' => '',
-      'link' => 'https://example.com/',
+      'link' => 'https://eastercon2026.org/',
       'card-permission' => 'see-website',
     ]
   ],
