@@ -131,7 +131,7 @@ $cards = [
     ], [
       'name' => 'itinerary',
       'title' => 'Your participant schedule',
-      'subtitle' => 'Planorama',
+      'subtitle' => 'PlanZ',
       'link' => 'https://participants.eastercon2026.org/MySchedule.php',
       'card-permission' => 'see-itinerary'
     ], [
