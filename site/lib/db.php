@@ -685,7 +685,7 @@ function db_delete_stage($room_id) {
 function db_get_stream_urls() {
   global $mysqli;
 
-  $result = $mysqli->query("SELECT room_id, title FROM prog_stream_urls ORDER BY title, room_id");
+  $result = $mysqli->query("SELECT room_id, title, url FROM prog_stream_urls ORDER BY COALESCE(NULLIF(title, ''), room_id)");
   try {
     $items = [];
     while ($row = $result->fetch_assoc()) {

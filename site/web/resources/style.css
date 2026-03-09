@@ -1308,3 +1308,7 @@ ul.maps li a {
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
+  .no-stream {
+    color: #888;
+  }
