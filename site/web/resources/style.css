@@ -23,16 +23,13 @@
   --select-list-hover-bg-color: #DDD;
   --select-list-fg-color: var(--link-color);
 
-  --info-pattern: repeating-linear-gradient( 45deg, #4187f7, #4187f7 5px, #3b82f6 5px, #3b82f6 25px) #3b82f6;
+  --info-pattern: url(/resources/card-blue.png);
   --info-color-light: #eff6ff;
 
-  --prog-bg: #ef5e44;
+  --prog-bg: url(/resources/card-red.png);
   --prog-color-light: #fef2f2;
 
-  --part-bg: linear-gradient(135deg, #f59e0b 25%, transparent 25%), linear-gradient(225deg, #f59e0b 25%, transparent 25%), linear-gradient(45deg, #f59e0b 25%, transparent 25%), linear-gradient(315deg, #f59e0b 25%, #ec9807 25%) #ec9807;
-  --part-bg-size: 32px 32px;
-  --part-bg-pos: 16px 0, 16px 0, 0 0, 0 0;
-  --part-bg-repeat: repeat;
+  --part-bg: url(/resources/card-yellow.png);
   --part-color-light: #fffbeb;
 
   --events-bg: linear-gradient(0deg, #c084fc 50%, #b679f3 50%) #c084fc;
