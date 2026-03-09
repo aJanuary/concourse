@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   style="height: 512px; width: 512px;"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="trophy-cup.svg"
+   inkscape:version="1.4.3 (fcd0343856, 2026-01-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4863281"
+     inkscape:cx="255.6636"
+     inkscape:cy="256"
+     inkscape:window-width="1854"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <g
+     class=""
+     style=""
+     transform="translate(0,0)"
+     id="g1">
+    <path
+       d="m 137.436,28.859 c 2.146,36.533 16.76,83.07 36.537,120.824 10.707,20.442 22.876,38.334 34.761,50.685 11.886,12.352 23.266,18.49 31.266,18.49 h 32 c 8,0 19.38,-6.138 31.266,-18.49 11.885,-12.351 24.054,-30.243 34.761,-50.685 19.777,-37.755 34.39,-84.29 36.537,-120.824 z m 95.564,208 v 16 h 46 v -16 z m 6.445,34 c -2.458,25.967 -12.796,57.873 -24.437,76 h 81.984 c -11.64,-18.127 -21.979,-50.033 -24.437,-76 z m -38.445,94 v 14 h 110 v -14 z m -32,32 v 94 h 174 v -94 z m 23,23 h 128 v 48 H 192 Z"
+       fill="#ffffff"
+       fill-opacity="1"
+       id="path1"
+       style="fill:#ffffff;fill-opacity:1"
+       sodipodi:nodetypes="ccsssscccccccccccccccccccccccccccc" />
+  </g>
+</svg>

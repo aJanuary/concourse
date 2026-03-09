@@ -18,10 +18,6 @@ render_header(
 ?>
   <p><a class="button" href="<?php echo make_login_link(); ?>">Log in to watch</a></p>
 <?php
-  } else if (!current_user_has_permission('see-rce-link')) {
-?>
-  <p>Our streaming will open on Friday. Please check back then.</p>
-<?php
   } else {
     $stream_urls = db_get_stream_urls();
 ?>

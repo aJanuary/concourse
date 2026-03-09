@@ -123,6 +123,18 @@ $cards = [
       'link' => 'https://eastercon2026.org/volunteering',
       'card-permission' => 'see-volunteer',
     ], [
+      'name' => 'fan-funds',
+      'title' => 'Fan funds',
+      'subtitle' => 'Vote',
+      'link' => '/fan-funds',
+      'card-permission' => 'see-fan-funds',
+    ], [
+      'name' => 'doc-weir',
+      'title' => 'Doc Weir',
+      'subtitle' => 'Vote',
+      'link' => 'https://forms.gle/nc1BnX6c1AU3vsVc9',
+      'card-permission' => 'see-doc-weir',
+    ], [
       'name' => 'upload-photo',
       'title' => 'Upload your photo',
       'subtitle' => 'For online members',
@@ -291,6 +303,8 @@ $cards = [
     'readme',
     'gallery',
     'upload-presentation',
+    'fan-funds',
+    'doc-weir',
     'accessibility',
     'childcare',
     'volunteer',
