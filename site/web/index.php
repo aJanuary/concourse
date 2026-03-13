@@ -132,7 +132,7 @@ $cards = [
       'name' => 'doc-weir',
       'title' => 'Doc Weir',
       'subtitle' => 'Vote',
-      'link' => 'https://forms.gle/nc1BnX6c1AU3vsVc9',
+      'link' => '/doc-weir',
       'card-permission' => 'see-doc-weir',
     ], [
       'name' => 'upload-photo',
