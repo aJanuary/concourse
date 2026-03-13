@@ -1034,33 +1034,42 @@ ul.maps li a {
 }
 
 .times-list {
-  list-style: none;
+  margin-bottom: 2em;
+  display: grid;
+  grid-template-columns: 20ch 1fr;
+  gap: 0 1em;
 }
 
-.times-list li {
-  position: relative;
+.times-list > div {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   margin-bottom: 0.5em;
 }
 
-.times-list p {
-  margin: 0;
-}
-
-.times-list p:first-of-type {
+.times-list dt {
   font-weight: bold;
+  grid-row: 1;
+  grid-column: 1;
 }
 
-.times-list p:last-of-type {
-  position: absolute;
-  top: 0;
-  left: 20ch;
+.times-list dd {
+  margin: 0;
+  grid-column: 2;
 }
 
 @media (max-width: 500px) {
-  .times-list p:last-of-type {
-    position: relative;
-    top: auto;
-    left: auto;
+  .times-list {
+    grid-template-columns: 1fr;
+  }
+
+  .times-list dt {
+    grid-row: auto;
+    grid-column: auto;
+  }
+
+  .times-list dd {
+    grid-column: auto;
   }
 }
 
