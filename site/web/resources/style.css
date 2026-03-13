@@ -640,6 +640,19 @@ main {
   background-image: url('/resources/vote.svg');
 }
 
+.card.artist-info {
+  background-color: var(--part-color-light);
+}
+.card.artist-info .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.artist-info .hero::after {
+  background-image: url('/resources/gallery.svg');
+}
+
 .card.doc-weir {
   background-color: var(--part-color-light);
 }

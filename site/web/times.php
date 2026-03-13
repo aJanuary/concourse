@@ -54,7 +54,7 @@ render_header(
     <div>
       <dt>Sunday, 5 April</dt>
       <dd>10:00&ndash;16:00</dd>
-      <dd>16:00&ndash;18:00 (collection of purchased word)</dd>
+      <dd>16:00&ndash;18:00 (collection of purchased work)</dd>
     </div>
   </dl>
 

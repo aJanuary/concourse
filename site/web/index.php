@@ -158,6 +158,12 @@ $cards = [
       'subtitle' => 'Programme participants and presenters',
       'link' => '/upload-presentation',
       'card-permission' => 'see-upload-presentation'
+    ], [
+      'name' => 'artist-info',
+      'title' => 'Information for artists',
+      'subtitle' => '',
+      'link' => '/artist-info',
+      'card-permission' => 'see-artist-info',
     ]
   ],
   'Other' => [
@@ -302,6 +308,7 @@ $cards = [
     'itinerary',
     'readme',
     'gallery',
+    'artist-info',
     'upload-presentation',
     'fan-funds',
     'doc-weir',
