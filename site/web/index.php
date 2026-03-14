@@ -385,15 +385,13 @@ $cards = [
 <?php
     $faved_cards = [];
     if (current_user_has_permission('online')) {
-      $faved_cards = ['chat', 'upload-photo', 'newsletter', 'guide', 'signups', 'stream'];
+      $faved_cards = ['chat', 'newsletter', 'guide', 'signups', 'stream'];
     } else {
       $faved_cards = ['chat', 'newsletter', 'maps', 'guide', 'signups'];
     }
     if (current_user_has_permission('programme-participant')) {
       $faved_cards.push('itinerary');
-    }
-    if (current_user_has_permission('childcare')) {
-      $faved_cards.push('childcare');
+      $faved_cards.push('participant-guides');
     }
     echo "favedCards = " . json_encode($faved_cards) . ";\n";
 ?>
