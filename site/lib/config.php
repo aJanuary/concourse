@@ -350,6 +350,12 @@ define('DEFAULT_ROLES_BY_BADGE', [
     '0011',
     '0013',
   ],
+  'discord mod' => [
+    '0033',
+    '0056',
+    '0282',
+    '0138',
+  ]
 ]);
 
 define('DISCORD_SERVICE_ACCOUNTS', [
