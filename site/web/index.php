@@ -164,6 +164,12 @@ $cards = [
       'subtitle' => '',
       'link' => '/artist-info',
       'card-permission' => 'see-artist-info',
+    ], [
+      'name' => 'dealer-info',
+      'title' => 'Information for dealers',
+      'subtitle' => '',
+      'link' => '/dealer-info',
+      'card-permission' => 'see-dealer-info',
     ]
   ],
   'Other' => [
@@ -309,6 +315,7 @@ $cards = [
     'readme',
     'gallery',
     'artist-info',
+    'dealer-info',
     'upload-presentation',
     'fan-funds',
     'doc-weir',

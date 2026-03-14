@@ -653,6 +653,19 @@ main {
   background-image: url('/resources/gallery.svg');
 }
 
+.card.dealer-info {
+  background-color: var(--part-color-light);
+}
+.card.dealer-info .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.dealer-info .hero::after {
+  background-image: url('/resources/dealers.svg');
+}
+
 .card.doc-weir {
   background-color: var(--part-color-light);
 }

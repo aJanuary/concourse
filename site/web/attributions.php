@@ -38,6 +38,7 @@ render_header(
     <li>Truce icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a></li>
     <li>Sunflower icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Watch icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
+    <li>Receive money icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
   </ul>
 </article>
 <?php
