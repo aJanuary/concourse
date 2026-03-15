@@ -170,6 +170,12 @@ $cards = [
       'subtitle' => '',
       'link' => '/dealer-info',
       'card-permission' => 'see-dealer-info',
+    ], [
+      'name' => 'games',
+      'title' => 'Games',
+      'subtitle' => 'Sign-up for RPGs',
+      'link' => '/games',
+      'card-permission' => 'see-games',
     ]
   ],
   'Other' => [
@@ -316,6 +322,7 @@ $cards = [
     'gallery',
     'artist-info',
     'dealer-info',
+    'games',
     'upload-presentation',
     'fan-funds',
     'doc-weir',

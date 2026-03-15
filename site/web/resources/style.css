@@ -95,6 +95,10 @@ h4 {
   font-size: 1.25rem;
 }
 
+strong {
+  font-weight: bold;
+}
+
 a, summary {
   color: var(--link-color);
   text-decoration: underline;
@@ -664,6 +668,19 @@ main {
 }
 .card.dealer-info .hero::after {
   background-image: url('/resources/dealers.svg');
+}
+
+.card.games {
+  background-color: var(--part-color-light);
+}
+.card.games .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.games .hero::after {
+  background-image: url('/resources/signups.svg');
 }
 
 .card.doc-weir {
