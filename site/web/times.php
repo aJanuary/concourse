@@ -33,10 +33,6 @@ render_header(
       <dt>Sunday, 5 April</dt>
       <dd>09:00&ndash;17:00</dd>
     </div>
-    <div>
-      <dt>Monday, 6 April</dt>
-      <dd>09:00&ndash;11:00</dd>
-    </div>
   </dl>
 
   <h3><a href="#artshow" name="artshow">Art show</a></h3>
