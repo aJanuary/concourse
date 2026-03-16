@@ -19,7 +19,7 @@ function conreg_is_allowed($badge_no, $badge_type) {
 function conreg_get_members_from_email($email) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name, badge_type FROM conreg_members WHERE is_approved = 1 AND (email = ? OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE email = ?)))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_name as name, badge_type FROM conreg_members WHERE is_approved = 1 AND (LOWER(email) = LOWER(?) OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE LOWER(email) = LOWER(?))))");
 
   try {
     $stmt->bind_param("ss", $email, $email);
@@ -163,7 +163,7 @@ function conreg_get_member_by_badge_no($badge_no) {
 function conreg_any_member_has_email($email) {
   global $conreg_mysqli;
 
-  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_type FROM conreg_members WHERE is_approved = 1 AND (email = ? OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE email = ?)))");
+  $stmt = $conreg_mysqli->prepare("SELECT member_no as badge_no, badge_type FROM conreg_members WHERE is_approved = 1 AND (LOWER(email) = LOWER(?) OR (email = '' AND lead_mid IN (SELECT mid FROM conreg_members WHERE LOWER(email) = LOWER(?))))");
 
   try {
     $stmt->bind_param("ss", $email, $email);
