@@ -24,7 +24,7 @@ $cards = [
       'name' => 'maps',
       'title' => 'Maps',
       'subtitle' => '',
-      'link' => '/maps',
+      'link' => 'https://map.eastercon2026.org',
       'card-permission' => 'see-maps',
     ], [
       'name' => 'times',
