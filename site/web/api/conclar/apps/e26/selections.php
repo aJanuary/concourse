@@ -7,12 +7,7 @@ conclar_cors_headers();
 
 header('Content-Type: application/json; charset=utf-8');
 
-$app_id = $_GET['app_id'] ?? '';
-if (!conclar_validate_app_id($app_id)) {
-    http_response_code(400);
-    echo conclar_error('invalid_app_id', 'Invalid app_id');
-    exit;
-}
+$app_id = 'e26';
 
 if (!is_logged_in()) {
     http_response_code(401);
