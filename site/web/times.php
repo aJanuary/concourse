@@ -36,7 +36,7 @@ render_header(
   </dl>
 
   <h3><a href="#artshow" name="artshow">Art show</a></h3>
-  <p>Located in <a href="https://map.eastercon2026/room/princes">Princes</a></p>
+  <p>Located in <a href="https://map.eastercon2026.org/room/princes">Princes</a></p>
   <dl class="times-list">
     <div>
       <dt>Friday, 3 April</dt>
@@ -55,7 +55,7 @@ render_header(
   </dl>
 
   <h3><a href="#dealers" name="dealers">Dealers room</a></h3>
-  <p>Located in <a href="https://map.eastercon2026/room/queens">Queens</a></p>
+  <p>Located in <a href="https://map.eastercon2026.org/room/queens">Queens</a></p>
   <dl class="times-list">
     <div>
       <dt>Friday, 3 April</dt>
@@ -76,19 +76,23 @@ render_header(
   </dl>
 
   <h3><a href="#games" name="games">Games room</a></h3>
-  <p>Located in <a href="https://map.eastercon2026/room/london">London</a> with overflow in the <a href="https://map.eastercon2026/room/stairs-upper-floor">upper floor rooms</a> (Note: the upper floor rooms do not have step-free access)</p>
+  <p>Located in <a href="https://map.eastercon2026/room/london">London</a> with overflow in Ascot and Sunningdale on the <a href="https://map.eastercon2026.org/room/stairs-mezzanine">mezanine floor</a> (Note: the mezanine floor does not have step-free access)</p>
   <dl class="times-list">
     <div>
       <dt>Friday, 3 April</dt>
-      <dd>15:00&ndash;20:00</dd>
+      <dd>15:00&ndash;21:00</dd>
     </div>
     <div>
       <dt>Saturday, 4 April</dt>
-      <dd>10:00&ndash;20:00</dd>
+      <dd>10:00&ndash;21:00</dd>
     </div>
     <div>
       <dt>Sunday, 5 April</dt>
-      <dd>10:00&ndash;20:00</dd>
+      <dd>10:00&ndash;21:00</dd>
+    </div>
+    <div>
+      <dt>Monday, 6 April</dt>
+      <dd>10:00&ndash;14:00</dd>
     </div>
   </dl>
 </article>
