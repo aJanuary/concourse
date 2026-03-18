@@ -108,6 +108,12 @@ $cards = [
       'link' => '/virtual-gatherings',
       'card-permission' => 'see-virtual-gathering'
     ], [
+      'name' => 'games',
+      'title' => 'Games',
+      'subtitle' => 'Sign-up for RPGs',
+      'link' => '/games',
+      'card-permission' => 'see-games',
+    ], [
       'name' => 'chat',
       'title' => 'Chat online',
       'subtitle' => 'Discord',
@@ -170,12 +176,6 @@ $cards = [
       'subtitle' => '',
       'link' => '/dealer-info',
       'card-permission' => 'see-dealer-info',
-    ], [
-      'name' => 'games',
-      'title' => 'Games',
-      'subtitle' => 'Sign-up for RPGs',
-      'link' => '/games',
-      'card-permission' => 'see-games',
     ]
   ],
   'Other' => [

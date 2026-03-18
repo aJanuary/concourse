@@ -671,16 +671,13 @@ main {
 }
 
 .card.games {
-  background-color: var(--part-color-light);
+  background-color: var(--prog-color-light);
 }
 .card.games .hero {
-  background: var(--part-bg);
-  background-size: var(--part-bg-size);
-  background-position: var(--part-bg-pos);
-  background-repeat: var(--part-bg-repeat);
+  background: var(--prog-bg);
 }
 .card.games .hero::after {
-  background-image: url('/resources/signups.svg');
+  background-image: url('/resources/games.svg');
 }
 
 .card.doc-weir {
