@@ -405,10 +405,10 @@ define('SMTP_SECURE', $config_file['smtp']['secure']);
 define('SIGNING_KEY', $config_file['crypto']['signing_key']);
 
 if (isset($config_file['conclar'])) {
-  define('CONCLAR_ALLOWED_ORIGIN', $config_file['conclar']['allowed_origin'] ?? '');
+  define('CONCLAR_ALLOWED_ORIGINS', $config_file['conclar']['allowed_origins'] ?? []);
   define('COOKIE_DOMAIN', $config_file['conclar']['cookie_domain'] ?? '');
 } else {
-  define('CONCLAR_ALLOWED_ORIGIN', '');
+  define('CONCLAR_ALLOWED_ORIGINS', []);
   define('COOKIE_DOMAIN', '');
 }
 

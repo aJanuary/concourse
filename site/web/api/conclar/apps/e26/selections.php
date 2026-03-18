@@ -24,7 +24,7 @@ if ($method === 'GET') {
 } elseif ($method === 'PATCH') {
     // CSRF check: verify Origin header matches allowed origin
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    if ($origin !== CONCLAR_ALLOWED_ORIGIN) {
+    if (!in_array($origin, CONCLAR_ALLOWED_ORIGINS, true)) {
         http_response_code(403);
         echo conclar_error('forbidden', 'Origin not allowed');
         exit;

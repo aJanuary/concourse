@@ -4,7 +4,10 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 
 function conclar_cors_headers() {
-    header('Access-Control-Allow-Origin: ' . CONCLAR_ALLOWED_ORIGIN);
+    $request_origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if (in_array($request_origin, CONCLAR_ALLOWED_ORIGINS, true)) {
+        header('Access-Control-Allow-Origin: ' . $request_origin);
+    }
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Allow-Methods: GET, PATCH, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type');

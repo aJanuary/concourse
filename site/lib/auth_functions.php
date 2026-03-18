@@ -70,8 +70,12 @@ function is_valid_redirect($url) {
   if (str_starts_with($url, '/')) {
     return true;
   }
-  $origin = CONCLAR_ALLOWED_ORIGIN;
-  return $url === $origin || str_starts_with($url, $origin . '/');
+  foreach (CONCLAR_ALLOWED_ORIGINS as $origin) {
+    if ($url === $origin || str_starts_with($url, $origin . '/')) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function make_login_link() {
