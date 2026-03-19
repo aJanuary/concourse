@@ -48,7 +48,7 @@ $cards = [
       'name' => 'accessibility',
       'title' => 'Accessibility',
       'subtitle' => '',
-      'link' => 'https://example.com/accessibility/',
+      'link' => 'https://eastercon2026.org/access-policy',
       'card-permission' => 'see-accessibility',
     ], [
       'name' => 'childcare',
