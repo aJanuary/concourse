@@ -176,6 +176,12 @@ $cards = [
       'subtitle' => '',
       'link' => '/dealer-info',
       'card-permission' => 'see-dealer-info',
+    ], [
+      'name' => 'in-memoriam',
+      'title' => 'In memoriam',
+      'subtitle' => 'Submit a name',
+      'link' => 'https://docs.google.com/forms/d/e/1FAIpQLSfIJ8dzYZxlNpVhCQReEmrZc6CtZ3BCxMbXjMV6AyjR2sV5rQ/viewform',
+      'card-permission' => 'see-in-memoriam',
     ]
   ],
   'Other' => [

@@ -670,6 +670,19 @@ main {
   background-image: url('/resources/dealers.svg');
 }
 
+.card.in-memoriam {
+  background-color: var(--part-color-light);
+}
+.card.in-memoriam .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.in-memoriam .hero::after {
+  background-image: url('/resources/in-memoriam.svg');
+}
+
 .card.games {
   background-color: var(--prog-color-light);
 }
