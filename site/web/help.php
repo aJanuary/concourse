@@ -24,7 +24,7 @@ render_header(
   <h3><a href="#in-person" name="in-person">In person</a></h3>
   <ul>
     <li>Go to Ops located in the <a href="https://map.eastercon2026.org/room/oxford">Oxford room</a></li>
-    <li>Find the on-duty committee member. They will be wearing a hi-viz vest</li>
+    <li>Find the on-duty committee member. They will be wearing a green sash.</li>
     <li>Talk to the hotel staff</li>
   </ul>
 </article>
