@@ -204,8 +204,13 @@ if ($phase === 'enter-password') {
         <button type="submit" class="button login">Log in</button>
         <script>
         document.getElementById('code').addEventListener('input', function() {
-            if (/^[0-9]{6}$/.test(this.value)) {
-                this.form.submit();
+            var input = this;
+            if (/^[0-9]{6}$/.test(input.value)) {
+                setTimeout(function() {
+                    if (/^[0-9]{6}$/.test(input.value)) {
+                        input.form.submit();
+                    }
+                }, 100);
             }
         });
         (function() {
