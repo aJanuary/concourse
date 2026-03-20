@@ -58,7 +58,6 @@ render_header(
   <h3>Problems</h3>
   <p>Read the <a href="/discord-instructions" target="_blank">instructions on how to join the Discord server</a>.</p>
   <p>If you have any problems, email <a href="mailto:<?php echo SUPPORT_EMAIL; ?>"><?php echo SUPPORT_EMAIL; ?></a> from the e-mail you signed up with and include your discord username, if you know it.</p>
-  <p>You can read through our <a href="https://www.google.co.uk">Guide to using Discord</a> for more information on how to use Discord.</p>
 </article>
 
 <?php
