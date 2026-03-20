@@ -94,7 +94,7 @@ if ($phase === 'entered-email') {
     header('Location: /login?phase=enter-code&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . $error);
     exit();
 } else if ($phase === 'entered-code') {
-    $code = $_POST['code'] ?? '';
+    $code = trim($_POST['code'] ?? '');
     $redirect_result = db_verify_login_code($email, $code);
     if ($redirect_result !== null) {
         db_delete_login_codes_for_email($email);
@@ -106,6 +106,7 @@ if ($phase === 'entered-email') {
         header('Location: ' . $token);
         exit();
     } else {
+        error_log("Login code failed: email=" . $email . " code=[" . $code . "]");
         header('Location: /login?phase=enter-code&redirect=' . urlencode($redirect) . '&email=' . urlencode($email) . '&code=' . urlencode($code) . '&error_code=invalid-code');
         exit();
     }
