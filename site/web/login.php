@@ -29,7 +29,7 @@ if (!is_valid_redirect($redirect)
     $redirect = '/';
 }
 
-if (!$phase && $_GET['token']) {
+if (!$phase && isset($_GET['token'])) {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $token_data = verify_secure_link($path, $_GET['token']);
     if ($token_data === 'expired') {

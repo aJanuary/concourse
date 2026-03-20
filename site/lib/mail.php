@@ -35,6 +35,8 @@ function send_email($to, $subject, $heading, $blocks, $from = SUPPORT_EMAIL) {
     foreach ($blocks as $block) {
         if ($block['type'] == 'para') {
             $plaintext_parts[] = $block['text'];
+        } else if ($block['type'] == 'code') {
+            $plaintext_parts[] = $block['text'];
         } else if ($block['type'] == 'button') {
             $plaintext_parts[] = $block['href'];
         }
