@@ -36,14 +36,14 @@ $cards = [
       'name' => 'readme',
       'title' => 'Convention guide',
       'subtitle' => 'Readme',
-      'link' => current_user_has_permission('see-readme-redirect') ? 'https://example.com/convention-readme' : '/convention-guide',
+      'link' => 'https://eastercon2026.org/progress-reports/readme',
       'card-permission' => 'see-readme',
     ], [
       'name' => 'newsletter',
       'title' => 'Newsletter',
       'subtitle' => '',
       'link' => current_user_has_permission('see-newsletter-redirect') ? 'https://example.com/newsletter' : '/newsletter',
-      'card-permission' => 'see-help',
+      'card-permission' => 'see-newsletter',
     ], [
       'name' => 'accessibility',
       'title' => 'Accessibility',
