@@ -693,6 +693,16 @@ main {
   background-image: url('/resources/games.svg');
 }
 
+.card.programme-handouts {
+  background-color: var(--prog-color-light);
+}
+.card.programme-handouts .hero {
+  background: var(--prog-bg);
+}
+.card.programme-handouts .hero::after {
+  background-image: url('/resources/programme-handouts.svg');
+}
+
 .card.doc-weir {
   background-color: var(--part-color-light);
 }

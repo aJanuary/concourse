@@ -114,6 +114,12 @@ $cards = [
       'link' => '/games',
       'card-permission' => 'see-games',
     ], [
+      'name' => 'programme-handouts',
+      'title' => 'Programme handouts',
+      'subtitle' => '',
+      'link' => '/programme-handouts',
+      'card-permission' => 'see-programme-handouts',
+    ], [
       'name' => 'chat',
       'title' => 'Chat online',
       'subtitle' => 'Discord',
