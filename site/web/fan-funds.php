@@ -20,7 +20,7 @@ render_header(
   <p><a href="https://taff.org.uk/vote.php" target="_blank" class="button">Vote in TAFF</a></p>
 
   <h3>GUFF</h3>
-  <p>The Going Under Fan Fund (GUFF) does the same thing but in that case “over there” is Oceania. That race has finished by the time you read this as CANDIDATE is going  “over there” but keep an eye out in future years!</p>
+  <p>The Going Under Fan Fund (GUFF) does the same thing but in that case “over there” is Oceania. That race has finished by the time you read this as Farah Mendlesohn is going  “over there” but keep an eye out in future years!</p>
 
   <h3>EFF</h3>
   <p>Nowadays, some fan funds send fans from “here” to “here”. The European Fan Fund (EFF) is an example, to send a European fan to Metropol Con.</p>
