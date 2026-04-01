@@ -6,12 +6,37 @@ require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 
+function session_cookie_options($expires_at) {
+  $is_https = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+    (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443) ||
+    (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+  );
+
+  $options = [
+    'expires' => $expires_at,
+    'path' => '/',
+    'secure' => $is_https,
+    'httponly' => true,
+    'samesite' => $is_https ? 'None' : 'Lax',
+  ];
+
+  if (trim((string) COOKIE_DOMAIN) !== '') {
+    $options['domain'] = COOKIE_DOMAIN;
+  }
+
+  return $options;
+}
+
 function make_session($badge_no) {
+  error_log('Creating session for badge_no ' . $badge_no);
     $session_id = sha1(rand());
     $expires_at = time() + 60*60*24*30;
 
     $member = conreg_get_member_by_badge_no($badge_no);
+    error_log("Member for badge_no $badge_no: " . print_r($member, true));
     if ($member === null) {
+      error_log("No member found with badge no $badge_no");
         throw new Exception("No member found with badge no $badge_no");
     }
     db_upsert_member($badge_no, $member['email'], $member['name'], $member['roles']);
@@ -23,26 +48,12 @@ function make_session($badge_no) {
     }
 
     db_insert_session($session_id, $badge_no, $expires_at);
-    setcookie("session", $session_id, [
-        'expires' => $expires_at,
-        'path' => '/',
-        'domain' => COOKIE_DOMAIN,
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'None',
-    ]);
+    setcookie("session", $session_id, session_cookie_options($expires_at));
 }
 
 function make_anonymous_session() {
   $expires_at = time() + 60*60*24;
-  setcookie('session', 'anonymous', [
-      'expires' => $expires_at,
-      'path' => '/',
-      'domain' => COOKIE_DOMAIN,
-      'secure' => true,
-      'httponly' => true,
-      'samesite' => 'None',
-  ]);
+  setcookie('session', 'anonymous', session_cookie_options($expires_at));
 }
 
 function is_logged_in() {
@@ -110,7 +121,7 @@ function logout() {
   if (isset($_COOKIE['session'])) {
     db_delete_session($_COOKIE['session']);
   }
-  setcookie('session', '', time() - 3600, '/');
+  setcookie('session', '', session_cookie_options(time() - 3600));
   session_destroy();
 }
 
