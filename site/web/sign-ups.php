@@ -54,7 +54,7 @@ render_header(
 <article>
   <h2>Sign-ups</h2>
   <p>Most of the programme you can just turn up to the room to watch, but some items have limited space and will require signing up in advance.</p>
-  <p>If there are more sign-ups for a particular item than there are spaces, successful applicants will be chosen by a random lottery. Results of the lottery will be announced by e-mail and posted at the registration desk.</p>
+  <p>If there are more sign-ups for a particular item than there are spaces, successful applicants will be chosen by a random lottery. Results of the lottery will be announced by e-mail. Results for workshops and table wilks will also be posted at the registration desk.</p>
   <p>There is no advantage to signing up for an item early. As long as you fill in the form before sign-ups close, you will have an equal chance of getting a spot.</p>
 
 <?php
