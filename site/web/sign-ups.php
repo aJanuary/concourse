@@ -197,7 +197,7 @@ render_header(
       'name' => 'Starfleet Academy 2270: Milk Run (The Code of the Spacelanes) [GAME]',
       'guide_url' => 'https://guide.eastercon2026.org/id/1206',
       'url' => 'https://docs.google.com/forms/d/e/1FAIpQLScaJuTKtNZw7G_7ax8au6H6BH9KywZNpwbUgNnIniCcMj4R3A/viewform?usp=pp_url&entry.964998266=NAME&entry.294137761=EMAIL&entry.1782361168=MEMBER+NO',
-      'open_date' => '2026-04-02 14:0000',
+      'open_date' => '2026-04-02 14:00',
       'close_date' => '2026-04-05 19:00',
     ],
     [
