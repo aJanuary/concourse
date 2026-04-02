@@ -18,9 +18,19 @@ function render_handout_section($title, $files, $available_at = null) {
     <p>The handouts will be available at <?php echo $available_at->format('H:i \o\n l, j F'); ?>.</p>
   <?php } else { ?>
     <ul>
-      <?php foreach ($files as $file) { ?>
-        <li><p><a download href="handouts/<?php echo htmlspecialchars($file); ?>"><?php echo htmlspecialchars($file); ?></a></p></li>
-      <?php } ?>
+      <?php
+        foreach ($files as $file) {
+          if (isset($file['url'])) {
+        ?>
+            <li><p><a href="<?php echo htmlspecialchars($file['url']); ?>"><?php echo htmlspecialchars($file['label']); ?></a></p></li>
+        <?php
+          } else {
+        ?>
+            <li><p><a download href="handouts/<?php echo htmlspecialchars($file['file']); ?>"><?php echo htmlspecialchars($file['label']); ?></a></p></li>
+      <?php
+          }
+        }
+      ?>
     </ul>
   <?php } ?>
 <?php
@@ -35,9 +45,22 @@ render_header(
 <article>
   <h2>Programme handouts</h2>
 
-<?php render_handout_section('Self Publishing 101 Workshop', [
-    'HANDOUT SELF PUB WORKSHOP EASTERCONJ 26.docx',
-  ], '2026-04-06 09:00'); ?>
+<?php
+  render_handout_section('Self Publishing 101 Workshop', [
+    [
+      'label' => 'HANDOUT SELF PUB WORKSHOP EASTERCONJ 26.docx',
+      'file' => 'HANDOUT_SELF_PUB_WORKSHOP_EASTERCONJ_26.docx',
+    ],
+  ], '2026-04-06 09:00');
+
+  render_handout_section('How to Crochet a Dragon', [
+    [
+      'label' => 'Google Drive',
+      'url' => 'https://drive.google.com/drive/folders/1ItkkCLtMqmlPHlfoujkknIl8F6MCg0yA',
+    ],
+  ], '2026-04-05 10:30');
+?>
+
 </article>
 <?php
 render_footer();
