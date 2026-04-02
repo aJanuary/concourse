@@ -706,12 +706,13 @@ function db_get_stream_url($room_id) {
     $stmt->bind_param("s", $room_id);
     $stmt->execute();
     $stmt->bind_result($title, $url);
-    $stmt->fetch();
+    $found = $stmt->fetch() === true;
   } finally {
     $stmt->close();
   }
 
   return [
+    'found' => $found,
     'title' => $title,
     'url' => $url,
   ];

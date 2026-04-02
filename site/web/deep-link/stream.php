@@ -30,7 +30,7 @@ if (is_anonymous()) {
 
 $stream = db_get_stream_url($room_id);
 
-if (!$stream['url']) {
+if (!$stream['found']) {
   render_header(
     'View stream',
     'Unknown room.',
@@ -40,6 +40,22 @@ if (!$stream['url']) {
   <article>
     <h2>Unknown room</h2>
     <p>Oops, something went wrong and we don&apos;t know where you should be going. Please get in touch with the programme team to find out.</p>
+  </article>
+<?php
+  render_footer();
+  exit;
+}
+
+if (!$stream['url']) {
+  render_header(
+    'View stream',
+    'Room not streaming.',
+    ['Home' => '/', 'View stream']
+  );
+?>
+  <article>
+    <h2>Room not streaming</h2>
+    <p>This room is not currently streaming. Please check back later.</p>
   </article>
 <?php
   render_footer();
