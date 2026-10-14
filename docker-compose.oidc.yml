@@ -1,9 +1,9 @@
 #
 # Adds a mock OpenID Connect provider (scripts/mock-oidc.php). Layer it over
-# the default compose file:
+# the default compose file by adding it to COMPOSE_FILE in .env (see
+# scripts/bootstrap), then run docker compose up -d:
 #
-#   docker-compose -p portal-dev up -d
-#   docker-compose -p portal-dev -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.oidc.yml up -d
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.oidc.yml
 #
 # It shares the web container's network, so http://localhost:8090 reaches it
 # from the browser and from the portal. Configure the portal with:

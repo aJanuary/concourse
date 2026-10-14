@@ -2,9 +2,10 @@
 # Runs the portal against Postgres instead of MySQL. Layer it over the default
 # compose file:
 #
-#   docker-compose -p portal-dev -f docker-compose.yml -f docker-compose.postgres.yml up
+#   docker compose -f docker-compose.yml -f docker-compose.postgres.yml up
 #
-# The data lives in a separate volume, so the MySQL data is untouched.
+# scripts/bootstrap pgsql sets that up for every docker compose command. The
+# data lives in a separate volume, so the MySQL data is untouched.
 #
 volumes:
   portal-mysqldata: !reset null
@@ -13,6 +14,7 @@ volumes:
 services:
   db:
     image: postgres:17
+    platform: !reset null
     environment: !override
       POSTGRES_DB: members
       POSTGRES_USER: dba
@@ -22,7 +24,7 @@ services:
     volumes: !override
       - portal-pgdata:/var/lib/postgresql/data
     ports: !override
-      - 5432:5432
+      - "127.0.0.1::5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U dba -d members"]
       interval: 5s
@@ -36,3 +38,40 @@ services:
   # phpMyAdmin only speaks MySQL
   phpmyadmin:
     profiles: ["mysql-only"]
+
+  pgadmin:
+    image: dpage/pgadmin4:9.14
+    restart: always
+    ports:
+      - "127.0.0.1::80"
+    environment:
+      # Desktop mode: no pgAdmin login. The default email is still required.
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/db_dba_password
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/portal-servers.json
+    secrets:
+      - db_dba_password
+    configs:
+      - source: pgadmin_servers
+        target: /pgadmin4/portal-servers.json
+    depends_on:
+      - db
+
+configs:
+  pgadmin_servers:
+    content: |
+      {
+        "Servers": {
+          "1": {
+            "Name": "portal",
+            "Group": "Servers",
+            "Host": "db",
+            "Port": 5432,
+            "MaintenanceDB": "members",
+            "Username": "dba",
+            "SSLMode": "prefer"
+          }
+        }
+      }
