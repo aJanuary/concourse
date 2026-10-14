@@ -52,7 +52,6 @@ function cleanup() {
   db_query("DELETE FROM password_prompt_dismissals WHERE email = 'smoke.test@example.com'");
   db_query("DELETE FROM oidc_sessions WHERE sub = 'smoke-sub'");
   db_query("DELETE FROM sessions WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
-  db_query("DELETE FROM rce_invites WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM discord_ids WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM discord_verification_token WHERE token_id = ?", [$token]);
   db_query("DELETE FROM member_roles WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
@@ -150,10 +149,6 @@ try {
   check('db_get_email_by_session', call('db_get_email_by_session', $session) === 'smoke.test@example.com');
   check('db_get_user_name_by_session', call('db_get_user_name_by_session', $session) === 'Smoke Tester');
   check('db_get_sessions', in_array(['badge_no' => $badge, 'name' => 'Smoke Tester', 'session_id' => $session], call('db_get_sessions'), true));
-
-  // RCE invites
-  call('db_create_invite', $badge, 'https://example.com/invite');
-  check('db_get_magic_link', call('db_get_magic_link', $session) === 'https://example.com/invite');
 
   // Discord ids: second call is the upsert
   call('db_set_discord_id', $badge, '1001', 'first-name');

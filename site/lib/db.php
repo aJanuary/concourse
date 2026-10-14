@@ -132,16 +132,8 @@ function db_create_member($badge_no, $email, $name, $real_name = null) {
   db_query("INSERT INTO members (badge_no, email, name, real_name) VALUES (?, ?, ?, ?)", [$badge_no, $email, $name, $real_name]);
 }
 
-function db_create_invite($badge_no, $invite_url) {
-  db_query("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)", [$badge_no, $invite_url]);
-}
-
 function db_update_member($badge_no, $email, $name, $real_name = null) {
   db_query("UPDATE members SET name = ?, email = ?, real_name = COALESCE(?, real_name) WHERE badge_no = ?", [$name, $email, $real_name, $badge_no]);
-}
-
-function db_get_magic_link($session_token) {
-  return db_fetch_value("SELECT invite_url FROM rce_invites WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())", [$session_token]);
 }
 
 function db_set_discord_id($badge_no, $discord_id, $discord_username) {
