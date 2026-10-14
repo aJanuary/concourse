@@ -52,6 +52,25 @@ function db_fetch_column($sql, $params = []) {
   return db_query($sql, $params)->fetchAll(PDO::FETCH_COLUMN);
 }
 
+// Runs $fn in a transaction and returns what it returns, rolling back if it
+// throws. Inside another transaction it just runs $fn, as part of that one.
+function db_transaction($fn) {
+  global $pdo;
+
+  if ($pdo->inTransaction()) {
+    return $fn();
+  }
+  $pdo->beginTransaction();
+  try {
+    $result = $fn();
+    $pdo->commit();
+    return $result;
+  } catch (Throwable $exception) {
+    $pdo->rollBack();
+    throw $exception;
+  }
+}
+
 function db_check_member_creds($email, $password) {
   $hash = db_fetch_value("SELECT password FROM members WHERE LOWER(email) = LOWER(?)", [$email]);
   if ($hash === null) {
@@ -743,6 +762,308 @@ function db_set_business_meeting_links($links) {
     throw $exception;
   }
   return ['added' => $added, 'updated' => count($links) - $added];
+}
+
+// Site selection. A site_selection_tokens row is a voter key from the election
+// platform (token set; method null while in the pool, online once assigned)
+// or a paper ballot sold at the desk (method paper, no token). A member's
+// current row is the one that isn't spoilt; there is at most one.
+
+const DB_SITE_SELECTION_TOKEN_SORTS = [
+  'label' => 't.label',
+  'token' => 't.token',
+  'badge_no' => 't.badge_no',
+  'sold_at' => 't.sold_at',
+  'added_by' => 't.added_by',
+  'added_at' => 't.added_at',
+];
+
+function db_site_selection_token_where($search) {
+  if ($search === null || $search === '') {
+    return ['WHERE t.token IS NOT NULL', []];
+  }
+  $like = '%' . strtr($search, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
+  return ["WHERE t.token IS NOT NULL AND (LOWER(t.token) LIKE LOWER(?) ESCAPE '!' OR LOWER(t.label) LIKE LOWER(?) ESCAPE '!')", [$like, $like]];
+}
+
+// The voter keys, not paper ballots, optionally matching $search in the token
+// or label. $sort is a key of DB_SITE_SELECTION_TOKEN_SORTS.
+function db_get_site_selection_tokens($limit, $offset, $search = null, $sort = 'added_at', $descending = true) {
+  [$where, $params] = db_site_selection_token_where($search);
+  $order = DB_SITE_SELECTION_TOKEN_SORTS[$sort] ?? DB_SITE_SELECTION_TOKEN_SORTS['added_at'];
+  $direction = $descending ? 'DESC' : 'ASC';
+  return db_fetch_rows(
+    "SELECT t.id, t.token, t.label, t.badge_no, m.name, t.method, t.sold_at, t.spoilt_at, t.added_by, a.name AS added_by_name, t.added_at
+     FROM site_selection_tokens t
+     LEFT JOIN members m ON m.badge_no = t.badge_no
+     LEFT JOIN members a ON a.badge_no = t.added_by
+     $where
+     ORDER BY $order $direction, t.id $direction
+     LIMIT " . (int) $limit . " OFFSET " . (int) $offset,
+    $params
+  );
+}
+
+function db_count_site_selection_tokens($search = null) {
+  [$where, $params] = db_site_selection_token_where($search);
+  return (int) db_fetch_value("SELECT COUNT(*) FROM site_selection_tokens t $where", $params);
+}
+
+function db_count_available_site_selection_tokens() {
+  return (int) db_fetch_value("SELECT COUNT(*) FROM site_selection_tokens WHERE token IS NOT NULL AND badge_no IS NULL");
+}
+
+// Which of $tokens are already in the pool
+function db_get_existing_site_selection_tokens($tokens) {
+  $existing = [];
+  foreach (array_chunk(array_values($tokens), 500) as $chunk) {
+    $placeholders = implode(', ', array_fill(0, count($chunk), '?'));
+    $existing = array_merge($existing, db_fetch_column("SELECT token FROM site_selection_tokens WHERE token IN ($placeholders)", $chunk));
+  }
+  return $existing;
+}
+
+// $entries is a list of ['label' => ..., 'token' => ...]. All or nothing.
+function db_add_site_selection_tokens($entries, $added_by) {
+  $now = time();
+  db_transaction(function () use ($entries, $added_by, $now) {
+    foreach (array_chunk($entries, 500) as $chunk) {
+      $params = [];
+      foreach ($chunk as $entry) {
+        array_push($params, $entry['token'], $entry['label'], $added_by, $now);
+      }
+      $placeholders = implode(', ', array_fill(0, count($chunk), '(?, ?, ?, ?)'));
+      db_query("INSERT INTO site_selection_tokens (token, label, added_by, added_at) VALUES $placeholders", $params);
+    }
+  });
+}
+
+// A voter key goes back to the pool, unspoilt; a paper ballot is deleted
+function db_unassign_site_selection_token($id) {
+  db_transaction(function () use ($id) {
+    db_query("DELETE FROM site_selection_tokens WHERE id = ? AND token IS NULL", [$id]);
+    db_query("UPDATE site_selection_tokens SET badge_no = NULL, method = NULL, sold_by = NULL, sold_at = NULL, spoilt_at = NULL WHERE id = ?", [$id]);
+  });
+}
+
+// Only unassigned keys can be deleted. Returns whether it was.
+function db_delete_site_selection_token($id) {
+  return db_query("DELETE FROM site_selection_tokens WHERE id = ? AND badge_no IS NULL", [$id])->rowCount() > 0;
+}
+
+function db_get_spoilt_site_selection_tokens($limit, $offset) {
+  return db_fetch_rows(
+    "SELECT id, token, label, badge_no, spoilt_at FROM site_selection_tokens
+     WHERE spoilt_at IS NOT NULL AND token IS NOT NULL
+     ORDER BY spoilt_at DESC, id DESC
+     LIMIT " . (int) $limit . " OFFSET " . (int) $offset
+  );
+}
+
+function db_count_spoilt_site_selection_tokens() {
+  return (int) db_fetch_value("SELECT COUNT(*) FROM site_selection_tokens WHERE spoilt_at IS NOT NULL AND token IS NOT NULL");
+}
+
+// The member's current assignment, or null if they have none
+function db_get_member_site_selection($badge_no) {
+  return db_fetch_row(
+    "SELECT id, token, label, method, sold_by, sold_at FROM site_selection_tokens WHERE badge_no = ? AND spoilt_at IS NULL ORDER BY id DESC",
+    [$badge_no]
+  );
+}
+
+// The current assignments of several members, keyed by badge number
+function db_get_members_site_selections($badge_nos) {
+  if (!$badge_nos) {
+    return [];
+  }
+  $placeholders = implode(', ', array_fill(0, count($badge_nos), '?'));
+  $rows = db_fetch_rows(
+    "SELECT id, badge_no, token, label, method, sold_by, sold_at FROM site_selection_tokens WHERE badge_no IN ($placeholders) AND spoilt_at IS NULL",
+    array_values($badge_nos)
+  );
+  return array_column($rows, null, 'badge_no');
+}
+
+// Locks the member, so that their assignments can be checked and changed
+// without another request doing the same at once, and returns the current
+// assignment, or null. Locking their token rows instead would lock nothing
+// on Postgres when they have none, and on MySQL takes gap locks that
+// deadlock with assigning keys to other members. Call it first in the
+// transaction, so MySQL's snapshot is taken after the lock.
+function db_lock_member_site_selection($badge_no) {
+  db_query("SELECT badge_no FROM members WHERE badge_no = ? FOR UPDATE", [$badge_no]);
+  return db_fetch_row("SELECT id, token, method FROM site_selection_tokens WHERE badge_no = ? AND spoilt_at IS NULL", [$badge_no]);
+}
+
+// Locks an unassigned voter key for this transaction, skipping any another
+// transaction has locked. Null if there are none.
+function db_take_site_selection_token() {
+  return db_fetch_row("SELECT id, token FROM site_selection_tokens WHERE badge_no IS NULL AND token IS NOT NULL ORDER BY id LIMIT 1 FOR UPDATE SKIP LOCKED");
+}
+
+function db_assign_site_selection_token($id, $badge_no, $method, $sold_by) {
+  db_query("UPDATE site_selection_tokens SET badge_no = ?, method = ?, sold_by = ?, sold_at = ? WHERE id = ?", [$badge_no, $method, $sold_by, time(), $id]);
+}
+
+function db_spoil_site_selection_token($id) {
+  db_query("UPDATE site_selection_tokens SET spoilt_at = ? WHERE id = ?", [time(), $id]);
+}
+
+function db_insert_paper_site_selection_ballot($badge_no, $sold_by) {
+  $now = time();
+  db_query(
+    "INSERT INTO site_selection_tokens (badge_no, method, sold_by, sold_at, added_by, added_at) VALUES (?, 'paper', ?, ?, ?, ?)",
+    [$badge_no, $sold_by, $now, $sold_by, $now]
+  );
+}
+
+// Assigns a voter key from the pool to a member who has paid online. Returns
+// ['success' => true, 'token' => ...] or ['success' => false, 'error' =>
+// 'already_has_token' or 'no_tokens'].
+function db_sell_online_site_selection_token($badge_no) {
+  return db_transaction(function () use ($badge_no) {
+    if (db_lock_member_site_selection($badge_no) !== null) {
+      return ['success' => false, 'error' => 'already_has_token'];
+    }
+    $token = db_take_site_selection_token();
+    if ($token === null) {
+      return ['success' => false, 'error' => 'no_tokens'];
+    }
+    db_assign_site_selection_token($token['id'], $badge_no, 'online', null);
+    return ['success' => true, 'token' => $token['token']];
+  });
+}
+
+// Records that the desk sold the member a paper ballot. Returns ['success' =>
+// true] or ['success' => false, 'error' => 'already_has_token'].
+function db_sell_paper_site_selection_ballot($badge_no, $sold_by) {
+  return db_transaction(function () use ($badge_no, $sold_by) {
+    if (db_lock_member_site_selection($badge_no) !== null) {
+      return ['success' => false, 'error' => 'already_has_token'];
+    }
+    db_insert_paper_site_selection_ballot($badge_no, $sold_by);
+    return ['success' => true];
+  });
+}
+
+// Spoils the member's voter key and gives them a paper ballot instead.
+// Returns ['success' => true] or ['success' => false, 'error' =>
+// 'no_online_token'].
+function db_transfer_site_selection_to_paper($badge_no, $sold_by) {
+  return db_transaction(function () use ($badge_no, $sold_by) {
+    $current = db_lock_member_site_selection($badge_no);
+    if ($current === null || $current['method'] !== 'online') {
+      return ['success' => false, 'error' => 'no_online_token'];
+    }
+    db_spoil_site_selection_token($current['id']);
+    db_insert_paper_site_selection_ballot($badge_no, $sold_by);
+    return ['success' => true];
+  });
+}
+
+// Spoils the member's voter key and assigns them another from the pool.
+// Returns ['success' => true, 'token' => ...] or ['success' => false, 'error'
+// => 'no_online_token' or 'no_tokens'].
+function db_replace_site_selection_token($badge_no, $sold_by) {
+  return db_transaction(function () use ($badge_no, $sold_by) {
+    $current = db_lock_member_site_selection($badge_no);
+    if ($current === null || $current['method'] !== 'online') {
+      return ['success' => false, 'error' => 'no_online_token'];
+    }
+    $token = db_take_site_selection_token();
+    if ($token === null) {
+      return ['success' => false, 'error' => 'no_tokens'];
+    }
+    db_spoil_site_selection_token($current['id']);
+    db_assign_site_selection_token($token['id'], $badge_no, 'online', $sold_by);
+    return ['success' => true, 'token' => $token['token']];
+  });
+}
+
+function db_record_site_selection_payment_link($payment_link_id, $badge_no, $order_id) {
+  db_insert_ignore('site_selection_payment_links', [
+    'payment_link_id' => $payment_link_id,
+    'badge_no' => $badge_no,
+    'order_id' => $order_id,
+    'created_at' => time(),
+  ]);
+}
+
+// The id of the member's most recent payment link, or null
+function db_get_latest_site_selection_payment_link($badge_no) {
+  return db_fetch_value(
+    "SELECT payment_link_id FROM site_selection_payment_links WHERE badge_no = ? ORDER BY created_at DESC, payment_link_id DESC LIMIT 1",
+    [$badge_no]
+  );
+}
+
+// Marks the link for the order as paid or, if no link has that order, the
+// member's latest unpaid link
+function db_mark_site_selection_payment_link_paid($badge_no, $order_id) {
+  $now = time();
+  if (db_query("UPDATE site_selection_payment_links SET paid_at = ? WHERE order_id = ? AND paid_at IS NULL", [$now, $order_id])->rowCount() > 0) {
+    return;
+  }
+  if (db_fetch_value("SELECT 1 FROM site_selection_payment_links WHERE order_id = ?", [$order_id]) !== null) {
+    return;
+  }
+  $payment_link_id = db_fetch_value(
+    "SELECT payment_link_id FROM site_selection_payment_links WHERE badge_no = ? AND paid_at IS NULL ORDER BY created_at DESC, payment_link_id DESC LIMIT 1",
+    [$badge_no]
+  );
+  if ($payment_link_id !== null) {
+    db_query("UPDATE site_selection_payment_links SET order_id = ?, paid_at = ? WHERE payment_link_id = ?", [$order_id, $now, $payment_link_id]);
+  }
+}
+
+function db_site_selection_info_row($row) {
+  if ($row === null) {
+    return null;
+  }
+  $row['wants_paper_publications'] = (bool) $row['wants_paper_publications'];
+  $row['consent_to_publish_name'] = (bool) $row['consent_to_publish_name'];
+  return $row;
+}
+
+// The member's address and preferences, or null
+function db_get_site_selection_info($badge_no) {
+  return db_site_selection_info_row(db_fetch_row(
+    "SELECT country, address, wants_paper_publications, consent_to_publish_name FROM site_selection_info WHERE badge_no = ?",
+    [$badge_no]
+  ));
+}
+
+function db_set_site_selection_info($badge_no, $country, $address, $wants_paper_publications, $consent_to_publish_name) {
+  $now = time();
+  db_upsert(
+    'site_selection_info',
+    ['badge_no'],
+    ['country', 'address', 'wants_paper_publications', 'consent_to_publish_name', 'updated_at'],
+    [
+      'badge_no' => $badge_no,
+      'country' => $country,
+      'address' => $address,
+      'wants_paper_publications' => $wants_paper_publications ? 1 : 0,
+      'consent_to_publish_name' => $consent_to_publish_name ? 1 : 0,
+      'created_at' => $now,
+      'updated_at' => $now,
+    ]
+  );
+}
+
+// Members who can vote online, with their details for the winning bid. The
+// address and preferences are null if a member has none, which happens only
+// if they were assigned a key by hand.
+function db_get_site_selection_export() {
+  return array_map('db_site_selection_info_row', db_fetch_rows(
+    "SELECT t.badge_no, m.name, m.real_name, m.email, i.country, i.address, i.wants_paper_publications, i.consent_to_publish_name
+     FROM site_selection_tokens t
+     JOIN members m ON m.badge_no = t.badge_no
+     LEFT JOIN site_selection_info i ON i.badge_no = t.badge_no
+     WHERE t.method = 'online' AND t.spoilt_at IS NULL
+     ORDER BY t.sold_at, t.id"
+  ));
 }
 
 function db_insert_discord_token($token, $discord_id, $discord_username) {

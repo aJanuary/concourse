@@ -56,6 +56,10 @@ function cleanup() {
   db_query("DELETE FROM discord_verification_token WHERE token_id = ?", [$token]);
   db_query("DELETE FROM member_roles WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM roles WHERE name = 'smoke-role'");
+  db_query("DELETE FROM site_selection_tokens WHERE token LIKE 'smoke-ss-%' OR (token IS NULL AND badge_no IN (?, ?))", [$badge, $other_badge]);
+  db_query("UPDATE site_selection_tokens SET badge_no = NULL, method = NULL, sold_by = NULL, sold_at = NULL, spoilt_at = NULL WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
+  db_query("DELETE FROM site_selection_payment_links WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
+  db_query("DELETE FROM site_selection_info WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM members WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM prog_stages WHERE room_id = 'smoke-room'");
   db_query("DELETE FROM prog_sessions WHERE item_id = 'smoke-item'");
@@ -361,6 +365,93 @@ try {
   call('db_delete_business_meeting_link', $badge);
   check('db_delete_business_meeting_link', db_get_business_meeting_link($badge) === null);
 
+  // Site selection. Other keys may already be in the pool, so checks don't
+  // assume which key is taken, and no_tokens is only checked if there are none.
+  $pool_before = call('db_count_available_site_selection_tokens');
+  call('db_add_site_selection_tokens', [
+    ['label' => 'smoke-label A', 'token' => 'smoke-ss-Aa'],
+    ['label' => 'smoke-label B', 'token' => 'smoke-ss-aa'],
+    ['label' => 'smoke-label C', 'token' => 'smoke-ss-c'],
+  ], $badge);
+  check('db_count_available_site_selection_tokens', db_count_available_site_selection_tokens() === $pool_before + 3);
+  check('db_get_existing_site_selection_tokens is case sensitive', call('db_get_existing_site_selection_tokens', ['smoke-ss-Aa', 'smoke-ss-AA', 'smoke-ss-new']) === ['smoke-ss-Aa']);
+  $failed = false;
+  try {
+    db_add_site_selection_tokens([['label' => 'smoke-label D', 'token' => 'smoke-ss-d'], ['label' => 'smoke-label C', 'token' => 'smoke-ss-c']], $badge);
+  } catch (PDOException $e) {
+    $failed = true;
+  }
+  check('db_add_site_selection_tokens adds nothing when a token exists', $failed && db_get_existing_site_selection_tokens(['smoke-ss-d']) === []);
+  check('db_count_site_selection_tokens searches label and token, ignoring case', call('db_count_site_selection_tokens', 'SMOKE-LABEL') === 3 && db_count_site_selection_tokens('smoke-ss-c') === 1);
+  check('db_count_site_selection_tokens escapes wildcards', db_count_site_selection_tokens('smoke_ss') === 0);
+  $listed = call('db_get_site_selection_tokens', 2, 1, 'smoke-label', 'label', false);
+  check('db_get_site_selection_tokens sorts and pages', array_column($listed, 'label') === ['smoke-label B', 'smoke-label C']
+    && $listed[0]['added_by'] === $badge && $listed[0]['added_by_name'] === 'Smoke Tester' && is_int($listed[0]['added_at']) && is_int($listed[0]['id']));
+  check('db_get_site_selection_tokens ignores an unknown sort', count(db_get_site_selection_tokens(10, 0, 'smoke-label', 'nope; DROP TABLE members')) === 3);
+
+  check('no site selection at first', call('db_get_member_site_selection', $badge) === null);
+  $sold = call('db_sell_online_site_selection_token', $badge);
+  $current = db_get_member_site_selection($badge);
+  check('db_sell_online_site_selection_token', $sold['success'] === true && $current['token'] === $sold['token'] && $current['method'] === 'online' && $current['sold_by'] === null && is_int($current['sold_at']));
+  check('db_sell_online_site_selection_token refuses a second key', db_sell_online_site_selection_token($badge) === ['success' => false, 'error' => 'already_has_token']);
+  check('db_sell_paper_site_selection_ballot refuses a member with a key', call('db_sell_paper_site_selection_ballot', $badge, $other_badge) === ['success' => false, 'error' => 'already_has_token']);
+
+  $replaced = call('db_replace_site_selection_token', $badge, $other_badge);
+  $current = db_get_member_site_selection($badge);
+  check('db_replace_site_selection_token', $replaced['success'] === true && $replaced['token'] !== $sold['token'] && $current['token'] === $replaced['token'] && $current['method'] === 'online' && $current['sold_by'] === $other_badge);
+  check('db_count_spoilt_site_selection_tokens', call('db_count_spoilt_site_selection_tokens') >= 1);
+  check('db_get_spoilt_site_selection_tokens', in_array($sold['token'], array_column(call('db_get_spoilt_site_selection_tokens', 1000, 0), 'token'), true));
+
+  check('db_transfer_site_selection_to_paper', call('db_transfer_site_selection_to_paper', $badge, $other_badge) === ['success' => true]);
+  $current = db_get_member_site_selection($badge);
+  check('a transferred member has a paper ballot', $current['method'] === 'paper' && $current['token'] === null && $current['sold_by'] === $other_badge);
+  check('db_transfer_site_selection_to_paper refuses a paper ballot', db_transfer_site_selection_to_paper($badge, $other_badge) === ['success' => false, 'error' => 'no_online_token']);
+  check('db_replace_site_selection_token refuses a paper ballot', db_replace_site_selection_token($badge, $other_badge) === ['success' => false, 'error' => 'no_online_token']);
+  $selections = call('db_get_members_site_selections', [$badge, $other_badge]);
+  check('db_get_members_site_selections', array_keys($selections) === [$badge] && $selections[$badge]['method'] === 'paper' && db_get_members_site_selections([]) === []);
+
+  call('db_unassign_site_selection_token', $current['id']);
+  check('unassigning a paper ballot deletes it', db_get_member_site_selection($badge) === null && db_fetch_value("SELECT COUNT(*) FROM site_selection_tokens WHERE id = ?", [$current['id']]) == 0);
+  check('db_sell_paper_site_selection_ballot', db_sell_paper_site_selection_ballot($other_badge, $badge) === ['success' => true] && db_get_member_site_selection($other_badge)['method'] === 'paper');
+
+  $spoilt_id = db_fetch_value("SELECT id FROM site_selection_tokens WHERE token = ?", [$sold['token']]);
+  check('db_delete_site_selection_token refuses an assigned key', call('db_delete_site_selection_token', $spoilt_id) === false);
+  db_unassign_site_selection_token($spoilt_id);
+  $returned = db_fetch_row("SELECT badge_no, method, spoilt_at FROM site_selection_tokens WHERE id = ?", [$spoilt_id]);
+  check('unassigning a key returns it to the pool', $returned === ['badge_no' => null, 'method' => null, 'spoilt_at' => null]);
+  check('db_delete_site_selection_token', db_delete_site_selection_token($spoilt_id) === true && db_get_existing_site_selection_tokens([$sold['token']]) === []);
+
+  $sold = db_sell_online_site_selection_token($badge);
+  check('db_sell_online_site_selection_token after unassigning', $sold['success'] === true);
+  if ($pool_before === 0) {
+    check('db_replace_site_selection_token with an empty pool', db_replace_site_selection_token($badge, $other_badge) === ['success' => false, 'error' => 'no_tokens'] && db_get_member_site_selection($badge)['token'] === $sold['token']);
+    db_unassign_site_selection_token(db_get_member_site_selection($other_badge)['id']);
+    check('db_sell_online_site_selection_token with an empty pool', db_sell_online_site_selection_token($other_badge) === ['success' => false, 'error' => 'no_tokens']);
+  } else {
+    echo "skip no_tokens checks, as the pool has other keys
+";
+  }
+
+  // Payment links and details
+  call('db_record_site_selection_payment_link', 'smoke-link-1', $badge, 'smoke-order-1');
+  call('db_record_site_selection_payment_link', 'smoke-link-1', $badge, 'smoke-order-1');
+  check('db_get_latest_site_selection_payment_link', call('db_get_latest_site_selection_payment_link', $badge) === 'smoke-link-1' && db_get_latest_site_selection_payment_link($other_badge) === null);
+  call('db_record_site_selection_payment_link', 'smoke-link-2', $badge, null);
+  call('db_mark_site_selection_payment_link_paid', $badge, 'smoke-order-1');
+  check('db_mark_site_selection_payment_link_paid by order', db_fetch_value("SELECT COUNT(*) FROM site_selection_payment_links WHERE badge_no = ? AND paid_at IS NOT NULL", [$badge]) == 1);
+  db_mark_site_selection_payment_link_paid($badge, 'smoke-order-2');
+  check('db_mark_site_selection_payment_link_paid falls back to the latest unpaid link', db_fetch_value("SELECT order_id FROM site_selection_payment_links WHERE payment_link_id = 'smoke-link-2' AND paid_at IS NOT NULL") === 'smoke-order-2');
+
+  check('no site selection info at first', call('db_get_site_selection_info', $badge) === null);
+  call('db_set_site_selection_info', $badge, 'GB', "1 Smoke St\n=Town", true, false);
+  check('db_set_site_selection_info', db_get_site_selection_info($badge) === ['country' => 'GB', 'address' => "1 Smoke St\n=Town", 'wants_paper_publications' => true, 'consent_to_publish_name' => false]);
+  db_set_site_selection_info($badge, 'US', 'Elsewhere', false, true);
+  check('db_set_site_selection_info updates', db_get_site_selection_info($badge) === ['country' => 'US', 'address' => 'Elsewhere', 'wants_paper_publications' => false, 'consent_to_publish_name' => true]);
+
+  $export = array_column(call('db_get_site_selection_export'), null, 'badge_no');
+  check('db_get_site_selection_export', isset($export[$badge]) && !isset($export[$other_badge])
+    && $export[$badge]['real_name'] === 'Smoke Realer' && $export[$badge]['country'] === 'US' && $export[$badge]['consent_to_publish_name'] === true);
+
   // Sessions last, as the earlier checks depend on them
   call('db_delete_session', $session);
   check('db_delete_session', call('db_session_exists', $session) === false);
@@ -373,7 +464,10 @@ $data_functions = array_filter($all, fn($f) => !in_array($f, [
   // helpers and dialect functions, exercised through the functions above
   'db_dsn', 'db_query', 'db_fetch_value', 'db_fetch_row', 'db_fetch_rows', 'db_fetch_column',
   'db_driver', 'db_quote_identifier', 'db_upsert', 'db_insert_ignore', 'db_last_insert_id',
-  'db_format_discord_post', 'db_signup_values',
+  'db_format_discord_post', 'db_signup_values', 'db_transaction',
+  'db_site_selection_token_where', 'db_site_selection_info_row', 'db_lock_member_site_selection',
+  'db_take_site_selection_token', 'db_assign_site_selection_token', 'db_spoil_site_selection_token',
+  'db_insert_paper_site_selection_ballot',
 ]));
 $uncovered = array_diff($data_functions, array_keys($called), $not_applicable);
 echo "\ncovered " . count(array_intersect($data_functions, array_keys($called))) . " of " . count($data_functions) . " db_* functions\n";
