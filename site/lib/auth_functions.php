@@ -166,11 +166,15 @@ function finish_login($identity, $redirect) {
     update_member($badge_no, $identity->email, $identity->name);
   }
 
-  if ($identity->roles !== null) {
-    $existing_roles = db_get_member_role_names($badge_no);
-    foreach (array_diff($identity->roles, $existing_roles) as $role) {
-      db_add_member_role($badge_no, $role);
+  $roles = $identity->roles ?? [];
+  foreach (DEFAULT_ROLES_BY_BADGE as $role => $badge_nos) {
+    if (in_array($badge_no, $badge_nos, true)) {
+      $roles[] = $role;
     }
+  }
+  $existing_roles = db_get_member_role_names($badge_no);
+  foreach (array_diff(array_unique($roles), $existing_roles) as $role) {
+    db_add_member_role($badge_no, $role);
   }
 
   make_session($badge_no);

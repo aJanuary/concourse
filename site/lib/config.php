@@ -22,6 +22,11 @@ define("PROGRAMME_EMAIL", "programme@example.com");
 define('TIMEZONE', 'Europe/London');
 define('ALLOW_ANONYMOUS_ACCESS', true);
 
+// Roles given to a member when they log in, keyed by role name and listing the
+// badge numbers that get it, e.g. ['artist' => ['0042', '0043']]. Roles are
+// only ever added.
+define('DEFAULT_ROLES_BY_BADGE', []);
+
 define('DISCORD_SERVICE_ACCOUNTS', [
   '1259068933491789854' => [
     'name' => 'Con Ops (SEC)',
