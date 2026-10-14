@@ -44,6 +44,7 @@ container, so changes to them show on the next page load.
 | `scripts/open-mailpit` | Opens [mailpit](https://mailpit.axllent.org/), which catches all mail the portal sends |
 | `scripts/open-db-admin` | Opens phpMyAdmin, or pgAdmin on Postgres (log in to the `portal` server with the password in `secrets/db_dba_password.txt`) |
 | `scripts/db-migrate` | Runs [Phinx](https://book.cakephp.org/phinx/0/en/index.html) in the `web` container: applies pending migrations, or runs the Phinx command given (`create`, `status`, `rollback`, ...) |
+| `scripts/composer` | Runs Composer in the `web` container on `site/lib`; `-d /var/php-migrations` runs it on the migrations instead |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
 
 ### Ports and running several checkouts
@@ -121,5 +122,7 @@ on pushes to `main` and on pull requests.
 
 ## Updating dependencies
 
-1. Add the dependency to `site/lib/composer.json`
-2. Run `docker compose exec web bash -c 'cd /srv/lib; composer update'`
+```
+scripts/composer require vendor/package    # add one
+scripts/composer update                    # update them all
+```

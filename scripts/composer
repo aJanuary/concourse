@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Runs Composer in the web container, on site/lib unless -d says otherwise:
+#
+#   scripts/composer require vendor/package
+#   scripts/composer update
+#   scripts/composer -d /var/php-migrations update    # the migrations' Phinx
+#
+set -eu -o pipefail
+. "$(dirname "$0")/lib.sh"
+
+# Plain "${EXEC_FLAGS[@]}" fails under set -u in macOS bash 3.2 when empty
+EXEC_FLAGS=()
+if [ ! -t 0 ]; then
+	EXEC_FLAGS+=(-T)
+fi
+
+exec docker compose exec ${EXEC_FLAGS[@]+"${EXEC_FLAGS[@]}"} -w /srv/lib web composer "$@"
