@@ -1334,3 +1334,30 @@ button {
 .profile-details dt {
   font-weight: bold;
 }
+
+#timezone-converter {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.converter-column {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.converter-column label {
+  font-weight: bold;
+}
+
+.converter-column input,
+.converter-column select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
