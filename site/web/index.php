@@ -301,7 +301,7 @@ $cards = [
     'childcare',
     'volunteer',
     'website',
-    'code-of-conduct',
+    'coc',
     'help',
   ];
 
