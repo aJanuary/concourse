@@ -112,3 +112,9 @@ There are two ways to connect it to a registration system:
   registration system, and return it from `auth_member_source()` in
   `site/lib/auth/providers.php`. The default, `DbMemberSource`, reads the
   `members` table.
+
+The [site selection desk](integrations/site-selection.md#the-desk) also finds
+members through `MemberSource`, with its `search()` method. With the default,
+it only finds members who have logged in. If members buy a paper ballot
+before they have logged in to the portal, implement `search()` against the
+registration system, whichever login provider you use.

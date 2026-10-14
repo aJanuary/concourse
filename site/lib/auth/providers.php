@@ -26,8 +26,9 @@ function auth_provider_factories() {
   ];
 }
 
-// Where the local provider finds members. Replace this to look members up in
-// a registration system instead of the members table.
+// Where the local provider and the site selection desk find members. Replace
+// this to look members up in a registration system instead of the members
+// table.
 function auth_member_source() {
   require_once(__DIR__ . '/DbMemberSource.php');
   return new DbMemberSource();
