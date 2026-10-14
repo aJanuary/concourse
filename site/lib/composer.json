@@ -6,6 +6,7 @@
         "twig/markdown-extra": "^3.0",
         "league/commonmark": "^2.7.1",
         "jumbojett/openid-connect-php": "^1.0",
-        "chillerlan/php-qrcode": "^5.0"
+        "chillerlan/php-qrcode": "^5.0",
+        "square/square": "^47.0"
     }
 }

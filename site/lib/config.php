@@ -110,6 +110,28 @@ define('BUSINESS_MEETING', [
   'mpc_election' => null,
 ]);
 
+// Site selection. Members with see-site-selection pay the site selection fee,
+// an advance membership of the Worldcon being voted on, through Square and
+// vote online on the election platform; the desk sells paper ballots. See
+// docs/integrations/site-selection.md.
+define('SITE_SELECTION', [
+  // The Worldcon being voted on: its year and its number, e.g. '85th'
+  'year' => '2027',
+  'ordinal' => '85th',
+  // The fee as shown to members. The Square catalogue item sets the charge.
+  'fee' => '$50 USD',
+  // Shown in a random order. A withdrawn bid is struck through.
+  'bids' => [
+    ['name' => 'Example City', 'url' => 'https://example.com/bid', 'withdrawn' => false],
+  ],
+  // The convention's page about how site selection works, and its paper ballot
+  'info_url' => 'https://example.com/site-selection',
+  'paper_ballot_url' => 'https://example.com/site-selection-ballot.pdf',
+  // The election platform's page for voting with a voter key, with {token}
+  // where the key goes
+  'ballot_url' => 'https://example.com/vote/{token}',
+]);
+
 define('DB_DRIVER', getenv('CONFIG_DB_DRIVER') ?: 'mysql');
 if (!in_array(DB_DRIVER, ['mysql', 'pgsql'], true)) {
   throw new RuntimeException("Unsupported CONFIG_DB_DRIVER '" . DB_DRIVER . "'");
