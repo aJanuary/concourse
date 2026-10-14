@@ -13,7 +13,7 @@ render_header(
 <article>
   <h2>Opening times</h2>
   <p>The opening times will be updated as we get closer to the event. Please check back regularly for the latest information.</p>
-<?
+<?php
 // Here is an example of how to structure the opening times.
 /*
   <ul id="times-toc">
@@ -913,7 +913,7 @@ render_header(
       <p>SEC, Hall 4</p>
     </li>
   </ul>
-*/
+*/ ?>
 </article>
 <?php
 render_footer();
