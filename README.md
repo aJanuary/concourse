@@ -178,8 +178,9 @@ Certificates are verified. For a development provider with a self-signed
 certificate, set `verify_tls = false`.
 
 For development without an identity provider, `scripts/mock-oidc.php` is a
-minimal provider that approves every login; its header explains how to run
-it.
+minimal provider that approves every login. `docker-compose.oidc.yml` runs it
+at `http://localhost:8090`; its header has the matching `[oidc]` settings, and
+`secrets/mock-oidc/claims.json` sets who the next login is.
 
 ### Database
 

@@ -1,0 +1,50 @@
+#
+# Adds a mock OpenID Connect provider (scripts/mock-oidc.php). Layer it over
+# the default compose file:
+#
+#   docker-compose -p portal-dev up -d
+#   docker-compose -p portal-dev -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.oidc.yml up -d
+#
+# It shares the web container's network, so http://localhost:8090 reaches it
+# from the browser and from the portal. Configure the portal with:
+#
+#   [auth]
+#   providers[] = oidc
+#
+#   [oidc]
+#   provider_url = http://localhost:8090
+#   client_id = portal
+#   client_secret = mock-secret
+#   provider_logout = true
+#   claims[badge_no] = member-number
+#   claims[real_name] = full-name
+#   role_map[is-in-person] = in-person
+#   role_map[is-online] = online
+#
+# Edit secrets/mock-oidc/claims.json to change who the next login is. Browse
+# to http://localhost:8090/ to log provider sessions out, which sends the
+# portal a back-channel logout.
+#
+services:
+  web:
+    ports:
+      - 8090:8090
+
+  idp:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    network_mode: "service:web"
+    command: php -S 0.0.0.0:8090 /var/scripts/mock-oidc.php
+    environment:
+      # The portal fetches the discovery document and keys while the mock is
+      # still waiting for the logout reply, so one worker would deadlock
+      PHP_CLI_SERVER_WORKERS: "4"
+      MOCK_OIDC_DIR: /var/mock-oidc
+      MOCK_OIDC_BACKCHANNEL_URL: http://nginx/oidc/logout
+    volumes:
+      - ./scripts/mock-oidc.php:/var/scripts/mock-oidc.php
+      - ./site/lib:/srv/lib
+      - ./secrets/mock-oidc:/var/mock-oidc
+    depends_on:
+      - web
