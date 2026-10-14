@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
   <article>
     <h3>Success!</h3>
-    <p>Thank you, we have now associated this membership with the Discord account <?php htmlspecialchars($verification_result["username"]); ?>. You may close this tab.</p>
+    <p>Thank you, we have now associated this membership with the Discord account <?php echo htmlspecialchars($verification_result["username"]); ?>. You may close this tab.</p>
   </article>
 <?php
 
