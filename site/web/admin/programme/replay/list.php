@@ -37,6 +37,7 @@ render_header(
 <?php
         $replays = db_get_replays();
         foreach ($replays as $replay) {
+          $subtitle = null;
           if ($replay['title']) {
             $label = $replay['title'];
             $subtitle = $replay['item_id'];

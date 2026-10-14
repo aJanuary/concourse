@@ -38,6 +38,7 @@ render_header(
 <?php
         $posts = db_get_discord_posts();
         foreach ($posts as $post) {
+          $subtitle = null;
           if ($post['title']) {
             $label = $post['title'];
             $subtitle = $post['item_id'];

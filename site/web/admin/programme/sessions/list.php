@@ -37,6 +37,7 @@ render_header(
 <?php
         $sessions = db_get_prog_sessions();
         foreach ($sessions as $session) {
+          $subtitle = null;
           if ($session['title']) {
             $label = $session['title'];
             $subtitle = $session['item_id'];

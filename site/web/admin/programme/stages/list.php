@@ -37,6 +37,7 @@ render_header(
 <?php
         $stages = db_get_stages();
         foreach ($stages as $stage) {
+          $subtitle = null;
           if ($stage['title']) {
             $label = $stage['title'];
             $subtitle = $stage['room_id'];
