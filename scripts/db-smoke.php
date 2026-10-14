@@ -207,6 +207,20 @@ try {
   check('db_search_members by email', array_column(call('db_search_members', 'other@example'), 'badge_no') === [$other_badge]);
   check('db_search_members treats wildcards literally', call('db_search_members', 'Smoke%Tester') === [] && call('db_search_members', 'Smoke_Tester') === []);
 
+  // The admin role has every permission without any being granted
+  $admin_role_id = db_get_role_id(ADMIN_ROLE_NAME);
+  $admin_permissions = db_get_role_permissions($admin_role_id);
+  check('admin role has every permission', count($admin_permissions) > 0 && array_sum(array_column($admin_permissions, 'has_permission')) === count($admin_permissions));
+  db_grant_member_role($other_badge, $admin_role_id);
+  db_insert_session('smoke-admin-session', $other_badge, time() + 3600);
+  $all_permissions = array_column($admin_permissions, 'name');
+  $session_permissions = db_get_permissions_by_session('smoke-admin-session');
+  sort($all_permissions);
+  sort($session_permissions);
+  check('admin member has every permission', $session_permissions === $all_permissions);
+  db_delete_session('smoke-admin-session');
+  db_revoke_member_role($other_badge, $admin_role_id);
+
   call('db_set_role_permission', $role_id, $permission_id, false);
   check('role permission removed', array_sum(array_column(call('db_get_role_permissions', $role_id), 'has_permission')) === 0);
   db_query("DELETE FROM member_roles WHERE role_id = ?", [$role_id]);

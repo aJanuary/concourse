@@ -5,14 +5,16 @@ roles. Every card and most pages need a permission. Everyone, including
 people who haven't logged in, has the permissions of the `default` role.
 
 Permissions are created by migrations, and so are some roles (`default`,
-`admin`, `online`, `in-person` and a few others). Almost nothing is granted to
-start with: the `default` role has no permissions, so the home page is empty
-until someone grants some, and no role has `manage-roles`.
+`admin`, `online`, `in-person` and a few others). The `admin` role always has
+every permission, including ones added later, and they cannot be taken away
+from it. Almost nothing else is granted to start with: the `default` role has
+no permissions, so the home page is empty until someone grants some.
 
 ## The first administrator
 
-Nobody can manage roles until someone has `manage-roles`, so the first
-administrator is set up in the database, for example with `scripts/db-shell`.
+Nobody can manage roles until someone has the `admin` role or another role
+with `manage-roles`, so the first administrator is set up in the database, for
+example with `scripts/db-shell`.
 
 Members are added to the `members` table when they first log in, so log in
 once and skip this step if you can. A new database has no members, though,
@@ -24,19 +26,14 @@ INSERT INTO members (badge_no, email, name)
   VALUES ('0001', 'you@example.com', 'Your Name');
 ```
 
-Then give the `admin` role `manage-roles`, and give yourself the `admin` role,
-replacing `0001` with your badge number:
+Then give yourself the `admin` role, replacing `0001` with your badge number:
 
 ```sql
-INSERT INTO role_permissions (role_id, permission_id)
-  SELECT role_id, permission_id FROM roles CROSS JOIN permissions
-  WHERE roles.name = 'admin' AND permissions.name = 'manage-roles';
-
 INSERT INTO member_roles (badge_no, role_id)
   SELECT '0001', role_id FROM roles WHERE name = 'admin';
 ```
 
-Instead of the last statement, the `admin` role can be given through
+Instead, the `admin` role can be given through
 `DEFAULT_ROLES_BY_BADGE` or the OIDC `role_map` (see
 [Roles given at login](#roles-given-at-login)). Everything else can then be
 done under Manage roles.

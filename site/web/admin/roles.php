@@ -6,6 +6,10 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
 check_permission('manage-roles');
 
+function is_admin_role($role_id) {
+  return (db_get_role($role_id)['name'] ?? null) === ADMIN_ROLE_NAME;
+}
+
 function render_form_body($role_id = 1) {
 ?>
     <label>Role: <select id="role_id" name="role_id" hx-get="/admin/roles" hx-trigger="change" hx-push-url="true" hx-target="closest form">
@@ -20,9 +24,18 @@ function render_form_body($role_id = 1) {
 ?>
     </select></label>
     <a href="#" hx-on:click="addRole(event)">New role...</a>
-    <fieldset id="permissions">
+<?php
+    $is_admin_role = is_admin_role($role_id);
+    $disabled = $is_admin_role ? ' disabled' : '';
+?>
+    <fieldset id="permissions"<?php echo $disabled; ?>>
       <legend>Permissions</legend>
 <?php
+    if ($is_admin_role) {
+?>
+      <p>The <?php echo htmlspecialchars(ADMIN_ROLE_NAME); ?> role always has every permission.</p>
+<?php
+    }
     $permissions = db_get_role_permissions($role_id);
     foreach ($permissions as $permission) {
       $checked = $permission['has_permission'] ? 'checked' : '';
@@ -49,13 +62,15 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
     } else if (array_key_exists('name', $_POST)) {
       $name = $_POST['name'];
       $role_id = db_create_role($name);
-    } else {
+    } else if (!is_admin_role($_POST['role_id'])) {
       $role_id = $_POST['role_id'];
       $permissions = db_get_role_permissions($role_id);
       foreach ($permissions as $permission) {
         $has_permission = array_key_exists('permission_' . $permission['name'] . '_' . $permission['permission_id'], $_POST);
         db_set_role_permission($role_id, $permission['permission_id'], $has_permission);
       }
+    } else {
+      $role_id = $_POST['role_id'];
     }
   } else {
     $role_id = $_GET['role_id'];
