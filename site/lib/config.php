@@ -120,6 +120,7 @@ define('OAUTH_CLIENT_SECRET', config_get('oauth', 'client_secret'));
 define('OAUTH_SERVER_ENDPOINT', config_get('oauth', 'server_endpoint'));
 
 define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));
+define('AUTH_PROVIDERS', array_map('trim', config_get('auth', 'providers', [])));
 
 // The default name keeps existing sessions valid
 define('SESSION_COOKIE_NAME', config_get('cookie', 'cookie_name') ?: 'session');

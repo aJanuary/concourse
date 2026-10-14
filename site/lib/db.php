@@ -71,6 +71,10 @@ function db_get_member($badge_no) {
   ];
 }
 
+function db_get_members() {
+  return db_fetch_rows("SELECT badge_no, name, email FROM members ORDER BY badge_no");
+}
+
 function db_insert_session($session_token, $badge_no, $expires_at) {
   db_query(
     "INSERT INTO sessions (session_id, expires_at, badge_no) VALUES (?, ?, ?)",
@@ -258,6 +262,10 @@ function db_delete_role($role_id) {
 
 function db_add_member_role($badge_no, $role_name) {
   db_query("INSERT INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?", [$badge_no, $role_name]);
+}
+
+function db_get_member_role_names($badge_no) {
+  return db_fetch_column("SELECT roles.name FROM roles JOIN member_roles USING (role_id) WHERE badge_no = ?", [$badge_no]);
 }
 
 function db_get_default_permissions() {

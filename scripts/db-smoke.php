@@ -79,6 +79,8 @@ try {
   call('db_update_member', $badge, 'smoke.test@example.com', 'Smoke Tester');
   check('db_update_member', call('db_get_member', $badge) === ['name' => 'Smoke Tester', 'email' => 'smoke.test@example.com']);
   check('member count is native int', call('db_get_num_members') === $num_members_before + 2);
+  $members = array_column(call('db_get_members'), null, 'badge_no');
+  check('db_get_members', $members[$badge] === ['badge_no' => $badge, 'name' => 'Smoke Tester', 'email' => 'smoke.test@example.com'] && isset($members[$other_badge]));
 
   // Login links resolve the member however the email is cased
   call('db_insert_login_link', 'SMOKE.TEST@example.COM', $login_code, $future);
@@ -134,6 +136,7 @@ try {
   check('db_get_role_id', call('db_get_role_id', $role_name) === $role_id);
   check('db_get_roles', in_array($role_name, array_column(call('db_get_roles'), 'name'), true));
   call('db_add_member_role', $badge, $role_name);
+  check('db_get_member_role_names', call('db_get_member_role_names', $badge) === [$role_name]);
   $permissions = call('db_get_role_permissions', $role_id);
   $permission_id = $permissions[0]['permission_id'];
   check('role starts with no permissions', array_sum(array_column($permissions, 'has_permission')) === 0);

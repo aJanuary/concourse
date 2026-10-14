@@ -57,7 +57,7 @@ All sections are optional; a feature whose section is missing reports which key 
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients |
 | `[rce]` | `api_key`, `ticket_id` | RingCentral Events magic links |
 | `[oauth]` | `client_id`, `client_secret`, `server_endpoint` | OAuth login provider |
-| `[auth]` | `allowlist[]` | Emails allowed to log in (empty means everyone) |
+| `[auth]` | `allowlist[]`, `providers[]` | Emails allowed to log in (empty means everyone); enabled login providers (default `registration-oauth`; `dev` only works when `RUNTIME_ENV=development`) |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
 
 `docker-compose.yml` has the same list with a description of each key.

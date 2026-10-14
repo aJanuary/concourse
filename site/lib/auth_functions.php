@@ -4,6 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/auth/Identity.php');
 
 // Browsers only accept SameSite=None on Secure cookies, so plain HTTP (local
 // development) falls back to Lax. None over HTTPS lets a ConClar site on
@@ -148,6 +149,54 @@ function update_member($badge_no, $email, $name) {
       request_discord_recheck_user($discord_id);
     }
   }
+}
+
+// Completes a login for an identity from a provider: creates or updates the
+// member, starts a session and sends the browser on. Throws AuthFailure if the
+// identity may not log in.
+function finish_login($identity, $redirect) {
+  if (ALLOWLIST && !in_array($identity->email, ALLOWLIST)) {
+    throw new AuthFailure('not-in-allowlist');
+  }
+
+  $badge_no = $identity->badge_no;
+  if (!db_member_exists($badge_no)) {
+    create_member($badge_no, $identity->email, $identity->name);
+  } else {
+    update_member($badge_no, $identity->email, $identity->name);
+  }
+
+  if ($identity->roles !== null) {
+    $existing_roles = db_get_member_role_names($badge_no);
+    foreach (array_diff($identity->roles, $existing_roles) as $role) {
+      db_add_member_role($badge_no, $role);
+    }
+  }
+
+  if ($identity->external !== null && !db_identity_exists($badge_no)) {
+    [$provider, $identity_id, $raw_info] = $identity->external;
+    db_create_oauth_identity($badge_no, $provider, $identity_id, $identity->email, $raw_info);
+  }
+
+  make_session($badge_no);
+
+  if (session_status() === PHP_SESSION_ACTIVE) {
+    session_destroy();
+  }
+
+  // Don't allow open redirects
+  // https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html
+  header('Location: ' . (is_valid_redirect($redirect) ? $redirect : '/'));
+  exit;
+}
+
+function redirect_to_login_error($error_code, $redirect = null) {
+  $url = '/login?error_code=' . urlencode($error_code);
+  if ($redirect !== null) {
+    $url .= '&redirect=' . urlencode($redirect);
+  }
+  header('Location: ' . $url);
+  exit;
 }
 
 function get_login_link_status($badge_no, $login_code) {

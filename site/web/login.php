@@ -3,13 +3,24 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 
-if (isset($_GET['dologin'])) {
-    $oauth = new OAuthService();
-    $_SESSION['oauth2redirect'] = $_GET['redirect'] ?? '/';
-    header('Location: ' . $oauth->authorize_url());
-    exit();
+// Older links start the registration login with ?dologin
+$provider_id = $_GET['provider'] ?? (isset($_GET['dologin']) ? 'registration-oauth' : null);
+if ($provider_id !== null) {
+    $provider = auth_get_provider($provider_id);
+    if ($provider === null) {
+        render_404();
+    }
+    $redirect = $_POST['redirect'] ?? $_GET['redirect'] ?? '/';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            finish_login($provider->complete($_POST), $redirect);
+        } catch (AuthFailure $e) {
+            redirect_to_login_error($e->getMessage(), $redirect);
+        }
+    }
+    $provider->begin($redirect);
 }
 
 if (is_logged_in()) {
@@ -59,15 +70,18 @@ if (isset($_GET['error_code'])) {
         'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.',
         'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',
         'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
+        'unknown-member' => 'No member with that badge number exists.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occurred.';
 ?>
     <p class="error"><img src="resources/error.svg" alt="error" aria-label="error"><?php echo $error; ?></p>
 <?php
 }
+foreach (auth_enabled_providers() as $provider) {
 ?>
-    <a href="?dologin&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login">Log in</a>
+    <a href="?provider=<?php echo urlencode($provider->id()); ?>&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login"><?php echo htmlspecialchars($provider->display_name()); ?></a>
 <?php
+}
 if (ALLOW_ANONYMOUS_ACCESS) {
 ?>
     <p><a href="/login?skip-login&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>">Continue without logging in</a></p>
