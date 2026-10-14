@@ -49,6 +49,27 @@ echo "COMPOSE_FILE=$COMPOSE_FILE" >>.env.tmp
 mv .env.tmp .env
 echo "Using $DRIVER (COMPOSE_FILE=$COMPOSE_FILE in .env)"
 
+# Compose would otherwise start everything but nginx and fail with a bind
+# error. The shell's PORTAL_PORT beats .env's, as it does for compose.
+PORT=${PORTAL_PORT:-$(sed -n 's/^PORTAL_PORT=//p' .env | tail -n 1)}
+PORT=${PORT:-8080}
+OWN_PORT=$(docker compose port nginx 80 2>/dev/null | sed 's/.*://') || true
+if [ "$PORT" != 0 ] && [ "$PORT" != "$OWN_PORT" ] && (exec 3<>"/dev/tcp/127.0.0.1/$PORT") 2>/dev/null; then
+	cat >&2 <<EOF
+
+Port $PORT is already in use, so the portal can't be published there.
+Set PORTAL_PORT in .env to a free port and run this again, for example:
+
+  PORTAL_PORT=8081
+
+Or set it to 0 to let Docker pick a free port each time the portal starts;
+scripts/open-portal or docker compose port nginx 80 shows which:
+
+  PORTAL_PORT=0
+EOF
+	exit 1
+fi
+
 mkdir -p "$SECRETS"
 if [ ! -f "$SECRETS/db_root_password.txt" ]; then
 	echo "Generating database root password"

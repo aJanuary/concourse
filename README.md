@@ -257,12 +257,14 @@ included automatically. To add `docker-compose.oidc.yml`, append it to
 | `scripts/open-db-admin` | Opens phpMyAdmin, or pgAdmin on Postgres (log in to the `portal` server with the password in `secrets/db_dba_password.txt`) |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
 
-Only the portal has a fixed port. The database, mailpit and the admin tools
-get a free port each time they start, which the `open-*` scripts look up
-(`docker compose port <service> <port>` shows it too). Nothing has a fixed
-container name and the database volume belongs to the compose project, which
-is named after the checkout's directory. So two checkouts can run at once:
-set `PORTAL_PORT=8081` in the second one's `.env`.
+The portal is on port 8080 unless `PORTAL_PORT` in `.env` says otherwise;
+bootstrap stops before starting anything if that port is in use. Set
+`PORTAL_PORT=0` to have Docker pick a free port each time the portal starts.
+The database, mailpit and the admin tools always get a free port, which the
+`open-*` scripts look up (`docker compose port <service> <port>` shows it
+too). Nothing has a fixed container name and the database volume belongs to
+the compose project, which is named after the checkout's directory. So two
+checkouts can run at once, as long as their `PORTAL_PORT`s differ.
 
 The database volume used to be an external volume called
 `portal-mysqldata`. To keep using it, add this to
