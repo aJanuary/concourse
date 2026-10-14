@@ -3,6 +3,8 @@
   require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/analytics.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 
   function get_internal_url($script) {
     return $script . '?v=' . filemtime(getenv('CONFIG_WEB_DIR') . $script);
@@ -21,6 +23,8 @@
     <link rel="shortcut icon" href="/resources/favicon.png">
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/reset.css"); ?>">
     <link rel="stylesheet" href="<?php echo get_internal_url("/resources/style.css"); ?>">
+    <script src="<?php echo get_internal_url("/resources/dropdown.js"); ?>" defer></script>
+    <script src="<?php echo get_internal_url("/resources/form.js"); ?>" defer></script>
   </head>
   <body <?php echo $is_home ? 'class="home"' : ''; ?>>
     <header>
@@ -39,21 +43,33 @@
         <?php
         if (isset($GLOBALS['app-data']['username'])) {
         ?>
-          <p class="username">
-            <?php echo htmlspecialchars($GLOBALS['app-data']['username']); ?>
-            |
+          <div class="username">
             <?php
             if (is_anonymous()) {
             ?>
-              <a href="<?php echo make_login_link(); ?>">Log in</a>
+              <a href="<?php echo htmlspecialchars(make_login_link()); ?>">Log in</a>
             <?php
             } else {
             ?>
-              <a href="/logout">Log out</a>
+              <div id="user-dropdown">
+                <input type="checkbox" id="user-menu-toggle" role="button" aria-haspopup="true" aria-controls="user-dropdown-menu">
+                <label for="user-menu-toggle" id="user-menu-label"><?php echo htmlspecialchars($GLOBALS['app-data']['username']); ?></label>
+                <div id="user-dropdown-menu" role="menu">
+                  <a href="/profile" role="menuitem">Profile</a>
+                  <?php
+                  if (count(auth_switchable_members()) > 1) {
+                  ?>
+                    <a href="/switch-member?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" role="menuitem">Switch member</a>
+                  <?php
+                  }
+                  ?>
+                  <a href="/logout" role="menuitem">Log out</a>
+                </div>
+              </div>
             <?php
             }
             ?>
-          </p>
+          </div>
         <?php
         }
         ?>
@@ -105,6 +121,35 @@
     </footer>
   </body>
 </html>
+<?php
+  }
+
+  function member_initials($name) {
+    $parts = preg_split('/\s+/', trim($name));
+    if (count($parts) === 1) {
+      return strtoupper(substr($parts[0], 0, 1));
+    }
+    return strtoupper(substr($parts[0], 0, 1) . substr($parts[count($parts) - 1], 0, 1));
+  }
+
+  // One button per member. Each posts a token bound to the current member, so
+  // a form from another site or another login cannot switch the session.
+  function render_user_select($members, $redirect = '/') {
+    $current = get_current_user_badge_no();
+?>
+    <ul id="user-select">
+      <?php foreach ($members as $member) { ?>
+        <li>
+          <form method="post" action="/switch-member">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars(create_secure_token('/switch-member', ['from' => $current, 'badge_no' => $member['badge_no'], 'redirect' => $redirect], 300)); ?>">
+            <button type="submit"<?php echo $member['badge_no'] === $current ? ' aria-current="true"' : ''; ?>>
+              <span class="avatar color-<?php echo ((int) preg_replace('/\D/', '', $member['badge_no']) % 4) + 1; ?>"><?php echo htmlspecialchars(member_initials($member['name'])); ?></span>
+              [<?php echo htmlspecialchars($member['badge_no']); ?>] <?php echo htmlspecialchars($member['name']); ?>
+            </button>
+          </form>
+        </li>
+      <?php } ?>
+    </ul>
 <?php
   }
 

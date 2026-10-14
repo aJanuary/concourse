@@ -1218,3 +1218,119 @@ button {
 #user-select .avatar.color-4 {
   background: #87ABDF;
 }
+
+.username {
+  margin-left: auto;
+}
+
+@media only screen and (max-width: 40em) {
+  .username {
+    margin-left: 0;
+  }
+}
+
+#user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#user-menu-toggle {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
+
+#user-menu-label {
+  color: var(--link-color);
+  cursor: pointer;
+}
+
+#user-menu-label:hover,
+#user-menu-toggle:focus + #user-menu-label {
+  color: var(--link-hover-color);
+}
+
+#user-menu-toggle:focus-visible + #user-menu-label {
+  outline: 2px solid highlight;
+  outline-offset: 2px;
+}
+
+#user-menu-label::after {
+  content: ' ▾';
+  font-size: 0.8em;
+}
+
+#user-menu-toggle:checked + #user-menu-label::after {
+  content: ' ▴';
+}
+
+#user-dropdown-menu {
+  position: absolute;
+  top: 1.5em;
+  right: -0.5em;
+  min-width: 18ch;
+  z-index: 1000;
+  background: var(--body-bg-color);
+  border: 1px solid var(--inst-border-color);
+  border-radius: 0.5em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+}
+
+#user-menu-toggle:checked ~ #user-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#user-dropdown-menu a {
+  display: block;
+  padding: 0.5em 1em;
+  color: var(--body-fg-color);
+  text-decoration: none;
+  text-align: left;
+  border-bottom: 1px solid var(--inst-border-color);
+}
+
+#user-dropdown-menu a:first-child {
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+
+#user-dropdown-menu a:last-child {
+  border-bottom: none;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+
+#user-dropdown-menu a:hover,
+#user-dropdown-menu a:focus {
+  background: var(--select-list-bg-color);
+  color: var(--link-color);
+}
+
+#user-select li button[aria-current] {
+  background: var(--select-list-hover-bg-color);
+}
+
+.nu-form .error-message {
+  color: var(--error-fg-color);
+}
+
+.message {
+  margin-top: 20px;
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.25em;
+}
+
+.profile-details dt {
+  font-weight: bold;
+}
