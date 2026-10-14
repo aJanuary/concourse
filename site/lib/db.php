@@ -604,6 +604,64 @@ function db_delete_replay($item_id) {
   db_query("DELETE FROM prog_replay WHERE item_id = ?", [$item_id]);
 }
 
+function db_get_signups() {
+  return db_fetch_rows("SELECT id, title, category, url, guide_url, notes, session_start, opens_at, closes_at FROM signups");
+}
+
+// Null if there is no such signup
+function db_get_signup($id) {
+  return db_fetch_row("SELECT id, title, category, url, guide_url, notes, session_start, opens_at, closes_at FROM signups WHERE id = ?", [$id]);
+}
+
+function db_signup_values($signup) {
+  return [
+    $signup['title'],
+    $signup['category'],
+    $signup['url'],
+    $signup['guide_url'] ?? null,
+    $signup['notes'] ?? null,
+    $signup['session_start'] ?? null,
+    $signup['opens_at'] ?? null,
+    $signup['closes_at'] ?? null,
+  ];
+}
+
+function db_add_signup($signup) {
+  db_query(
+    "INSERT INTO signups (title, category, url, guide_url, notes, session_start, opens_at, closes_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    db_signup_values($signup)
+  );
+
+  return db_last_insert_id('signups_id_seq');
+}
+
+// All or nothing, so a failure part way through a bulk add leaves no partial import
+function db_add_signups($signups) {
+  global $pdo;
+
+  $pdo->beginTransaction();
+  try {
+    foreach ($signups as $signup) {
+      db_add_signup($signup);
+    }
+    $pdo->commit();
+  } catch (Exception $exception) {
+    $pdo->rollBack();
+    throw $exception;
+  }
+}
+
+function db_edit_signup($id, $signup) {
+  db_query(
+    "UPDATE signups SET title = ?, category = ?, url = ?, guide_url = ?, notes = ?, session_start = ?, opens_at = ?, closes_at = ? WHERE id = ?",
+    array_merge(db_signup_values($signup), [$id])
+  );
+}
+
+function db_delete_signup($id) {
+  db_query("DELETE FROM signups WHERE id = ?", [$id]);
+}
+
 function db_insert_discord_token($token, $discord_id, $discord_username) {
   db_query(
     "INSERT INTO discord_verification_token (token_id, discord_id, username) VALUES (?, ?, ?)",

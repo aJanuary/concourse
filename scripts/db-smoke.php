@@ -65,6 +65,7 @@ function cleanup() {
   db_query("DELETE FROM auth_token_cache WHERE service = 'smoke'");
   db_query("DELETE FROM prog_discord_posts WHERE item_id IN ('smoke-post', 'smoke-post-2')");
   db_query("DELETE FROM prog_replay WHERE item_id = 'smoke-replay'");
+  db_query("DELETE FROM signups WHERE category = 'smoke-category'");
 }
 
 echo "driver: " . DB_DRIVER . "\n";
@@ -289,6 +290,27 @@ try {
   call('db_delete_replay', 'smoke-replay');
   check('db_delete_replay', call('db_get_replay', 'smoke-replay')['found'] === false);
 
+  // Signups
+  $signup = ['title' => 'Smoke Signup', 'category' => 'smoke-category', 'url' => 'https://example.com/form?n={name}', 'guide_url' => null, 'notes' => null, 'session_start' => 1700000000, 'opens_at' => null, 'closes_at' => 4102444800];
+  $signup_id = call('db_add_signup', $signup);
+  check('db_add_signup returns the new id as an int', is_int($signup_id) && $signup_id > 0);
+  check('db_get_signup', call('db_get_signup', $signup_id) === ['id' => $signup_id] + $signup);
+  check('db_get_signup for missing signup', call('db_get_signup', -1) === null);
+  call('db_edit_signup', $signup_id, ['notes' => "Two\nlines", 'opens_at' => 1600000000] + $signup);
+  $edited = call('db_get_signup', $signup_id);
+  check('db_edit_signup', $edited['notes'] === "Two\nlines" && $edited['opens_at'] === 1600000000 && $edited['closes_at'] === 4102444800);
+  call('db_add_signups', [['title' => 'Bulk 1'] + $signup, ['title' => 'Bulk 2'] + $signup]);
+  check('db_add_signups', count(array_filter(call('db_get_signups'), fn($s) => $s['category'] === 'smoke-category')) === 3);
+  $failed = false;
+  try {
+    db_add_signups([['title' => 'Bulk 3'] + $signup, ['title' => null] + $signup]);
+  } catch (PDOException $e) {
+    $failed = true;
+  }
+  check('db_add_signups adds nothing when a row fails', $failed && count(array_filter(db_get_signups(), fn($s) => $s['category'] === 'smoke-category')) === 3);
+  call('db_delete_signup', $signup_id);
+  check('db_delete_signup', db_get_signup($signup_id) === null);
+
   // Sessions last, as the earlier checks depend on them
   call('db_delete_session', $session);
   check('db_delete_session', call('db_session_exists', $session) === false);
@@ -301,7 +323,7 @@ $data_functions = array_filter($all, fn($f) => !in_array($f, [
   // helpers and dialect functions, exercised through the functions above
   'db_dsn', 'db_query', 'db_fetch_value', 'db_fetch_row', 'db_fetch_rows', 'db_fetch_column',
   'db_driver', 'db_quote_identifier', 'db_upsert', 'db_insert_ignore', 'db_last_insert_id',
-  'db_format_discord_post',
+  'db_format_discord_post', 'db_signup_values',
 ]));
 $uncovered = array_diff($data_functions, array_keys($called), $not_applicable);
 echo "\ncovered " . count(array_intersect($data_functions, array_keys($called))) . " of " . count($data_functions) . " db_* functions\n";
