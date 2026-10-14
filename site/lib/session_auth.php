@@ -14,6 +14,9 @@ if (!is_logged_in()) {
     $GLOBALS['app-data']['username'] = 'Anonymous';
     $GLOBALS['app-data']['permissions'] = db_get_default_permissions();
     return;
+  } else if (isset($_REQUEST['no_redirect'])) {
+    // Beacons have nowhere to follow a redirect to
+    exit;
   } else {
     header('Location: ' . make_login_link());
     exit;
