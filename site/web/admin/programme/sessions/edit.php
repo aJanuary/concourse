@@ -59,12 +59,12 @@ if (array_key_exists('item_id', $_GET)) {
 }
 
 render_header(
-  'Add/edit an RCE session',
-  'Manage RCE sessions.',
+  'Add/edit a session',
+  'Manage sessions.',
   [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
-    'Manage RCE sessions' => '/admin/programme/sessions/list',
+    'Manage sessions' => '/admin/programme/sessions/list',
     htmlspecialchars($title)
   ]
 );
