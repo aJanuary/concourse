@@ -9,13 +9,13 @@ if (!current_user_has_permission('manage-programme')) {
 }
   
 render_header(
-  'Manage RCE stages',
-  'Manage RCE stages.',
-  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage RCE stages']
+  'Manage stages',
+  'Manage stages.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage stages']
 );
 ?>
   <article>
-    <h2>Manage <abbr title="RingCentral Events">RCE</abbr> stages</h2>
+    <h2>Manage stages</h2>
     <script>
       if (window.location.search.includes('error')) {
         var $toast = document.createElement('p');

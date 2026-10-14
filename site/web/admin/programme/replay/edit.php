@@ -12,11 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $item_id = $_POST['item_id'] ?: null;
   $title = $_POST['title'] ?: null;
-  $replay_url = $_POST['replay_url'];
+  $replay_url = $_POST['replay_url'] ?? '';
+  $unavailable = isset($_POST['unavailable']);
 
   if ($action == "add") {
     try {
-      db_add_replay($item_id, $title, $replay_url);
+      db_add_replay($item_id, $title, $replay_url, $unavailable);
     } catch (Exception $e) {
       header('Location: /admin/programme/replay/list?error=' . $e->getMessage());
       throw $e;
@@ -30,9 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } else if ($action == "edit") {
     try {
-      db_edit_replay($item_id, $title, $replay_url);
+      db_edit_replay($item_id, $title, $replay_url, $unavailable);
     } catch (Exception $e) {
-      header('Location: /admin/programme/feplay/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/replay/list?error=' . $e->getMessage());
       throw $e;
     }
   }
@@ -40,24 +41,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit;
 }
 
-if (array_key_exists('item_id', $_GET)) {
-  $item_id = $_GET['item_id'];
-  $replay = db_get_replay($item_id);
-}
+$item_id = $_GET['item_id'] ?? '';
+$replay = db_get_replay($item_id);
+// A replay that doesn't exist yet can still be filled in from the link on the session page
+$new_replay = !$replay['found'];
+$replay['title'] = $replay['title'] ?? $_GET['title'] ?? '';
+$replay['replay_url'] = $replay['replay_url'] ?? $_GET['replay_url'] ?? '';
 
-if (array_key_exists('item_id', $_GET)) {
+if ($item_id !== '' && !$new_replay) {
   $title = 'Edit ' . $item_id;
 } else {
   $title = 'Add replay';
 }
 
 render_header(
-  'Add/edit a RCE replay',
-  'Manage RCE replays.',
+  'Add/edit a replay',
+  'Manage replays.',
   [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
-    'Manage RCE replays' => '/admin/programme/replay/list',
+    'Manage replays' => '/admin/programme/replay/list',
     htmlspecialchars($title)
   ]
 );
@@ -68,25 +71,25 @@ render_header(
       <fieldset>
         <legend>Replay details</legend>
       <?php
-if (array_key_exists('item_id', $_GET)) {
+if (!$new_replay) {
 ?>
-        <input type="hidden" name="item_id" value="<?php echo $item_id; ?>">
-        
+        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item_id); ?>">
         <input type="hidden" name="action" value="edit">
 <?php
 } else {
 ?>
         <input type="hidden" name="action" value="add">
-        <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+        <p><label>Plano Item ID: <input name="item_id" value="<?php echo htmlspecialchars($item_id); ?>" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 <?php
 }
 ?>
         <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($replay['title']); ?>"></label></p>
         <p><label>Replay URL: <input type="text" name="replay_url" value="<?php echo htmlspecialchars($replay['replay_url']); ?>"></label></p>
+        <p><label><input type="checkbox" name="unavailable"<?php echo $replay['unavailable'] ? ' checked' : ''; ?>> No replay will be available (shows a message instead of the replay)</label></p>
       </fieldset>
       <input type="submit" value="Save">
       <?php
-if (array_key_exists('item_id', $_GET)) {
+if (!$new_replay) {
 ?>
       <input id="delete" type="button" value="Delete">
 <?php

@@ -54,12 +54,12 @@ if (array_key_exists('room_id', $_GET)) {
 }
 
 render_header(
-  'Add/edit an RCE stage',
-  'Manage RCE stages.',
+  'Add/edit a stage',
+  'Manage stages.',
   [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
-    'Manage RCE stages' => '/admin/programme/stages/list',
+    'Manage stages' => '/admin/programme/stages/list',
     htmlspecialchars($title)
   ]
 );

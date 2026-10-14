@@ -12,11 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?: null;
   $item_id = $_POST['item_id'] ?: null;
   $title = $_POST['title'] ?: null;
-  $rce_url = $_POST['rce_url'];
+  $destination = $_POST['destination'] ?? '';
+  $handler = $_POST['handler'] ?: null;
+  if ($handler !== null && !in_array($handler, AVAILABLE_PROG_HANDLERS, true)) {
+    header('Location: /admin/programme/sessions/list?error=' . urlencode('Unknown handler'));
+    exit;
+  }
 
   if ($action == "add") {
     try {
-      db_add_prog_session($item_id, $title, $rce_url);
+      db_add_prog_session($item_id, $title, $destination, $handler);
     } catch (Exception $e) {
       header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
       throw $e;
@@ -30,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } else if ($action == "edit") {
     try {
-      db_edit_prog_session($item_id, $title, $rce_url);
+      db_edit_prog_session($item_id, $title, $destination, $handler);
     } catch (Exception $e) {
       header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
       throw $e;
@@ -43,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (array_key_exists('item_id', $_GET)) {
   $item_id = $_GET['item_id'];
   $session = db_get_prog_session($item_id);
+} else {
+  $session = ['title' => '', 'destination' => '', 'handler' => null];
 }
 
 if (array_key_exists('item_id', $_GET)) {
@@ -81,13 +88,29 @@ if (array_key_exists('item_id', $_GET)) {
 }
 ?>
         <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($session['title']); ?>"></label></p>
-        <p><label>Session URL: <input type="text" name="rce_url" value="<?php echo htmlspecialchars($session['rce_url']); ?>"></label></p>
+        <p><label>Destination: <input type="text" name="destination" value="<?php echo htmlspecialchars($session['destination']); ?>"></label></p>
+        <p><label>Handler:
+          <select name="handler">
+            <option value="">Default (<?php echo htmlspecialchars(DEFAULT_PROG_HANDLER); ?>)</option>
+<?php
+foreach (AVAILABLE_PROG_HANDLERS as $available_handler) {
+?>
+            <option value="<?php echo htmlspecialchars($available_handler); ?>"<?php echo $session['handler'] === $available_handler ? ' selected' : ''; ?>><?php echo htmlspecialchars($available_handler); ?></option>
+<?php
+}
+?>
+          </select>
+        </label></p>
+        <p>The destination depends on the handler: a Zoom Events session id for <code>zoomevents</code>, a room id for <code>stream</code>, and unused for <code>discord</code>.</p>
       </fieldset>
       <input type="submit" value="Save">
       <?php
 if (array_key_exists('item_id', $_GET)) {
 ?>
       <input id="delete" type="button" value="Delete">
+      <a href="/admin/programme/replay/edit?<?php echo htmlspecialchars(http_build_query($same_replay_destination
+        ? ['item_id' => $item_id, 'title' => $session['title'], 'replay_url' => $session['destination']]
+        : ['item_id' => $item_id, 'title' => $session['title']])); ?>" class="button">Add or edit replay</a>
 <?php
 }
 ?>

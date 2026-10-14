@@ -9,13 +9,13 @@ if (!current_user_has_permission('manage-programme')) {
 }
   
 render_header(
-  'Manage RCE sessions',
-  'Manage RCE sessions.',
-  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage RCE sessions']
+  'Manage sessions',
+  'Manage sessions.',
+  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage sessions']
 );
 ?>
   <article>
-    <h2>Manage <abbr title="RingCentral Events">RCE</abbr> sessions</h2>
+    <h2>Manage sessions</h2>
     <script>
       if (window.location.search.includes('error')) {
         var $toast = document.createElement('p');
