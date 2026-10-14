@@ -360,6 +360,39 @@ function db_get_member_role_names($badge_no) {
   return db_fetch_column("SELECT roles.name FROM roles JOIN member_roles USING (role_id) WHERE badge_no = ?", [$badge_no]);
 }
 
+// Badge numbers match exactly; names and emails match anywhere
+function db_search_members($query, $limit = 50) {
+  $like = '%' . strtr($query, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
+  return db_fetch_rows(
+    "SELECT badge_no, name, email FROM members WHERE badge_no = ? OR LOWER(name) LIKE LOWER(?) ESCAPE '!' OR LOWER(real_name) LIKE LOWER(?) ESCAPE '!' OR LOWER(email) LIKE LOWER(?) ESCAPE '!' ORDER BY badge_no LIMIT " . (int) $limit,
+    [$query, $like, $like, $like]
+  );
+}
+
+function db_get_role($role_id) {
+  return db_fetch_row("SELECT role_id, name FROM roles WHERE role_id = ?", [$role_id]);
+}
+
+// By id, because role names are not unique
+function db_get_member_roles($badge_no) {
+  return db_fetch_rows("SELECT role_id, roles.name FROM roles JOIN member_roles USING (role_id) WHERE badge_no = ? ORDER BY roles.name", [$badge_no]);
+}
+
+// Returns false if the member already had the role
+function db_grant_member_role($badge_no, $role_id) {
+  return db_insert_ignore('member_roles', ['badge_no' => $badge_no, 'role_id' => $role_id]);
+}
+
+// Returns false if the member did not have the role
+function db_revoke_member_role($badge_no, $role_id) {
+  return db_query("DELETE FROM member_roles WHERE badge_no = ? AND role_id = ?", [$badge_no, $role_id])->rowCount() > 0;
+}
+
+// The member's permissions as they would be without one of their roles
+function db_get_member_permissions_without_role($badge_no, $role_id) {
+  return db_fetch_column("(SELECT name FROM permissions JOIN role_permissions USING (permission_id) JOIN member_roles USING (role_id) WHERE badge_no = ? AND role_id <> ?) UNION (SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default')", [$badge_no, $role_id]);
+}
+
 function db_get_default_permissions() {
   return db_fetch_column("SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default'");
 }

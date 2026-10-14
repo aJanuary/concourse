@@ -194,6 +194,24 @@ try {
   check('db_get_default_permissions', is_array(call('db_get_default_permissions')));
   $discord_info = call('db_get_all_discord_info');
   check('db_get_all_discord_info', $discord_info['1001']['name'] === 'Smoke Tester' && $discord_info['1001']['roles'] === [$role_name]);
+  check('db_get_member_permissions_without_role leaves out the role', !in_array($permission_name, call('db_get_member_permissions_without_role', $badge, $role_id), true));
+  check('db_get_member_permissions_without_role keeps other roles', in_array($permission_name, call('db_get_member_permissions_without_role', $badge, $role_id + 1000), true));
+
+  // Roles by id, as the member roles admin uses them
+  check('db_get_role', call('db_get_role', $role_id) === ['role_id' => $role_id, 'name' => $role_name]);
+  check('db_get_role for missing role', call('db_get_role', 0) === null);
+  check('db_get_member_roles', call('db_get_member_roles', $badge) === [['role_id' => $role_id, 'name' => $role_name]]);
+  check('db_grant_member_role for a role the member has', call('db_grant_member_role', $badge, $role_id) === false);
+  check('db_revoke_member_role', call('db_revoke_member_role', $badge, $role_id) === true && call('db_get_member_roles', $badge) === []);
+  check('db_revoke_member_role for a role the member lacks', call('db_revoke_member_role', $badge, $role_id) === false);
+  check('db_grant_member_role', call('db_grant_member_role', $badge, $role_id) === true && count(call('db_get_member_roles', $badge)) === 1);
+
+  // Member search
+  check('db_search_members by badge number', array_column(call('db_search_members', $badge), 'badge_no') === [$badge]);
+  check('db_search_members by name ignores case', array_column(call('db_search_members', 'smoke TESTER'), 'badge_no') === [$badge]);
+  check('db_search_members by email', array_column(call('db_search_members', 'other@example'), 'badge_no') === [$other_badge]);
+  check('db_search_members treats wildcards literally', call('db_search_members', 'Smoke%Tester') === [] && call('db_search_members', 'Smoke_Tester') === []);
+
   call('db_set_role_permission', $role_id, $permission_id, false);
   check('role permission removed', array_sum(array_column(call('db_get_role_permissions', $role_id), 'has_permission')) === 0);
   db_query("DELETE FROM member_roles WHERE role_id = ?", [$role_id]);
