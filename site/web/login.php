@@ -48,6 +48,8 @@ render_header(
 <?php
 if (isset($_GET['error_code'])) {
     $error = [
+        'invalid-state' => 'Your login could not be completed. Please try logging in again.',
+        'missing-claims' => 'Your account did not provide the details needed to log in. Please contact support.',
         'unknown-member' => 'No member with that badge number exists.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occurred.';

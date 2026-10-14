@@ -14,6 +14,10 @@ function auth_provider_factories() {
       require_once(__DIR__ . '/LocalProvider.php');
       return new LocalProvider();
     },
+    'oidc' => function () {
+      require_once(__DIR__ . '/OidcProvider.php');
+      return new OidcProvider();
+    },
     'dev' => function () {
       require_once(__DIR__ . '/DevProvider.php');
       return DevProvider::is_available() ? new DevProvider() : null;

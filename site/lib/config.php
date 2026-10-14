@@ -125,6 +125,20 @@ define('API_KEYS', $config_file['api_keys'] ?? []);
 define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));
 define('AUTH_PROVIDERS', array_map('trim', config_get('auth', 'providers', [])));
 
+// The `oidc` login provider. Claim names are the userinfo claims that supply
+// each member field; `role_map` maps a claim to the role it grants when the
+// claim is truthy. See the README.
+define('OIDC_PROVIDER_URL', config_get('oidc', 'provider_url'));
+define('OIDC_CLIENT_ID', config_get('oidc', 'client_id'));
+define('OIDC_CLIENT_SECRET', config_get('oidc', 'client_secret'));
+define('OIDC_SCOPES', array_map('trim', config_get('oidc', 'scopes', ['openid', 'email', 'profile'])));
+define('OIDC_CLAIMS', array_map('trim', config_get('oidc', 'claims', [])) + ['email' => 'email', 'name' => 'name']);
+define('OIDC_ROLE_MAP', array_map('trim', config_get('oidc', 'role_map', [])));
+// Whether logging out of the portal also logs out at the provider
+define('OIDC_PROVIDER_LOGOUT', in_array(strtolower(trim((string) config_get('oidc', 'provider_logout'))), ['1', 'true', 'yes', 'on'], true));
+// Only an explicit false turns certificate checking off
+define('OIDC_VERIFY_TLS', !in_array(strtolower(trim((string) config_get('oidc', 'verify_tls', '1'))), ['', '0', 'false', 'no', 'off'], true));
+
 define('SMTP_HOST', config_get('smtp', 'host'));
 define('SMTP_PORT', (int) config_get('smtp', 'port', 25));
 define('SMTP_USERNAME', config_get('smtp', 'username'));
