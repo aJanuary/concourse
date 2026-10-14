@@ -75,6 +75,9 @@ final class AddSeeArtAuctionPermission extends AbstractMigration
 Or reuse an existing permission if the card should be seen by the same
 people as another.
 
+If the card may be announced before it opens, also add
+`see-art-auction-coming-soon` (see [Coming soon](#coming-soon)).
+
 Once deployed, grant the permission to roles under
 [Manage roles](roles-and-permissions.md#managing-roles). Grant it to the
 `default` role to show the card to everyone, including people who haven't
@@ -159,6 +162,20 @@ the other site doesn't need its own login. `site/lib/auth_functions.php` has
 `get_current_user_email()`; `site/web/upload-photo.php` and
 `site/web/virtual-gatherings.php` are examples. Anyone can edit a URL, so
 only do this where it doesn't matter if the details are changed.
+
+## Coming soon
+
+To tell members a card is on its way before it opens, grant the card's
+permission followed by `-coming-soon`. A member who has that but not the
+card's permission sees the card greyed out in a "Coming soon…" section at the
+bottom of the home page, with no link and no quick links heart. Once they
+have the card's permission too, it shows normally in its category.
+
+For example, grant `see-signups-coming-soon` to the `default` role a week
+before sign-ups open, then grant `see-signups` on the day.
+
+Each member-facing card's permission has a `-coming-soon` permission already.
+A card is only listed once, even when several cards share a permission.
 
 ## Removing a card
 

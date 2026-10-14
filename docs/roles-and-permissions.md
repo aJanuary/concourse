@@ -56,6 +56,12 @@ they can be given a role. Changes apply from the member's next page load.
 A member with `manage-roles` can preview the portal as a role would see it by
 adding `?role=<role name>` to a page's URL.
 
+Each member-facing card's permission has a matching `-coming-soon`
+permission, such as `see-signups-coming-soon`, which shows the card greyed
+out in a "Coming soon…" section instead (see
+[Coming soon](cards.md#coming-soon)). A member with both sees the card
+normally.
+
 ## Roles given at login
 
 `DEFAULT_ROLES_BY_BADGE` in `site/lib/config.php` adds roles to members as
