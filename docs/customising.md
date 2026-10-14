@@ -27,6 +27,8 @@ In `site/lib/config.php`:
 - The programme handlers, which default to Zoom Events. See
   [Programme handlers](integrations/programme.md#programme-handlers).
 - `CONCLAR_VALID_APP_IDS`, if you use [ConClár](integrations/conclar.md).
+- `BUSINESS_MEETING`, if you hold the WSFS Business Meeting online. See
+  [Business meeting](integrations/business-meeting.md).
 
 See [config.php](configuration.md#configphp) for the full list.
 

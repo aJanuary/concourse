@@ -10,6 +10,8 @@ already identified, and it is the place those services ask about members.
 - [Watson](watson.md): the Discord bot that gives members roles and creates
   programme item posts
 - [ConClár](conclar.md): keeping members' starred items on the portal
+- [Business meeting](business-meeting.md): members' personal join links for
+  an online WSFS Business Meeting, and the MPC election
 - [The API](api.md): how other systems call the portal
 
 Logging in through an identity provider or looking members up in a

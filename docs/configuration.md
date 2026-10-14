@@ -26,7 +26,7 @@ development.
 | `[crypto]` | `signing_key` | Signs emailed links and hashes login codes for the `local` provider. At least 32 characters; generate with `openssl rand -hex 32` |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain. Use a different name for each deployment that shares a parent domain |
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients; see [The API](integrations/api.md) |
-| `[discord]` | `bot_token`, `client_id`, `client_secret` | Discord bot and OAuth app; see [Discord](integrations/discord.md) |
+| `[discord]` | `bot_token`, `client_id`, `client_secret`, `bm_invite` | Discord bot and OAuth app; see [Discord](integrations/discord.md). `bm_invite` is the invite code for the separate Business Meeting server; see [Business meeting](integrations/business-meeting.md#discord) |
 | `[zoom_events]` | `client_id`, `client_secret`, `account_id`, `event_id`, `ticket_type_id`, `ticket_email_domain` | The `zoomevents` programme handler; see [Zoom Events](integrations/programme.md#zoom-events). `ticket_email_domain` is optional |
 | `[conclar]` | `allowed_origins[]`, `schedule_url` | Origins hosting the ConClár programme guide, and an optional programme JSON for the favourites report. See [ConClár](integrations/conclar.md) |
 
@@ -46,6 +46,7 @@ The settings in `site/lib/config.php`:
 | `DISCORD_*` | See [Discord](integrations/discord.md) |
 | `DEFAULT_PROG_HANDLER`, `AVAILABLE_PROG_HANDLERS`, `PROG_*` | See [Programme handlers](integrations/programme.md#programme-handlers) |
 | `CONCLAR_VALID_APP_IDS`, `CONCLAR_MAX_ITEMS` | See [ConClár](integrations/conclar.md) |
+| `BUSINESS_MEETING` | The business meeting page's platform, links, contact address, dates and MPC election; see [Business meeting](integrations/business-meeting.md#the-page) |
 
 The rest of the file reads the secrets file and the environment, and doesn't
 need changing.
