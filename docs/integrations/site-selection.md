@@ -23,7 +23,7 @@ Online:
    for this, then sends them to the Site selection page, which now has a
    "Vote" button linking to the election platform with their key.
 
-If the webhook takes longer than about 40 seconds, the processing page tells
+If the webhook takes longer than about a minute, the processing page tells
 the member their voting link will be on the Site selection page once the
 payment is confirmed, and who to contact if it isn't.
 
