@@ -1,6 +1,7 @@
 FROM nginx:1.27.0
 
-# Copy the php files into the container - for prod
-# these will be overlayed with the dev env via compose
+# nginx only serves the static files; every other path goes to php-fpm in
+# the web image, so the PHP sources stay out of this one
 ADD ./docker/nginx.conf /etc/nginx/conf.d/default.conf
-ADD ./site/web/ /var/www/html/
+ADD ./site/web/502.html /var/www/html/502.html
+ADD ./site/web/resources /var/www/html/resources
