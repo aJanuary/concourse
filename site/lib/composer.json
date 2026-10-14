@@ -1,13 +1,13 @@
 {
     "require": {
-        "phpmailer/phpmailer": "^6.10",
+        "phpmailer/phpmailer": "^7.1",
         "firebase/php-jwt": "^7.2",
         "twig/twig": "^3.0",
         "twig/markdown-extra": "^3.0",
         "league/commonmark": "^2.7.1",
         "jumbojett/openid-connect-php": "^1.0",
-        "chillerlan/php-qrcode": "^5.0",
+        "chillerlan/php-qrcode": "^6.0",
         "square/square": "^47.0",
-        "guzzlehttp/guzzle": "^7.9"
+        "guzzlehttp/guzzle": "^8.2"
     }
 }
