@@ -942,6 +942,45 @@ fieldset {
   word-break: break-all;
 }
 
+.required {
+  color: var(--error-fg-color);
+}
+
+.site-selection-details label {
+  display: block;
+}
+
+.site-selection-details textarea,
+.site-selection-details select {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.site-selection-details textarea {
+  max-width: 36rem;
+  min-height: 12rem;
+}
+
+.site-selection-details select {
+  max-width: 24rem;
+  padding: 0.4em 0.6em;
+}
+
+.site-selection-details .checkbox {
+  max-width: 36rem;
+}
+
+.site-selection-details .checkbox label {
+  display: flex;
+  gap: 0.5em;
+  align-items: flex-start;
+}
+
+.site-selection-details .checkbox input {
+  margin-top: 0.25em;
+}
+
 @media only screen and (max-width: 40em) {
   .container {
     flex-direction: column;
