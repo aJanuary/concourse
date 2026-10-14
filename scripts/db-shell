@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Opens a mysql or psql shell on the portal database as the dba user. Extra
+# arguments go to the client, and stdin can be a file:
+#
+#   scripts/db-shell
+#   scripts/db-shell -e 'SELECT COUNT(*) FROM members'     # MySQL
+#   scripts/db-shell -c 'SELECT COUNT(*) FROM members'     # Postgres
+#   scripts/db-shell < dump.sql
+#
+set -eu -o pipefail
+. "$(dirname "$0")/lib.sh"
+
+# Plain "${EXEC_FLAGS[@]}" fails under set -u in macOS bash 3.2 when empty
+EXEC_FLAGS=()
+if [ ! -t 0 ]; then
+	EXEC_FLAGS+=(-T)
+fi
+
+if db_is_postgres; then
+	# Postgres trusts connections from inside its own container
+	exec docker compose exec ${EXEC_FLAGS[@]+"${EXEC_FLAGS[@]}"} db psql -U dba members "$@"
+else
+	exec docker compose exec ${EXEC_FLAGS[@]+"${EXEC_FLAGS[@]}"} db sh -c \
+		'MYSQL_PWD=$(cat /run/secrets/db_dba_password) exec mysql -u dba members "$@"' sh "$@"
+fi

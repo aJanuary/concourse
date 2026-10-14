@@ -1,0 +1,129 @@
+#!/bin/bash
+#
+# Sets up and starts the development environment:
+#
+#   scripts/bootstrap          # MySQL
+#   scripts/bootstrap pgsql    # Postgres
+#
+# Creates any missing secrets files, points every later `docker compose`
+# command at the right compose files through COMPOSE_FILE in .env, then
+# builds and starts the containers and waits for the migrations to finish.
+# Existing secrets are never overwritten, so it is safe to run again, for
+# example to switch database.
+#
+set -eu -o pipefail
+
+HERE=$(unset CDPATH && cd "$(dirname "$0")" && pwd)
+ROOT=$(unset CDPATH && cd "$HERE/.." && pwd)
+SECRETS=$ROOT/secrets
+
+DRIVER=${1:-mysql}
+case "$DRIVER" in
+	mysql)
+		COMPOSE_FILE=docker-compose.yml
+		;;
+	pgsql)
+		COMPOSE_FILE=docker-compose.yml:docker-compose.postgres.yml
+		;;
+	*)
+		echo "usage: $0 [mysql|pgsql]" >&2
+		exit 1
+		;;
+esac
+
+cd "$ROOT"
+
+# Setting COMPOSE_FILE stops compose loading the override file by itself
+if [ -f docker-compose.override.yml ]; then
+	COMPOSE_FILE=$COMPOSE_FILE:docker-compose.override.yml
+fi
+
+touch .env
+# Switching database: stop the old stack while .env still describes it, or
+# services only the old one has keep running
+if ! grep -qx "COMPOSE_FILE=$COMPOSE_FILE" .env && docker compose ps --quiet | grep -q .; then
+	docker compose --profile "*" down --remove-orphans
+fi
+grep -v '^COMPOSE_FILE=' .env >.env.tmp || true
+echo "COMPOSE_FILE=$COMPOSE_FILE" >>.env.tmp
+mv .env.tmp .env
+echo "Using $DRIVER (COMPOSE_FILE=$COMPOSE_FILE in .env)"
+
+mkdir -p "$SECRETS"
+if [ ! -f "$SECRETS/db_root_password.txt" ]; then
+	echo "Generating database root password"
+	openssl rand -hex 24 >"$SECRETS/db_root_password.txt"
+fi
+
+if [ ! -f "$SECRETS/db_dba_password.txt" ]; then
+	echo "Generating database dba password"
+	openssl rand -hex 24 >"$SECRETS/db_dba_password.txt"
+fi
+
+if [ ! -f "$SECRETS/web_secrets.ini" ]; then
+	echo "Generating web secrets"
+	cat <<EOF >"$SECRETS/web_secrets.ini"
+; Development secrets written by scripts/bootstrap. Every section is
+; optional; see "web_secrets.ini" in the README for what each key does.
+
+[auth]
+; dev lets you log in as any existing member; local is email login, whose
+; mail goes to mailpit (scripts/open-mailpit)
+providers[] = dev
+providers[] = local
+;allowlist[] =
+;client_ip_header =
+
+[smtp]
+host = mailpit
+port = 1025
+username =
+password =
+secure =
+
+[crypto]
+signing_key = $(openssl rand -hex 32)
+
+;[cookie]
+;cookie_name = session
+;cookie_domain =
+
+;[discord]
+;bot_token =
+;client_id =
+;client_secret =
+
+;[api_keys]
+;<client name> = <shared secret>
+
+;[zoom_events]
+;client_id =
+;client_secret =
+;account_id =
+;event_id =
+;ticket_type_id =
+;ticket_email_domain =
+
+;[oidc]
+;provider_url =
+;client_id =
+;client_secret =
+;scopes[] =
+;claims[badge_no] =
+;role_map[<claim>] = <role name>
+;provider_logout = false
+;password_change_url =
+;verify_tls = true
+
+;[conclar]
+;allowed_origins[] = https://guide.example.com
+;schedule_url =
+EOF
+fi
+
+docker compose build
+docker compose up --detach --wait
+
+echo
+echo "The portal is at http://localhost:$(docker compose port nginx 80 | sed 's/.*://')"
+echo "scripts/open-portal, scripts/open-mailpit and scripts/open-db-admin open it and the tools"

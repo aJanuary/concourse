@@ -179,29 +179,56 @@ roles. You cannot remove a role from yourself if that would take away your own
 
 ## Development
 
-### Deployment for Development
+### Running locally
 
 Requirements:
 
-- [https://docs.docker.com/compose/](docker-compose)
+- [Docker Compose](https://docs.docker.com/compose/)
+- `openssl`, to generate the secrets
 
-1. Clone the repository
-2. Create a folder called `secrets` and populate it with the secrets.
-   See the `secrets` section of the `docker-compose.yml` file for an explanation
-   of what secrets should be placed in what file.
-3. Create a docker volume for the database
-   `docker volume create --name=portal-mysqldata`
-4. Run docket compose to start the servers:
+Clone the repository and run one of:
 
 ```
-docker-compose -p portal-dev -f docker-compose.yml up
+scripts/bootstrap          # MySQL
+scripts/bootstrap pgsql    # Postgres
 ```
 
-NOTE: the -p portal dev is optional but gives a way to group the containers if
-you have other projects on your machine.
+This creates any missing files in `secrets/` (random database passwords and
+a starter `web_secrets.ini` with the `dev` and `local` login providers and
+mail going to mailpit), builds the images, starts everything and waits for
+the migrations to finish. The portal is then at <http://localhost:8080>.
+Existing secrets are left alone, so run it again to switch database.
 
-5. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
-   phpMyAdmin.
+The choice of database is kept as `COMPOSE_FILE` in `.env`, so plain
+`docker compose` commands (`up -d`, `down`, `logs web`, `exec web ...`) work
+on the same set of containers afterwards. A `docker-compose.override.yml` is
+included automatically. To add `docker-compose.oidc.yml`, append it to
+`COMPOSE_FILE`.
+
+| Script | Does |
+|---|---|
+| `scripts/open-portal` | Opens the portal |
+| `scripts/open-mailpit` | Opens [mailpit](https://mailpit.axllent.org/), which catches all mail the portal sends |
+| `scripts/open-db-admin` | Opens phpMyAdmin, or pgAdmin on Postgres (log in to the `portal` server with the password in `secrets/db_dba_password.txt`) |
+| `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
+
+Only the portal has a fixed port. The database, mailpit and the admin tools
+get a free port each time they start, which the `open-*` scripts look up
+(`docker compose port <service> <port>` shows it too). Nothing has a fixed
+container name and the database volume belongs to the compose project, which
+is named after the checkout's directory. So two checkouts can run at once:
+set `PORTAL_PORT=8081` in the second one's `.env`.
+
+The database volume used to be an external volume called
+`portal-mysqldata`. To keep using it, add this to
+`docker-compose.override.yml`:
+
+```yaml
+volumes:
+  portal-mysqldata:
+    name: portal-mysqldata
+    external: true
+```
 
 ### Email login
 
@@ -209,7 +236,8 @@ The `local` provider lets a member enter their email address and then either
 a password or a six digit code sent to that address. Enable it with
 `providers[] = local` in the `[auth]` section, and set `[smtp]` and
 `[crypto]`. For development, [mailpit](https://mailpit.axllent.org/) is a
-convenient SMTP server that shows what was sent.
+convenient SMTP server that shows what was sent. The development environment
+runs it; see [Running locally](#running-locally).
 
 Members are found by email through a `MemberSource`
 (`site/lib/auth/MemberSource.php`). The default reads the `members` table. To
@@ -313,14 +341,10 @@ container to choose the database:
 `CONFIG_DB_PASSWORD_FILE` apply to both. `CONFIG_DB_PORT` overrides the default
 port. The migrations and the start script pick up the same settings.
 
-To develop against Postgres, layer `docker-compose.postgres.yml` over the
-default compose file. It swaps the `db` service for `postgres:17`, keeps its
-data in a separate `portal-pgdata` volume (no need to create it), and turns off
-phpMyAdmin:
-
-```
-docker-compose -p portal-dev -f docker-compose.yml -f docker-compose.postgres.yml up
-```
+To develop against Postgres, run `scripts/bootstrap pgsql`. This layers
+`docker-compose.postgres.yml` over the default compose file, which swaps the
+`db` service for `postgres:17`, keeps its data in a separate `portal-pgdata`
+volume, and replaces phpMyAdmin with pgAdmin.
 
 Switching an existing install between databases does not carry the data over.
 
@@ -331,12 +355,12 @@ not, so compare emails with `LOWER(email) = LOWER(?)`.
 
 `scripts/db-smoke.php` runs every `db_*` function against the configured
 database and cleans up after itself. Run it in the `web` container after the
-migrations have been applied: `docker exec web php /var/scripts/db-smoke.php`.
+migrations have been applied: `docker compose exec web php /var/scripts/db-smoke.php`.
 
 ### Updating dependencies
 
 1. Add the dependency to `site/lib/composer.json`
-2. Run `docker exec web bash -c 'cd /srv/lib; composer update'`
+2. Run `docker compose exec web bash -c 'cd /srv/lib; composer update'`
 
 ### Database changes
 
@@ -344,12 +368,12 @@ migrations have been applied: `docker exec web php /var/scripts/db-smoke.php`.
    `sites/php-migrations`
    To create a migration file run (replace MIGRATIONNAME with a meaningful name for
    your migration)
-   `docker exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx create MIGRATIONNAME'`
+   `docker compose exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx create MIGRATIONNAME'`
 2. Edit the file to put in the PHP or SQL for the migration.
 3. The migration will be automatically applied to the database on start up of the web container.
    If you want to apply the change right away do:
    ```
-   docker exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx migrate -e development'
+   docker compose exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx migrate -e development'
    ```
 
 See the Phinx documentation for more details [https://book.cakephp.org/phinx/0/en/index.html]

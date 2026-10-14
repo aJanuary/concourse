@@ -3,3 +3,4 @@ secrets/*
 **/vendor/
 composer.phar
 analytics/*.log
+.env

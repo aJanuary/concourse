@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Opens phpMyAdmin, or pgAdmin when running on Postgres.
+#
+set -eu -o pipefail
+. "$(dirname "$0")/lib.sh"
+
+if db_is_postgres; then
+	url=$(service_url pgadmin 80)
+	echo "The dba password is in secrets/db_dba_password.txt"
+else
+	url=$(service_url phpmyadmin 80)
+fi
+open_url "$url"
