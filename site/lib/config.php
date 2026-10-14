@@ -5,6 +5,7 @@ $GLOBALS['app-data'] ??= [];
 $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
   || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'
   || ($_SERVER['SERVER_PORT'] ?? '') == 443;
+define('IS_HTTPS', $is_https);
 define('ROOT_URL', ($is_https ? 'https://' : 'http://') . ($_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Example Convention, a great tagline for a great demo');
 define('CON_SHORT_NAME', 'ExampleCon');

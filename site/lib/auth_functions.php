@@ -5,26 +5,51 @@ require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
 
+// Browsers only accept SameSite=None on Secure cookies, so plain HTTP (local
+// development) falls back to Lax. None over HTTPS lets a ConClar site on
+// another origin send the cookie.
+function session_cookie_options($expires_at) {
+  $options = [
+    'expires' => $expires_at,
+    'path' => '/',
+    'secure' => IS_HTTPS,
+    'httponly' => true,
+    'samesite' => IS_HTTPS ? 'None' : 'Lax',
+  ];
+
+  if (SESSION_COOKIE_DOMAIN !== '') {
+    $options['domain'] = SESSION_COOKIE_DOMAIN;
+  }
+
+  return $options;
+}
+
 function make_session($badge_no) {
-    $session_id = sha1(rand());
-    $expires_at = time() + 60*60*24*30;
-    db_insert_session($session_id, $badge_no, $expires_at);
-    setcookie(SESSION_COOKIE_NAME, $session_id, $expires_at, '/', SESSION_COOKIE_DOMAIN, true, true);
+  $session_id = bin2hex(random_bytes(32));
+  $expires_at = time() + 60*60*24*30;
+  db_insert_session($session_id, $badge_no, $expires_at);
+  setcookie(SESSION_COOKIE_NAME, $session_id, session_cookie_options($expires_at));
 }
 
 function make_anonymous_session() {
   $expires_at = time() + 60*60*24;
-  setcookie(SESSION_COOKIE_NAME, 'anonymous', $expires_at, '/', SESSION_COOKIE_DOMAIN, true, true);
+  setcookie(SESSION_COOKIE_NAME, 'anonymous', session_cookie_options($expires_at));
+}
+
+// The id of the logged in session, or null for no session or an anonymous one
+function get_current_session_id() {
+  if (!isset($_COOKIE[SESSION_COOKIE_NAME]) || $_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
+    return null;
+  }
+  return $_COOKIE[SESSION_COOKIE_NAME];
 }
 
 function is_logged_in() {
-  if (!isset($_COOKIE[SESSION_COOKIE_NAME])) {
+  $session_id = get_current_session_id();
+  if ($session_id === null) {
     return false;
   }
-  if ($_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
-    return false;
-  }
-  return db_session_exists($_COOKIE[SESSION_COOKIE_NAME]);
+  return db_session_exists($session_id);
 }
 
 function is_anonymous() {
@@ -38,15 +63,37 @@ function is_anonymous() {
   );
 }
 
+// Only paths on this site, plus origins from allowed_redirect_origins()
+function is_valid_redirect($url) {
+  if (!is_string($url) || preg_match('/[\x00-\x1f\\\\]/', $url)) {
+    return false;
+  }
+  // "//host" is a protocol-relative URL, not a path
+  if (str_starts_with($url, '/')) {
+    return !str_starts_with($url, '//');
+  }
+  foreach (allowed_redirect_origins() as $origin) {
+    if ($url === $origin || str_starts_with($url, $origin . '/')) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function allowed_redirect_origins() {
+  return [];
+}
+
 function make_login_link() {
   return '/login?redirect=' . urlencode($_SERVER['REQUEST_URI']);
 }
 
 function get_current_user_badge_no() {
-  if (!isset($_COOKIE[SESSION_COOKIE_NAME]) || $_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
+  $session_id = get_current_session_id();
+  if ($session_id === null) {
     return null;
   }
-  return db_get_badge_no_by_session($_COOKIE[SESSION_COOKIE_NAME]);
+  return db_get_badge_no_by_session($session_id);
 }
 
 function get_current_user_name() {
@@ -60,18 +107,22 @@ function get_current_user_name() {
 }
 
 function get_current_user_email() {
-  if (!isset($_COOKIE[SESSION_COOKIE_NAME]) || $_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
+  $session_id = get_current_session_id();
+  if ($session_id === null) {
     return null;
   }
-  return db_get_email_by_session($_COOKIE[SESSION_COOKIE_NAME]);
+  return db_get_email_by_session($session_id);
 }
 
 function logout() {
-  if (isset($_COOKIE[SESSION_COOKIE_NAME])) {
-    db_delete_session($_COOKIE[SESSION_COOKIE_NAME]);
+  $session_id = get_current_session_id();
+  if ($session_id !== null) {
+    db_delete_session($session_id);
   }
-  setcookie(SESSION_COOKIE_NAME, '', time() - 3600, '/', SESSION_COOKIE_DOMAIN);
-  session_destroy();
+  setcookie(SESSION_COOKIE_NAME, '', session_cookie_options(time() - 3600));
+  if (session_status() === PHP_SESSION_ACTIVE) {
+    session_destroy();
+  }
 }
 
 function get_registration_status($email) {
