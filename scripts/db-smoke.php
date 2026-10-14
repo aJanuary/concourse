@@ -60,6 +60,9 @@ function cleanup() {
   db_query("DELETE FROM members WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM prog_stages WHERE room_id = 'smoke-room'");
   db_query("DELETE FROM prog_sessions WHERE item_id = 'smoke-item'");
+  db_query("DELETE FROM prog_stream_urls WHERE room_id = 'smoke-room'");
+  db_query("DELETE FROM zoom_events_tickets WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
+  db_query("DELETE FROM auth_token_cache WHERE service = 'smoke'");
   db_query("DELETE FROM prog_discord_posts WHERE item_id IN ('smoke-post', 'smoke-post-2')");
   db_query("DELETE FROM prog_replay WHERE item_id = 'smoke-replay'");
 }
@@ -214,13 +217,37 @@ try {
   check('db_delete_stage', call('db_get_stage', 'smoke-room')['title'] === null);
 
   // Programme sessions
-  call('db_add_prog_session', 'smoke-item', 'Smoke Session', 'https://example.com/s');
-  check('db_get_prog_session', call('db_get_prog_session', 'smoke-item') === ['title' => 'Smoke Session', 'rce_url' => 'https://example.com/s']);
-  call('db_edit_prog_session', 'smoke-item', 'Smoke Session 2', 'https://example.com/s2');
-  check('db_edit_prog_session', call('db_get_prog_session', 'smoke-item')['title'] === 'Smoke Session 2');
-  check('db_get_prog_sessions', in_array(['item_id' => 'smoke-item', 'title' => 'Smoke Session 2'], call('db_get_prog_sessions'), true));
+  call('db_add_prog_session', 'smoke-item', 'Smoke Session', 'https://example.com/s', null);
+  check('db_get_prog_session', call('db_get_prog_session', 'smoke-item') === ['found' => true, 'title' => 'Smoke Session', 'destination' => 'https://example.com/s', 'handler' => null]);
+  call('db_edit_prog_session', 'smoke-item', 'Smoke Session 2', 'smoke-room', 'stream');
+  $prog_session = call('db_get_prog_session', 'smoke-item');
+  check('db_edit_prog_session', $prog_session['title'] === 'Smoke Session 2' && $prog_session['handler'] === 'stream');
+  call('db_upsert_prog_session', 'smoke-item', 'Smoke Session 3', 'room-2', 'discord');
+  call('db_upsert_prog_session', 'smoke-item-2', 'New Session', 'room-3', null);
+  check('prog session upsert updates and inserts', call('db_get_prog_session', 'smoke-item')['handler'] === 'discord' && call('db_get_prog_session', 'smoke-item-2')['title'] === 'New Session');
+  check('db_get_prog_sessions', in_array(['item_id' => 'smoke-item', 'title' => 'Smoke Session 3'], call('db_get_prog_sessions'), true));
   call('db_delete_prog_session', 'smoke-item');
-  check('db_delete_prog_session', call('db_get_prog_session', 'smoke-item')['title'] === null);
+  call('db_delete_prog_session', 'smoke-item-2');
+  check('db_delete_prog_session', call('db_get_prog_session', 'smoke-item') === ['found' => false, 'title' => null, 'destination' => null, 'handler' => null]);
+
+  // Stream URLs
+  call('db_add_stream_url', 'smoke-room', 'Smoke Room', null);
+  check('db_get_stream_url', call('db_get_stream_url', 'smoke-room') === ['found' => true, 'title' => 'Smoke Room', 'url' => null]);
+  call('db_edit_stream_url', 'smoke-room', 'Smoke Room 2', 'https://example.com/stream');
+  check('db_edit_stream_url', call('db_get_stream_url', 'smoke-room')['url'] === 'https://example.com/stream');
+  check('db_get_stream_urls', in_array(['room_id' => 'smoke-room', 'title' => 'Smoke Room 2', 'url' => 'https://example.com/stream'], call('db_get_stream_urls'), true));
+  call('db_delete_stream_url', 'smoke-room');
+  check('db_delete_stream_url', call('db_get_stream_url', 'smoke-room')['found'] === false);
+
+  // Zoom Events tickets and cached auth tokens
+  call('db_save_zoom_events_ticket', $badge, 'ticket-1', 'https://example.com/join-1', 'a@example.com');
+  call('db_save_zoom_events_ticket', $badge, 'ticket-2', 'https://example.com/join-2', 'b@example.com');
+  check('db_get_zoom_events_ticket keeps the first ticket', call('db_get_zoom_events_ticket', $badge)['ticket_id'] === 'ticket-1');
+  check('no zoom events ticket', call('db_get_zoom_events_ticket', $other_badge) === null);
+  call('db_cache_auth_token', 'smoke', 'token-1', $future);
+  call('db_cache_auth_token', 'smoke', 'token-2', $future + 10);
+  check('db_get_cached_auth_token', call('db_get_cached_auth_token', 'smoke') === ['auth_token' => 'token-2', 'expires_at' => $future + 10]);
+  check('no cached auth token', call('db_get_cached_auth_token', 'smoke-other') === null);
 
   // Discord posts
   call('db_add_discord_post', 'smoke-post', 'Smoke Post', '2025-01-01 10:00', '60', 'smoke-room', 'https://example.com/post');
@@ -253,13 +280,14 @@ try {
   }
 
   // Replays
-  call('db_add_replay', 'smoke-replay', 'Smoke Replay', 'https://example.com/r');
-  check('db_get_replay', call('db_get_replay', 'smoke-replay') === ['title' => 'Smoke Replay', 'replay_url' => 'https://example.com/r']);
-  call('db_edit_replay', 'smoke-replay', 'Smoke Replay 2', 'https://example.com/r2');
-  check('db_edit_replay', call('db_get_replay', 'smoke-replay')['title'] === 'Smoke Replay 2');
+  call('db_add_replay', 'smoke-replay', 'Smoke Replay', 'https://example.com/r', false);
+  check('db_get_replay', call('db_get_replay', 'smoke-replay') === ['found' => true, 'title' => 'Smoke Replay', 'replay_url' => 'https://example.com/r', 'unavailable' => false]);
+  call('db_edit_replay', 'smoke-replay', 'Smoke Replay 2', 'https://example.com/r2', true);
+  $replay = call('db_get_replay', 'smoke-replay');
+  check('db_edit_replay', $replay['title'] === 'Smoke Replay 2' && $replay['unavailable'] === true);
   check('db_get_replays', in_array(['item_id' => 'smoke-replay', 'title' => 'Smoke Replay 2'], call('db_get_replays'), true));
   call('db_delete_replay', 'smoke-replay');
-  check('db_delete_replay', call('db_get_replay', 'smoke-replay')['title'] === null);
+  check('db_delete_replay', call('db_get_replay', 'smoke-replay')['found'] === false);
 
   // Sessions last, as the earlier checks depend on them
   call('db_delete_session', $session);

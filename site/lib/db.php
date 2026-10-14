@@ -405,25 +405,62 @@ function db_delete_stage($room_id) {
   db_query("DELETE FROM prog_stages WHERE room_id = ?", [$room_id]);
 }
 
+function db_get_stream_urls() {
+  return db_fetch_rows("SELECT room_id, title, url FROM prog_stream_urls ORDER BY COALESCE(NULLIF(title, ''), room_id)");
+}
+
+function db_get_stream_url($room_id) {
+  $row = db_fetch_row("SELECT title, url FROM prog_stream_urls WHERE room_id = ?", [$room_id]);
+
+  return [
+    'found' => $row !== null,
+    'title' => $row['title'] ?? null,
+    'url' => $row['url'] ?? null,
+  ];
+}
+
+function db_add_stream_url($room_id, $title, $url) {
+  db_query("INSERT INTO prog_stream_urls (room_id, title, url) VALUES (?, ?, ?)", [$room_id, $title, $url]);
+}
+
+function db_edit_stream_url($room_id, $title, $url) {
+  db_query("UPDATE prog_stream_urls SET title = ?, url = ? WHERE room_id = ?", [$title, $url, $room_id]);
+}
+
+function db_delete_stream_url($room_id) {
+  db_query("DELETE FROM prog_stream_urls WHERE room_id = ?", [$room_id]);
+}
+
 function db_get_prog_sessions() {
   return db_fetch_rows("SELECT item_id, title FROM prog_sessions ORDER BY title, item_id");
 }
 
 function db_get_prog_session($item_id) {
-  $row = db_fetch_row("SELECT title, rce_url FROM prog_sessions WHERE item_id = ?", [$item_id]);
+  $row = db_fetch_row("SELECT title, destination, handler FROM prog_sessions WHERE item_id = ?", [$item_id]);
 
   return [
+    'found' => $row !== null && $row !== false,
     'title' => $row['title'] ?? null,
-    'rce_url' => $row['rce_url'] ?? null,
+    'destination' => $row['destination'] ?? null,
+    'handler' => $row['handler'] ?? null,
   ];
 }
 
-function db_edit_prog_session($item_id, $title, $rce_url) {
-  db_query("UPDATE prog_sessions SET title = ?, rce_url = ? WHERE item_id = ?", [$title, $rce_url, $item_id]);
+function db_edit_prog_session($item_id, $title, $destination, $handler) {
+  db_query("UPDATE prog_sessions SET title = ?, destination = ?, handler = ? WHERE item_id = ?", [$title, $destination, $handler, $item_id]);
 }
 
-function db_add_prog_session($item_id, $title, $rce_url) {
-  db_query("INSERT INTO prog_sessions (item_id, title, rce_url) VALUES (?, ?, ?)", [$item_id, $title, $rce_url]);
+function db_add_prog_session($item_id, $title, $destination, $handler) {
+  db_query("INSERT INTO prog_sessions (item_id, title, destination, handler) VALUES (?, ?, ?, ?)", [$item_id, $title, $destination, $handler]);
+}
+
+function db_upsert_prog_session($item_id, $title, $destination, $handler) {
+  db_upsert(
+    'prog_sessions',
+    ['item_id'],
+    ['title', 'destination', 'handler'],
+    ['item_id' => $item_id, 'title' => $title, 'destination' => $destination, 'handler' => $handler]
+  );
 }
 
 function db_delete_prog_session($item_id) {
@@ -545,20 +582,22 @@ function db_get_replays() {
 }
 
 function db_get_replay($item_id) {
-  $row = db_fetch_row("SELECT title, replay_url FROM prog_replay WHERE item_id = ?", [$item_id]);
+  $row = db_fetch_row("SELECT title, replay_url, unavailable FROM prog_replay WHERE item_id = ?", [$item_id]);
 
   return [
+    'found' => $row !== null && $row !== false,
     'title' => $row['title'] ?? null,
     'replay_url' => $row['replay_url'] ?? null,
+    'unavailable' => (bool) ($row['unavailable'] ?? false),
   ];
 }
 
-function db_edit_replay($item_id, $title, $replay_url) {
-  db_query("UPDATE prog_replay SET title = ?, replay_url = ? WHERE item_id = ?", [$title, $replay_url, $item_id]);
+function db_edit_replay($item_id, $title, $replay_url, $unavailable) {
+  db_query("UPDATE prog_replay SET title = ?, replay_url = ?, unavailable = ? WHERE item_id = ?", [$title, $replay_url, ($unavailable ? 1 : 0), $item_id]);
 }
 
-function db_add_replay($item_id, $title, $replay_url) {
-  db_query("INSERT INTO prog_replay (item_id, title, replay_url) VALUES (?, ?, ?)", [$item_id, $title, $replay_url]);
+function db_add_replay($item_id, $title, $replay_url, $unavailable) {
+  db_query("INSERT INTO prog_replay (item_id, title, replay_url, unavailable) VALUES (?, ?, ?, ?)", [$item_id, $title, $replay_url, ($unavailable ? 1 : 0)]);
 }
 
 function db_delete_replay($item_id) {
@@ -614,5 +653,36 @@ function db_record_analytics($member_type, $event, $data) {
 
 function db_get_num_members() {
   return db_fetch_value("SELECT COUNT(*) FROM members");
+}
+
+function db_get_zoom_events_ticket($badge_no) {
+  return db_fetch_row("SELECT ticket_id, event_join_link, email FROM zoom_events_tickets WHERE badge_no = ?", [$badge_no]);
+}
+
+// Keeps the existing ticket if there is one
+function db_save_zoom_events_ticket($badge_no, $ticket_id, $event_join_link, $email) {
+  db_upsert(
+    'zoom_events_tickets',
+    ['badge_no'],
+    [],
+    ['badge_no' => $badge_no, 'ticket_id' => $ticket_id, 'event_join_link' => $event_join_link, 'email' => $email]
+  );
+}
+
+function db_get_cached_auth_token($service) {
+  $row = db_fetch_row("SELECT auth_token, expires_at FROM auth_token_cache WHERE service = ?", [$service]);
+  if ($row === null) {
+    return null;
+  }
+  return ['auth_token' => $row['auth_token'], 'expires_at' => (int) $row['expires_at']];
+}
+
+function db_cache_auth_token($service, $auth_token, $expires_at) {
+  db_upsert(
+    'auth_token_cache',
+    ['service'],
+    ['auth_token', 'expires_at'],
+    ['service' => $service, 'auth_token' => $auth_token, 'expires_at' => $expires_at]
+  );
 }
 ?>
