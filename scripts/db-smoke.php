@@ -49,6 +49,7 @@ function cleanup() {
   db_query("DELETE FROM login_codes WHERE email = 'smoke.test@example.com'");
   db_query("DELETE FROM login_attempts WHERE bucket = 'smoke'");
   db_query("DELETE FROM password_auth WHERE email = 'smoke.test@example.com'");
+  db_query("DELETE FROM oidc_sessions WHERE sub = 'smoke-sub'");
   db_query("DELETE FROM sessions WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM rce_invites WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM discord_ids WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
@@ -71,14 +72,16 @@ $num_members_before = call('db_get_num_members');
 
 try {
   // Members, and email lookups with different casing
-  call('db_create_member', $badge, 'Smoke.Test@Example.com', 'Smoke Test');
+  call('db_create_member', $badge, 'Smoke.Test@Example.com', 'Smoke Test', 'Smoke Real');
   call('db_create_member', $other_badge, 'other@example.com', 'Other Member');
   check('member exists', call('db_member_exists', $badge) == 1);
   check('missing member does not exist', !call('db_member_exists', 'NOPE'));
-  check('db_get_member', call('db_get_member', $badge) === ['name' => 'Smoke Test', 'email' => 'Smoke.Test@Example.com']);
-  check('db_get_member for missing member', call('db_get_member', 'NOPE') === ['name' => null, 'email' => null]);
+  check('db_get_member', call('db_get_member', $badge) === ['name' => 'Smoke Test', 'email' => 'Smoke.Test@Example.com', 'real_name' => 'Smoke Real']);
+  check('db_get_member for missing member', call('db_get_member', 'NOPE') === ['name' => null, 'email' => null, 'real_name' => null]);
   call('db_update_member', $badge, 'smoke.test@example.com', 'Smoke Tester');
-  check('db_update_member', call('db_get_member', $badge) === ['name' => 'Smoke Tester', 'email' => 'smoke.test@example.com']);
+  check('db_update_member keeps the real name when none is given', call('db_get_member', $badge) === ['name' => 'Smoke Tester', 'email' => 'smoke.test@example.com', 'real_name' => 'Smoke Real']);
+  call('db_update_member', $badge, 'smoke.test@example.com', 'Smoke Tester', 'Smoke Realer');
+  check('db_update_member', call('db_get_member', $badge)['real_name'] === 'Smoke Realer');
   check('member count is native int', call('db_get_num_members') === $num_members_before + 2);
   $members = array_column(call('db_get_members'), null, 'badge_no');
   check('db_get_members', $members[$badge] === ['badge_no' => $badge, 'name' => 'Smoke Tester', 'email' => 'smoke.test@example.com'] && isset($members[$other_badge]));
@@ -117,6 +120,17 @@ try {
   // Sessions
   call('db_insert_session', $session, $badge, $future);
   call('db_insert_session', 'smoke-expired', $other_badge, time() - 3600);
+
+  // OIDC sessions, ended by the provider's sid or sub
+  db_insert_session('smoke-oidc-1', $other_badge, $future);
+  db_insert_session('smoke-oidc-2', $other_badge, $future);
+  call('db_insert_oidc_session', 'smoke-oidc-1', 'smoke-sid', 'smoke-sub', 'id-token-1');
+  call('db_insert_oidc_session', 'smoke-oidc-2', null, 'smoke-sub', null);
+  check('db_get_oidc_id_token', call('db_get_oidc_id_token', 'smoke-oidc-1') === 'id-token-1');
+  check('db_get_oidc_id_token for a non-OIDC session', call('db_get_oidc_id_token', $session) === null);
+  check('db_delete_sessions_by_sid', call('db_delete_sessions_by_sid', 'smoke-sid') === 1 && !db_session_exists('smoke-oidc-1') && db_session_exists('smoke-oidc-2'));
+  check('db_delete_sessions_by_sub', call('db_delete_sessions_by_sub', 'smoke-sub') === 1 && !db_session_exists('smoke-oidc-2'));
+  check('OIDC sessions go with their sessions', db_fetch_value("SELECT COUNT(*) FROM oidc_sessions WHERE sub = 'smoke-sub'") == 0);
   check('db_session_exists', call('db_session_exists', $session) === true);
   check('expired session does not exist', call('db_session_exists', 'smoke-expired') === false);
   check('db_get_badge_no_by_session', call('db_get_badge_no_by_session', $session) === $badge);
@@ -153,6 +167,9 @@ try {
   check('db_get_roles', in_array($role_name, array_column(call('db_get_roles'), 'name'), true));
   call('db_add_member_role', $badge, $role_name);
   check('db_get_member_role_names', call('db_get_member_role_names', $badge) === [$role_name]);
+  call('db_remove_member_role', $badge, $role_name);
+  check('db_remove_member_role', db_get_member_role_names($badge) === []);
+  db_add_member_role($badge, $role_name);
   $permissions = call('db_get_role_permissions', $role_id);
   $permission_id = $permissions[0]['permission_id'];
   check('role starts with no permissions', array_sum(array_column($permissions, 'has_permission')) === 0);

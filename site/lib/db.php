@@ -63,11 +63,12 @@ function db_check_member_creds($email, $password) {
 }
 
 function db_get_member($badge_no) {
-  $row = db_fetch_row("SELECT name, email FROM members WHERE badge_no = ?", [$badge_no]);
+  $row = db_fetch_row("SELECT name, email, real_name FROM members WHERE badge_no = ?", [$badge_no]);
 
   return [
     'name' => $row['name'] ?? null,
     'email' => $row['email'] ?? null,
+    'real_name' => $row['real_name'] ?? null,
   ];
 }
 
@@ -106,16 +107,33 @@ function db_delete_session($session_token) {
   db_query("DELETE FROM sessions WHERE session_id = ?", [$session_token]);
 }
 
-function db_create_member($badge_no, $email, $name) {
-  db_query("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?)", [$badge_no, $email, $name]);
+function db_insert_oidc_session($session_token, $sid, $sub, $id_token) {
+  db_query("INSERT INTO oidc_sessions (session_id, sid, sub, id_token) VALUES (?, ?, ?, ?)", [$session_token, $sid, $sub, $id_token]);
+}
+
+function db_get_oidc_id_token($session_token) {
+  return db_fetch_value("SELECT id_token FROM oidc_sessions WHERE session_id = ?", [$session_token]);
+}
+
+// Both return how many sessions were deleted. The oidc_sessions rows go with them.
+function db_delete_sessions_by_sid($sid) {
+  return db_query("DELETE FROM sessions WHERE session_id IN (SELECT session_id FROM oidc_sessions WHERE sid = ?)", [$sid])->rowCount();
+}
+
+function db_delete_sessions_by_sub($sub) {
+  return db_query("DELETE FROM sessions WHERE session_id IN (SELECT session_id FROM oidc_sessions WHERE sub = ?)", [$sub])->rowCount();
+}
+
+function db_create_member($badge_no, $email, $name, $real_name = null) {
+  db_query("INSERT INTO members (badge_no, email, name, real_name) VALUES (?, ?, ?, ?)", [$badge_no, $email, $name, $real_name]);
 }
 
 function db_create_invite($badge_no, $invite_url) {
   db_query("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)", [$badge_no, $invite_url]);
 }
 
-function db_update_member($badge_no, $email, $name) {
-  db_query("UPDATE members SET name = ?, email = ? WHERE badge_no = ?", [$name, $email, $badge_no]);
+function db_update_member($badge_no, $email, $name, $real_name = null) {
+  db_query("UPDATE members SET name = ?, email = ?, real_name = COALESCE(?, real_name) WHERE badge_no = ?", [$name, $email, $real_name, $badge_no]);
 }
 
 function db_get_magic_link($session_token) {
@@ -320,6 +338,10 @@ function db_delete_role($role_id) {
 
 function db_add_member_role($badge_no, $role_name) {
   db_query("INSERT INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?", [$badge_no, $role_name]);
+}
+
+function db_remove_member_role($badge_no, $role_name) {
+  db_query("DELETE FROM member_roles WHERE badge_no = ? AND role_id IN (SELECT role_id FROM roles WHERE name = ?)", [$badge_no, $role_name]);
 }
 
 function db_get_member_role_names($badge_no) {
