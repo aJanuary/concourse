@@ -136,6 +136,8 @@ define('OIDC_CLAIMS', array_map('trim', config_get('oidc', 'claims', [])) + ['em
 define('OIDC_ROLE_MAP', array_map('trim', config_get('oidc', 'role_map', [])));
 // Whether logging out of the portal also logs out at the provider
 define('OIDC_PROVIDER_LOGOUT', in_array(strtolower(trim((string) config_get('oidc', 'provider_logout'))), ['1', 'true', 'yes', 'on'], true));
+// Where a member signed in through the provider changes their password
+define('OIDC_PASSWORD_CHANGE_URL', trim((string) config_get('oidc', 'password_change_url')));
 // Only an explicit false turns certificate checking off
 define('OIDC_VERIFY_TLS', !in_array(strtolower(trim((string) config_get('oidc', 'verify_tls', '1'))), ['', '0', 'false', 'no', 'off'], true));
 

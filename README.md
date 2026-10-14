@@ -57,7 +57,7 @@ All sections are optional; a feature whose section is missing reports which key 
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients |
 | `[rce]` | `api_key`, `ticket_id` | RingCentral Events magic links |
 | `[auth]` | `allowlist[]`, `providers[]`, `client_ip_header` | Emails allowed to log in (empty means everyone); enabled login providers (default `dev`, which only works when `RUNTIME_ENV=development`; `local` is email login); the `$_SERVER` key holding the client address behind a proxy, e.g. `HTTP_X_FORWARDED_FOR` (default `REMOTE_ADDR`) |
-| `[oidc]` | `provider_url`, `client_id`, `client_secret`, `scopes[]`, `claims[...]`, `role_map[...]`, `provider_logout`, `verify_tls` | The `oidc` login provider; see [OpenID Connect login](#openid-connect-login) |
+| `[oidc]` | `provider_url`, `client_id`, `client_secret`, `scopes[]`, `claims[...]`, `role_map[...]`, `provider_logout`, `password_change_url`, `verify_tls` | The `oidc` login provider; see [OpenID Connect login](#openid-connect-login) |
 | `[smtp]` | `host`, `port`, `username`, `password`, `secure` | Outgoing mail for the `local` login provider. `secure` is empty, `tls` or `ssl` |
 | `[crypto]` | `signing_key` | Signs emailed links and hashes login codes for the `local` provider. At least 32 characters; generate with `openssl rand -hex 32` |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
@@ -173,6 +173,10 @@ as the hint and returning to `https://portal.example.com/login`. Register
 that URL as a post-logout redirect URI with the provider. The ID token is
 kept with the session until it ends, and the provider must advertise an
 `end_session_endpoint` in its discovery document.
+
+Set `password_change_url` to the provider's password change page. The profile
+page links to it for members who signed in through the provider, since the
+portal has no password for them. Without it the profile page shows no link.
 
 Certificates are verified. For a development provider with a self-signed
 certificate, set `verify_tls = false`.

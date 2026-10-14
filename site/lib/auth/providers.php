@@ -1,6 +1,7 @@
 <?php
 
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(__DIR__ . '/AuthProvider.php');
 
 // Providers enabled when `[auth] providers[]` is not set. `dev` only exists in
@@ -55,4 +56,32 @@ function auth_enabled_providers() {
 
 function auth_get_provider($id) {
   return auth_enabled_providers()[$id] ?? null;
+}
+
+// Whether the logged in session came from the oidc provider
+function auth_session_is_oidc() {
+  $session_id = get_current_session_id();
+  return $session_id !== null && db_oidc_session_exists($session_id);
+}
+
+// The members the current login can switch between, including the current
+// one. Empty unless the session came from the local provider. An OIDC login
+// is one user at the provider, so it has no siblings to switch to.
+function auth_switchable_members() {
+  static $members = [];
+  static $loaded = false;
+  if ($loaded) {
+    return $members;
+  }
+  $loaded = true;
+
+  $email = get_current_user_email();
+  if ($email === null || auth_get_provider('local') === null || auth_session_is_oidc()) {
+    return $members;
+  }
+  $found = auth_member_source()->members_for_email($email);
+  if (count($found) > 1) {
+    $members = $found;
+  }
+  return $members;
 }

@@ -111,6 +111,10 @@ function db_insert_oidc_session($session_token, $sid, $sub, $id_token) {
   db_query("INSERT INTO oidc_sessions (session_id, sid, sub, id_token) VALUES (?, ?, ?, ?)", [$session_token, $sid, $sub, $id_token]);
 }
 
+function db_oidc_session_exists($session_token) {
+  return db_fetch_value("SELECT 1 FROM oidc_sessions WHERE session_id = ?", [$session_token]) !== null;
+}
+
 function db_get_oidc_id_token($session_token) {
   return db_fetch_value("SELECT id_token FROM oidc_sessions WHERE session_id = ?", [$session_token]);
 }

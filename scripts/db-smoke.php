@@ -126,6 +126,8 @@ try {
   db_insert_session('smoke-oidc-2', $other_badge, $future);
   call('db_insert_oidc_session', 'smoke-oidc-1', 'smoke-sid', 'smoke-sub', 'id-token-1');
   call('db_insert_oidc_session', 'smoke-oidc-2', null, 'smoke-sub', null);
+  check('db_oidc_session_exists', call('db_oidc_session_exists', 'smoke-oidc-1') === true);
+  check('db_oidc_session_exists for a non-OIDC session', call('db_oidc_session_exists', $session) === false);
   check('db_get_oidc_id_token', call('db_get_oidc_id_token', 'smoke-oidc-1') === 'id-token-1');
   check('db_get_oidc_id_token for a non-OIDC session', call('db_get_oidc_id_token', $session) === null);
   check('db_delete_sessions_by_sid', call('db_delete_sessions_by_sid', 'smoke-sid') === 1 && !db_session_exists('smoke-oidc-1') && db_session_exists('smoke-oidc-2'));
