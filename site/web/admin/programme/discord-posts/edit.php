@@ -43,14 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit;
 }
 
-if (array_key_exists('item_id', $_GET)) {
-  $item_id = $_GET['item_id'];
+// Null when adding
+$item_id = $_GET['item_id'] ?? null;
+if ($item_id !== null) {
   $post = db_get_discord_post($item_id);
-}
-
-if (array_key_exists('item_id', $_GET)) {
   $title = 'Edit ' . $item_id;
 } else {
+  $post = ['title' => '', 'start' => '', 'duration' => '', 'room_id' => '', 'post_url' => ''];
   $title = 'Add Discord post';
 }
 
@@ -73,9 +72,9 @@ render_header(
       <fieldset>
         <legend>Discord post details</legend>
       <?php
-if (array_key_exists('item_id', $_GET)) {
+if ($item_id !== null) {
 ?>
-        <input type="hidden" name="item_id" value="<?php echo $item_id; ?>">
+        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item_id); ?>">
         <input type="hidden" name="action" value="edit">
 <?php
 } else {
@@ -93,7 +92,7 @@ if (array_key_exists('item_id', $_GET)) {
       </fieldset>
       <input type="submit" value="Save">
       <?php
-if (array_key_exists('item_id', $_GET)) {
+if ($item_id !== null) {
 ?>
       <input id="delete" type="button" value="Delete">
 <?php
@@ -105,11 +104,11 @@ if (array_key_exists('item_id', $_GET)) {
       var $delete = document.getElementById('delete');
       if ($delete) {
         $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete <?php echo $item_id; ?>?')) {
+          if (confirm('Are you sure you want to delete ' + <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?> + '?')) {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '/admin/programme/discord-posts/edit';
-            var itemId = '<?php echo $item_id; ?>';
+            var itemId = <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?>;
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'action';

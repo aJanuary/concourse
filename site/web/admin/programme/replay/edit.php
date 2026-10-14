@@ -102,11 +102,11 @@ if (!$new_replay) {
       var $delete = document.getElementById('delete');
       if ($delete) {
         $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete <?php echo $item_id; ?>?')) {
+          if (confirm('Are you sure you want to delete ' + <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?> + '?')) {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '/admin/programme/replay/edit';
-            var itemId = '<?php echo $item_id; ?>';
+            var itemId = <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?>;
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'action';

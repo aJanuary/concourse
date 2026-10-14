@@ -45,19 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit;
 }
 
-if (array_key_exists('item_id', $_GET)) {
-  $item_id = $_GET['item_id'];
+// Null when adding
+$item_id = $_GET['item_id'] ?? null;
+if ($item_id !== null) {
   $session = db_get_prog_session($item_id);
-  $same_replay_destination = ($session['handler'] ?? DEFAULT_PROG_HANDLER) === PROG_REPLAY_HANDLER;
-} else {
-  $session = ['title' => '', 'destination' => '', 'handler' => null];
-}
-
-if (array_key_exists('item_id', $_GET)) {
   $title = 'Edit ' . $item_id;
 } else {
+  $session = ['title' => '', 'destination' => '', 'handler' => null];
   $title = 'Add session';
 }
+$same_replay_destination = ($session['handler'] ?? DEFAULT_PROG_HANDLER) === PROG_REPLAY_HANDLER;
 
 render_header(
   'Add/edit a session',
@@ -77,9 +74,9 @@ render_header(
       <fieldset>
         <legend>Session details</legend>
       <?php
-if (array_key_exists('item_id', $_GET)) {
+if ($item_id !== null) {
 ?>
-        <input type="hidden" name="item_id" value="<?php echo $item_id; ?>">
+        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item_id); ?>">
         <input type="hidden" name="action" value="edit">
 <?php
 } else {
@@ -107,7 +104,7 @@ foreach (AVAILABLE_PROG_HANDLERS as $available_handler) {
       </fieldset>
       <input type="submit" value="Save">
       <?php
-if (array_key_exists('item_id', $_GET)) {
+if ($item_id !== null) {
 ?>
       <input id="delete" type="button" value="Delete">
       <a href="/admin/programme/replay/edit?<?php echo htmlspecialchars(http_build_query($same_replay_destination
@@ -122,11 +119,11 @@ if (array_key_exists('item_id', $_GET)) {
       var $delete = document.getElementById('delete');
       if ($delete) {
         $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete <?php echo $item_id; ?>?')) {
+          if (confirm('Are you sure you want to delete ' + <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?> + '?')) {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '/admin/programme/sessions/edit';
-            var sessionId = '<?php echo $item_id; ?>';
+            var sessionId = <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?>;
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'action';

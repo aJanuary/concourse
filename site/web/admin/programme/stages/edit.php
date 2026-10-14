@@ -42,14 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit;
 }
 
-if (array_key_exists('room_id', $_GET)) {
-  $room_id = $_GET['room_id'];
+// Null when adding
+$room_id = $_GET['room_id'] ?? null;
+if ($room_id !== null) {
   $stage = db_get_stage($room_id);
-}
-
-if (array_key_exists('room_id', $_GET)) {
   $title = 'Edit ' . $room_id;
 } else {
+  $stage = ['title' => '', 'viewer_url' => '', 'type' => '', 'participant_url' => ''];
   $title = 'Add stage';
 }
 
@@ -71,9 +70,9 @@ render_header(
       <fieldset>
         <legend>Stage details</legend>
       <?php
-if (array_key_exists('room_id', $_GET)) {
+if ($room_id !== null) {
 ?>
-        <input type="hidden" name="room_id" value="<?php echo $room_id; ?>">
+        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room_id); ?>">
         <input type="hidden" name="action" value="edit">
 <?php
 } else {
@@ -93,7 +92,7 @@ if (array_key_exists('room_id', $_GET)) {
       </fieldset>
       <input type="submit" value="Save">
 <?php
-if (array_key_exists('room_id', $_GET)) {
+if ($room_id !== null) {
 ?>
       <input id="delete" type="button" value="Delete">
 <?php
@@ -113,11 +112,11 @@ if (array_key_exists('room_id', $_GET)) {
       var $delete = document.getElementById('delete');
       if ($delete) {
         $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete <?php echo $stage['room_id']; ?>?')) {
+          if (confirm('Are you sure you want to delete ' + <?php echo json_encode($room_id, JSON_HEX_TAG | JSON_HEX_AMP); ?> + '?')) {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '/admin/programme/stages/edit';
-            var roomId = '<?php echo $room_id; ?>';
+            var roomId = <?php echo json_encode($room_id, JSON_HEX_TAG | JSON_HEX_AMP); ?>;
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'action';
