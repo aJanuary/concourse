@@ -1,763 +1,365 @@
 <?php
 
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/db_dialect.php');
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$mysqli = new mysqli("p:" . DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+function db_dsn() {
+  $port = DB_PORT ? ';port=' . DB_PORT : '';
+  if (DB_DRIVER === 'pgsql') {
+    return 'pgsql:host=' . DB_HOST . $port . ';dbname=' . DB_NAME;
+  }
+  return 'mysql:host=' . DB_HOST . $port . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+}
+
+$pdo = new PDO(
+  db_dsn(),
+  DB_USER,
+  DB_PASSWORD,
+  [
+    PDO::ATTR_PERSISTENT => true,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    // Real prepared statements, so MySQL returns native ints like Postgres does
+    PDO::ATTR_EMULATE_PREPARES => false,
+  ]
+);
+
+function db_query($sql, $params = []) {
+  global $pdo;
+
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($params);
+  return $stmt;
+}
+
+// First column of the first row, or null if there are no rows
+function db_fetch_value($sql, $params = []) {
+  $value = db_query($sql, $params)->fetchColumn();
+  return $value === false ? null : $value;
+}
+
+// First row, or null if there are no rows
+function db_fetch_row($sql, $params = []) {
+  $row = db_query($sql, $params)->fetch();
+  return $row === false ? null : $row;
+}
+
+function db_fetch_rows($sql, $params = []) {
+  return db_query($sql, $params)->fetchAll();
+}
+
+function db_fetch_column($sql, $params = []) {
+  return db_query($sql, $params)->fetchAll(PDO::FETCH_COLUMN);
+}
 
 function db_check_member_creds($email, $password) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT password FROM members WHERE email = ?");
-  try {
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($hash);
-    if (!$stmt->fetch()) {
-      // No such user
-      return false;
-    }
-  } finally {
-    $stmt->close();
+  $hash = db_fetch_value("SELECT password FROM members WHERE LOWER(email) = LOWER(?)", [$email]);
+  if ($hash === null) {
+    // No such user
+    return false;
   }
 
   return password_verify($password, $hash);
 }
 
 function db_get_member($badge_no) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT name, email FROM members WHERE badge_no = ?");
-  try {
-    $stmt->bind_param("s", $badge_no);
-    $stmt->execute();
-    $stmt->bind_result($name, $email);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
+  $row = db_fetch_row("SELECT name, email FROM members WHERE badge_no = ?", [$badge_no]);
 
   return [
-    'name' => $name,
-    'email' => $email,
+    'name' => $row['name'] ?? null,
+    'email' => $row['email'] ?? null,
   ];
 }
 
 function db_insert_session($session_token, $badge_no, $expires_at) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO sessions (session_id, expires_at, badge_no) VALUES (?, ?, ?)");
-  try {
-    $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
-    $stmt->bind_param("sss", $session_token, $expires_at_ts, $badge_no);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query(
+    "INSERT INTO sessions (session_id, expires_at, badge_no) VALUES (?, ?, ?)",
+    [$session_token, date('Y-m-d H:i:s', $expires_at), $badge_no]
+  );
 }
 
 function db_session_exists($session_token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM sessions WHERE session_id = ? AND expires_at > NOW()");
-  try {
-    $stmt->bind_param("s", $session_token);
-    $stmt->execute();
-    $stmt->bind_result($email);
-    if (!$stmt->fetch()) {
-      // No such session
-      return false;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return true;
+  return db_fetch_value("SELECT 1 FROM sessions WHERE session_id = ? AND expires_at > NOW()", [$session_token]) !== null;
 }
 
 function db_get_badge_no_by_session($session_token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW()");
-  try {
-    $stmt->bind_param("s", $session_token);
-    $stmt->execute();
-    $stmt->bind_result($badge_no);
-    if (!$stmt->fetch()) {
-      // No such session
-      return null;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $badge_no;
+  return db_fetch_value("SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW()", [$session_token]);
 }
 
 function db_get_email_by_session($session_token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT email FROM members WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())");
-  try {
-    $stmt->bind_param("s", $session_token);
-    $stmt->execute();
-    $stmt->bind_result($email);
-    if (!$stmt->fetch()) {
-      // No such session
-      return null;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $email;
+  return db_fetch_value("SELECT email FROM members WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())", [$session_token]);
 }
 
 function db_get_user_name_by_session($session_token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT name FROM members WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())");
-  try {
-    $stmt->bind_param("s", $session_token);
-    $stmt->execute();
-    $stmt->bind_result($name);
-    if (!$stmt->fetch()) {
-      // No such session
-      return null;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $name;
+  return db_fetch_value("SELECT name FROM members WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())", [$session_token]);
 }
 
 function db_get_sessions() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT badge_no, name, session_id FROM sessions JOIN members USING (badge_no) ORDER BY badge_no, session_id");
-  try {
-    $sessions = [];
-    while ($row = $result->fetch_assoc()) {
-      $sessions[] = $row;
-    }
-  } finally {
-    $result->close();
-  }
-
-  return $sessions;
+  return db_fetch_rows("SELECT badge_no, name, session_id FROM sessions JOIN members USING (badge_no) ORDER BY badge_no, session_id");
 }
 
 function db_delete_session($session_token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("DELETE FROM sessions WHERE session_id = ?");
-  try {
-    $stmt->bind_param("s", $session_token);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("DELETE FROM sessions WHERE session_id = ?", [$session_token]);
 }
 
 function db_create_oauth_identity($badge_no, $provider,  $identity_id, $email, $raw_info) {
-  global $mysqli;
-
-  try {
-    $stmt = $mysqli->prepare("INSERT INTO oauth_identities (badge_no, provider, identity_id, email, raw_info) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $badge_no, $provider,  $identity_id, $email, $raw_info);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query(
+    "INSERT INTO oauth_identities (badge_no, provider, identity_id, email, raw_info) VALUES (?, ?, ?, ?, ?)",
+    [$badge_no, $provider, $identity_id, $email, $raw_info]
+  );
 }
 
 function db_create_member($badge_no, $email, $name) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("sss", $badge_no, $email, $name);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?)", [$badge_no, $email, $name]);
 }
 
 function db_create_invite($badge_no, $invite_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)");
-  try {
-    $stmt->bind_param("ss", $badge_no, $invite_url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("INSERT INTO rce_invites (badge_no, invite_url) VALUES (?, ?)", [$badge_no, $invite_url]);
 }
 
 function db_update_member($badge_no, $email, $name) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("UPDATE members SET name = ?, email = ? WHERE badge_no = ?");
-  try {
-    $stmt->bind_param("sss", $name, $email, $badge_no);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("UPDATE members SET name = ?, email = ? WHERE badge_no = ?", [$name, $email, $badge_no]);
 }
 
 function db_get_magic_link($session_token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT invite_url FROM rce_invites WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())");
-  try {
-    $stmt->bind_param("s", $session_token);
-    $stmt->execute();
-    $stmt->bind_result($invite_url);
-    if (!$stmt->fetch()) {
-      // No such session
-      return null;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $invite_url;
+  return db_fetch_value("SELECT invite_url FROM rce_invites WHERE badge_no = (SELECT badge_no FROM sessions WHERE session_id = ? AND expires_at > NOW())", [$session_token]);
 }
 
 function db_set_discord_id($badge_no, $discord_id, $discord_username) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("REPLACE INTO discord_ids(badge_no, discord_id, username) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("sss", $badge_no, $discord_id, $discord_username);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_upsert(
+    'discord_ids',
+    ['badge_no', 'discord_id'],
+    ['username'],
+    ['badge_no' => $badge_no, 'discord_id' => $discord_id, 'username' => $discord_username]
+  );
 }
 
 function db_identity_exists($badge_no) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM oauth_identities WHERE badge_no = ?");
-  try {
-    $stmt->bind_param("s", $badge_no);
-    $stmt->execute();
-    $stmt->bind_result($exists);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
-
-  return $exists;
+  return db_fetch_value("SELECT 1 FROM oauth_identities WHERE badge_no = ?", [$badge_no]);
 }
 
 function db_member_exists($badge_no) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT 1 FROM members WHERE badge_no = ?");
-  try {
-    $stmt->bind_param("s", $badge_no);
-    $stmt->execute();
-    $stmt->bind_result($exists);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
-
-  return $exists;
+  return db_fetch_value("SELECT 1 FROM members WHERE badge_no = ?", [$badge_no]);
 }
 
 function db_insert_login_link($email, $login_code, $expires_at) {
-  global $mysqli;
-
   $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
-  $stmt = $mysqli->prepare("INSERT INTO login_links (login_code, badge_no, expires_at) SELECT ?, badge_no, ? FROM members WHERE email = ?");
-  try {
-    $stmt->bind_param("sss", $login_code, $expires_at_ts, $email);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
+  // Looked up first rather than INSERT ... SELECT, as Postgres won't implicitly
+  // cast the untyped parameter in the select list to a timestamp
+  $badge_nos = db_fetch_column("SELECT badge_no FROM members WHERE LOWER(email) = LOWER(?)", [$email]);
+  foreach ($badge_nos as $badge_no) {
+    db_query(
+      "INSERT INTO login_links (login_code, badge_no, expires_at) VALUES (?, ?, ?)",
+      [$login_code, $badge_no, $expires_at_ts]
+    );
   }
 }
 
 function db_get_login_link_expiry($badge_no, $login_code) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = ?");
-  try {
-    $stmt->bind_param("ss", $login_code, $badge_no);
-    $stmt->execute();
-    $stmt->bind_result($expires_at);
-    if (!$stmt->fetch()) {
-      // No such link
-      return null;
-    }
-  } finally {
-    $stmt->close();
+  $expires_at = db_fetch_value("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = ?", [$login_code, $badge_no]);
+  if ($expires_at === null) {
+    // No such link
+    return null;
   }
 
   return strtotime($expires_at);
 }
 
 function db_get_member_discord_data() {
-  global $mysqli;
+  $rows = db_fetch_rows("SELECT members.badge_no, name, discord_ids.discord_id, discord_ids.username FROM members LEFT OUTER JOIN discord_ids USING (badge_no) ORDER BY badge_no");
 
-  $result = $mysqli->query("SELECT members.badge_no, name, discord_ids.discord_id, discord_ids.username from members LEFT OUTER JOIN discord_ids USING (badge_no) ORDER by badge_no");
-  try {
-    $members = [];
-    $cur_member = null;
-    while ($row = $result->fetch_assoc()) {
-      if ($cur_member && $cur_member['badge_no'] === $row['badge_no']) {
+  $members = [];
+  $cur_member = null;
+  foreach ($rows as $row) {
+    if ($cur_member && $cur_member['badge_no'] === $row['badge_no']) {
+      $cur_member['discord_ids'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
+    } else {
+      if ($cur_member) {
+        $members[] = $cur_member;
+      }
+      $cur_member = ['badge_no' => $row['badge_no'], 'name' => $row['name'], 'discord_ids' => []];
+      if ($row['discord_id']) {
         $cur_member['discord_ids'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
-      } else {
-        if ($cur_member) {
-          $members[] = $cur_member;
-        }
-        $cur_member = ['badge_no' => $row['badge_no'], 'name' => $row['name'], 'discord_ids' => []];
-        if ($row['discord_id']) {
-          $cur_member['discord_ids'][] = ['id' => $row['discord_id'], 'username' => $row['username']];
-        }
       }
     }
-    if ($cur_member) {
-      $members[] = $cur_member;
-    }
-  } finally {
-    $result->close();
+  }
+  if ($cur_member) {
+    $members[] = $cur_member;
   }
 
   return $members;
 }
 
 function db_get_all_discord_info() {
-  global $mysqli;
+  $rows = db_fetch_rows("SELECT members.name AS member_name, discord_id, roles.name AS role_name FROM discord_ids JOIN members USING (badge_no) LEFT JOIN member_roles USING (badge_no) LEFT JOIN roles USING (role_id)");
 
-  $result = $mysqli->query("SELECT members.name member_name, discord_id, roles.name role_name FROM discord_ids JOIN members USING (badge_no) LEFT JOIN member_roles USING (badge_no) LEFT JOIN roles USING (role_id)");
-  try {
-    $discord_info = [];
-    while ($row = $result->fetch_assoc()) {
-      if (!isset($discord_info[$row['discord_id']])) {
-        $discord_info[$row['discord_id']] = [
-          "name" => $row['member_name'],
-          "roles" => [],
-        ];
-      }
-      if ($row['role_name']) {
-        $discord_info[$row['discord_id']]["roles"][] = $row['role_name'];
-      }
+  $discord_info = [];
+  foreach ($rows as $row) {
+    if (!isset($discord_info[$row['discord_id']])) {
+      $discord_info[$row['discord_id']] = [
+        "name" => $row['member_name'],
+        "roles" => [],
+      ];
     }
-  } finally {
-    $result->close();
+    if ($row['role_name']) {
+      $discord_info[$row['discord_id']]["roles"][] = $row['role_name'];
+    }
   }
 
   return $discord_info;
 }
 
 function db_get_discord_usernames($session_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT discord_ids.username FROM discord_ids JOIN sessions USING (badge_no) WHERE session_id = ?");
-  try {
-    $stmt->bind_param("s", $session_id);
-    $stmt->execute();
-    $stmt->bind_result($username);
-    $usernames = [];
-    while ($stmt->fetch()) {
-      $usernames[] = $username;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $usernames;
+  return db_fetch_column("SELECT discord_ids.username FROM discord_ids JOIN sessions USING (badge_no) WHERE session_id = ?", [$session_id]);
 }
 
 function db_get_discord_ids($badge_no) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT discord_id FROM discord_ids WHERE badge_no = ?");
-  try {
-    $stmt->bind_param("s", $badge_no);
-    $stmt->execute();
-    $stmt->bind_result($discord_id);
-    $discord_ids = [];
-    while ($stmt->fetch()) {
-      $discord_ids[] = $discord_id;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $discord_ids;
+  return db_fetch_column("SELECT discord_id FROM discord_ids WHERE badge_no = ?", [$badge_no]);
 }
 
 function db_get_roles() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT role_id, name FROM roles");
-  try {
-    $roles = [];
-    while ($row = $result->fetch_assoc()) {
-      $roles[] = $row;
-    }
-  } finally {
-    $result->close();
-  }
-
-  return $roles;
+  return db_fetch_rows("SELECT role_id, name FROM roles");
 }
 
 function db_get_role_permissions($role_id) {
-  global $mysqli;
+  $rows = db_fetch_rows("SELECT permission_id, name, COALESCE(has_permission, 0) AS has_permission FROM permissions LEFT OUTER JOIN (SELECT permission_id, COUNT(*) AS has_permission FROM role_permissions WHERE role_id = ? GROUP BY permission_id) h_p USING (permission_id) ORDER BY name", [$role_id]);
 
-  $stmt = $mysqli->prepare("SELECT permission_id, name, IFNULL(has_permission, 0) has_permission FROM permissions LEFT OUTER JOIN (SELECT permission_id, COUNT(*) has_permission FROM role_permissions WHERE role_id=? GROUP BY permission_id) h_p USING (permission_id) ORDER BY name;");
-  try {
-    $stmt->bind_param("s", $role_id);
-    $stmt->execute();
-    $stmt->bind_result($permission_id, $name, $has_permission);
-    $permissions = [];
-    while ($stmt->fetch()) {
-      $permissions[] = ['permission_id' => $permission_id, 'name' => $name, 'has_permission' => $has_permission];
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $permissions;
+  return array_map(function ($row) {
+    return [
+      'permission_id' => $row['permission_id'],
+      'name' => $row['name'],
+      'has_permission' => (int) $row['has_permission'],
+    ];
+  }, $rows);
 }
 
 function db_set_role_permission($role_id, $permission_id, $has_permission) {
-  global $mysqli;
-
   if ($has_permission) {
-    $stmt = $mysqli->prepare("REPLACE INTO role_permissions (role_id, permission_id) VALUES (?, ?)");
-    try {
-      $stmt->bind_param("ss", $role_id, $permission_id);
-      $stmt->execute();
-    } finally {
-      $stmt->close();
-    }
+    db_upsert(
+      'role_permissions',
+      ['role_id', 'permission_id'],
+      [],
+      ['role_id' => $role_id, 'permission_id' => $permission_id]
+    );
   } else {
-    $stmt = $mysqli->prepare("DELETE FROM role_permissions WHERE role_id = ? AND permission_id = ?");
-    try {
-      $stmt->bind_param("ss", $role_id, $permission_id);
-      $stmt->execute();
-    } finally {
-      $stmt->close();
-    }
+    db_query("DELETE FROM role_permissions WHERE role_id = ? AND permission_id = ?", [$role_id, $permission_id]);
   }
 }
 
 function db_create_role($name) {
-  global $mysqli;
+  db_query("INSERT INTO roles (name) VALUES (?)", [$name]);
 
-  $stmt = $mysqli->prepare("INSERT INTO roles (name) VALUES (?)");
-  try {
-    $stmt->bind_param("s", $name);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
-
-  return $mysqli->insert_id;
+  return db_last_insert_id('roles_role_id_seq');
 }
 
 function db_delete_role($role_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("DELETE FROM roles WHERE role_id = ?");
-  try {
-    $stmt->bind_param("s", $role_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("DELETE FROM roles WHERE role_id = ?", [$role_id]);
 }
 
 function db_add_member_role($badge_no, $role_name) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?");
-  try {
-    $stmt->bind_param("ss", $badge_no, $role_name);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("INSERT INTO member_roles (badge_no, role_id) SELECT ?, role_id FROM roles WHERE name = ?", [$badge_no, $role_name]);
 }
 
 function db_get_default_permissions() {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default'");
-  try {
-    $stmt->execute();
-    $stmt->bind_result($name);
-    $permissions = [];
-    while ($stmt->fetch()) {
-      $permissions[] = $name;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $permissions;
+  return db_fetch_column("SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default'");
 }
 
 function db_get_permissions_by_session($session_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("(SELECT name FROM permissions JOIN role_permissions USING (permission_id) JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) WHERE session_id = ?) UNION (SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default')");
-  try {
-    $stmt->bind_param("s", $session_id);
-    $stmt->execute();
-    $stmt->bind_result($name);
-    $permissions = [];
-    while ($stmt->fetch()) {
-      $permissions[] = $name;
-    }
-  } finally {
-    $stmt->close();
-  }
-
-  return $permissions;
+  return db_fetch_column("(SELECT name FROM permissions JOIN role_permissions USING (permission_id) JOIN member_roles USING (role_id) JOIN sessions USING (badge_no) WHERE session_id = ?) UNION (SELECT permissions.name FROM permissions JOIN role_permissions USING (permission_id) JOIN roles USING (role_id) WHERE roles.name = 'default')", [$session_id]);
 }
 
 function db_get_role_id($role_name) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT role_id FROM roles WHERE name = ?");
-  try {
-    $stmt->bind_param("s", $role_name);
-    $stmt->execute();
-    $stmt->bind_result($role_id);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
-
-  return $role_id;
+  return db_fetch_value("SELECT role_id FROM roles WHERE name = ?", [$role_name]);
 }
 
 function db_get_stages() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT room_id, title FROM prog_stages ORDER BY title, room_id");
-  try {
-    $stages = [];
-    while ($row = $result->fetch_assoc()) {
-      $stages[] = $row;
-    }
-  } finally {
-    $result->close();
-  }
-
-  return $stages;
+  return db_fetch_rows("SELECT room_id, title FROM prog_stages ORDER BY title, room_id");
 }
 
 function db_get_stage($room_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT title, viewer_url, type, participant_url FROM prog_stages WHERE room_id = ?");
-  try {
-    $stmt->bind_param("s", $room_id);
-    $stmt->execute();
-    $stmt->bind_result($title, $viewer_url, $type, $participant_url);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
+  $row = db_fetch_row("SELECT title, viewer_url, type, participant_url FROM prog_stages WHERE room_id = ?", [$room_id]);
 
   return [
-    'title' => $title,
-    'viewer_url' => $viewer_url,
-    'type' => $type,
-    'participant_url' => $participant_url
+    'title' => $row['title'] ?? null,
+    'viewer_url' => $row['viewer_url'] ?? null,
+    'type' => $row['type'] ?? null,
+    'participant_url' => $row['participant_url'] ?? null,
   ];
 }
 
 function db_add_stage($room_id, $title, $viewer_url, $type, $participant_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO prog_stages (room_id, title, viewer_url, type, participant_url) VALUES (?, ?, ?, ?, ?)");
-  try {
-    $stmt->bind_param("sssss", $room_id, $title, $viewer_url, $type, $participant_url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
-
-  return $mysqli->insert_id;
+  db_query(
+    "INSERT INTO prog_stages (room_id, title, viewer_url, type, participant_url) VALUES (?, ?, ?, ?, ?)",
+    [$room_id, $title, $viewer_url, $type, $participant_url]
+  );
 }
 
 function db_edit_stage($room_id, $title, $viewer_url, $type, $participant_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("UPDATE prog_stages SET title = ?, viewer_url = ?, type = ?, participant_url = ? WHERE room_id = ?");
-  try {
-    $stmt->bind_param("sssss", $title, $viewer_url, $type, $participant_url, $room_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query(
+    "UPDATE prog_stages SET title = ?, viewer_url = ?, type = ?, participant_url = ? WHERE room_id = ?",
+    [$title, $viewer_url, $type, $participant_url, $room_id]
+  );
 }
 
 function db_delete_stage($room_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("DELETE FROM prog_stages WHERE room_id = ?");
-  try {
-    $stmt->bind_param("s", $room_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("DELETE FROM prog_stages WHERE room_id = ?", [$room_id]);
 }
 
 function db_get_prog_sessions() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT item_id, title FROM prog_sessions ORDER BY title, item_id");
-  try {
-    $items = [];
-    while ($row = $result->fetch_assoc()) {
-      $items[] = $row;
-    }
-  } finally {
-    $result->close();
-  }
-
-  return $items;
+  return db_fetch_rows("SELECT item_id, title FROM prog_sessions ORDER BY title, item_id");
 }
 
 function db_get_prog_session($item_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT title, rce_url FROM prog_sessions WHERE item_id = ?");
-  try {
-    $stmt->bind_param("s", $item_id);
-    $stmt->execute();
-    $stmt->bind_result($title, $rce_url);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
+  $row = db_fetch_row("SELECT title, rce_url FROM prog_sessions WHERE item_id = ?", [$item_id]);
 
   return [
-    'title' => $title,
-    'rce_url' => $rce_url,
+    'title' => $row['title'] ?? null,
+    'rce_url' => $row['rce_url'] ?? null,
   ];
 }
 
 function db_edit_prog_session($item_id, $title, $rce_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("UPDATE prog_sessions SET title = ?, rce_url = ? WHERE item_id = ?");
-  try {
-    $stmt->bind_param("sss", $title, $rce_url, $item_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("UPDATE prog_sessions SET title = ?, rce_url = ? WHERE item_id = ?", [$title, $rce_url, $item_id]);
 }
 
 function db_add_prog_session($item_id, $title, $rce_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO prog_sessions (item_id, title, rce_url) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("sss", $item_id, $title, $rce_url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
-
-  return $mysqli->insert_id;
+  db_query("INSERT INTO prog_sessions (item_id, title, rce_url) VALUES (?, ?, ?)", [$item_id, $title, $rce_url]);
 }
 
 function db_delete_prog_session($item_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("DELETE FROM prog_sessions WHERE item_id = ?");
-  try {
-    $stmt->bind_param("s", $item_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("DELETE FROM prog_sessions WHERE item_id = ?", [$item_id]);
 }
 
 function db_get_discord_posts() {
-  global $mysqli;
+  return db_fetch_rows("SELECT item_id, title FROM prog_discord_posts ORDER BY title, item_id");
+}
 
-  $result = $mysqli->query("SELECT item_id, title FROM prog_discord_posts ORDER BY title, item_id");
-  try {
-    $items = [];
-    while ($row = $result->fetch_assoc()) {
-      $items[] = $row;
-    }
-  } finally {
-    $result->close();
-  }
+function db_format_discord_post($row) {
+  $start_time = $row['start'] ?? null;
+  $duration_secs = $row['duration'] ?? null;
 
-  return $items;
+  return [
+    'start' => $start_time ? (new DateTime('@' . $start_time))->setTimezone(new DateTimeZone(TIMEZONE))->format('Y-m-d H:i') : null,
+    'title' => $row['title'] ?? null,
+    'duration' => $duration_secs ? $duration_secs / 60 : null,
+    'room_id' => $row['room_id'] ?? null,
+    'post_url' => $row['post_url'] ?? null,
+  ];
 }
 
 function db_get_discord_post($item_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT start, title, duration, room_id, post_url FROM prog_discord_posts WHERE item_id = ?");
-  try {
-    $stmt->bind_param("s", $item_id);
-    $stmt->execute();
-    $stmt->bind_result($start_time, $title, $duration_secs, $room_id, $post_url);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
-
-  $start_time_formatted = $start_time ? (new DateTime('@' . $start_time))->setTimezone(new DateTimeZone(TIMEZONE))->format('Y-m-d H:i') : null;
-
-  return [
-    'start' => $start_time_formatted,
-    'title' => $title,
-    'duration' => $duration_secs ? $duration_secs / 60 : null,
-    'room_id' => $room_id,
-    'post_url' => $post_url,
-  ];
+  return db_format_discord_post(
+    db_fetch_row("SELECT start, title, duration, room_id, post_url FROM prog_discord_posts WHERE item_id = ?", [$item_id])
+  );
 }
 
 function db_get_discord_post_by_room_and_time($room_id, $utc_time) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT title, start, duration, room_id, post_url FROM prog_discord_posts WHERE room_id = ? AND start <= ? AND start + duration >= ?");
-  try {
-    $stmt->bind_param("sii", $room_id, $utc_time, $utc_time);
-    $stmt->execute();
-    $stmt->bind_result($title, $start_time, $duration_secs, $room_id, $post_url);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
-
-  $start_time_formatted = $start_time ? (new DateTime('@' . $start_time))->setTimezone(new DateTimeZone(TIMEZONE))->format('Y-m-d H:i') : null;
-
-  return [
-    'start' => $start_time_formatted,
-    'title' => $title,
-    'duration' => $duration_secs ? $duration_secs / 60 : null,
-    'room_id' => $room_id,
-    'post_url' => $post_url,
-  ];
+  return db_format_discord_post(
+    db_fetch_row("SELECT title, start, duration, room_id, post_url FROM prog_discord_posts WHERE room_id = ? AND start <= ? AND start + duration >= ?", [$room_id, $utc_time, $utc_time])
+  );
 }
 
 function db_edit_discord_post($item_id, $title, $start, $duration, $room_id, $post_url) {
-  global $mysqli;
-
   if ($start) {
     $date = new DateTime($start, new DateTimeZone(TIMEZONE));
     $start_time = $date->getTimestamp();
@@ -771,18 +373,13 @@ function db_edit_discord_post($item_id, $title, $start, $duration, $room_id, $po
     $duration_secs = null;
   }
 
-  $stmt = $mysqli->prepare("UPDATE prog_discord_posts SET title = ?, start = ?, duration = ?, room_id = ?, post_url = ? WHERE item_id = ?");
-  try {
-    $stmt->bind_param("siisss", $title, $start_time, $duration_secs, $room_id, $post_url, $item_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query(
+    "UPDATE prog_discord_posts SET title = ?, start = ?, duration = ?, room_id = ?, post_url = ? WHERE item_id = ?",
+    [$title, $start_time, $duration_secs, $room_id, $post_url, $item_id]
+  );
 }
 
 function db_add_discord_post($item_id, $title, $start, $duration, $room_id, $post_url) {
-  global $mysqli;
-
   if ($start) {
     $date = new DateTime($start, new DateTimeZone(TIMEZONE));
     $start_time = $date->getTimestamp();
@@ -796,20 +393,13 @@ function db_add_discord_post($item_id, $title, $start, $duration, $room_id, $pos
     $duration_secs = null;
   }
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, title, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?, ?)");
-  try {
-    $stmt->bind_param("ssiiss", $item_id, $title, $start_time, $duration_secs, $room_id, $post_url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
-
-  return $mysqli->insert_id;
+  db_query(
+    "INSERT INTO prog_discord_posts (item_id, title, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?, ?)",
+    [$item_id, $title, $start_time, $duration_secs, $room_id, $post_url]
+  );
 }
 
 function db_upsert_discord_post($item_id, $title, $start, $duration, $room_id, $post_url) {
-  global $mysqli;
-
   if ($start) {
     $date = new DateTime($start, new DateTimeZone("UTC"));
     $start_time = $date->getTimestamp();
@@ -823,229 +413,113 @@ function db_upsert_discord_post($item_id, $title, $start, $duration, $room_id, $
     $duration_secs = null;
   }
 
-  $stmt = $mysqli->prepare("INSERT INTO prog_discord_posts (item_id, title, start, duration, room_id, post_url) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE start = VALUES(start), duration = VALUES(duration), room_id = VALUES(room_id), post_url = VALUES(post_url)");
-  try {
-    $stmt->bind_param("ssiiss", $item_id, $title, $start_time, $duration_secs, $room_id, $post_url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_upsert(
+    'prog_discord_posts',
+    ['item_id'],
+    ['start', 'duration', 'room_id', 'post_url'],
+    [
+      'item_id' => $item_id,
+      'title' => $title,
+      'start' => $start_time,
+      'duration' => $duration_secs,
+      'room_id' => $room_id,
+      'post_url' => $post_url,
+    ]
+  );
 }
 
 function db_delete_discord_post($item_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("DELETE FROM prog_discord_posts WHERE item_id = ?");
-  try {
-    $stmt->bind_param("s", $item_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("DELETE FROM prog_discord_posts WHERE item_id = ?", [$item_id]);
 }
 
 function db_get_zoom_url() {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT zoom_url FROM prog_zoom");
-  try {
-    $stmt->execute();
-    $stmt->bind_result($url);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
-
-  return $url;
+  return db_fetch_value("SELECT zoom_url FROM prog_zoom");
 }
 
 function db_set_zoom_url($url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("UPDATE prog_zoom SET zoom_url = ?");
-  try {
-    $stmt->bind_param("s", $url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("UPDATE prog_zoom SET zoom_url = ?", [$url]);
 }
 
 function db_get_replays() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT item_id, title FROM prog_replay ORDER BY title, item_id");
-  try {
-    $items = [];
-    while ($row = $result->fetch_assoc()) {
-      $items[] = $row;
-    }
-  } finally {
-    $result->close();
-  }
-
-  return $items;
+  return db_fetch_rows("SELECT item_id, title FROM prog_replay ORDER BY title, item_id");
 }
 
 function db_get_replay($item_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT title, replay_url FROM prog_replay WHERE item_id = ?");
-  try {
-    $stmt->bind_param("s", $item_id);
-    $stmt->execute();
-    $stmt->bind_result($title, $replay_url);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
+  $row = db_fetch_row("SELECT title, replay_url FROM prog_replay WHERE item_id = ?", [$item_id]);
 
   return [
-    'title' => $title,
-    'replay_url' => $replay_url,
+    'title' => $row['title'] ?? null,
+    'replay_url' => $row['replay_url'] ?? null,
   ];
 }
 
 function db_edit_replay($item_id, $title, $replay_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("UPDATE prog_replay SET title = ?, replay_url = ? WHERE item_id = ?");
-  try {
-    $stmt->bind_param("sss", $title, $replay_url, $item_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("UPDATE prog_replay SET title = ?, replay_url = ? WHERE item_id = ?", [$title, $replay_url, $item_id]);
 }
 
 function db_add_replay($item_id, $title, $replay_url) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO prog_replay (item_id, title, replay_url) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("sss", $item_id, $title, $replay_url);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
-
-  return $mysqli->insert_id;
+  db_query("INSERT INTO prog_replay (item_id, title, replay_url) VALUES (?, ?, ?)", [$item_id, $title, $replay_url]);
 }
 
 function db_delete_replay($item_id) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("DELETE FROM prog_replay WHERE item_id = ?");
-  try {
-    $stmt->bind_param("s", $item_id);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("DELETE FROM prog_replay WHERE item_id = ?", [$item_id]);
 }
 
 function db_insert_discord_token($token, $discord_id, $discord_username) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO discord_verification_token (token_id, discord_id, username) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("sss", $token, $discord_id, $discord_username);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query(
+    "INSERT INTO discord_verification_token (token_id, discord_id, username) VALUES (?, ?, ?)",
+    [$token, $discord_id, $discord_username]
+  );
 }
 
 function db_set_discord_id_from_token($badge_no, $token) {
-  global $mysqli;
+  global $pdo;
 
-  $mysqli->begin_transaction();
+  $pdo->beginTransaction();
   try {
-    $stmt = $mysqli->prepare("SELECT discord_id, username, verified_at FROM discord_verification_token WHERE token_id = ?");
-    try {
-      $stmt->bind_param("s", $token);
-      $stmt->execute();
-      $stmt->bind_result($discord_id, $discord_username, $verified_at);
-      if (!$stmt->fetch()) {
-        return [ "result"=>"no-token" ];
-      }
-    } finally {
-      $stmt->close();
+    $row = db_fetch_row("SELECT discord_id, username, verified_at FROM discord_verification_token WHERE token_id = ?", [$token]);
+    if (!$row) {
+      $pdo->rollBack();
+      return [ "result"=>"no-token" ];
     }
 
-    if ($verified_at) {
-      return [ "result"=>"already-verified", "id"=>$discord_id, "username"=>$discord_username ];
+    if ($row['verified_at']) {
+      $pdo->rollBack();
+      return [ "result"=>"already-verified", "id"=>$row['discord_id'], "username"=>$row['username'] ];
     }
 
-    db_set_discord_id($badge_no, $discord_id, $discord_username);
+    db_set_discord_id($badge_no, $row['discord_id'], $row['username']);
 
-    $stmt = $mysqli->prepare("UPDATE discord_verification_token SET verified_at = CURRENT_TIMESTAMP() WHERE token_id = ?");
-    try {
-      $stmt->bind_param("s", $token);
-      $stmt->execute();
-    } finally {
-      $stmt->close();
-    }
+    db_query("UPDATE discord_verification_token SET verified_at = CURRENT_TIMESTAMP WHERE token_id = ?", [$token]);
 
-    $mysqli->commit();
+    $pdo->commit();
 
-    return [ "result"=>"verified", "id"=>$discord_id, "username"=>$discord_username ];
-  } catch (mysqli_sql_exception $exception) {
-    $mysqli->rollback();
+    return [ "result"=>"verified", "id"=>$row['discord_id'], "username"=>$row['username'] ];
+  } catch (PDOException $exception) {
+    $pdo->rollBack();
     throw $exception;
   }
 }
 
 function db_get_discord_id_from_token($token) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("SELECT username FROM discord_verification_token WHERE token_id = ?");
-  try {
-    $stmt->bind_param("s", $token);
-    $stmt->execute();
-    $stmt->bind_result($username);
-    $stmt->fetch();
-  } finally {
-    $stmt->close();
-  }
+  $username = db_fetch_value("SELECT username FROM discord_verification_token WHERE token_id = ?", [$token]);
 
   error_log("Got username $username for token $token");
   return $username;
 }
 
 function db_record_analytics($member_type, $event, $data) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO analytics (member_type, event, data) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("sss", $member_type, $event, $data);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query("INSERT INTO analytics (member_type, event, data) VALUES (?, ?, ?)", [$member_type, $event, $data]);
 }
 
 function db_create_login_link($badge_no, $login_code, $expiry) {
-  global $mysqli;
-
-  $stmt = $mysqli->prepare("INSERT INTO login_links (badge_no, login_code, expires_at) VALUES (?, ?, ?)");
-  try {
-    $stmt->bind_param("ssi", $badge_no, $login_code, $expiry);
-    $stmt->execute();
-  } finally {
-    $stmt->close();
-  }
+  db_query(
+    "INSERT INTO login_links (badge_no, login_code, expires_at) VALUES (?, ?, ?)",
+    [$badge_no, $login_code, date('Y-m-d H:i:s', $expiry)]
+  );
 }
 
 function db_get_num_members() {
-  global $mysqli;
-
-  $result = $mysqli->query("SELECT COUNT(*) FROM members");
-  try {
-    $row = $result->fetch_row();
-    return $row[0];
-  } finally {
-    $result->close();
-  }
+  return db_fetch_value("SELECT COUNT(*) FROM members");
 }
 ?>

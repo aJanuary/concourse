@@ -75,7 +75,12 @@ define('DISCORD_SERVICE_ACCOUNTS', [
   ]
 ]);
 
+define('DB_DRIVER', getenv('CONFIG_DB_DRIVER') ?: 'mysql');
+if (!in_array(DB_DRIVER, ['mysql', 'pgsql'], true)) {
+  throw new RuntimeException("Unsupported CONFIG_DB_DRIVER '" . DB_DRIVER . "'");
+}
 define('DB_HOST', getenv('CONFIG_DB_HOST'));
+define('DB_PORT', getenv('CONFIG_DB_PORT') ?: '');
 define('DB_NAME', getenv('CONFIG_DB_NAME'));
 define('DB_USER', getenv('CONFIG_DB_USER'));
 define('DB_PASSWORD', trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"));
