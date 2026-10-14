@@ -16,7 +16,7 @@ function fail($message) {
   exit(1);
 }
 
-$args = array_slice($argv, 1);
+$args = array_slice($_SERVER['argv'], 1);
 if (count($args) !== 1 && count($args) !== 3) {
   fail('usage: scripts/create-admin <badge no> [<email> <name>]');
 }

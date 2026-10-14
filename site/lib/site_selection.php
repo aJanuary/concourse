@@ -44,11 +44,10 @@ function site_selection_tokens_from_csv($text) {
       continue;
     }
     $cells = array_map('trim', str_getcsv($line, ',', '"', ''));
-    $label = $cells[0] ?? '';
-    $token = $cells[1] ?? '';
-    if (count($cells) !== 2 || $label === '' || $token === '') {
+    if (count($cells) !== 2 || $cells[0] === '' || $cells[1] === '') {
       return [[], "Row $row_no doesn't have a label and a token, like \"Batch A,abc-def-ghi\"."];
     }
+    [$label, $token] = $cells;
     if (strlen($token) > SITE_SELECTION_TOKEN_MAX_LENGTH) {
       return [[], "The token in row $row_no is longer than " . SITE_SELECTION_TOKEN_MAX_LENGTH . ' characters.'];
     }

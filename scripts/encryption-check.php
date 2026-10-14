@@ -13,15 +13,18 @@ require_once(getenv('CONFIG_LIB_DIR') . '/encryption.php');
 
 restore_exception_handler();
 
-$failures = 0;
+// How many checks have failed, after adding $add
+function failed_checks($add = 0) {
+  static $count = 0;
+  return $count += $add;
+}
 
 function check($description, $condition) {
-  global $failures;
   if ($condition) {
     echo "ok   $description\n";
   } else {
     echo "FAIL $description\n";
-    $failures++;
+    failed_checks(1);
   }
 }
 
@@ -62,8 +65,8 @@ check('a key of the wrong length is refused', error_from(fn() => encrypt_config_
 check('decrypts a value encrypted by LAcon V\'s script',
   decrypt_config_value('AAECAwQFBgcICQoLL2e6d6onl/81O4oEbSgjbc2dBXu7', 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=') === 'hello');
 
-$original_config = $config_file;
-$config_file['smoke'] = [
+$original_config = $GLOBALS['config_file'];
+$GLOBALS['config_file']['smoke'] = [
   'plain' => 'plain value',
   'encrypted' => CONFIG_ENCRYPTED_PREFIX . $encrypted,
   'other_key' => CONFIG_ENCRYPTED_PREFIX . encrypt_config_value($secret, $other_key),
@@ -91,17 +94,18 @@ unlink($key_file);
 check('a missing key file is an error', error_from(fn() => config_encryption_key()) !== null);
 
 clear_key_sources();
-$config_file['encryption'] = ['config_encryption_key' => $key];
+$GLOBALS['config_file']['encryption'] = ['config_encryption_key' => $key];
 check('key from [encryption] config_encryption_key', config_encryption_key() === $key);
 
 clear_key_sources();
 putenv("CONFIG_ENCRYPTION_KEY=$key");
-$config_file['encryption'] = ['config_encryption_key' => $other_key];
+$GLOBALS['config_file']['encryption'] = ['config_encryption_key' => $other_key];
 check('CONFIG_ENCRYPTION_KEY comes before the secrets file', config_encryption_key() === $key);
 
 clear_key_sources();
-$config_file = $original_config;
+$GLOBALS['config_file'] = $original_config;
 
+$failures = failed_checks();
 if ($failures > 0) {
   echo "\n$failures check(s) failed\n";
   exit(1);

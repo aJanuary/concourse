@@ -1,5 +1,6 @@
 <?php
-// Rendered by exception_handler in config.php with $err_code set
+// Rendered by exception_handler in config.php
+/** @var string $err_code */
 $mailto = 'mailto:' . SUPPORT_EMAIL
   . '?subject=' . rawurlencode('Problem with member portal')
   . '&body=' . rawurlencode("Code: $err_code\n\nProblem:\n");

@@ -17,7 +17,7 @@ function fail($message) {
   exit(1);
 }
 
-$args = array_slice($argv, 1);
+$args = array_slice($_SERVER['argv'], 1);
 if ($args === ['--generate-key']) {
   echo generate_config_encryption_key() . "\n";
   exit(0);
