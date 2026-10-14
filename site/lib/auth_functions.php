@@ -85,7 +85,7 @@ function is_valid_redirect($url) {
 }
 
 function allowed_redirect_origins() {
-  return [];
+  return CONCLAR_ALLOWED_ORIGINS;
 }
 
 function make_login_link() {

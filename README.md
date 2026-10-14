@@ -60,7 +60,32 @@ All sections are optional; a feature whose section is missing reports which key 
 | `[oidc]` | `provider_url`, `client_id`, `client_secret`, `scopes[]`, `claims[...]`, `role_map[...]`, `provider_logout`, `password_change_url`, `verify_tls` | The `oidc` login provider; see [OpenID Connect login](#openid-connect-login) |
 | `[smtp]` | `host`, `port`, `username`, `password`, `secure` | Outgoing mail for the `local` login provider. `secure` is empty, `tls` or `ssl` |
 | `[crypto]` | `signing_key` | Signs emailed links and hashes login codes for the `local` provider. At least 32 characters; generate with `openssl rand -hex 32` |
+| `[conclar]` | `allowed_origins[]`, `schedule_url` | Origins hosting the ConClár programme guide, which may call `/api/conclar/` with the session cookie and are also valid login redirect targets (no trailing slash); optional programme JSON used to show item titles in the favourites report. See [ConClár](#conclár) |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
+
+### ConClár
+
+ConClár can store members' starred items on the portal so they follow them
+across devices. Add the origin it is served from to the secrets file:
+
+```ini
+[conclar]
+allowed_origins[] = https://guide.example.com
+; Optional. Adds item titles to the favourites report
+schedule_url = https://guide.example.com/programme.json
+```
+
+Each ConClár instance identifies itself with an `app_id`. Add the ones you
+use to `CONCLAR_VALID_APP_IDS` in `site/lib/config.php`; requests with any
+other `app_id` are rejected. `CONCLAR_MAX_ITEMS` caps how many items a member
+can store per app id.
+
+The API is `GET` and `PATCH /api/conclar/selections?app_id=...` and
+`GET /api/conclar/profile`. For the session cookie to be sent from another
+origin the portal must be served over HTTPS (see `cookie_domain` above).
+
+Members with the `see-programme-reports` permission get a Programme reports
+card with the most starred items, split by the `online` and `in-person` roles.
 
 `docker-compose.yml` has the same list with a description of each key.
 

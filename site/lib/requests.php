@@ -1,6 +1,6 @@
 <?php
 
-function api_call($url, $headers, $payload=false, $method=null) {
+function api_call($url, $headers, $payload=false, $method=null, $timeout=null) {
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   if ($payload) {
@@ -12,6 +12,9 @@ function api_call($url, $headers, $payload=false, $method=null) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
   }
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  if ($timeout !== null) {
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+  }
   $response_raw = curl_exec($ch);
   curl_close($ch);
   return json_decode($response_raw, true);

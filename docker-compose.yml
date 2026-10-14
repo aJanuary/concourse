@@ -188,6 +188,13 @@ secrets:
     # ; Generate with `openssl rand -hex 32`
     # signing_key =
     #
+    # [conclar]
+    # ; Origins hosting ConClar, which may call the API with the session cookie.
+    # ; No trailing slash.
+    # allowed_origins[] = https://guide.example.com
+    # ; Optional programme JSON, used to show item titles in the favourites report
+    # schedule_url =
+    #
     # [cookie]
     # ; The name of the session cookie. Defaults to "session". Changing it logs
     # ; everyone out, so use a different name for each deployment that shares a

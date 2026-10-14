@@ -141,6 +141,17 @@ define('OIDC_PASSWORD_CHANGE_URL', trim((string) config_get('oidc', 'password_ch
 // Only an explicit false turns certificate checking off
 define('OIDC_VERIFY_TLS', !in_array(strtolower(trim((string) config_get('oidc', 'verify_tls', '1'))), ['', '0', 'false', 'no', 'off'], true));
 
+// ConClár, the programme guide front end, may be hosted on another origin.
+// allowed_origins[] lists the origins that may call the API with the session
+// cookie, e.g. https://guide.example.com (no trailing slash).
+define('CONCLAR_ALLOWED_ORIGINS', array_map('trim', config_get('conclar', 'allowed_origins', [])));
+// Optional ConClár programme JSON, used to show item titles in the favourites report
+define('CONCLAR_SCHEDULE_URL', trim((string) config_get('conclar', 'schedule_url')));
+// The app ids a ConClár instance may store selections under, e.g. ['example2026']
+define('CONCLAR_VALID_APP_IDS', []);
+// The most items a member may have stored per app id
+define('CONCLAR_MAX_ITEMS', 300);
+
 define('SMTP_HOST', config_get('smtp', 'host'));
 define('SMTP_PORT', (int) config_get('smtp', 'port', 25));
 define('SMTP_USERNAME', config_get('smtp', 'username'));
