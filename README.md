@@ -145,6 +145,24 @@ card with the most starred items, split by the `online` and `in-person` roles.
 
 `docker-compose.yml` has the same list with a description of each key.
 
+### Sign-ups
+
+The Sign-ups page (`/sign-ups`) lists links to sign-up forms for items with
+limited space. Members with `manage-programme` add them under Manage programme,
+one at a time or by pasting CSV. A bulk add with any invalid row imports
+nothing.
+
+Entries are grouped by their free-text category, then by session start time.
+Each has an optional opening and closing time; before it opens the page shows
+when it will, and after it closes the link is replaced with "Closed". The links
+are only shown to members with the `see-signup-links` permission.
+
+To fill in member details, put `{name}`, `{email}` or `{badge_no}` anywhere in
+the sign-up URL, for example
+`https://forms.example.com/f?entry.1={name}&entry.2={badge_no}`. For someone
+not logged in, query parameters holding a placeholder are removed,
+and placeholders elsewhere in the URL are left empty.
+
 ## Development
 
 ### Deployment for Development
