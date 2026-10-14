@@ -7,6 +7,8 @@ already identified, and it is the place those services ask about members.
   or Discord, and sign-up forms
 - [Discord](discord.md): joining the convention's server, roles in the server
   and programme item chat
+- [Watson](watson.md): the Discord bot that gives members roles and creates
+  programme item posts
 - [ConClár](conclar.md): keeping members' starred items on the portal
 - [The API](api.md): how other systems call the portal
 

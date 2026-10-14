@@ -4,7 +4,7 @@ The portal lets members join the convention's Discord server with their
 badge name as their nickname, and links Discord accounts to members so the
 server can give them roles. It has three parts in Discord: an OAuth
 application, a bot in the server, and optionally a companion bot that asks
-the portal about members (not part of this repository).
+the portal about members, such as [Watson](watson.md).
 
 ## Joining the server
 
@@ -33,7 +33,7 @@ nickname, and sends them to a single use invite in case adding them failed.
 
 ## Roles in the server
 
-A companion bot can give members Discord roles that match their portal
+A companion bot such as [Watson](watson.md) can give members Discord roles that match their portal
 roles. It calls `/api/check-discord-ids` through [the API](api.md) with
 the server's members:
 
@@ -60,7 +60,8 @@ Each programme item can have a Discord post (for example a forum thread) for
 discussing it. `/deep-link/chat?item_id=...` sends the member to the item's
 post, walking them through logging in and joining the server first. Posts
 are managed under Manage programme → Manage Discord posts, or pushed to
-`/api/assign-discord-posts`:
+`/api/assign-discord-posts`, which [Watson](watson.md) does as it creates
+them:
 
 ```json
 [{"itemId": "1", "title": "Panel", "start": "2026-08-08 14:00", "mins": 60, "roomId": "room-a", "postUrl": "https://discord.com/channels/..."}]
