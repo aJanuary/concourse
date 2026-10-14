@@ -16,7 +16,6 @@ function api_call($url, $headers, $payload=false, $method=null, $timeout=null) {
     curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
   }
   $response_raw = curl_exec($ch);
-  curl_close($ch);
   return json_decode($response_raw, true);
 }
 

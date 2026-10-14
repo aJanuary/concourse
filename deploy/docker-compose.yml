@@ -17,9 +17,7 @@ volumes:
 
 services:
   db:
-    image: mysql:8.0.37-debian
-    # mysql:*-debian has no arm64 build
-    platform: linux/amd64
+    image: mysql:9.7.2
     secrets:
       - db_root_password
       - db_dba_password

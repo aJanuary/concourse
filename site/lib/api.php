@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 class ClientException extends Exception {
   public $public_error_code;
 
-  public function __construct($public_error_code, $message, $code = 0, Throwable $previous = null) {
+  public function __construct($public_error_code, $message, $code = 0, ?Throwable $previous = null) {
       $this->public_error_code = $public_error_code;
       parent::__construct($message, $code, $previous);
   }

@@ -14,9 +14,7 @@ volumes:
 
 services:
   db:
-    image: mysql:8.0.37-debian
-    # mysql:*-debian has no arm64 build
-    platform: linux/amd64
+    image: mysql:9.7.2
     secrets:
       - db_root_password
       - db_dba_password
@@ -98,7 +96,7 @@ services:
       - mailpit
 
   phpmyadmin:
-    image: phpmyadmin:5.2.1-apache
+    image: phpmyadmin:5.2.3-apache
     ports:
       - "127.0.0.1::80"
     restart: always
@@ -109,7 +107,7 @@ services:
 
   # Catches all mail the portal sends; set [smtp] host = mailpit, port = 1025
   mailpit:
-    image: axllent/mailpit:v1.30.6
+    image: axllent/mailpit:v1.31.5
     restart: always
     ports:
       - "127.0.0.1::8025"

@@ -1,4 +1,4 @@
-FROM nginx:1.27.0
+FROM nginx:1.31.6
 
 # nginx only serves the static files; every other path goes to php-fpm in
 # the web image, so the PHP sources stay out of this one

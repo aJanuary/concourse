@@ -38,7 +38,7 @@ Generate the passwords with, for example, `openssl rand -hex 24`.
 
 The portal runs on MySQL by default. To run on Postgres instead, uncomment
 `COMPOSE_FILE` in the env file. `docker-compose.postgres.yml` swaps the `db`
-service for `postgres:17` and keeps its data in a `portal-pgdata` volume.
+service for `postgres:18` and keeps its data in a `portal-pgdata` volume.
 Switching an existing install between databases does not carry the data over.
 
 The compose files set the `web` container's database settings, which the
@@ -46,7 +46,7 @@ migrations and the start script also use:
 
 | Variable | Purpose |
 |---|---|
-| `CONFIG_DB_DRIVER` | `mysql` (default, MySQL 8, port 3306) or `pgsql` (Postgres, port 5432) |
+| `CONFIG_DB_DRIVER` | `mysql` (default, MySQL 9.7, port 3306) or `pgsql` (Postgres 18, port 5432) |
 | `CONFIG_DB_HOST`, `CONFIG_DB_NAME`, `CONFIG_DB_USER` | Where the database is and who to connect as |
 | `CONFIG_DB_PASSWORD_FILE` | A file holding the password |
 | `CONFIG_DB_PORT` | Overrides the default port |

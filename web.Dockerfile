@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.5.11-fpm
 
 # Default the runtime to prod. Can be overridden by passing in env vars
 ARG RUNTIME_ENV=production

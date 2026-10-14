@@ -60,7 +60,6 @@ $send_backchannel = function ($token) use ($backchannel_url) {
   curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http_build_query(['logout_token' => $token]), CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 5]);
   $body = curl_exec($ch);
   $result = $body === false ? curl_error($ch) : curl_getinfo($ch, CURLINFO_HTTP_CODE) . ' ' . $body;
-  curl_close($ch);
   return $result;
 };
 
