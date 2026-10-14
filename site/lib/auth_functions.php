@@ -9,22 +9,22 @@ function make_session($badge_no) {
     $session_id = sha1(rand());
     $expires_at = time() + 60*60*24*30;
     db_insert_session($session_id, $badge_no, $expires_at);
-    setcookie("session", $session_id, $expires_at, '/', '', true, true);
+    setcookie(SESSION_COOKIE_NAME, $session_id, $expires_at, '/', SESSION_COOKIE_DOMAIN, true, true);
 }
 
 function make_anonymous_session() {
   $expires_at = time() + 60*60*24;
-  setcookie('session', 'anonymous', $expires_at, '/', '', true, true);
+  setcookie(SESSION_COOKIE_NAME, 'anonymous', $expires_at, '/', SESSION_COOKIE_DOMAIN, true, true);
 }
 
 function is_logged_in() {
-  if (!isset($_COOKIE['session'])) {
+  if (!isset($_COOKIE[SESSION_COOKIE_NAME])) {
     return false;
   }
-  if ($_COOKIE['session'] == 'anonymous') {
+  if ($_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
     return false;
   }
-  return db_session_exists($_COOKIE['session']);
+  return db_session_exists($_COOKIE[SESSION_COOKIE_NAME]);
 }
 
 function is_anonymous() {
@@ -33,8 +33,8 @@ function is_anonymous() {
     $implicit = $GLOBALS['app-data']['allow_implicit_anonymous'] === 'always' || (ALLOW_ANONYMOUS_ACCESS && $GLOBALS['app-data']['allow_implicit_anonymous']);
   }
   return (
-    (isset($_COOKIE['session']) && $_COOKIE['session'] == 'anonymous') ||
-    ($implicit && !isset($_COOKIE['session']))
+    (isset($_COOKIE[SESSION_COOKIE_NAME]) && $_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') ||
+    ($implicit && !isset($_COOKIE[SESSION_COOKIE_NAME]))
   );
 }
 
@@ -43,34 +43,34 @@ function make_login_link() {
 }
 
 function get_current_user_badge_no() {
-  if (!isset($_COOKIE['session']) || $_COOKIE['session'] == 'anonymous') {
+  if (!isset($_COOKIE[SESSION_COOKIE_NAME]) || $_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
     return null;
   }
-  return db_get_badge_no_by_session($_COOKIE['session']);
+  return db_get_badge_no_by_session($_COOKIE[SESSION_COOKIE_NAME]);
 }
 
 function get_current_user_name() {
-  if (!isset($_COOKIE['session'])) {
+  if (!isset($_COOKIE[SESSION_COOKIE_NAME])) {
     return null;
   }
-  if ($_COOKIE['session'] == 'anonymous') {
+  if ($_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
     return 'Anonymous';
   }
-  return db_get_user_name_by_session($_COOKIE['session']);
+  return db_get_user_name_by_session($_COOKIE[SESSION_COOKIE_NAME]);
 }
 
 function get_current_user_email() {
-  if (!isset($_COOKIE['session']) || $_COOKIE['session'] == 'anonymous') {
+  if (!isset($_COOKIE[SESSION_COOKIE_NAME]) || $_COOKIE[SESSION_COOKIE_NAME] == 'anonymous') {
     return null;
   }
-  return db_get_email_by_session($_COOKIE['session']);
+  return db_get_email_by_session($_COOKIE[SESSION_COOKIE_NAME]);
 }
 
 function logout() {
-  if (isset($_COOKIE['session'])) {
-    db_delete_session($_COOKIE['session']);
+  if (isset($_COOKIE[SESSION_COOKIE_NAME])) {
+    db_delete_session($_COOKIE[SESSION_COOKIE_NAME]);
   }
-  setcookie('session', '', time() - 3600, '/');
+  setcookie(SESSION_COOKIE_NAME, '', time() - 3600, '/', SESSION_COOKIE_DOMAIN);
   session_destroy();
 }
 

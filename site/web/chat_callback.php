@@ -32,6 +32,8 @@ if (!$code) {
   }
 }
 
+require_config('discord', 'client_id', 'client_secret', 'bot_token');
+
 // Exchange code for access token
 $token_resp = api_call('https://discord.com/api/oauth2/token', [
   'Content-Type: application/x-www-form-urlencoded'

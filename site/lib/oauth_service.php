@@ -8,6 +8,7 @@ class AuthService {
   public $token;
 
   function __construct() {
+    require_config('oauth', 'client_id', 'client_secret', 'server_endpoint');
     $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
       'redirectUri'             => ROOT_URL . '/oauth_callback',
       'clientId'                => OAUTH_CLIENT_ID,

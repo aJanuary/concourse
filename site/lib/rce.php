@@ -10,6 +10,7 @@ function get_magic_rce_link($session) {
     return $magic_link;
   }
 
+  require_config('rce', 'api_key', 'ticket_id');
   $badge_no = get_current_user_badge_no();
   error_log("++++BADGE NO IS " . $badge_no);
   $member = db_get_member($badge_no);

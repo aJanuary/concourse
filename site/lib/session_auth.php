@@ -22,10 +22,10 @@ if (!is_logged_in()) {
 
 $GLOBALS['app-data']['username'] = get_current_user_name();
 
-if (!isset($_COOKIE['session'])) {
+if (!isset($_COOKIE[SESSION_COOKIE_NAME])) {
   $permissions = [];
 } else {
-  $permissions = db_get_permissions_by_session($_COOKIE['session']);
+  $permissions = db_get_permissions_by_session($_COOKIE[SESSION_COOKIE_NAME]);
 
   if (isset($_GET['role']) && in_array('manage-roles', $permissions)) {
     $default_role_id = db_get_role_id('default');

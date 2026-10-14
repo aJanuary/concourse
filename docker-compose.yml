@@ -142,8 +142,21 @@ secrets:
     # client_secret =
     # ; The server endpoint of the oauth system
     # server_endpoint =
+    #
+    # [auth]
     # ; List of emails that are allowed to log into the portal.
     # ; If not specified, then anyone can log in.
     # allowlist[] =
     #
+    # [cookie]
+    # ; The name of the session cookie. Defaults to "session". Changing it logs
+    # ; everyone out, so use a different name for each deployment that shares a
+    # ; parent domain (e.g. staging).
+    # cookie_name =
+    # ; The domain to set on the session cookie, e.g. .example.com.
+    # ; Leave empty to use the current host only.
+    # cookie_domain =
+    #
+    # Every section is optional. A feature whose section is missing fails with
+    # an error naming the missing key when it is used.
     file: ./secrets/web_secrets.ini

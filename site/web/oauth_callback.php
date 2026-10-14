@@ -86,7 +86,7 @@ if (!array_key_exists('oauth2redirect', $_SESSION)) {
 
   $email = trim($registrant['email']);
 
-  if (defined('OAUTH_ALLOWLIST') && !in_array($email, OAUTH_ALLOWLIST)) {
+  if (ALLOWLIST && !in_array($email, ALLOWLIST)) {
     redirect_to_error('not-in-allowlist');
   }
 

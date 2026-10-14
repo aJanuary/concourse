@@ -8,7 +8,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/rce.php');
 if (array_key_exists('invite', $_GET)) {
   check_permission('see-rce-link');
 
-  $magic_link = get_magic_rce_link($_COOKIE['session']);
+  $magic_link = get_magic_rce_link($_COOKIE[SESSION_COOKIE_NAME]);
   header('Location: ' . $magic_link);
   setcookie('seen-rce-invite', '1', time() + 60*60*24*365, '/');
   exit;

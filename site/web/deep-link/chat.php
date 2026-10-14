@@ -6,7 +6,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 
 if (array_key_exists('check_has_joined_discord', $_GET)) {
-  $usernames = db_get_discord_usernames($_COOKIE['session']);
+  $usernames = db_get_discord_usernames($_COOKIE[SESSION_COOKIE_NAME]);
   echo !empty($usernames) ? 'true' : 'false';
   exit;
 }
@@ -74,7 +74,7 @@ if (array_key_exists('item_id', $_GET)) {
   die('Missing required query parameter "item_id" or "room_id"');
 }
 
-$usernames = db_get_discord_usernames($_COOKIE['session']);
+$usernames = db_get_discord_usernames($_COOKIE[SESSION_COOKIE_NAME]);
 if (!empty($usernames)) {
   header('Location: ' . $post['post_url']);
   exit;

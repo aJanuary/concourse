@@ -4,7 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 
-$usernames = db_get_discord_usernames($_COOKIE['session']);
+$usernames = db_get_discord_usernames($_COOKIE[SESSION_COOKIE_NAME]);
 
 render_header(
   'Chat',

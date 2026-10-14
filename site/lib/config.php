@@ -2,7 +2,10 @@
 
 $GLOBALS['app-data'] ??= [];
 
-define('ROOT_URL', 'https://' . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
+$is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+  || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'
+  || ($_SERVER['SERVER_PORT'] ?? '') == 443;
+define('ROOT_URL', ($is_https ? 'https://' : 'http://') . ($_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Example Convention, a great tagline for a great demo');
 define('CON_SHORT_NAME', 'ExampleCon');
 define('CON_START_DATE', '2025-01-01');
@@ -86,19 +89,40 @@ define('DB_USER', getenv('CONFIG_DB_USER'));
 define('DB_PASSWORD', trim(file_get_contents(getenv('CONFIG_DB_PASSWORD_FILE')), "\r\n"));
 
 $config_file = parse_ini_file(getenv('CONFIG_SECRETS_FILE'), true);
-define('RCE_API_KEY', $config_file['rce']['api_key']);
-define('RCE_TICKET_ID', $config_file['rce']['ticket_id']);
-define('DISCORD_BOT_TOKEN', $config_file['discord']['bot_token']);
-define('DISCORD_CLIENT_ID', $config_file['discord']['client_id']);
-define('DISCORD_CLIENT_SECRET', $config_file['discord']['client_secret']);
-define('API_KEYS', $config_file['api_keys']);
 
-define('OAUTH_CLIENT_ID', $config_file['oauth']['client_id']);
-define('OAUTH_CLIENT_SECRET', $config_file['oauth']['client_secret']);
-define('OAUTH_SERVER_ENDPOINT', $config_file['oauth']['server_endpoint']);
-if (!empty($config_file['oauth']['allowlist'])) {
-  define('OAUTH_ALLOWLIST', array_map('trim', $config_file['oauth']['allowlist']));
+// Every section is optional so that an install only needs the sections for
+// the features it uses.
+function config_get($section, $key, $default = '') {
+  global $config_file;
+  return $config_file[$section][$key] ?? $default;
 }
+
+// Call before using an integration so an unconfigured one fails with a clear
+// message rather than a confusing error from the remote service.
+function require_config($section, ...$keys) {
+  foreach ($keys as $key) {
+    if (config_get($section, $key) === '') {
+      throw new RuntimeException("The secrets file must set '$key' in the [$section] section to use this feature");
+    }
+  }
+}
+
+define('RCE_API_KEY', config_get('rce', 'api_key'));
+define('RCE_TICKET_ID', config_get('rce', 'ticket_id'));
+define('DISCORD_BOT_TOKEN', config_get('discord', 'bot_token'));
+define('DISCORD_CLIENT_ID', config_get('discord', 'client_id'));
+define('DISCORD_CLIENT_SECRET', config_get('discord', 'client_secret'));
+define('API_KEYS', $config_file['api_keys'] ?? []);
+
+define('OAUTH_CLIENT_ID', config_get('oauth', 'client_id'));
+define('OAUTH_CLIENT_SECRET', config_get('oauth', 'client_secret'));
+define('OAUTH_SERVER_ENDPOINT', config_get('oauth', 'server_endpoint'));
+
+define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));
+
+// The default name keeps existing sessions valid
+define('SESSION_COOKIE_NAME', config_get('cookie', 'cookie_name') ?: 'session');
+define('SESSION_COOKIE_DOMAIN', config_get('cookie', 'cookie_domain'));
 
 function log_exception(Throwable $exception) {
   $err_code = bin2hex(random_bytes(8));
