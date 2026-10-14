@@ -6,7 +6,7 @@
  * A login method is an AuthProvider. Enable providers in the secrets file:
  *
  *   [auth]
- *   providers[] = dev
+ *   providers[] = local
  *
  * When `providers[]` is absent only `dev` is enabled. The `dev` provider is
  * only ever offered when RUNTIME_ENV is "development".
@@ -29,7 +29,7 @@
 require_once(__DIR__ . '/Identity.php');
 
 interface AuthProvider {
-  // Stable id used in config and URLs, e.g. "dev"
+  // Stable id used in config and URLs, e.g. "local"
   public function id(): string;
 
   // Shown on the login button

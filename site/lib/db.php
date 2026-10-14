@@ -159,6 +159,10 @@ function db_check_password_auth($email, $password) {
   return true;
 }
 
+function db_email_has_password_auth($email) {
+  return db_fetch_value("SELECT 1 FROM password_auth WHERE email = ?", [strtolower($email)]) !== null;
+}
+
 function db_set_password_auth($email, $password) {
   db_upsert(
     'password_auth',

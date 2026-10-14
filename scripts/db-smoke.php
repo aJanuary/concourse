@@ -87,7 +87,9 @@ try {
   check('db_get_members_by_email ignores case', array_column(call('db_get_members_by_email', 'SMOKE.TEST@example.COM'), 'badge_no') === [$badge]);
   check('db_get_members_by_email for unknown email', call('db_get_members_by_email', 'nobody@example.com') === []);
 
+  check('no password before one is set', call('db_email_has_password_auth', $smoke_email) === false);
   call('db_set_password_auth', 'Smoke.Test@example.com', 'correct horse');
+  check('db_email_has_password_auth ignores case', call('db_email_has_password_auth', 'SMOKE.TEST@example.COM') === true);
   check('password accepted for differently-cased email', call('db_check_password_auth', 'SMOKE.TEST@example.COM', 'correct horse') === true);
   check('wrong password rejected', call('db_check_password_auth', $smoke_email, 'wrong') === false);
   check('password for unknown email rejected', call('db_check_password_auth', 'nobody@example.com', 'correct horse') === false);

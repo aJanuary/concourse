@@ -10,11 +10,22 @@ const DEFAULT_AUTH_PROVIDERS = ['dev'];
 // Constructors are deferred so a provider's dependencies are only loaded when it is enabled
 function auth_provider_factories() {
   return [
+    'local' => function () {
+      require_once(__DIR__ . '/LocalProvider.php');
+      return new LocalProvider();
+    },
     'dev' => function () {
       require_once(__DIR__ . '/DevProvider.php');
       return DevProvider::is_available() ? new DevProvider() : null;
     },
   ];
+}
+
+// Where the local provider finds members. Replace this to look members up in
+// a registration system instead of the members table.
+function auth_member_source() {
+  require_once(__DIR__ . '/DbMemberSource.php');
+  return new DbMemberSource();
 }
 
 // Enabled providers in the order configured

@@ -4,6 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/auth/InlineLoginForm.php');
 
 $provider_id = $_GET['provider'] ?? null;
 if ($provider_id !== null) {
@@ -55,6 +56,10 @@ if (isset($_GET['error_code'])) {
 <?php
 }
 foreach (auth_enabled_providers() as $provider) {
+    if ($provider instanceof InlineLoginForm) {
+        $provider->render_inline_form($_GET['redirect'] ?? '/');
+        continue;
+    }
 ?>
     <a href="?provider=<?php echo urlencode($provider->id()); ?>&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login"><?php echo htmlspecialchars($provider->display_name()); ?></a>
 <?php

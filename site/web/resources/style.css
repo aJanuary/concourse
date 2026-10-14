@@ -18,6 +18,9 @@
   --button-disabled-fg-color: #202226;
   --error-fg-color: rgb(174, 0, 0);
   --inst-border-color: #DDD;
+  --select-list-bg-color: #EEE;
+  --select-list-hover-bg-color: #DDD;
+  --select-list-fg-color: var(--link-color);
 
   --info-pattern: repeating-linear-gradient( 45deg, #187bb9, #187bb9 5px, #1b80bd 5px, #1b80bd 25px) #1b80bd;
   --info-color-light: #f0feff;
@@ -1094,4 +1097,124 @@ ul.maps li a {
   body.home {
     background-image: none;
   }
+}
+
+button {
+  font: inherit;
+}
+
+.button.link {
+  background: none;
+  color: var(--link-color);
+  text-decoration: underline;
+  box-shadow: none;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.button.link:hover {
+  color: var(--link-hover-color);
+}
+
+.nu-form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 40ch;
+  margin-bottom: 1.25em;
+}
+
+.login-links {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.login-links p {
+  margin: 0;
+}
+
+.login-links + .login-links {
+  margin-top: -1rem;
+}
+
+.nu-form .form-group {
+  display: grid;
+}
+
+.nu-form label {
+  font-weight: bold;
+}
+
+.nu-form button, .nu-form input[type=submit] {
+  max-width: fit-content;
+}
+
+.nu-form input {
+  font: inherit;
+  padding: 0.5em;
+  border: solid 1px #CCC;
+  border-radius: 3px;
+}
+
+.code-input {
+  font-family: monospace;
+  font-size: 2rem;
+  letter-spacing: 0.5em;
+  padding: 0.4em 0.5em;
+  width: calc(6ch + 6 * 0.5em + 1.5em);
+}
+
+#user-select {
+  list-style: none;
+  display: grid;
+  padding: 0;
+}
+
+#user-select li button {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  width: 100%;
+  line-height: 2em;
+  padding: 1em;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--select-list-bg-color);
+  color: var(--select-list-fg-color);
+}
+
+#user-select li button:hover {
+  background: var(--select-list-hover-bg-color);
+}
+
+#user-select .avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100em;
+  height: 2em;
+  width: 2em;
+  color: #FFFB;
+}
+
+#user-select .avatar.color-1 {
+  background: #F8EE7A;
+  color: #0008;
+}
+
+#user-select .avatar.color-2 {
+  background: #D24848;
+}
+
+#user-select .avatar.color-3 {
+  background: #EC6B54;
+}
+
+#user-select .avatar.color-4 {
+  background: #87ABDF;
 }

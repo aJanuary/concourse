@@ -127,6 +127,10 @@ define('SMTP_PASSWORD', config_get('smtp', 'password'));
 define('SMTP_SECURE', config_get('smtp', 'secure'));
 define('SIGNING_KEY', config_get('crypto', 'signing_key'));
 
+// $_SERVER key holding the client address when behind a proxy that sets it,
+// e.g. HTTP_X_FORWARDED_FOR. Only set this if the proxy overwrites the header.
+define('CLIENT_IP_HEADER', config_get('auth', 'client_ip_header'));
+
 // The default name keeps existing sessions valid
 define('SESSION_COOKIE_NAME', config_get('cookie', 'cookie_name') ?: 'session');
 define('SESSION_COOKIE_DOMAIN', config_get('cookie', 'cookie_domain'));
