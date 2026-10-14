@@ -12,58 +12,10 @@ render_header(
 ?>
 <article>
   <h2>How to log in</h2>
-  <ol class="instructions">
-      <li>
-        <p>Click the "Log in" button.</p>
-        <p><img src="/resources/login/login-button.webp" alt="A screenshot of a blue button that says 'Log in'" width="640" height="220"/></p>
-      </li>
-      <li>
-          <p>Log in to the registration system.</p>
-          <p><em>Note: If you have already logged in to the registration system, you will automatically be taken to step 3.</em></p>
-          <ol>
-              <li>Enter the email address you used to register for the convention.</li>
-              <li>Enter your ticket number. You will be able to find this on your badge and in the e-mail that announced the opening of the portal. Note, this will be the number without the # sign i.e. 0933, not #0933.</li>
-              <li>Click "Email Login".</li>
-              <li>Check your email for a message from registration. This email will contain a link that you can use to log in to the portal.</li>
-              <li>
-                <p>Click on the "Login" button in the email.</p>
-                <p><img src="/resources/login/email-login.webp" alt="A screenshot of the email log in screen" width="652" height="364" /></p>
-              </li>
-              <li>
-                <p>If you see this screen, unfortunately this means the log in has not worked correctly. See <a href="#registration-dashboard">What to do if you get to the Registration dashboard</a>.</p>
-                <p><img src="/resources/login/registration-dashboard.webp" alt="A screenshot of a screen that says 'Registration dashboard' in the top left" width="480" height="270" /></p>
-              </li>
-          </ol>
-      </li>
-      <li>
-        <p>Click the "Authorize" button to allow the portal to access your registration information.</p>
-        <p><img src="/resources/login/authorize.webp" alt="A screenshot of the authorize screen" width="354" height="389" /></p>
-      </li>
-      <li>
-        <p>If you see this screen, see <a href="#another-castle">What to do if you get the "Your Princess is in another castle" screen</a>.</p>
-        <p><img src="/resources/login/another-castle.webp" alt="A screenshot of a screen that says 'Your Princess is in another castle'" width="480" height="270" /></p>
-      </li>
-      <li>
-        <p>You should now see the member portal.</p>
-        <p><img src="/resources/login/portal.webp" alt="A screenshot of the member portal" width="640" height="360" /></p>
-      </li>
-  </ol>
-
-  <h3><a href="#another-castle" id="another-castle">What to do if you get the "Your Princess is in another castle" screen</a></h3>
-  <p>This typically happens because you started the log in process in one browser, but the log in button in the e-mail opened in another.</p>
-  <p>Note, if you are trying to log in with multiple browsers, you must start the log in process from the beginning on each device by going to <a href="<?php echo ROOT_URL; ?>"><?php echo ROOT_URL; ?></a>.</p>
-  <ol>
-    <li>
-      <p>Click the "Copy" button to copy the URL to your clipboard</p>
-      <p><img src="/resources/login/another-castle-step1.webp" alt="A screenshot of a screen that says 'Your Princess is in another castle' with an '1' annotation next to the copy button" width="1920" height="1080" /></p>
-    </li>
-    <li>Go to the browser you started the log in process with</li>
-    <li>
-      <p>Paste the URL into the address bar</p>
-      <p><img src="/resources/login/paste-url.webp" alt="A screenshot of a browser with a '3' annotation next to the URL bar" width="1920" height="1080" /></p>
-    </li>
-  </ol>
+  <p>We&apos;re still working on this page.</p>
+  <p>If you are involved in testing the site, this is probably fine. If you are not, please let us know.</p>
 </article>
+
 <?php
 render_footer();
 ?>
