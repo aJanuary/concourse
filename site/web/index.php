@@ -86,7 +86,7 @@ $cards = [
     ], [
       'name' => 'stream',
       'title' => 'Stream and replay',
-      'subtitle' => 'RingCentral Events',
+      'subtitle' => 'Live streams and replays',
       'link' => '/stream',
       'card-permission' => 'see-rce',
     ], [

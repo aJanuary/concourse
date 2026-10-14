@@ -115,8 +115,31 @@ function require_config($section, ...$keys) {
   }
 }
 
-define('RCE_API_KEY', config_get('rce', 'api_key'));
-define('RCE_TICKET_ID', config_get('rce', 'ticket_id'));
+// The handler used for programme items that don't name one, and the handlers
+// an item may name. See lib/prog_handlers.php.
+define('DEFAULT_PROG_HANDLER', 'zoomevents');
+define('AVAILABLE_PROG_HANDLERS', ['zoomevents', 'stream', 'discord']);
+// The handler that opens replays
+define('PROG_REPLAY_HANDLER', 'stream');
+// Whether a member must be logged in to open a replay. Joining a live item
+// always needs a login.
+define('PROG_REPLAY_REQUIRES_LOGIN', true);
+// Permission needed to join an item or open a replay. Empty means any
+// logged in member.
+define('PROG_JOIN_PERMISSION', 'see-rce');
+// While true, joining an item shows a "you're early" page instead, for
+// testing links before the convention starts
+define('PROG_TEST_MODE', false);
+
+define('ZOOM_EVENTS_CLIENT_ID', config_get('zoom_events', 'client_id'));
+define('ZOOM_EVENTS_CLIENT_SECRET', config_get('zoom_events', 'client_secret'));
+define('ZOOM_EVENTS_ACCOUNT_ID', config_get('zoom_events', 'account_id'));
+define('ZOOM_EVENTS_EVENT_ID', config_get('zoom_events', 'event_id'));
+define('ZOOM_EVENTS_TICKET_TYPE_ID', config_get('zoom_events', 'ticket_type_id'));
+// Tickets are registered as zoomlogin+<badge>@<domain> so members' own
+// addresses aren't shared with Zoom. Leave empty to use the member's email.
+define('ZOOM_EVENTS_TICKET_EMAIL_DOMAIN', config_get('zoom_events', 'ticket_email_domain'));
+
 define('DISCORD_BOT_TOKEN', config_get('discord', 'bot_token'));
 define('DISCORD_CLIENT_ID', config_get('discord', 'client_id'));
 define('DISCORD_CLIENT_SECRET', config_get('discord', 'client_secret'));

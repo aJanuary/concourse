@@ -1,31 +1,23 @@
 <?php
+$GLOBALS['app-data']['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/deep_link.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/prog_handlers.php');
 
 if (!array_key_exists('room_id', $_GET)) {
   die('Missing required query parameter "room_id"');
 }
 
-$room_id = $_GET['room_id'];
-$stage = db_get_stage($room_id);
+$title = 'Go to a stage';
+prog_check_test_mode($title, $title);
+if (!is_logged_in()) {
+  prog_render_login($title, $title);
+}
+prog_check_may_join($title, $title);
 
+$stage = db_get_stage($_GET['room_id']);
 if (!$stage['viewer_url']) {
-  render_header(
-    'Go to a stage',
-    'Unknown item.',
-    ['Home' => '/', 'Go to a stage']
-  );
-  ?>
-  <article>
-    <h2>Unknown room</h2>
-    <p>Sorry, we don&apos;t know about that room.</p>
-  </article>
-  <?php
-  render_footer();
-  exit;
+  prog_render_message($title, 'Unknown room', "Sorry, we don't know about that room.", $title);
 }
 
-render_rce_wizard("Go to a stage", $stage['viewer_url']);
-?>
+header('Location: ' . $stage['viewer_url']);
+exit;
