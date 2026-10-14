@@ -234,7 +234,7 @@ $cards = [
   <?php
   foreach ($cards as $category => $category_cards) {
     $category_cards = array_filter($category_cards, function($card) {
-      return !array_key_exists('card-permission', $card) || current_user_has_permission($card['card-permission']);
+      return current_user_has_permission($card['card-permission']);
     });
     if (empty($category_cards)) {
       continue;
@@ -245,12 +245,11 @@ $cards = [
       <div class="cards">
       <?php
       foreach ($category_cards as $card) {
-        if (array_key_exists('card-permission', $card) && current_user_has_permission($card['card-permission'])) {
-          $open_in_new_tab = str_starts_with($card['link'], 'http');
+        $open_in_new_tab = str_starts_with($card['link'], 'http');
       ?>
         <div class="card <?php echo $card['name']; ?>">
           <div class="hero"
-          <?php if (array_key_exists('live-card', $card) && $card['live-card']) { ?>
+          <?php if (!empty($card['live-card'])) { ?>
               aria-label="<?php echo $card['title']; ?>"
           <?php } else { ?>
               aria-hidden="true"
@@ -270,7 +269,6 @@ $cards = [
           <button class="fav" aria-label="Add <?php echo $card['title']; ?> to quick links"></button>
         </div>
       <?php
-        }
       }
       ?>
       </div>
@@ -284,8 +282,7 @@ $cards = [
   $coming_soon_cards = [];
   foreach ($cards as $category_cards) {
     foreach ($category_cards as $card) {
-      if (array_key_exists('card-permission', $card)
-          && !current_user_has_permission($card['card-permission'])
+      if (!current_user_has_permission($card['card-permission'])
           && current_user_has_permission($card['card-permission'] . '-coming-soon')) {
         $coming_soon_cards[$card['name']] = $card;
       }
