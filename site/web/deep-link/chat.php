@@ -3,7 +3,6 @@ $GLOBALS['app-data']['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/oauth_service.php');
 
 if (array_key_exists('check_has_joined_discord', $_GET)) {
   $usernames = db_get_discord_usernames($_COOKIE[SESSION_COOKIE_NAME]);
@@ -88,9 +87,6 @@ render_header(
   ['Home' => '/', 'Go to Discord chat for an item']
 );
 
-$oauth = new OAuthService();
-$_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
-
 ?>
   <article>
     <h2>Join the Discord</h2>
@@ -102,7 +98,7 @@ $_SESSION['oauth2redirect'] = $_SERVER['REQUEST_URI'];
       if (!is_logged_in()) {
       ?>
         <div class="content">
-          <a href="<?php echo $oauth->authorize_url(); ?>" class="button login">Log in with registration</a>
+          <a href="<?php echo make_login_link(); ?>" class="button login">Log in</a>
           <p><a href="/login-instructions" target="_blank">Log in instructions</a>
           <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
       </div>

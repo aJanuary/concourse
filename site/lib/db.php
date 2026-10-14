@@ -106,13 +106,6 @@ function db_delete_session($session_token) {
   db_query("DELETE FROM sessions WHERE session_id = ?", [$session_token]);
 }
 
-function db_create_oauth_identity($badge_no, $provider,  $identity_id, $email, $raw_info) {
-  db_query(
-    "INSERT INTO oauth_identities (badge_no, provider, identity_id, email, raw_info) VALUES (?, ?, ?, ?, ?)",
-    [$badge_no, $provider, $identity_id, $email, $raw_info]
-  );
-}
-
 function db_create_member($badge_no, $email, $name) {
   db_query("INSERT INTO members (badge_no, email, name) VALUES (?, ?, ?)", [$badge_no, $email, $name]);
 }
@@ -136,10 +129,6 @@ function db_set_discord_id($badge_no, $discord_id, $discord_username) {
     ['username'],
     ['badge_no' => $badge_no, 'discord_id' => $discord_id, 'username' => $discord_username]
   );
-}
-
-function db_identity_exists($badge_no) {
-  return db_fetch_value("SELECT 1 FROM oauth_identities WHERE badge_no = ?", [$badge_no]);
 }
 
 function db_member_exists($badge_no) {

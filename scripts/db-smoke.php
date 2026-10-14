@@ -53,7 +53,6 @@ function cleanup() {
   db_query("DELETE FROM discord_verification_token WHERE token_id = ?", [$token]);
   db_query("DELETE FROM member_roles WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM roles WHERE name = 'smoke-role'");
-  db_query("DELETE FROM oauth_identities WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM members WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM prog_stages WHERE room_id = 'smoke-room'");
   db_query("DELETE FROM prog_sessions WHERE item_id = 'smoke-item'");
@@ -107,11 +106,6 @@ try {
   // RCE invites
   call('db_create_invite', $badge, 'https://example.com/invite');
   check('db_get_magic_link', call('db_get_magic_link', $session) === 'https://example.com/invite');
-
-  // OAuth identities
-  check('no identity yet', !call('db_identity_exists', $badge));
-  call('db_create_oauth_identity', $badge, 'smoke', 'smoke-identity', 'smoke.test@example.com', '{"a": 1}');
-  check('identity exists', call('db_identity_exists', $badge) == 1);
 
   // Discord ids: second call is the upsert
   call('db_set_discord_id', $badge, '1001', 'first-name');

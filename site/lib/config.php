@@ -115,10 +115,6 @@ define('DISCORD_CLIENT_ID', config_get('discord', 'client_id'));
 define('DISCORD_CLIENT_SECRET', config_get('discord', 'client_secret'));
 define('API_KEYS', $config_file['api_keys'] ?? []);
 
-define('OAUTH_CLIENT_ID', config_get('oauth', 'client_id'));
-define('OAUTH_CLIENT_SECRET', config_get('oauth', 'client_secret'));
-define('OAUTH_SERVER_ENDPOINT', config_get('oauth', 'server_endpoint'));
-
 define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));
 define('AUTH_PROVIDERS', array_map('trim', config_get('auth', 'providers', [])));
 

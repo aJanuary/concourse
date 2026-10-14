@@ -173,11 +173,6 @@ function finish_login($identity, $redirect) {
     }
   }
 
-  if ($identity->external !== null && !db_identity_exists($badge_no)) {
-    [$provider, $identity_id, $raw_info] = $identity->external;
-    db_create_oauth_identity($badge_no, $provider, $identity_id, $identity->email, $raw_info);
-  }
-
   make_session($badge_no);
 
   if (session_status() === PHP_SESSION_ACTIVE) {

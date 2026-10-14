@@ -45,7 +45,7 @@ When you deploy the applicaton as above the secrets files should places in `/opt
 
 - db_root_password.txt: file with single line containing a string to use for the DB root password
 - db_dba_password.txt: file with single line containing a string to use for the DB DBA/Application password
-- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as RCE, Discord, OAuth etc)
+- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as RCE, Discord etc)
 
 #### web_secrets.ini
 
@@ -56,8 +56,7 @@ All sections are optional; a feature whose section is missing reports which key 
 | `[discord]` | `bot_token`, `client_id`, `client_secret` | Discord bot and OAuth app |
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients |
 | `[rce]` | `api_key`, `ticket_id` | RingCentral Events magic links |
-| `[oauth]` | `client_id`, `client_secret`, `server_endpoint` | OAuth login provider |
-| `[auth]` | `allowlist[]`, `providers[]` | Emails allowed to log in (empty means everyone); enabled login providers (default `registration-oauth`; `dev` only works when `RUNTIME_ENV=development`) |
+| `[auth]` | `allowlist[]`, `providers[]` | Emails allowed to log in (empty means everyone); enabled login providers (default `dev`, which only works when `RUNTIME_ENV=development`) |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
 
 `docker-compose.yml` has the same list with a description of each key.

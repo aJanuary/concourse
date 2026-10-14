@@ -5,8 +5,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 
-// Older links start the registration login with ?dologin
-$provider_id = $_GET['provider'] ?? (isset($_GET['dologin']) ? 'registration-oauth' : null);
+$provider_id = $_GET['provider'] ?? null;
 if ($provider_id !== null) {
     $provider = auth_get_provider($provider_id);
     if ($provider === null) {
@@ -65,11 +64,6 @@ render_header(
 <?php
 if (isset($_GET['error_code'])) {
     $error = [
-        'invalid-state' => 'An error occurred while logging in with registration. Please try again.',
-        'no-code' => 'Unable to log in with registration. Please try again and make sure you click the "Authorize" button after reviewing the permissions.',
-        'no-access' => 'Your membership does not include access to the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.',
-        'under-age' => 'Your membership indicates you are under 16 and not allowed to access the online convention. If you think this is a mistake, please e-mail <a href="mailto:' . REGISTRATION_EMAIL . '">' . REGISTRATION_EMAIL . '</a>.<p>You can still access most of the portal by clicking "Continue without logging in", but you will not be able to access any content that is age restricted such as watching streams or joining the Discord.</p>',
-        'duplicate-email' => 'An account with this e-mail address already exists. Please log in with your existing account.',
         'unknown-member' => 'No member with that badge number exists.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occurred.';

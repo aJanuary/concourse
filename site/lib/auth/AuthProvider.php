@@ -6,10 +6,10 @@
  * A login method is an AuthProvider. Enable providers in the secrets file:
  *
  *   [auth]
- *   providers[] = registration-oauth
+ *   providers[] = dev
  *
- * When `providers[]` is absent only `registration-oauth` is enabled. The
- * `dev` provider is only ever offered when RUNTIME_ENV is "development".
+ * When `providers[]` is absent only `dev` is enabled. The `dev` provider is
+ * only ever offered when RUNTIME_ENV is "development".
  *
  * To add a provider, implement AuthProvider and add it to auth_provider_factories()
  * in auth/providers.php.
@@ -29,7 +29,7 @@
 require_once(__DIR__ . '/Identity.php');
 
 interface AuthProvider {
-  // Stable id used in config and URLs, e.g. "registration-oauth"
+  // Stable id used in config and URLs, e.g. "dev"
   public function id(): string;
 
   // Shown on the login button

@@ -14,8 +14,6 @@ class Identity {
     public ?string $real_name = null,
     // Role names to add to the member. Existing roles are never removed.
     public ?array $roles = null,
-    // Records the link to the external account, as [provider, id, raw] where raw is JSON
-    public ?array $external = null,
   ) {
   }
 }
