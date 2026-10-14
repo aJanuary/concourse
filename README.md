@@ -45,7 +45,7 @@ When you deploy the applicaton as above the secrets files should places in `/opt
 
 - db_root_password.txt: file with single line containing a string to use for the DB root password
 - db_dba_password.txt: file with single line containing a string to use for the DB DBA/Application password
-- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as RCE, Discord, SMTP etc)
+- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as Zoom Events, Discord, SMTP etc)
 
 #### web_secrets.ini
 
@@ -55,13 +55,69 @@ All sections are optional; a feature whose section is missing reports which key 
 |---|---|---|
 | `[discord]` | `bot_token`, `client_id`, `client_secret` | Discord bot and OAuth app |
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients |
-| `[rce]` | `api_key`, `ticket_id` | RingCentral Events magic links |
+| `[zoom_events]` | `client_id`, `client_secret`, `account_id`, `event_id`, `ticket_type_id`, `ticket_email_domain` | The `zoomevents` programme handler; see [Programme handlers](#programme-handlers). `ticket_email_domain` is optional |
 | `[auth]` | `allowlist[]`, `providers[]`, `client_ip_header` | Emails allowed to log in (empty means everyone); enabled login providers (default `dev`, which only works when `RUNTIME_ENV=development`; `local` is email login); the `$_SERVER` key holding the client address behind a proxy, e.g. `HTTP_X_FORWARDED_FOR` (default `REMOTE_ADDR`) |
 | `[oidc]` | `provider_url`, `client_id`, `client_secret`, `scopes[]`, `claims[...]`, `role_map[...]`, `provider_logout`, `password_change_url`, `verify_tls` | The `oidc` login provider; see [OpenID Connect login](#openid-connect-login) |
 | `[smtp]` | `host`, `port`, `username`, `password`, `secure` | Outgoing mail for the `local` login provider. `secure` is empty, `tls` or `ssl` |
 | `[crypto]` | `signing_key` | Signs emailed links and hashes login codes for the `local` provider. At least 32 characters; generate with `openssl rand -hex 32` |
 | `[conclar]` | `allowed_origins[]`, `schedule_url` | Origins hosting the ConClár programme guide, which may call `/api/conclar/` with the session cookie and are also valid login redirect targets (no trailing slash); optional programme JSON used to show item titles in the favourites report. See [ConClár](#conclár) |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
+
+### Programme handlers
+
+A programme item's join link (`/deep-link/session?item_id=...`) sends the member
+to whichever platform the item uses. A *handler* decides where, so a convention
+picks the platforms it uses rather than the portal assuming one.
+
+| Handler | Destination of a session | Replays |
+| ------- | ------------------------ | ------- |
+| `zoomevents` | Zoom Events session id. The member gets a ticket for the event, created through the API the first time they join, and is sent to the session | Zoom Events session id |
+| `stream` | Room id. The room's current URL is managed under *Manage stream URLs*, so it can change without touching sessions | A YouTube URL is embedded without cookies; any other URL is redirected to |
+| `discord` | Not used. Goes to `/deep-link/chat` for the item's Discord post | Not supported |
+
+Settings in `site/lib/config.php`:
+
+- `DEFAULT_PROG_HANDLER`: used by sessions that don't name a handler.
+- `AVAILABLE_PROG_HANDLERS`: the handlers the admin pages and the sessions API accept.
+- `PROG_REPLAY_HANDLER`: the handler that opens replays.
+- `PROG_REPLAY_REQUIRES_LOGIN`: whether replays need a login. Joining a live item always does.
+- `PROG_JOIN_PERMISSION`: the permission needed to join or replay, or empty for any logged in member.
+- `PROG_TEST_MODE`: while true, join links show a "you're early" page.
+
+The other links work the same way: `/deep-link/participate` takes an
+`item_id` (a session) or a `room_id` (a stage), `/deep-link/stage` redirects to
+a stage's viewer URL, and `/deep-link/stream?room_id=...` goes straight to a
+room's stream. `/stream` lists the rooms that are streaming.
+
+For `zoomevents`, create a Server-to-Server OAuth app in Zoom and set
+`client_id`, `client_secret` and `account_id` in `[zoom_events]`, plus the
+`event_id` and the `ticket_type_id` that tickets are created under. Tickets are
+registered as `zoomlogin+<badge number>@<ticket_email_domain>` so members' own
+addresses aren't shared with Zoom; leave `ticket_email_domain` out to use the
+member's email.
+
+#### Adding a handler
+
+The deep-link pages never mention a platform, so a new handler doesn't touch
+them.
+
+1. Implement `ProgHandler` in `site/lib/prog_handlers/`. `join()` is given the
+   item (`kind` is `session` or `replay`, plus `item_id`, `title`,
+   `destination` and the logged in `member`) and returns a
+   `ProgHandlerResult`: `redirect`, `message`, `embed` or `login_required`.
+2. Add it to `prog_handler_factories()` in `site/lib/prog_handlers.php`.
+3. Add its name to `AVAILABLE_PROG_HANDLERS`.
+
+#### Sessions API
+
+A programme tool can push sessions with signed requests to
+`/api/upsert-sessions` (a list of `{itemId, title, destination, handler}`) and
+`/api/delete-sessions` (a list of item ids). Clients are the entries in
+`[api_keys]`. `test/api-tester/send_api_request.py` signs and sends a request:
+
+```
+test/api-tester/send_api_request.py upsert-sessions '[{"itemId": "1", "title": "Panel", "destination": "room-a", "handler": "stream"}]' --client <client name>
+```
 
 ### ConClár
 
