@@ -12,11 +12,11 @@ render_header(
 ?>
 <article>
   <h2>Virtual gatherings</h2>
-  <p>Virtual gatherings are a space for you and or your group to host a hangout within <a href="/stream">RingCentral Events</a>. This could be anything from a writers club wanting to meet, to a D&amp;D session being held. The sky &ndash; and the <a href="https://example.com/code-of-conduct/">code of conduct</a> &ndash; are the limits of what can be hosted in these conference style AV rooms.</p>
-  <p>To join a gathering, go to <a href="/stream">RingCentral Events</a>, select "Sessions" from the sidebar, and then click on the session for the gathering you want to join.</p>
+  <p>Virtual gatherings are a space for you and or your group to host a hangout online. This could be anything from a writers club wanting to meet, to a D&amp;D session being held. The sky &ndash; and the <a href="https://example.com/code-of-conduct/">code of conduct</a> &ndash; are the limits of what can be hosted in these conference style AV rooms.</p>
+  <p>To join a gathering, find it in the <a href="/programme-guide">programme guide</a> and follow its link.</p>
   
   <h3>Requesting a gathering</h3>
-  <p>If you want to host your own gathering, please fill out the form. We will create a session in RingCentral Events and notify you via e-mail when it is set up.</p>
+  <p>If you want to host your own gathering, please fill out the form. We will set up a session for it and notify you via e-mail when it is ready.</p>
   <p>If you would like, you can advertise the gathering in the #meeting-people channel of the <a href="/chat">Discord</a>.
 
   <?php

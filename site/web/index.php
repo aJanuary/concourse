@@ -88,7 +88,7 @@ $cards = [
       'title' => 'Stream and replay',
       'subtitle' => 'Live streams and replays',
       'link' => '/stream',
-      'card-permission' => 'see-rce',
+      'card-permission' => 'see-stream',
     ], [
       'name' => 'signups',
       'title' => 'Sign-ups',
@@ -104,7 +104,7 @@ $cards = [
     ], [
       'name' => 'virtual-gathering',
       'title' => 'Virtual gatherings',
-      'subtitle' => 'In RingCentral Events',
+      'subtitle' => 'Host your own hangout',
       'link' => '/virtual-gatherings',
       'card-permission' => 'see-virtual-gathering'
     ], [

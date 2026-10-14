@@ -75,7 +75,7 @@ if (ALLOW_ANONYMOUS_ACCESS) {
 <?php
 }
 ?>
-    <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to access streaming programme via RingCentral Events and chatting via the Discord.</p>
+    <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to watch the programme online and to chat on Discord.</p>
 <?php
     if (time() < strtotime(CON_START_DATE)) {
 ?>

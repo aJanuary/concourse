@@ -21,8 +21,7 @@ In `site/lib/config.php`:
 - The contact addresses: `SUPPORT_EMAIL`, `REGISTRATION_EMAIL`,
   `TECH_EMAIL` and `PROGRAMME_EMAIL`.
 - `DISCORD_GUILD_ID`, `DISCORD_INVITE_CHANNEL_ID`, `DISCORD_API_CHANNEL_ID`
-  and `DISCORD_SERVICE_ACCOUNTS`, which still hold Glasgow 2024's ids. Replace
-  them with your own server's, or empty them if you don't use Discord. See
+  and `DISCORD_SERVICE_ACCOUNTS`, which are empty, if you use Discord. See
   [Discord](integrations/discord.md).
 - The programme handlers, which default to Zoom Events. See
   [Programme handlers](integrations/programme.md#programme-handlers).
@@ -48,15 +47,14 @@ These pages have convention specific text or links in them:
 | `site/web/convention-guide.php` | The convention guide holding page |
 | `site/web/maps.php`, `site/web/times.php` | Maps and opening times |
 | `site/web/upload-photo.php`, `site/web/upload-presentation.php` | The upload forms they link to |
-| `site/web/virtual-gatherings.php` | The request form it links to, and the mention of RingCentral Events |
+| `site/web/virtual-gatherings.php` | The request form it links to, and how members join a gathering |
 | `site/web/guides/` | Participant and moderator guides |
 | `site/web/privacy-policy.php`, `site/web/attributions.php` | The privacy policy and credits |
 | `site/web/502.html` | The maintenance page |
 | `site/lib/templates/email.html.twig` | The layout of emails the portal sends |
 
-Several cards and pages name the platform used at Glasgow 2024 (for example
-RingCentral Events or Planorama). Change these to whatever your convention
-uses, or remove the cards.
+Several cards name the tool behind them (for example ConClár or Planorama).
+Change these to whatever your convention uses, or remove the cards.
 
 ## Look and feel
 
@@ -66,7 +64,7 @@ uses, or remove the cards.
   custom properties at the top of the file.
 - Card images are the SVGs in `site/web/resources/`. See [Cards](cards.md).
 - The images in `site/web/resources/help/` and `site/web/resources/discord/`
-  are screenshots from Glasgow 2024.
+  are screenshots of Glasgow 2024's Discord server.
 
 ## Roles and permissions
 
