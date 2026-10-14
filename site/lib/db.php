@@ -135,27 +135,92 @@ function db_member_exists($badge_no) {
   return db_fetch_value("SELECT 1 FROM members WHERE badge_no = ?", [$badge_no]);
 }
 
-function db_insert_login_link($email, $login_code, $expires_at) {
-  $expires_at_ts = date('Y-m-d H:i:s', $expires_at);
-  // Looked up first rather than INSERT ... SELECT, as Postgres won't implicitly
-  // cast the untyped parameter in the select list to a timestamp
-  $badge_nos = db_fetch_column("SELECT badge_no FROM members WHERE LOWER(email) = LOWER(?)", [$email]);
-  foreach ($badge_nos as $badge_no) {
-    db_query(
-      "INSERT INTO login_links (login_code, badge_no, expires_at) VALUES (?, ?, ?)",
-      [$login_code, $badge_no, $expires_at_ts]
-    );
-  }
+function db_get_members_by_email($email) {
+  return db_fetch_rows("SELECT badge_no, name, email FROM members WHERE LOWER(email) = LOWER(?) ORDER BY badge_no", [$email]);
 }
 
-function db_get_login_link_expiry($badge_no, $login_code) {
-  $expires_at = db_fetch_value("SELECT expires_at FROM login_links WHERE login_code = ? AND badge_no = ?", [$login_code, $badge_no]);
-  if ($expires_at === null) {
-    // No such link
-    return null;
+// Passwords and login codes are keyed by the lower-cased email so that both
+// databases treat differently-cased spellings as one account.
+function db_check_password_auth($email, $password) {
+  $email = strtolower($email);
+  $hash = db_fetch_value("SELECT password_hash FROM password_auth WHERE email = ?", [$email]);
+  if ($hash === null) {
+    return false;
   }
 
-  return strtotime($expires_at);
+  if (!password_verify($password, $hash)) {
+    return false;
+  }
+
+  if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
+    db_set_password_auth($email, $password);
+  }
+
+  return true;
+}
+
+function db_set_password_auth($email, $password) {
+  db_upsert(
+    'password_auth',
+    ['email'],
+    ['password_hash', 'last_edited'],
+    [
+      'email' => strtolower($email),
+      'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+      'last_edited' => date('Y-m-d H:i:s'),
+    ]
+  );
+}
+
+// Only the most recent code for an email can be used
+function db_create_login_code($email, $code_hash, $expires_at) {
+  $email = strtolower($email);
+  db_query("DELETE FROM login_codes WHERE email = ? OR expires_at < ?", [$email, date('Y-m-d H:i:s')]);
+  db_query(
+    "INSERT INTO login_codes (email, code_hash, expires_at) VALUES (?, ?, ?)",
+    [$email, $code_hash, date('Y-m-d H:i:s', $expires_at)]
+  );
+}
+
+// Checks a code and consumes it when correct. A code that has been guessed
+// wrongly $max_failures times is deleted, so it cannot be brute forced.
+function db_consume_login_code($email, $code_hash, $max_failures) {
+  $email = strtolower($email);
+  $row = db_fetch_row(
+    "SELECT id, code_hash, failed_attempts FROM login_codes WHERE email = ? AND expires_at > ? ORDER BY id DESC",
+    [$email, date('Y-m-d H:i:s')]
+  );
+  if ($row === null) {
+    return false;
+  }
+
+  if (hash_equals($row['code_hash'], $code_hash)) {
+    db_query("DELETE FROM login_codes WHERE email = ?", [$email]);
+    return true;
+  }
+
+  if ($row['failed_attempts'] + 1 >= $max_failures) {
+    db_query("DELETE FROM login_codes WHERE id = ?", [$row['id']]);
+  } else {
+    db_query("UPDATE login_codes SET failed_attempts = failed_attempts + 1 WHERE id = ?", [$row['id']]);
+  }
+  return false;
+}
+
+function db_record_login_attempt($bucket, $subject) {
+  $now = time();
+  db_query("DELETE FROM login_attempts WHERE created_at < ?", [date('Y-m-d H:i:s', $now - 60*60*24)]);
+  db_query(
+    "INSERT INTO login_attempts (bucket, subject, created_at) VALUES (?, ?, ?)",
+    [$bucket, $subject, date('Y-m-d H:i:s', $now)]
+  );
+}
+
+function db_count_login_attempts($bucket, $subject, $window_seconds) {
+  return (int) db_fetch_value(
+    "SELECT COUNT(*) FROM login_attempts WHERE bucket = ? AND subject = ? AND created_at > ?",
+    [$bucket, $subject, date('Y-m-d H:i:s', time() - $window_seconds)]
+  );
 }
 
 function db_get_member_discord_data() {
@@ -507,13 +572,6 @@ function db_get_discord_id_from_token($token) {
 
 function db_record_analytics($member_type, $event, $data) {
   db_query("INSERT INTO analytics (member_type, event, data) VALUES (?, ?, ?)", [$member_type, $event, $data]);
-}
-
-function db_create_login_link($badge_no, $login_code, $expiry) {
-  db_query(
-    "INSERT INTO login_links (badge_no, login_code, expires_at) VALUES (?, ?, ?)",
-    [$badge_no, $login_code, date('Y-m-d H:i:s', $expiry)]
-  );
 }
 
 function db_get_num_members() {

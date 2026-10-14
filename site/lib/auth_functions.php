@@ -194,17 +194,6 @@ function redirect_to_login_error($error_code, $redirect = null) {
   exit;
 }
 
-function get_login_link_status($badge_no, $login_code) {
-  $expires = db_get_login_link_expiry($badge_no, $login_code);
-  if ($expires == null) {
-    return "no-found";
-  }
-  if ($expires < time()) {
-    return "expired";
-  }
-  return "ok";
-}
-
 function current_user_has_permission($permission) {
   if (!array_key_exists('permissions', $GLOBALS['app-data'] ?? [])) {
     return false;

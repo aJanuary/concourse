@@ -40,13 +40,15 @@ $other_badge = 'SMK2';
 $session = 'smoke-session-1';
 $role_name = 'smoke-role';
 $role_id = null;
-$login_code = 'smoke-login-code';
+$smoke_email = 'smoke.test@example.com';
 $token = 'smoke-token';
 $future = time() + 3600;
 
 function cleanup() {
   global $badge, $other_badge, $role_id, $token;
-  db_query("DELETE FROM login_links WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
+  db_query("DELETE FROM login_codes WHERE email = 'smoke.test@example.com'");
+  db_query("DELETE FROM login_attempts WHERE bucket = 'smoke'");
+  db_query("DELETE FROM password_auth WHERE email = 'smoke.test@example.com'");
   db_query("DELETE FROM sessions WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM rce_invites WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM discord_ids WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
@@ -81,16 +83,34 @@ try {
   $members = array_column(call('db_get_members'), null, 'badge_no');
   check('db_get_members', $members[$badge] === ['badge_no' => $badge, 'name' => 'Smoke Tester', 'email' => 'smoke.test@example.com'] && isset($members[$other_badge]));
 
-  // Login links resolve the member however the email is cased
-  call('db_insert_login_link', 'SMOKE.TEST@example.COM', $login_code, $future);
-  $expiry = call('db_get_login_link_expiry', $badge, $login_code);
-  check('login link looked up by differently-cased email', $expiry !== null && abs($expiry - $future) <= 1);
-  check('no login link for another member', call('db_get_login_link_expiry', $other_badge, $login_code) === null);
-  call('db_insert_login_link', 'nobody@example.com', 'smoke-unused-code', $future);
-  check('login link for unknown email is ignored', db_fetch_value("SELECT COUNT(*) FROM login_links WHERE login_code = 'smoke-unused-code'") == 0);
-  call('db_create_login_link', $other_badge, 'smoke-login-code-2', $future);
-  $expiry = call('db_get_login_link_expiry', $other_badge, 'smoke-login-code-2');
-  check('db_create_login_link', $expiry !== null && abs($expiry - $future) <= 1);
+  // Members, passwords and login codes are looked up however the email is cased
+  check('db_get_members_by_email ignores case', array_column(call('db_get_members_by_email', 'SMOKE.TEST@example.COM'), 'badge_no') === [$badge]);
+  check('db_get_members_by_email for unknown email', call('db_get_members_by_email', 'nobody@example.com') === []);
+
+  call('db_set_password_auth', 'Smoke.Test@example.com', 'correct horse');
+  check('password accepted for differently-cased email', call('db_check_password_auth', 'SMOKE.TEST@example.COM', 'correct horse') === true);
+  check('wrong password rejected', call('db_check_password_auth', $smoke_email, 'wrong') === false);
+  check('password for unknown email rejected', call('db_check_password_auth', 'nobody@example.com', 'correct horse') === false);
+  call('db_set_password_auth', $smoke_email, 'second password');
+  check('setting a password again replaces it', call('db_check_password_auth', $smoke_email, 'second password') === true && call('db_check_password_auth', $smoke_email, 'correct horse') === false);
+
+  call('db_create_login_code', 'Smoke.Test@example.com', 'hash-one', $future);
+  check('wrong login code rejected', call('db_consume_login_code', $smoke_email, 'wrong', 3) === false);
+  check('login code accepted after a wrong guess', call('db_consume_login_code', 'SMOKE.TEST@example.COM', 'hash-one', 3) === true);
+  check('login code is single use', call('db_consume_login_code', $smoke_email, 'hash-one', 3) === false);
+  call('db_create_login_code', $smoke_email, 'hash-two', $future);
+  call('db_create_login_code', $smoke_email, 'hash-three', $future);
+  check('only the newest login code works', call('db_consume_login_code', $smoke_email, 'hash-two', 3) === false);
+  call('db_consume_login_code', $smoke_email, 'x', 3);
+  call('db_consume_login_code', $smoke_email, 'x', 3);
+  check('code is invalidated after too many failures', call('db_consume_login_code', $smoke_email, 'hash-three', 3) === false);
+  call('db_create_login_code', $smoke_email, 'hash-expired', time() - 10);
+  check('expired login code rejected', call('db_consume_login_code', $smoke_email, 'hash-expired', 3) === false);
+
+  call('db_record_login_attempt', 'smoke', 'subject');
+  call('db_record_login_attempt', 'smoke', 'subject');
+  check('db_count_login_attempts', call('db_count_login_attempts', 'smoke', 'subject', 60) === 2);
+  check('login attempts for another subject are not counted', call('db_count_login_attempts', 'smoke', 'other', 60) === 0);
 
   // Sessions
   call('db_insert_session', $session, $badge, $future);

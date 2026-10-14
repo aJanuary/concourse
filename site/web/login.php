@@ -27,29 +27,11 @@ if (is_logged_in()) {
   exit;
 }
 
-$error = null;
-
 if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {
     make_anonymous_session();
     $redirect = $_GET['redirect'] ?? '/';
     header('Location: ' . (is_valid_redirect($redirect) ? $redirect : '/'));
     exit();
-}
-
-if (isset($_GET['badge_no']) && isset($_GET['login_code'])) {
-    $badge_no = $_GET['badge_no'];
-    $login_code = $_GET['login_code'];
-
-    $link_status = get_login_link_status($badge_no, $login_code);
-    if ($link_status === "ok") {
-        make_session($badge_no);
-        header('Location: /');
-        exit();
-    } else if ($link_status === "expired") {
-        $error = 'This log in link has expired. Please request a new log in link.';
-    } else {
-        $error = 'Invalid login code';
-    }
 }
 
 render_header(
