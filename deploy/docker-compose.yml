@@ -1,19 +1,25 @@
-# 
-# 1. To create the volume portal-mysqldata
-#   docker volume create --name=portal-mysqldata
-# 2. To start dev env using docker compose
-#   docker-compose -p portal-dev -f docker-compose.yml up
-# 
-version: '3.7'
+#
+# Runs the portal from the published images. redeploy.sh starts it with an
+# env file (.env.prod or .env.staging, from the examples here) that names
+# the images and, for a second instance on the same host, its ports and
+# directories. See "Deployment" in the README.
+#
+# Before the first start, create the database volume:
+#
+#   docker volume create portal-mysqldata
+#
 
 volumes:
   # Have a store for the DB data that persists across restarts
   portal-mysqldata:
+    name: ${PORTAL_DB_VOLUME:-portal-mysqldata}
     external: true
 
 services:
   db:
     image: mysql:8.0.37-debian
+    # mysql:*-debian has no arm64 build
+    platform: linux/amd64
     secrets:
       - db_root_password
       - db_dba_password
@@ -30,20 +36,20 @@ services:
       # Optional: we can tune the MySQL config
       # - /opt/portal/etc/mysql/conf.d/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
     ports:
-      # map to local 53306 in case there are other MySQL instances
-      - "127.0.0.1:53306:3306"
+      # Only reachable from the host; not 3306 in case MySQL runs there too
+      - "127.0.0.1:${PORTAL_DB_PORT:-53306}:3306"
 
   nginx:
-    image: ghcr.io/glasgow2024/nginx:latest
+    image: ${NGINX_IMAGE:?set NGINX_IMAGE in the env file}:${NGINX_IMAGE_TAG:-latest}
     restart: always
     ports:
-      # map to local 8080
-      - "127.0.0.1:8080:80"
+      # For the host's proxy to forward to
+      - "127.0.0.1:${PORTAL_PORT:-8080}:80"
     links:
       - web
 
   web:
-    image: ghcr.io/glasgow2024/member-portal:latest
+    image: ${WEB_IMAGE:?set WEB_IMAGE in the env file}:${WEB_IMAGE_TAG:-latest}
     # The script will wait for db to be ready, run migrations and then start web server
     command: "/var/scripts/start.sh"
     restart: always
@@ -52,7 +58,7 @@ services:
       - web_secrets
     volumes:
       - type: bind
-        source: /opt/portal/analytics
+        source: ${PORTAL_DIR:-/opt/portal}/analytics
         target: &analytics-dir /var/log/analytics
     environment:
       CONFIG_LIB_DIR: /srv/lib
@@ -67,11 +73,10 @@ services:
     depends_on:
       - db
 
-# Assuming portal files are put in /opt/portal ...
 secrets:
   db_root_password:
-    file: /opt/portal/secrets/db_root_password.txt
+    file: ${PORTAL_DIR:-/opt/portal}/secrets/db_root_password.txt
   db_dba_password:
-    file: /opt/portal/secrets/db_dba_password.txt
+    file: ${PORTAL_DIR:-/opt/portal}/secrets/db_dba_password.txt
   web_secrets:
-    file: /opt/portal/secrets/web_secrets.ini
+    file: ${PORTAL_DIR:-/opt/portal}/secrets/web_secrets.ini

@@ -26,22 +26,67 @@ assume the following directory structure on the host machine:
 /opt
 |__ portal
     |__ app
+    |__ analytics
     |__ secrets
 ```
 
 To deploy
 
-1. Copy both the files from the `deploy` directory to `/opt/portal/app`
-2. Create files for the secrets in `/opt/portal/secrest`
+1. Publish the images by running the "Build and publish docker images"
+   GitHub Action (see [Images](#images)).
+2. Copy the files from the `deploy` directory to `/opt/portal/app`, including
+   the `.env.*.example` files.
+3. Copy `.env.prod.example` to `.env.prod` and set `WEB_IMAGE` and
+   `NGINX_IMAGE` to your repository's images.
+4. Create the secrets files in `/opt/portal/secrets` (see
+   [Secrets files](#secrets-files)) and an empty `/opt/portal/analytics`.
+5. Create the database volume: `docker volume create portal-mysqldata`.
 
-To start the server run `/opt/app/redeploy.sh`. This will pull the docker
-containers and the application will be available on port `8080` for the web server.
+To start the server run `/opt/portal/app/redeploy.sh`. This pulls the images
+named in `.env.prod` and restarts the containers on them, running any new
+migrations. The portal is then available on `127.0.0.1:8080` for the proxy.
+The MySQL database is also available on `127.0.0.1:53306` if needed.
 
-NOTE: the MySQL database for the portal will also be available on `53306` if needed (only accessible from the host machine).
+To run on Postgres instead, uncomment `COMPOSE_FILE` in the env file and
+create a `portal-pgdata` volume instead. Its database is on port `55432`.
+
+#### Images
+
+The "Build and publish docker images" workflow is run by hand from the
+Actions tab. It publishes `ghcr.io/<owner>/<repository>-web` and `-nginx`:
+
+- Run on the default branch, the images are tagged `latest`, which
+  `.env.prod.example` follows.
+- Run on any other branch, they are tagged with the branch name in lower
+  case, with characters other than letters, digits, `.`, `_` and `-` changed
+  to `-`. For example `feature/SSO` becomes `feature-sso`.
+
+Each run also tags the images with the branch and commit, e.g.
+`main-1a2b3c4`, so a deployment can be pinned to it.
+
+#### Staging
+
+A staging instance can run on the same host, following a branch's images.
+Copy `.env.staging.example` to `.env.staging` and set the image tags to the
+branch. It gives staging its own compose project name, data directory
+(`/opt/portal-staging`, laid out like `/opt/portal`), database volume and
+ports; create the directory, secrets and volume as for production. Use a
+different `cookie_name` in its `web_secrets.ini` if it shares a parent domain
+with production. Then:
+
+```bash
+# Production
+/opt/portal/app/redeploy.sh .env.prod
+
+# Staging
+/opt/portal/app/redeploy.sh .env.staging
+```
+
+The settings an env file can have are listed in `.env.prod.example`.
 
 ### Secrets files
 
-When you deploy the applicaton as above the secrets files should places in `/opt/portal/secrets`. There are three files
+When you deploy the application as above the secrets files should be placed in `/opt/portal/secrets`. There are three files
 
 - db_root_password.txt: file with single line containing a string to use for the DB root password
 - db_dba_password.txt: file with single line containing a string to use for the DB DBA/Application password
@@ -356,6 +401,10 @@ not, so compare emails with `LOWER(email) = LOWER(?)`.
 `scripts/db-smoke.php` runs every `db_*` function against the configured
 database and cleans up after itself. Run it in the `web` container after the
 migrations have been applied: `docker compose exec web php /var/scripts/db-smoke.php`.
+
+The "Check" GitHub Action runs `scripts/bootstrap` on each database, which
+applies every migration to an empty database, then this smoke test. It runs
+on pushes to `main` and on pull requests.
 
 ### Updating dependencies
 
