@@ -12,8 +12,16 @@ class Identity {
     public string $email,
     public string $name,
     public ?string $real_name = null,
-    // Role names to add to the member. Existing roles are never removed.
+    // Role names to add to the member.
     public ?array $roles = null,
+    // Roles the provider decides. Any of these missing from $roles are
+    // removed from the member; other roles are left alone.
+    public ?array $managed_roles = null,
+    // The provider's ids for this login and user, used to end the session
+    // when the provider says the user logged out.
+    public ?string $sid = null,
+    public ?string $sub = null,
+    public ?string $id_token = null,
   ) {
   }
 }

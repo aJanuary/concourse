@@ -25,10 +25,13 @@ function session_cookie_options($expires_at) {
   return $options;
 }
 
-function make_session($badge_no) {
+function make_session($badge_no, $sid = null, $sub = null, $id_token = null) {
   $session_id = bin2hex(random_bytes(32));
   $expires_at = time() + 60*60*24*30;
   db_insert_session($session_id, $badge_no, $expires_at);
+  if ($sub !== null) {
+    db_insert_oidc_session($session_id, $sid, $sub, $id_token);
+  }
   setcookie(SESSION_COOKIE_NAME, $session_id, session_cookie_options($expires_at));
 }
 
@@ -131,17 +134,18 @@ function get_registration_status($email) {
   return $member_exists ? "registered" : "unregistered";
 }
 
-function create_member($badge_no, $email, $name) {
-  db_create_member($badge_no, $email, $name);
+function create_member($badge_no, $email, $name, $real_name = null) {
+  db_create_member($badge_no, $email, $name, $real_name);
 }
 
-function update_member($badge_no, $email, $name) {
+// A null $real_name leaves the stored one alone
+function update_member($badge_no, $email, $name, $real_name = null) {
   $existing = db_get_member($badge_no);
-  if ($existing['email'] == $email && $existing['name'] == $name) {
+  if ($existing['email'] == $email && $existing['name'] == $name && ($real_name === null || $existing['real_name'] == $real_name)) {
     return;
   }
 
-  db_update_member($badge_no, $email, $name);
+  db_update_member($badge_no, $email, $name, $real_name);
 
   if ($existing['name'] != $name) {
     $discord_ids = db_get_discord_ids($badge_no);
@@ -161,9 +165,9 @@ function finish_login($identity, $redirect) {
 
   $badge_no = $identity->badge_no;
   if (!db_member_exists($badge_no)) {
-    create_member($badge_no, $identity->email, $identity->name);
+    create_member($badge_no, $identity->email, $identity->name, $identity->real_name);
   } else {
-    update_member($badge_no, $identity->email, $identity->name);
+    update_member($badge_no, $identity->email, $identity->name, $identity->real_name);
   }
 
   $roles = $identity->roles ?? [];
@@ -173,11 +177,15 @@ function finish_login($identity, $redirect) {
     }
   }
   $existing_roles = db_get_member_role_names($badge_no);
-  foreach (array_diff(array_unique($roles), $existing_roles) as $role) {
+  $roles = array_unique($roles);
+  foreach (array_diff($roles, $existing_roles) as $role) {
     db_add_member_role($badge_no, $role);
   }
+  foreach (array_diff(array_intersect($identity->managed_roles ?? [], $existing_roles), $roles) as $role) {
+    db_remove_member_role($badge_no, $role);
+  }
 
-  make_session($badge_no);
+  make_session($badge_no, $identity->sid, $identity->sub, $identity->id_token);
 
   if (session_status() === PHP_SESSION_ACTIVE) {
     session_destroy();
