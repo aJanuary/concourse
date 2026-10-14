@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (array_key_exists('item_id', $_GET)) {
   $item_id = $_GET['item_id'];
   $session = db_get_prog_session($item_id);
+  $same_replay_destination = ($session['handler'] ?? DEFAULT_PROG_HANDLER) === PROG_REPLAY_HANDLER;
 } else {
   $session = ['title' => '', 'destination' => '', 'handler' => null];
 }
