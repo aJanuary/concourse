@@ -6,7 +6,6 @@
 # port (PORTAL_PORT, default 8080), so several checkouts can run at once as
 # separate compose projects.
 #
-version: "3.7"
 
 volumes:
   # Have a store for the DB data that persists across restarts
