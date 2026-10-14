@@ -1,7 +1,7 @@
 name: Check
 
 # Builds the images and runs every migration from an empty database, then the
-# db_* smoke test, on each database the portal supports.
+# db_* smoke test, on each database the portal supports. PHPStan runs too.
 
 on:
   push:
@@ -34,6 +34,9 @@ jobs:
 
       - name: Check encrypted secrets
         run: docker compose exec -T -e HTTP_HOST=localhost web php < scripts/encryption-check.php
+
+      - name: Run PHPStan
+        run: scripts/lint
 
       - name: Show container logs
         if: failure()

@@ -1,0 +1,18 @@
+# Run with scripts/lint
+includes:
+  - tools/phpstan-config.php
+
+parameters:
+  level: 5
+  paths:
+    - site/lib
+    - site/web
+    - site/php-migrations/db/migrations
+    - site/php-migrations/phinx.php
+    - scripts
+  excludePaths:
+    - site/lib/vendor
+  bootstrapFiles:
+    - site/lib/vendor/autoload.php
+    - site/php-migrations/vendor/autoload.php
+    - tools/phpstan-bootstrap.php

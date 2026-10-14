@@ -47,6 +47,7 @@ container, so changes to them show on the next page load.
 | `scripts/composer` | Runs Composer in the `web` container on `site/lib`; `-d /var/php-migrations` runs it on the migrations instead |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
 | `scripts/create-admin` | Gives a member the `admin` role; `scripts/create-admin <badge no> <email> <name>` adds them as a member first |
+| `scripts/lint` | Runs [PHPStan](https://phpstan.org/) on the portal's PHP, as CI does; see [Static analysis](#static-analysis) |
 | `scripts/encrypt-secret` | Encrypts a value for the secrets file, or generates a key with `--generate-key`; see [Encrypted secrets](configuration.md#encrypted-secrets) |
 
 ### Ports and running several checkouts
@@ -127,11 +128,34 @@ secrets](configuration.md#encrypted-secrets):
 docker compose exec -T -e HTTP_HOST=localhost web php < scripts/encryption-check.php
 ```
 
-It runs on pushes to `main` and on pull requests.
+It also runs `scripts/lint`. It runs on pushes to `main` and on pull requests.
+
+### Static analysis
+
+`scripts/lint` runs [PHPStan](https://phpstan.org/) at level 5 on `site/`
+and `scripts/`, in the web image. It finds undefined functions, constants and
+variables, wrong argument types and dead code. Arguments go to
+`phpstan analyse`, so `scripts/lint site/web/index.php` checks one file.
+
+- PHPStan has its own Composer project in `tools/`, so it isn't installed with
+  the portal. `scripts/lint` installs it on first run.
+- `tools/phpstan-bootstrap.php` loads `site/lib/config.php` with the
+  development secrets, so PHPStan knows the constants it defines. Those
+  constants are checked by type, not by the value in your checkout, so
+  turning a setting off doesn't make code look dead.
+- A constant defined as a literal array is just an `array` to PHPStan, as its
+  shape is the convention's. Code that reads one can say what it expects with
+  a `@return` type, like `business_meeting_mpc_election()`.
 
 ## Updating dependencies
 
 ```
 scripts/composer require vendor/package    # add one
 scripts/composer update                    # update them all
+```
+
+PHPStan, in `tools/`, isn't mounted in the web container, so update it with:
+
+```
+docker compose run --rm --no-deps -v "$PWD:/app" -w /app/tools web composer update
 ```

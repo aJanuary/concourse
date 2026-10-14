@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Runs PHPStan, configured by phpstan.neon, on the portal's PHP in the web
+# image. Arguments go to phpstan analyse:
+#
+#   scripts/lint
+#   scripts/lint site/web/index.php
+#
+# It needs the images built and the Composer dependencies installed, which
+# scripts/bootstrap does.
+set -eu -o pipefail
+. "$(dirname "$0")/lib.sh"
+
+for dir in site/lib site/php-migrations; do
+	if [ ! -f "$dir/vendor/autoload.php" ]; then
+		echo "$dir/vendor is missing; run scripts/bootstrap first" >&2
+		exit 1
+	fi
+done
+
+# PHPStan lives in tools/ so it isn't installed with the portal's dependencies
+exec docker compose run --rm --no-deps -T -v "$ROOT:/app" -w /app web sh -c '
+	composer install --quiet --no-interaction --working-dir=tools &&
+	php -d memory_limit=1G tools/vendor/bin/phpstan analyse --no-progress "$@"
+' lint "$@"
