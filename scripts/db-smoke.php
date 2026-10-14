@@ -65,6 +65,7 @@ function cleanup() {
   db_query("DELETE FROM prog_discord_posts WHERE item_id IN ('smoke-post', 'smoke-post-2')");
   db_query("DELETE FROM prog_replay WHERE item_id = 'smoke-replay'");
   db_query("DELETE FROM signups WHERE category = 'smoke-category'");
+  db_query("DELETE FROM business_meeting_links WHERE badge_no IN (?, ?, 'SMK3')", [$badge, $other_badge]);
 }
 
 echo "driver: " . DB_DRIVER . "\n";
@@ -337,6 +338,28 @@ try {
   check('db_add_signups adds nothing when a row fails', $failed && count(array_filter(db_get_signups(), fn($s) => $s['category'] === 'smoke-category')) === 3);
   call('db_delete_signup', $signup_id);
   check('db_delete_signup', db_get_signup($signup_id) === null);
+
+  // Business meeting links. SMK3 has no member, so no name
+  call('db_set_business_meeting_link', $badge, 'https://example.com/join?a="<1>');
+  check('db_get_business_meeting_link', call('db_get_business_meeting_link', $badge) === 'https://example.com/join?a="<1>');
+  check('db_get_business_meeting_link for member without a link', db_get_business_meeting_link($other_badge) === null);
+  call('db_set_business_meeting_link', $badge, 'https://example.com/join/1b');
+  check('db_set_business_meeting_link updates', db_get_business_meeting_link($badge) === 'https://example.com/join/1b');
+  $counts = call('db_set_business_meeting_links', [$badge => 'https://example.com/join/1c', 'SMK3' => 'https://example.com/join/3']);
+  check('db_set_business_meeting_links counts', $counts === ['added' => 1, 'updated' => 1]);
+  $bm_links = array_values(array_filter(call('db_get_business_meeting_links'), fn($l) => in_array($l['badge_no'], [$badge, 'SMK3'], true)));
+  check('db_get_business_meeting_links', count($bm_links) === 2
+    && $bm_links[0]['badge_no'] === $badge && $bm_links[0]['name'] === 'Smoke Tester' && $bm_links[0]['join_link'] === 'https://example.com/join/1c' && is_int($bm_links[0]['updated_at'])
+    && $bm_links[1]['badge_no'] === 'SMK3' && $bm_links[1]['name'] === null);
+  $failed = false;
+  try {
+    db_set_business_meeting_links([$other_badge => 'https://example.com/join/2', 'SMK3' => null]);
+  } catch (PDOException $e) {
+    $failed = true;
+  }
+  check('db_set_business_meeting_links adds nothing when a row fails', $failed && db_get_business_meeting_link($other_badge) === null && db_get_business_meeting_link('SMK3') === 'https://example.com/join/3');
+  call('db_delete_business_meeting_link', $badge);
+  check('db_delete_business_meeting_link', db_get_business_meeting_link($badge) === null);
 
   // Sessions last, as the earlier checks depend on them
   call('db_delete_session', $session);

@@ -692,6 +692,59 @@ function db_delete_signup($id) {
   db_query("DELETE FROM signups WHERE id = ?", [$id]);
 }
 
+// Null if the member has no link
+function db_get_business_meeting_link($badge_no) {
+  return db_fetch_value("SELECT join_link FROM business_meeting_links WHERE badge_no = ?", [$badge_no]);
+}
+
+// The name is null for members who haven't logged in yet
+function db_get_business_meeting_links() {
+  return db_fetch_rows(
+    "SELECT l.badge_no, m.name, l.join_link, l.updated_at
+     FROM business_meeting_links l
+     LEFT JOIN members m ON m.badge_no = l.badge_no
+     ORDER BY l.badge_no"
+  );
+}
+
+function db_set_business_meeting_link($badge_no, $join_link) {
+  $now = time();
+  db_upsert('business_meeting_links', ['badge_no'], ['join_link', 'updated_at'], [
+    'badge_no' => $badge_no,
+    'join_link' => $join_link,
+    'created_at' => $now,
+    'updated_at' => $now,
+  ]);
+}
+
+function db_delete_business_meeting_link($badge_no) {
+  db_query("DELETE FROM business_meeting_links WHERE badge_no = ?", [$badge_no]);
+}
+
+// $links maps badge numbers to join links. All or nothing, like
+// db_add_signups. Returns how many were added and how many updated.
+function db_set_business_meeting_links($links) {
+  global $pdo;
+
+  $pdo->beginTransaction();
+  try {
+    $existing = array_flip(db_fetch_column("SELECT badge_no FROM business_meeting_links"));
+    $added = 0;
+    foreach ($links as $badge_no => $join_link) {
+      $badge_no = (string) $badge_no;
+      if (!isset($existing[$badge_no])) {
+        $added++;
+      }
+      db_set_business_meeting_link($badge_no, $join_link);
+    }
+    $pdo->commit();
+  } catch (Exception $exception) {
+    $pdo->rollBack();
+    throw $exception;
+  }
+  return ['added' => $added, 'updated' => count($links) - $added];
+}
+
 function db_insert_discord_token($token, $discord_id, $discord_username) {
   db_query(
     "INSERT INTO discord_verification_token (token_id, discord_id, username) VALUES (?, ?, ?)",
