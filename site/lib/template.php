@@ -157,6 +157,58 @@
 <?php
   }
 
+  // The page number asked for in ?page=, at least 1
+  function current_page_number() {
+    return max(1, (int) ($_GET['page'] ?? 1));
+  }
+
+  // Links to the pages of a long list: the first and last, two either side of
+  // this one, and previous and next. $params are the other query parameters
+  // each link keeps, such as a search.
+  function render_pagination($page, $total_pages, $params = []) {
+    if ($total_pages <= 1) {
+      return;
+    }
+    $url = fn($number) => '?' . http_build_query(array_merge($params, ['page' => $number]));
+    $numbers = array_unique(array_merge([1], range(max(1, $page - 2), min($total_pages, $page + 2)), [$total_pages]));
+?>
+    <nav aria-label="Pages">
+      <ul class="pagination">
+<?php
+    if ($page > 1) {
+?>
+        <li><a href="<?php echo htmlspecialchars($url($page - 1)); ?>">Previous</a></li>
+<?php
+    }
+    $previous = 0;
+    foreach ($numbers as $number) {
+      if ($number > $previous + 1) {
+?>
+        <li aria-hidden="true">&hellip;</li>
+<?php
+      }
+      if ($number === $page) {
+?>
+        <li><a aria-current="page"><?php echo $number; ?></a></li>
+<?php
+      } else {
+?>
+        <li><a href="<?php echo htmlspecialchars($url($number)); ?>"><?php echo $number; ?></a></li>
+<?php
+      }
+      $previous = $number;
+    }
+    if ($page < $total_pages) {
+?>
+        <li><a href="<?php echo htmlspecialchars($url($page + 1)); ?>">Next</a></li>
+<?php
+    }
+?>
+      </ul>
+    </nav>
+<?php
+  }
+
   function render_404() {
     http_response_code(404);
     render_header(

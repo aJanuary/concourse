@@ -981,6 +981,76 @@ fieldset {
   margin-top: 0.25em;
 }
 
+textarea.token-csv {
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+  font-family: monospace;
+}
+
+article.full-width {
+  max-width: none;
+}
+
+button.button {
+  border: none;
+  cursor: pointer;
+}
+
+ul.pagination {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+ul.pagination a[aria-current] {
+  font-weight: bold;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.inline-actions form input[type='submit'] {
+  margin-top: 0;
+}
+
+dialog.confirm {
+  padding: 1.5rem;
+  border: none;
+  border-radius: 8px;
+  max-width: 28rem;
+  width: calc(100% - 2rem);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px, rgba(0, 0, 0, 0.35) 0px 8px 24px;
+}
+
+dialog.confirm::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+dialog.confirm dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.3rem 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+dialog.confirm dt {
+  font-weight: bold;
+}
+
+dialog.confirm .buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 @media only screen and (max-width: 40em) {
   .container {
     flex-direction: column;
