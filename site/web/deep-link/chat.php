@@ -100,7 +100,7 @@ render_header(
         <div class="content">
           <a href="<?php echo make_login_link(); ?>" class="button login">Log in</a>
           <p><a href="/login-instructions" target="_blank">Log in instructions</a>
-          <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo EMAIL; ?></a>.</p>
+          <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
       </div>
       <?php
       }
