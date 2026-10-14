@@ -147,6 +147,33 @@ secrets:
     # ; sets it, e.g. HTTP_X_FORWARDED_FOR. Defaults to REMOTE_ADDR.
     # client_ip_header =
     #
+    # [oidc]
+    # ; Enable with `providers[] = oidc` in [auth]. See the README.
+    # ; The issuer URL; endpoints are found through discovery.
+    # provider_url =
+    # client_id =
+    # client_secret =
+    # ; Defaults to email and profile (openid is always requested)
+    # scopes[] =
+    # ; Which userinfo claim supplies each member field. badge_no is required;
+    # ; email and name default to the claims of the same name; real_name is
+    # ; optional.
+    # claims[badge_no] =
+    # claims[email] =
+    # claims[name] =
+    # claims[real_name] =
+    # ; Grants a role while the claim is truthy and removes it when not.
+    # ; Roles not named here are never touched. Truthy is true, a non-zero
+    # ; number, or the text true, 1, yes or on.
+    # role_map[<claim>] = <role name>
+    # ; Set to true to also log out at the provider when a member logs out of
+    # ; the portal. The provider must allow <portal URL>/login as a
+    # ; post-logout redirect URI.
+    # provider_logout = false
+    # ; Set to false to skip certificate checks, for a development provider
+    # ; with a self-signed certificate. Never in production.
+    # verify_tls = true
+    #
     # [smtp]
     # ; Outgoing mail server, used by the local login provider.
     # host =

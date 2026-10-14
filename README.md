@@ -57,6 +57,7 @@ All sections are optional; a feature whose section is missing reports which key 
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients |
 | `[rce]` | `api_key`, `ticket_id` | RingCentral Events magic links |
 | `[auth]` | `allowlist[]`, `providers[]`, `client_ip_header` | Emails allowed to log in (empty means everyone); enabled login providers (default `dev`, which only works when `RUNTIME_ENV=development`; `local` is email login); the `$_SERVER` key holding the client address behind a proxy, e.g. `HTTP_X_FORWARDED_FOR` (default `REMOTE_ADDR`) |
+| `[oidc]` | `provider_url`, `client_id`, `client_secret`, `scopes[]`, `claims[...]`, `role_map[...]`, `provider_logout`, `verify_tls` | The `oidc` login provider; see [OpenID Connect login](#openid-connect-login) |
 | `[smtp]` | `host`, `port`, `username`, `password`, `secure` | Outgoing mail for the `local` login provider. `secure` is empty, `tls` or `ssl` |
 | `[crypto]` | `signing_key` | Signs emailed links and hashes login codes for the `local` provider. At least 32 characters; generate with `openssl rand -hex 32` |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
@@ -118,6 +119,67 @@ define('DEFAULT_ROLES_BY_BADGE', [
   'artist' => ['0042', '0043'],
 ]);
 ```
+
+### OpenID Connect login
+
+The `oidc` provider logs members in through any OpenID Connect identity
+provider using the authorization code flow, and supports back-channel
+single logout. Enable it with `providers[] = oidc` in the `[auth]` section.
+
+Register the portal with the provider as a confidential client with:
+
+- Redirect URI: `https://portal.example.com/oidc/callback`
+- Back-channel logout URI: `https://portal.example.com/oidc/logout`. A logout
+  token with a `sid` ends only the portal sessions started from that provider
+  session; one with only a `sub` ends all of that user's portal sessions.
+
+Example `[oidc]` section:
+
+```ini
+[oidc]
+provider_url = https://idp.example.com/application/portal/
+client_id = portal
+client_secret = ...
+scopes[] = email
+scopes[] = profile
+scopes[] = membership
+
+; Which userinfo claim gives each member field
+claims[badge_no] = member-number
+claims[email] = email
+claims[name] = display-name
+claims[real_name] = full-name
+
+; claim = role. The role is granted at login when the claim is truthy and
+; removed when it is not.
+role_map[is-attending] = attending
+role_map[can-vote] = voter
+```
+
+`badge_no` is required. `email` and `name` default to the claims of those
+names, and `real_name` is only stored when a claim is mapped for it. A login
+without `badge_no`, `email` and `name` is refused.
+
+A claim is truthy when it is `true`, a non-zero number, or one of the strings
+`true`, `1`, `yes` or `on`. Several claims can map to the same role; the role
+is granted if any of them is truthy. Only roles named in `role_map` are
+removed, so roles assigned by hand are untouched. The roles must already
+exist, and `DEFAULT_ROLES_BY_BADGE` still applies on top.
+
+Logging out of the portal only ends the portal session by default. Set
+`provider_logout = true` to also send the browser to the provider's
+end-session endpoint (RP-initiated logout), passing the ID token from login
+as the hint and returning to `https://portal.example.com/login`. Register
+that URL as a post-logout redirect URI with the provider. The ID token is
+kept with the session until it ends, and the provider must advertise an
+`end_session_endpoint` in its discovery document.
+
+Certificates are verified. For a development provider with a self-signed
+certificate, set `verify_tls = false`.
+
+For development without an identity provider, `scripts/mock-oidc.php` is a
+minimal provider that approves every login; its header explains how to run
+it.
 
 ### Database
 
