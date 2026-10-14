@@ -17,6 +17,8 @@
   --button-disabled-bg-color: #DDD;
   --button-disabled-fg-color: #202226;
   --error-fg-color: rgb(174, 0, 0);
+  --warn-border-color: #ffc107;
+  --warn-bg-color: #fffbe6;
   --inst-border-color: #DDD;
   --select-list-bg-color: #EEE;
   --select-list-hover-bg-color: #DDD;
@@ -629,15 +631,28 @@ main {
   background-image: url('/resources/website.svg');
 }
 
-.card.manage-roles, .card.manage-discord, .card.manage-programme, .card.manage-login-sessions, .card.programme-reports {
+.card.manage-roles, .card.manage-discord, .card.manage-programme, .card.manage-login-sessions, .card.programme-reports, .card.manage-business-meeting {
   background-color: var(--events-color-light);
 }
-.card.manage-roles .hero, .card.manage-discord .hero, .card.manage-programme .hero, .card.manage-login-sessions .hero, .card.programme-reports .hero {
+.card.manage-roles .hero, .card.manage-discord .hero, .card.manage-programme .hero, .card.manage-login-sessions .hero, .card.programme-reports .hero, .card.manage-business-meeting .hero {
   background: var(--events-bg);
   background-size: var(--events-bg-size);
 }
-.card.manage-roles .hero::after, .card.manage-discord .hero::after, .card.manage-programme .hero::after, .card.manage-login-sessions .hero::after, .card.programme-reports .hero::after {
+.card.manage-roles .hero::after, .card.manage-discord .hero::after, .card.manage-programme .hero::after, .card.manage-login-sessions .hero::after, .card.programme-reports .hero::after, .card.manage-business-meeting .hero::after {
   background-image: url('/resources/manage.svg');
+}
+
+.card.business-meeting {
+  background-color: var(--part-color-light);
+}
+.card.business-meeting .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.business-meeting .hero::after {
+  background-image: url('/resources/business-meeting.svg');
 }
 
 .card.card.upload-presentation {
@@ -904,6 +919,29 @@ fieldset {
   margin-top: 20px;
 }
 
+.warn {
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid var(--warn-border-color);
+  border-radius: 10px;
+  background-color: var(--warn-bg-color);
+}
+
+.warn img {
+  float: left;
+  width: 2em;
+  height: 2em;
+  margin-right: 0.5em;
+}
+
+.warn ul {
+  padding-left: 1.5em;
+}
+
+.join-link code {
+  word-break: break-all;
+}
+
 @media only screen and (max-width: 40em) {
   .container {
     flex-direction: column;
@@ -1097,6 +1135,8 @@ ul.maps li a {
     --button-disabled-bg-color: #DDD;
     --button-disabled-fg-color: black;
     --error-fg-color: rgb(174, 0, 0);
+    --warn-border-color: black;
+    --warn-bg-color: white;
     --inst-border-color: black;
   }
 

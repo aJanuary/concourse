@@ -86,6 +86,30 @@ define('DISCORD_SERVICE_ACCOUNTS', [
   ]
 ]);
 
+// The business meeting page. Members with see-business-meeting see it, and
+// those with a join link uploaded under Manage business meeting can join. See
+// docs/integrations/business-meeting.md.
+define('BUSINESS_MEETING', [
+  // The meeting platform that gives each member their own join link
+  'platform_name' => 'Lumi',
+  'platform_info_url' => 'https://www.lumiglobal.com/',
+  // The convention's page about the business meeting, and optional guidance
+  // for attendees (null for none)
+  'info_url' => 'https://example.com/business-meeting',
+  'guide_url' => null,
+  'help_email' => 'business-meeting@example.com',
+  // Shown to members without a join link, after the usual reasons, for
+  // example how long before a session a new member's link appears. Empty for none.
+  'no_link_note' => '',
+  // When each session starts, as 'yyyy-mm-dd hh:mm' in TIMEZONE
+  'sessions' => ['2025-01-01 10:00'],
+  // Shown under the dates, for example 'Each session lasts about three hours.'
+  'duration' => '',
+  // The Mark Protection Committee election, or null for none:
+  // ['url' => 'https://example.com/mpc-election', 'opens' => '2025-01-01 12:00', 'closes' => '2025-01-02 12:00']
+  'mpc_election' => null,
+]);
+
 define('DB_DRIVER', getenv('CONFIG_DB_DRIVER') ?: 'mysql');
 if (!in_array(DB_DRIVER, ['mysql', 'pgsql'], true)) {
   throw new RuntimeException("Unsupported CONFIG_DB_DRIVER '" . DB_DRIVER . "'");
@@ -143,6 +167,9 @@ define('ZOOM_EVENTS_TICKET_EMAIL_DOMAIN', config_get('zoom_events', 'ticket_emai
 define('DISCORD_BOT_TOKEN', config_get('discord', 'bot_token'));
 define('DISCORD_CLIENT_ID', config_get('discord', 'client_id'));
 define('DISCORD_CLIENT_SECRET', config_get('discord', 'client_secret'));
+// Invite code for the separate business meeting Discord server, the part after
+// https://discord.gg/. Empty until it opens.
+define('DISCORD_BM_INVITE', trim((string) config_get('discord', 'bm_invite')));
 define('API_KEYS', $config_file['api_keys'] ?? []);
 
 define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));

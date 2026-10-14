@@ -21,6 +21,7 @@ render_header(
     <li>Cloud upload icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Cog icon by <a href="https://lorcblog.blogspot.com/">Lorc</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Direction signs icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
+    <li>Gavel icon by <a href="https://lorcblog.blogspot.com/">Lorc</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Help icon by <a href="http://opengameart.org/content/95-game-icons">sbed</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Info icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>
     <li>Newspaper icon by <a href="https://delapouite.com/">Delapouite</a> under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></li>

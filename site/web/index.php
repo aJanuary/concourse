@@ -146,6 +146,12 @@ $cards = [
       'subtitle' => 'Programme participants and presenters',
       'link' => '/upload-presentation',
       'card-permission' => 'see-upload-presentation'
+    ], [
+      'name' => 'business-meeting',
+      'title' => 'Business Meeting',
+      'subtitle' => 'WSFS',
+      'link' => '/business-meeting',
+      'card-permission' => 'see-business-meeting'
     ]
   ],
   'Other' => [
@@ -191,6 +197,12 @@ $cards = [
       'subtitle' => 'Admin',
       'link' => '/admin/login-sessions',
       'card-permission' => 'manage-login-sessions',
+    ], [
+      'name' => 'manage-business-meeting',
+      'title' => 'Manage business meeting',
+      'subtitle' => 'Admin',
+      'link' => '/admin/business-meeting/list',
+      'card-permission' => 'manage-business-meeting',
     ]
   ]
 ];
@@ -341,6 +353,7 @@ $cards = [
     'readme',
     'gallery',
     'upload-presentation',
+    'business-meeting',
     'accessibility',
     'childcare',
     'volunteer',
@@ -416,6 +429,9 @@ $cards = [
   }
   if (current_user_has_permission('childcare')) {
     $faved_cards[] = 'childcare';
+  }
+  if (current_user_has_permission('see-business-meeting')) {
+    $faved_cards[] = 'business-meeting';
   }
   echo "const defaultFavs = " . json_encode($faved_cards) . ";\n";
 ?>
