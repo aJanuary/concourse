@@ -163,6 +163,20 @@ the sign-up URL, for example
 not logged in, query parameters holding a placeholder are removed,
 and placeholders elsewhere in the URL are left empty.
 
+### Roles
+
+Members with `manage-roles` choose which permissions each role has under
+Manage roles, and give or remove roles for one member at a time from "Edit a
+member's roles" there. Members are found by badge number, name or email in
+the `members` table, so a member usually has to have logged in once before
+they can be given a role. Changes apply from the member's next page load.
+
+Logging in can undo a change made by hand. A role in the OIDC `role_map` is
+set from the provider's claims at every login, and a role listed for a badge in
+`DEFAULT_ROLES_BY_BADGE` is given back at every login. The page marks these
+roles. You cannot remove a role from yourself if that would take away your own
+`manage-roles`.
+
 ## Development
 
 ### Deployment for Development
