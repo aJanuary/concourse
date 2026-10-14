@@ -26,6 +26,11 @@ signs and sends a request:
 test/api-tester/send_api_request.py upsert-sessions '[{"itemId": "1", "title": "Panel", "destination": "room-a", "handler": "stream"}]' --client <client name>
 ```
 
+It reads the client's secret from `secrets/web_secrets.ini`. If the secret is
+[encrypted](../configuration.md#encrypted-secrets), it finds the key the way
+the portal does, or from `secrets/config_encryption_key.txt`; set
+`CONFIG_ENCRYPTION_KEY` if the key is somewhere else.
+
 | Endpoint | Body | Does |
 |---|---|---|
 | `/api/upsert-sessions` | A list of `{itemId, title, destination, handler}` | Adds or updates programme sessions; see [Programme handlers](programme.md#programme-handlers) |

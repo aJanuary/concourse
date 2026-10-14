@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.9"
-# dependencies = ["requests>=2.31"]
+# dependencies = ["requests>=2.31", "cryptography>=42"]
 # ///
 """
 CLI utility for sending signed requests to the members API (see site/lib/api.php).
@@ -14,6 +14,12 @@ Examples:
   send_api_request.py delete-sessions '["1", "2"]' --client programme-tool
   send_api_request.py upsert-sessions @payload.json
   echo '["1"]' | send_api_request.py delete-sessions -
+
+An API key encrypted in the secrets file (enc:...) is decrypted with the key
+from CONFIG_ENCRYPTION_KEY, the file named by CONFIG_ENCRYPTION_KEY_FILE,
+secrets/config_encryption_key.txt next to the secrets file, or [encryption]
+config_encryption_key, in that order. See "Encrypted secrets" in
+docs/configuration.md.
 """
 
 import argparse
@@ -22,16 +28,63 @@ import configparser
 import hashlib
 import hmac
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
+from cryptography.exceptions import InvalidTag
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SECRETS_FILE = REPO_ROOT / "secrets" / "web_secrets.ini"
 DEFAULT_BASE_URL = "http://localhost:8080"
+
+
+ENCRYPTED_PREFIX = "enc:"
+NONCE_LENGTH = 12
+
+
+def ini_value(parser: configparser.ConfigParser, section: str, key: str) -> str:
+    # Encrypted values are quoted in the file, as base64 can end in =
+    return parser.get(section, key).strip().strip('"')
+
+
+def encryption_key(secrets_file: Path, parser: configparser.ConfigParser) -> str:
+    """The key for encrypted secrets, looked for as the portal does."""
+    key = os.environ.get("CONFIG_ENCRYPTION_KEY", "").strip()
+    if key:
+        return key
+    key_files = [Path(p) for p in [os.environ.get("CONFIG_ENCRYPTION_KEY_FILE")] if p]
+    key_files.append(secrets_file.parent / "config_encryption_key.txt")
+    for key_file in key_files:
+        if key_file.exists():
+            key = key_file.read_text().strip()
+            if key:
+                return key
+    if parser.has_option("encryption", "config_encryption_key"):
+        key = ini_value(parser, "encryption", "config_encryption_key")
+        if key:
+            return key
+    raise SystemExit("The API key is encrypted, but no encryption key was found. Set CONFIG_ENCRYPTION_KEY or pass --key")
+
+
+def decrypt_value(encrypted: str, key: str) -> str:
+    """Decrypts a value made by scripts/encrypt-secret: base64 of the nonce,
+    ciphertext and tag, AES-256-GCM."""
+    try:
+        key_bytes = base64.b64decode(key, validate=True)
+        data = base64.b64decode(encrypted, validate=True)
+    except ValueError:
+        raise SystemExit("The encryption key or the encrypted API key isn't valid base64")
+    if len(key_bytes) != 32:
+        raise SystemExit("The encryption key must be 32 bytes, base64 encoded")
+    try:
+        return AESGCM(key_bytes).decrypt(data[:NONCE_LENGTH], data[NONCE_LENGTH:], None).decode("utf-8")
+    except (InvalidTag, ValueError):
+        raise SystemExit("Couldn't decrypt the API key: the encryption key is wrong or the value has been changed")
 
 
 def load_api_key(secrets_file: Path, client_name: str) -> str:
@@ -47,8 +100,10 @@ def load_api_key(secrets_file: Path, client_name: str) -> str:
     if not parser.has_option("api_keys", client_name):
         raise SystemExit(f"No API key for client '{client_name}' in {secrets_file}")
 
-    # Defensively strip quotes in case the ini value is literally quoted.
-    return parser.get("api_keys", client_name).strip().strip('"')
+    api_key = ini_value(parser, "api_keys", client_name)
+    if api_key.startswith(ENCRYPTED_PREFIX):
+        api_key = decrypt_value(api_key[len(ENCRYPTED_PREFIX):], encryption_key(secrets_file, parser))
+    return api_key
 
 
 def read_data_arg(data_arg: str) -> bytes:
