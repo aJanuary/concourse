@@ -21,6 +21,7 @@ function send_email($to, $subject, $heading, $blocks, $from = SUPPORT_EMAIL) {
       if (MarkdownRuntime::class === $class) {
         return new MarkdownRuntime(new DefaultMarkdown());
       }
+      return null;
     }
   });
   $twig->addExtension(new \Twig\Extra\Markdown\MarkdownExtension());

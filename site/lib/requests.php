@@ -7,7 +7,7 @@ function api_call($url, $headers, $payload=false, $method=null, $timeout=null) {
     if ($method) {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
     } else {
-      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POST, true);
     }
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
   }
