@@ -45,7 +45,7 @@ When you deploy the applicaton as above the secrets files should places in `/opt
 
 - db_root_password.txt: file with single line containing a string to use for the DB root password
 - db_dba_password.txt: file with single line containing a string to use for the DB DBA/Application password
-- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as RCE, Discord etc)
+- web_secrets.ini: file containing the tokens and keys for the application for 3rd party apps (such as RCE, Discord, SMTP etc)
 
 #### web_secrets.ini
 
@@ -56,7 +56,9 @@ All sections are optional; a feature whose section is missing reports which key 
 | `[discord]` | `bot_token`, `client_id`, `client_secret` | Discord bot and OAuth app |
 | `[api_keys]` | `<client name> = <shared secret>` | Shared secrets for API clients |
 | `[rce]` | `api_key`, `ticket_id` | RingCentral Events magic links |
-| `[auth]` | `allowlist[]`, `providers[]` | Emails allowed to log in (empty means everyone); enabled login providers (default `dev`, which only works when `RUNTIME_ENV=development`) |
+| `[auth]` | `allowlist[]`, `providers[]`, `client_ip_header` | Emails allowed to log in (empty means everyone); enabled login providers (default `dev`, which only works when `RUNTIME_ENV=development`; `local` is email login); the `$_SERVER` key holding the client address behind a proxy, e.g. `HTTP_X_FORWARDED_FOR` (default `REMOTE_ADDR`) |
+| `[smtp]` | `host`, `port`, `username`, `password`, `secure` | Outgoing mail for the `local` login provider. `secure` is empty, `tls` or `ssl` |
+| `[crypto]` | `signing_key` | Signs emailed links and hashes login codes for the `local` provider. At least 32 characters; generate with `openssl rand -hex 32` |
 | `[cookie]` | `cookie_name` (default `session`), `cookie_domain` (default empty) | Session cookie name and domain |
 
 `docker-compose.yml` has the same list with a description of each key.
@@ -86,6 +88,36 @@ you have other projects on your machine.
 
 5. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
    phpMyAdmin.
+
+### Email login
+
+The `local` provider lets a member enter their email address and then either
+a password or a six digit code sent to that address. Enable it with
+`providers[] = local` in the `[auth]` section, and set `[smtp]` and
+`[crypto]`. For development, [mailpit](https://mailpit.axllent.org/) is a
+convenient SMTP server that shows what was sent.
+
+Members are found by email through a `MemberSource`
+(`site/lib/auth/MemberSource.php`). The default reads the `members` table. To
+look members up in a registration system, implement the interface and return
+it from `auth_member_source()` in `site/lib/auth/providers.php`.
+
+Several members can share an email address; they are offered a chooser after
+logging in.
+
+Code guesses, password guesses and emails sent are limited per email address
+and per client address. Behind a proxy, set `client_ip_header` or every
+visitor appears to share the proxy's address.
+
+`DEFAULT_ROLES_BY_BADGE` in `site/lib/config.php` adds roles to members as
+they log in with any provider. It maps role names to badge numbers, and
+roles are only ever added:
+
+```php
+define('DEFAULT_ROLES_BY_BADGE', [
+  'artist' => ['0042', '0043'],
+]);
+```
 
 ### Database
 

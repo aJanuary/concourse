@@ -140,9 +140,26 @@ secrets:
     # ; If not specified, then anyone can log in.
     # allowlist[] =
     # ; Enabled login providers, in display order. Defaults to dev.
-    # ; "dev" lets you log in as any existing member and is ignored unless
-    # ; RUNTIME_ENV is development.
+    # ; "local" is email login. "dev" lets you log in as any existing member
+    # ; and is ignored unless RUNTIME_ENV is development.
     # providers[] =
+    # ; The $_SERVER key holding the client address when behind a proxy that
+    # ; sets it, e.g. HTTP_X_FORWARDED_FOR. Defaults to REMOTE_ADDR.
+    # client_ip_header =
+    #
+    # [smtp]
+    # ; Outgoing mail server, used by the local login provider.
+    # host =
+    # port =
+    # username =
+    # password =
+    # ; Empty, tls or ssl
+    # secure =
+    #
+    # [crypto]
+    # ; Signs emailed links and hashes login codes. At least 32 characters.
+    # ; Generate with `openssl rand -hex 32`
+    # signing_key =
     #
     # [cookie]
     # ; The name of the session cookie. Defaults to "session". Changing it logs
