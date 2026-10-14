@@ -11,8 +11,8 @@ function check_permission($permission) {
 
 if (!is_logged_in()) {
   if (is_anonymous()) {
-    $_REQUEST['username'] = 'Anonymous';
-    $_REQUEST['permissions'] = db_get_default_permissions();
+    $GLOBALS['app-data']['username'] = 'Anonymous';
+    $GLOBALS['app-data']['permissions'] = db_get_default_permissions();
     return;
   } else {
     header('Location: ' . make_login_link());
@@ -20,7 +20,7 @@ if (!is_logged_in()) {
   }
 }
 
-$_REQUEST['username'] = get_current_user_name();
+$GLOBALS['app-data']['username'] = get_current_user_name();
 
 if (!isset($_COOKIE['session'])) {
   $permissions = [];
@@ -46,6 +46,6 @@ if (!isset($_COOKIE['session'])) {
   }
 }
 
-$_REQUEST['permissions'] = $permissions;
+$GLOBALS['app-data']['permissions'] = $permissions;
 
 ?>

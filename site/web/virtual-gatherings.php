@@ -1,5 +1,5 @@
 <?php
-$_REQUEST['allow_implicit_anonymous'] = true;
+$GLOBALS['app-data']['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
@@ -25,7 +25,7 @@ render_header(
         <p><a class="button" href="<?php echo make_login_link(); ?>">Log in to request a virtual gathering</a></p>
   <?php
       } else {
-        $url = "https://example.com/request-virtual-gathering?username=" . urlencode($_REQUEST["username"]) . "&email=" . urlencode(get_current_user_email());
+        $url = "https://example.com/request-virtual-gathering?username=" . urlencode($GLOBALS['app-data']['username']) . "&email=" . urlencode(get_current_user_email());
   ?>
     <p><a class="button" target="_blank" href="<?php echo $url; ?>">Request a virtual gathering</a></p>
   <?php

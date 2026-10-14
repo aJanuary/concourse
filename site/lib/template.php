@@ -37,10 +37,10 @@
           </div>
         </a>
         <?php
-        if (isset($_REQUEST['username'])) {
+        if (isset($GLOBALS['app-data']['username'])) {
         ?>
           <p class="username">
-            <?php echo htmlspecialchars($_REQUEST['username']); ?>
+            <?php echo htmlspecialchars($GLOBALS['app-data']['username']); ?>
             |
             <?php
             if (is_anonymous()) {

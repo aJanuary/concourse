@@ -1,5 +1,7 @@
 <?php
 
+$GLOBALS['app-data'] ??= [];
+
 define('ROOT_URL', 'https://' . (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Example Convention, a great tagline for a great demo');
 define('CON_SHORT_NAME', 'ExampleCon');

@@ -29,8 +29,8 @@ function is_logged_in() {
 
 function is_anonymous() {
   $implicit = false;
-  if (isset($_REQUEST['allow_implicit_anonymous'])) {
-    $implicit = $_REQUEST['allow_implicit_anonymous'] === 'always' || (ALLOW_ANONYMOUS_ACCESS && $_REQUEST['allow_implicit_anonymous']);
+  if (isset($GLOBALS['app-data']['allow_implicit_anonymous'])) {
+    $implicit = $GLOBALS['app-data']['allow_implicit_anonymous'] === 'always' || (ALLOW_ANONYMOUS_ACCESS && $GLOBALS['app-data']['allow_implicit_anonymous']);
   }
   return (
     (isset($_COOKIE['session']) && $_COOKIE['session'] == 'anonymous') ||
@@ -111,10 +111,10 @@ function get_login_link_status($badge_no, $login_code) {
 }
 
 function current_user_has_permission($permission) {
-  if (!array_key_exists('permissions', $_REQUEST)) {
+  if (!array_key_exists('permissions', $GLOBALS['app-data'] ?? [])) {
     return false;
   }
-  return in_array($permission, $_REQUEST['permissions']);
+  return in_array($permission, $GLOBALS['app-data']['permissions']);
 }
 
 function member_type() {
