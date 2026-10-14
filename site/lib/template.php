@@ -209,7 +209,7 @@
 <?php
   }
 
-  function render_404() {
+  function render_404(): never {
     http_response_code(404);
     render_header(
       'Page not found',

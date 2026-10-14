@@ -12,7 +12,6 @@ csrf_check();
 $provider = auth_get_provider('local');
 if ($provider === null) {
   render_404();
-  exit;
 }
 
 // set-password.php includes this page
