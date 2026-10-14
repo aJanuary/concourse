@@ -23,6 +23,7 @@ render_header(
     <li><a href="/admin/programme/sessions/list">Manage sessions</a></li>
     <li><a href="/admin/programme/stream-urls/list">Manage stream URLs</a></li>
     <li><a href="/admin/programme/discord-posts/list">Manage Discord posts</a></li>
+    <li><a href="/admin/programme/signups/list">Manage sign-ups</a></li>
   </ul>
 </article>
 
