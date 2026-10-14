@@ -31,7 +31,8 @@ $error = null;
 
 if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {
     make_anonymous_session();
-    header('Location: ' . $_GET['redirect']);
+    $redirect = $_GET['redirect'] ?? '/';
+    header('Location: ' . (is_valid_redirect($redirect) ? $redirect : '/'));
     exit();
 }
 
