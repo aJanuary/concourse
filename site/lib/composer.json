@@ -1,3 +1,9 @@
 {
-    "require": {}
+    "require": {
+        "phpmailer/phpmailer": "^6.10",
+        "firebase/php-jwt": "^7.2",
+        "twig/twig": "^3.0",
+        "twig/markdown-extra": "^3.0",
+        "league/commonmark": "^2.7.1"
+    }
 }

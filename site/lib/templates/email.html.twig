@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ heading }}</title>
+  </head>
+  <body style="margin: 0; padding: 0; background: #f4f4f7;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f4f4f7;">
+      <tr>
+        <td align="center" style="padding: 24px 12px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background: #ffffff; border-radius: 8px;">
+            <tr>
+              <td style="padding: 24px 32px 8px 32px;">
+                <h2 style="font-family: Helvetica, Arial, sans-serif; font-size: 20px; font-weight: bold; margin: 0;">{{ heading }}</h2>
+              </td>
+            </tr>
+{% for block in blocks %}
+            <tr>
+              <td style="padding: 8px 32px;">
+{% if block.type == 'para' %}
+                <div style="font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5;">{{ block.text|markdown_to_html }}</div>
+{% elseif block.type == 'code' %}
+                <p style="font-family: Consolas, Monaco, 'Courier New', monospace; font-size: 32px; font-weight: bold; letter-spacing: 0.3em; margin: 0;">{{ block.text }}</p>
+{% elseif block.type == 'button' %}
+                <a href="{{ block.href }}" style="display: inline-block; background: #0170b9; color: #ffffff; font-family: Helvetica, Arial, sans-serif; font-size: 14px; text-decoration: none; padding: 10px 20px; border-radius: 8px;" target="_blank">{{ block.text }}</a>
+{% endif %}
+              </td>
+            </tr>
+{% endfor %}
+            <tr>
+              <td style="padding: 16px 32px 24px 32px;">
+                <p style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #666666; margin: 0;"><a href="{{ con_website }}" target="_blank" rel="noopener" style="color: #666666;">{{ con_name }}</a></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

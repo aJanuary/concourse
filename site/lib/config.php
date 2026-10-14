@@ -8,6 +8,8 @@ $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
 define('IS_HTTPS', $is_https);
 define('ROOT_URL', ($is_https ? 'https://' : 'http://') . ($_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST']));
 define('CON_NAME', 'Example Convention, a great tagline for a great demo');
+define('CON_WEBSITE', 'https://example.com');
+define('REGISTRATION_URL', 'https://example.com/register');
 define('CON_SHORT_NAME', 'ExampleCon');
 define('CON_START_DATE', '2025-01-01');
 define('DISCORD_GUILD_ID', '1229093507835101204');
@@ -117,6 +119,13 @@ define('API_KEYS', $config_file['api_keys'] ?? []);
 
 define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));
 define('AUTH_PROVIDERS', array_map('trim', config_get('auth', 'providers', [])));
+
+define('SMTP_HOST', config_get('smtp', 'host'));
+define('SMTP_PORT', (int) config_get('smtp', 'port', 25));
+define('SMTP_USERNAME', config_get('smtp', 'username'));
+define('SMTP_PASSWORD', config_get('smtp', 'password'));
+define('SMTP_SECURE', config_get('smtp', 'secure'));
+define('SIGNING_KEY', config_get('crypto', 'signing_key'));
 
 // The default name keeps existing sessions valid
 define('SESSION_COOKIE_NAME', config_get('cookie', 'cookie_name') ?: 'session');
