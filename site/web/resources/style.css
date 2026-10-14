@@ -631,14 +631,14 @@ main {
   background-image: url('/resources/website.svg');
 }
 
-.card.manage-roles, .card.manage-discord, .card.manage-programme, .card.manage-login-sessions, .card.programme-reports, .card.manage-business-meeting {
+.card.manage-roles, .card.manage-discord, .card.manage-programme, .card.manage-login-sessions, .card.programme-reports, .card.manage-business-meeting, .card.site-selection-desk, .card.manage-site-selection {
   background-color: var(--events-color-light);
 }
-.card.manage-roles .hero, .card.manage-discord .hero, .card.manage-programme .hero, .card.manage-login-sessions .hero, .card.programme-reports .hero, .card.manage-business-meeting .hero {
+.card.manage-roles .hero, .card.manage-discord .hero, .card.manage-programme .hero, .card.manage-login-sessions .hero, .card.programme-reports .hero, .card.manage-business-meeting .hero, .card.site-selection-desk .hero, .card.manage-site-selection .hero {
   background: var(--events-bg);
   background-size: var(--events-bg-size);
 }
-.card.manage-roles .hero::after, .card.manage-discord .hero::after, .card.manage-programme .hero::after, .card.manage-login-sessions .hero::after, .card.programme-reports .hero::after, .card.manage-business-meeting .hero::after {
+.card.manage-roles .hero::after, .card.manage-discord .hero::after, .card.manage-programme .hero::after, .card.manage-login-sessions .hero::after, .card.programme-reports .hero::after, .card.manage-business-meeting .hero::after, .card.site-selection-desk .hero::after, .card.manage-site-selection .hero::after {
   background-image: url('/resources/manage.svg');
 }
 
@@ -653,6 +653,19 @@ main {
 }
 .card.business-meeting .hero::after {
   background-image: url('/resources/business-meeting.svg');
+}
+
+.card.site-selection {
+  background-color: var(--part-color-light);
+}
+.card.site-selection .hero {
+  background: var(--part-bg);
+  background-size: var(--part-bg-size);
+  background-position: var(--part-bg-pos);
+  background-repeat: var(--part-bg-repeat);
+}
+.card.site-selection .hero::after {
+  background-image: url('/resources/site-selection.svg');
 }
 
 .card.card.upload-presentation {

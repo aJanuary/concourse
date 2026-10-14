@@ -152,6 +152,12 @@ $cards = [
       'subtitle' => 'WSFS',
       'link' => '/business-meeting',
       'card-permission' => 'see-business-meeting'
+    ], [
+      'name' => 'site-selection',
+      'title' => 'Site selection',
+      'subtitle' => 'Vote for the ' . SITE_SELECTION['year'] . ' Worldcon',
+      'link' => '/site-selection',
+      'card-permission' => 'see-site-selection'
     ]
   ],
   'Other' => [
@@ -202,7 +208,18 @@ $cards = [
       'title' => 'Manage business meeting',
       'subtitle' => 'Admin',
       'link' => '/admin/business-meeting/list',
-      'card-permission' => 'manage-business-meeting',
+      'card-permission' => 'manage-business-meeting',    ], [
+      'name' => 'site-selection-desk',
+      'title' => 'Site selection desk',
+      'subtitle' => 'Admin',
+      'link' => '/admin/site-selection/desk',
+      'card-permission' => 'sell-tokens',
+    ], [
+      'name' => 'manage-site-selection',
+      'title' => 'Manage site selection',
+      'subtitle' => 'Admin',
+      'link' => '/admin/site-selection/list',
+      'card-permission' => 'manage-tokens',
     ]
   ]
 ];
@@ -354,6 +371,7 @@ $cards = [
     'gallery',
     'upload-presentation',
     'business-meeting',
+    'site-selection',
     'accessibility',
     'childcare',
     'volunteer',
@@ -432,6 +450,9 @@ $cards = [
   }
   if (current_user_has_permission('see-business-meeting')) {
     $faved_cards[] = 'business-meeting';
+  }
+  if (current_user_has_permission('see-site-selection')) {
+    $faved_cards[] = 'site-selection';
   }
   echo "const defaultFavs = " . json_encode($faved_cards) . ";\n";
 ?>
