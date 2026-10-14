@@ -341,7 +341,7 @@ main {
   border-radius: 10px;
 }
 
-.card:hover, .card:focus-within {
+.card:hover:not(.coming-soon), .card:focus-within:not(.coming-soon) {
   background-color: rgb(245, 245, 245);
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
   transform: scale(1.02, 1.02);
@@ -349,11 +349,21 @@ main {
 }
 
 @media (prefers-reduced-motion) {
-  .card:hover, .card:focus-within {
+  .card:hover:not(.coming-soon), .card:focus-within:not(.coming-soon) {
     transition: none;
     transform: none;
     outline: solid 4px var(--card-border-color);
   }
+}
+
+.card.coming-soon {
+  cursor: default;
+  filter: grayscale(100%);
+}
+
+/* Only the image fades, so the title keeps its contrast */
+.card.coming-soon .hero {
+  opacity: 0.6;
 }
 
 #favs h2 {

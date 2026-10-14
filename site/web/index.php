@@ -248,6 +248,50 @@ $cards = [
     </div>
   <?php
   }
+
+  // Cards the member can't use yet but has been told are on their way, with
+  // the card's permission followed by -coming-soon. Several cards share a
+  // permission, so each card is only listed once.
+  $coming_soon_cards = [];
+  foreach ($cards as $category_cards) {
+    foreach ($category_cards as $card) {
+      if (array_key_exists('card-permission', $card)
+          && !current_user_has_permission($card['card-permission'])
+          && current_user_has_permission($card['card-permission'] . '-coming-soon')) {
+        $coming_soon_cards[$card['name']] = $card;
+      }
+    }
+  }
+
+  if (!empty($coming_soon_cards)) {
+  ?>
+    <div class="category">
+      <h2>Coming soon…</h2>
+      <div class="cards">
+      <?php
+      foreach ($coming_soon_cards as $card) {
+      ?>
+        <div class="card <?php echo $card['name']; ?> coming-soon">
+          <div class="hero" aria-hidden="true">
+          </div>
+          <hgroup>
+            <h3><?php echo htmlspecialchars($card['title']); ?></h3>
+            <?php
+            if ($card['subtitle']) {
+            ?>
+            <h4><?php echo htmlspecialchars($card['subtitle']); ?></h4>
+            <?php
+            }
+            ?>
+          </hgroup>
+        </div>
+      <?php
+      }
+      ?>
+      </div>
+    </div>
+  <?php
+  }
   ?>
 </nav>
 
@@ -331,7 +375,8 @@ $cards = [
       $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
     } else {
       target.ariaLabel = 'Removed';
-      const cardSelector = '.' + cardName($card);
+      // Coming soon cards share the name class but can't be quick links
+      const cardSelector = '.card:not(.coming-soon).' + cardName($card);
       const $favedCard = $favsList.querySelector(cardSelector);
       $favsList.removeChild($favedCard);
       const $normalCardFav = document.querySelector(cardSelector).getElementsByClassName('fav')[0];
@@ -354,7 +399,7 @@ $cards = [
   }
 
   const $favsList = document.getElementById('favs').getElementsByClassName('cards')[0];
-  const $favs = [...document.getElementsByClassName('fav')];
+  const $favs = [...document.querySelectorAll('.card:not(.coming-soon) .fav')];
   // Card name => whether the member explicitly added (true) or removed (false)
   // it. Defaults only apply to cards the member hasn't chosen either way for,
   // so cards added to the defaults later still reach returning members.
