@@ -29,6 +29,8 @@ In `site/lib/config.php`:
 - `CONCLAR_VALID_APP_IDS`, if you use [ConClár](integrations/conclar.md).
 - `BUSINESS_MEETING`, if you hold the WSFS Business Meeting online. See
   [Business meeting](integrations/business-meeting.md).
+- `SITE_SELECTION`, if members pay for site selection through the portal.
+  See [Site selection](integrations/site-selection.md).
 
 See [config.php](configuration.md#configphp) for the full list.
 

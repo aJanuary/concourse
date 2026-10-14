@@ -29,6 +29,7 @@ development.
 | `[discord]` | `bot_token`, `client_id`, `client_secret`, `bm_invite` | Discord bot and OAuth app; see [Discord](integrations/discord.md). `bm_invite` is the invite code for the separate Business Meeting server; see [Business meeting](integrations/business-meeting.md#discord) |
 | `[zoom_events]` | `client_id`, `client_secret`, `account_id`, `event_id`, `ticket_type_id`, `ticket_email_domain` | The `zoomevents` programme handler; see [Zoom Events](integrations/programme.md#zoom-events). `ticket_email_domain` is optional |
 | `[conclar]` | `allowed_origins[]`, `schedule_url` | Origins hosting the ConClár programme guide, and an optional programme JSON for the favourites report. See [ConClár](integrations/conclar.md) |
+| `[square]` | `access_token`, `environment`, `location_id`, `catalog_item_variation_id`, `webhook_signature_key`, `notification_url` | Square, for the site selection fee. `environment` is `sandbox` (default) or `production`; `notification_url` is optional. See [Site selection](integrations/site-selection.md#setting-up-square) |
 | `[encryption]` | `config_encryption_key` | The key for [encrypted secrets](#encrypted-secrets), if it isn't given another way |
 
 ## Encrypted secrets
@@ -103,6 +104,7 @@ The settings in `site/lib/config.php`:
 | `DEFAULT_PROG_HANDLER`, `AVAILABLE_PROG_HANDLERS`, `PROG_*` | See [Programme handlers](integrations/programme.md#programme-handlers) |
 | `CONCLAR_VALID_APP_IDS`, `CONCLAR_MAX_ITEMS` | See [ConClár](integrations/conclar.md) |
 | `BUSINESS_MEETING` | The business meeting page's platform, links, contact address, dates and MPC election; see [Business meeting](integrations/business-meeting.md#the-page) |
+| `SITE_SELECTION` | The Worldcon being voted on, the fee, the bids, and links to the paper ballot, the election platform and how site selection works; see [Site selection](integrations/site-selection.md#the-page) |
 
 The rest of the file reads the secrets file and the environment, and doesn't
 need changing.

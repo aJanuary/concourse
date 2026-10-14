@@ -140,6 +140,14 @@ signing_key = $(openssl rand -hex 32)
 ;allowed_origins[] = https://guide.example.com
 ;schedule_url =
 
+;[square]
+;access_token =
+;environment = sandbox
+;location_id =
+;catalog_item_variation_id =
+;webhook_signature_key =
+;notification_url =
+
 ; Encrypted secrets are off. To use them, see "Encrypted secrets" in
 ; docs/configuration.md; the key can also come from the environment.
 ;[encryption]
