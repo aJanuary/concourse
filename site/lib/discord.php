@@ -1,5 +1,18 @@
 <?php
   require_once(getenv('CONFIG_LIB_DIR') . '/requests.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
+
+  // chat_callback.php checks the state, so only a link from the portal can
+  // link a Discord account
+  function discord_authorize_url() {
+    return 'https://discord.com/oauth2/authorize?' . http_build_query([
+      'client_id' => DISCORD_CLIENT_ID,
+      'response_type' => 'code',
+      'redirect_uri' => ROOT_URL . '/chat_callback',
+      'scope' => 'identify guilds.join',
+      'state' => csrf_token('discord-oauth'),
+    ]);
+  }
 
   function request_discord_recheck_user($user_id) {
     require_config('discord', 'bot_token');

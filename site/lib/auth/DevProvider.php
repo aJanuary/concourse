@@ -1,6 +1,7 @@
 <?php
 
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
 require_once(__DIR__ . '/AuthProvider.php');
 
 // Logs in as any existing member, without credentials. Development only.
@@ -33,6 +34,7 @@ class DevProvider implements AuthProvider {
     <article>
       <h2>Log in as a member</h2>
       <form method="post" action="/login?provider=dev">
+        <?php echo csrf_field(); ?>
         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
         <label for="badge_no">Member</label>
         <select name="badge_no" id="badge_no">

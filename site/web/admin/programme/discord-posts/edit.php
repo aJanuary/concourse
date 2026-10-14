@@ -69,6 +69,7 @@ render_header(
     <h2><?php echo htmlspecialchars($title); ?></h2>
     <p>Warning: These may be overriden by Watson</p>
     <form action="/admin/programme/discord-posts/edit" method="POST" class="vertical">
+      <?php echo csrf_field(); ?>
       <fieldset>
         <legend>Discord post details</legend>
       <?php

@@ -36,11 +36,13 @@ render_header(
   <p>You are logged in with a code sent to <?php echo htmlspecialchars($email); ?>. If you set a password, you can use it to log in next time instead of waiting for a code.</p>
   <p>We will email you a link to choose your password.</p>
   <form action="/set-password" method="post">
+    <?php echo csrf_field(); ?>
     <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
     <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
     <button type="submit" class="button">Email me a link to set a password</button>
   </form>
   <form action="/password-prompt" method="post">
+    <?php echo csrf_field(); ?>
     <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
     <button type="submit" class="button link">No thanks, don't ask again</button>
   </form>

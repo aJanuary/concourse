@@ -1,6 +1,10 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
+
+// Every page behind a login checks its forms here
+csrf_check();
 
 function check_permission($permission) {
   if (!current_user_has_permission($permission)) {

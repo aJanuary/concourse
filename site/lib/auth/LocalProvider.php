@@ -4,6 +4,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
 require_once(__DIR__ . '/AuthProvider.php');
 require_once(__DIR__ . '/InlineLoginForm.php');
 require_once(__DIR__ . '/MemberSource.php');
@@ -83,6 +84,7 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
   public function render_inline_form(string $redirect): void {
     ?>
     <form method="post" action="/login?provider=local" class="nu-form">
+      <?php echo csrf_field(); ?>
       <input type="hidden" name="phase" value="entered-email">
       <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
       <div class="form-group">
@@ -200,6 +202,7 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
         <?php foreach ($members as $member) { ?>
           <li>
             <form method="post" action="/login?provider=local">
+              <?php echo csrf_field(); ?>
               <input type="hidden" name="phase" value="selected-member">
               <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
               <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($member['badge_no']); ?>">
@@ -351,7 +354,8 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
   }
 
   private function hidden_fields(string $email, string $redirect): string {
-    return '<input type="hidden" name="email" value="' . htmlspecialchars($email) . '">'
+    return csrf_field()
+      . '<input type="hidden" name="email" value="' . htmlspecialchars($email) . '">'
       . '<input type="hidden" name="redirect" value="' . htmlspecialchars($redirect) . '">';
   }
 

@@ -72,6 +72,7 @@ if ($errors) {
     </ul>
     <p>Times are <em>yyyy-mm-dd hh:mm</em> in 24 hour <?php echo htmlspecialchars(TIMEZONE); ?> time.</p>
     <form method="POST" action="/admin/programme/signups/bulk-add" class="vertical">
+      <?php echo csrf_field(); ?>
       <p><label>CSV: <textarea name="csv" rows="15" required placeholder="title,category,url,session_start,opens_at,closes_at"><?php echo htmlspecialchars($csv); ?></textarea></label></p>
       <input type="submit" value="Import">
     </form>

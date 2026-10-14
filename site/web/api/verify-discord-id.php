@@ -7,12 +7,13 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
 
 
-if (!array_key_exists('token', $_GET)) {
+$token = $_POST['token'] ?? $_GET['token'] ?? null;
+if ($token === null) {
   throw new Exception('Missing token parameter');
 }
-$token = $_GET['token'];
 
-if (array_key_exists('confirm', $_GET)) {
+// Confirming is a POST so that session_auth.php checks its CSRF token
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $badge_no = get_current_user_badge_no();
   $verification_result = db_set_discord_id_from_token($badge_no, $token);
   if ($verification_result["result"] === "no-token") {
@@ -50,7 +51,11 @@ if (array_key_exists('confirm', $_GET)) {
   <article>
     <h3>Verify Discord ID</h3>
     <p>Are you sure you want to associate the membership for <?php echo htmlspecialchars($GLOBALS['app-data']['username']); ?> with the Discord account <?php echo htmlspecialchars($discord_id); ?>?</p>
-    <p><a href="/api/verify-discord-id?token=<?php echo urlencode($token); ?>&confirm=true" class="button">Yes, this is my Discord account</a></p>
+    <form action="/api/verify-discord-id" method="post">
+      <?php echo csrf_field(); ?>
+      <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+      <button type="submit" class="button">Yes, this is my Discord account</button>
+    </form>
   </article>
 <?php
   

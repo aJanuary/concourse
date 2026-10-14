@@ -32,6 +32,12 @@ if (!$code) {
   }
 }
 
+// Without this another site could send a member here with a code for its own
+// Discord account, linking that account to the member
+if (!csrf_token_valid($_GET['state'] ?? null, 'discord-oauth')) {
+  die("Sorry, your link to Discord could not be completed. Please go back to the <a href=\"/chat\">chat page</a> and try again.");
+}
+
 require_config('discord', 'client_id', 'client_secret', 'bot_token');
 
 // Exchange code for access token

@@ -81,6 +81,10 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
   <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
   <script>
+    document.body.addEventListener('htmx:configRequest', function(e) {
+      e.detail.headers['X-CSRF-Token'] = <?php echo json_encode(csrf_token()); ?>;
+    });
+
     function addRole(e) {
       e.preventDefault();
 

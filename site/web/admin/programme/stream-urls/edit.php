@@ -49,6 +49,7 @@ render_header(
   <article>
     <h2><?php echo htmlspecialchars($title); ?></h2>
     <form action="/admin/programme/stream-urls/edit" method="POST" class="vertical">
+      <?php echo csrf_field(); ?>
       <fieldset>
         <legend>Stream URL details</legend>
 <?php
@@ -80,6 +81,7 @@ if ($editing) {
 if ($editing) {
 ?>
     <form id="delete-form" action="/admin/programme/stream-urls/edit" method="POST" hidden>
+      <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="delete">
       <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room_id); ?>">
     </form>

@@ -99,6 +99,7 @@ if ($errors) {
 }
 ?>
     <form action="/admin/programme/signups/edit" method="POST" class="vertical">
+      <?php echo csrf_field(); ?>
       <fieldset>
         <legend>Sign-up details</legend>
 <?php
@@ -137,6 +138,7 @@ if ($editing) {
 if ($editing) {
 ?>
     <form id="delete-form" action="/admin/programme/signups/edit" method="POST" hidden>
+      <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="delete">
       <input type="hidden" name="id" value="<?php echo htmlspecialchars((string) $id); ?>">
     </form>

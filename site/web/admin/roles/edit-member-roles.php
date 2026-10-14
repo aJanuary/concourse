@@ -152,6 +152,7 @@ if ($member === null) {
 ?>
       <li>
         <form action="/admin/roles/edit-member-roles" method="POST">
+          <?php echo csrf_field(); ?>
           <?php echo htmlspecialchars($role['name']); ?>
           <input type="hidden" name="action" value="remove">
           <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($badge_no); ?>">
@@ -176,6 +177,7 @@ if ($member === null) {
   if ($other_roles) {
 ?>
     <form action="/admin/roles/edit-member-roles" method="POST">
+      <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="add">
       <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($badge_no); ?>">
       <label>Add role: <select name="role_id">

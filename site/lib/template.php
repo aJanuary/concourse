@@ -5,12 +5,15 @@
   require_once(getenv('CONFIG_LIB_DIR') . '/analytics.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
   require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
 
   function get_internal_url($script) {
     return $script . '?v=' . filemtime(getenv('CONFIG_WEB_DIR') . $script);
   }
 
   function render_header($title, $description, $breadcrumbs, $is_home = false) {
+    // Starts the CSRF cookie while headers can still be sent
+    csrf_token();
     record_analytics(member_type(), 'request', $_SERVER['REQUEST_URI']);
 ?>
 <!doctype html>
@@ -141,6 +144,7 @@
       <?php foreach ($members as $member) { ?>
         <li>
           <form method="post" action="/switch-member">
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="token" value="<?php echo htmlspecialchars(create_secure_token('/switch-member', ['from' => $current, 'badge_no' => $member['badge_no'], 'redirect' => $redirect], 300)); ?>">
             <button type="submit"<?php echo $member['badge_no'] === $current ? ' aria-current="true"' : ''; ?>>
               <span class="avatar color-<?php echo ((int) preg_replace('/\D/', '', $member['badge_no']) % 4) + 1; ?>"><?php echo htmlspecialchars(member_initials($member['name'])); ?></span>

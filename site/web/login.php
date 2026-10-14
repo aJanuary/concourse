@@ -5,6 +5,9 @@ require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/InlineLoginForm.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
+
+csrf_check();
 
 $provider_id = $_GET['provider'] ?? null;
 if ($provider_id !== null) {

@@ -43,6 +43,7 @@ render_header(
       }
     </script>
     <form method="POST">
+      <?php echo csrf_field(); ?>
       <ul>
 <?php
         $sessions = db_get_sessions();

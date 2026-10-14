@@ -5,6 +5,9 @@ require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/login_throttle.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
+
+csrf_check();
 
 $provider = auth_get_provider('local');
 if ($provider === null) {
@@ -103,6 +106,7 @@ if ($error !== null) {
 if ($phase === 'enter-password') {
 ?>
   <form action="<?php echo $path; ?>" method="POST" class="nu-form">
+    <?php echo csrf_field(); ?>
     <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
     <input type="hidden" name="phase" value="entered-password">
     <div class="form-group">
@@ -125,6 +129,7 @@ if ($phase === 'enter-password') {
   <p>If <?php echo htmlspecialchars($email); ?> belongs to a member, an email has been sent to it with instructions on how to <?php echo $kind === 'set' ? 'set a password' : 'reset your password'; ?>.</p>
   <p>If you do not receive an email within a few minutes, please check your spam folder or try again.</p>
   <form action="<?php echo $path; ?>" method="POST">
+    <?php echo csrf_field(); ?>
     <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
     <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
     <button type="submit" class="button login">Send another email</button>
@@ -133,6 +138,7 @@ if ($phase === 'enter-password') {
 } else if ($token === null) {
 ?>
   <form action="<?php echo $path; ?>" method="POST" class="nu-form">
+    <?php echo csrf_field(); ?>
     <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
     <div class="form-group">
       <label for="email">Email</label>

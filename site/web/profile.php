@@ -87,6 +87,7 @@ render_header(
     <?php } ?>
     <?php if (db_email_has_password_auth($email)) { ?>
       <form action="/profile" method="post" class="nu-form">
+        <?php echo csrf_field(); ?>
         <input type="hidden" name="phase" value="change-password">
         <div class="form-group">
           <label for="current_password">Current password</label>
@@ -108,6 +109,7 @@ render_header(
     <?php } else { ?>
       <p>You do not have a password yet. You can log in with a code sent to your email, or set a password.</p>
       <form action="/set-password" method="post">
+        <?php echo csrf_field(); ?>
         <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
         <input type="hidden" name="redirect" value="/profile">
         <button type="submit" class="button">Set password</button>

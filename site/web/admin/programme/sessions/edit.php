@@ -72,6 +72,7 @@ render_header(
   <article>
     <h2><?php echo htmlspecialchars($title); ?></h2>
     <form action="/admin/programme/sessions/edit" method="POST" class="vertical">
+      <?php echo csrf_field(); ?>
       <fieldset>
         <legend>Session details</legend>
       <?php

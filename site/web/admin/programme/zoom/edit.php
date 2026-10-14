@@ -33,6 +33,7 @@ render_header(
   <article>
     <h2>Edit Zoom link</h2>
     <form action="/admin/programme/zoom/edit" method="POST" class="vertical">
+      <?php echo csrf_field(); ?>
       <fieldset>
         <legend>Zoom link</legend>
         <p><label>Zoom URL: <input name="zoom_url" value="<?php echo htmlspecialchars($zoom_url); ?>"></label></p>
