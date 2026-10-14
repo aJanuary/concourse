@@ -199,7 +199,14 @@ function log_exception(Throwable $exception) {
 
 function exception_handler(Throwable $exception) {
   $err_code = log_exception($exception);
-  echo "Sorry, something has gone wrong. Please try again. If the problem persists, contact <a href=\"mailto:" . SUPPORT_EMAIL . "?subject=Problem with member portal&body=Code: $err_code%0D%0A%0D%0AProblem:%0D%0A\">" . SUPPORT_EMAIL . "</a> quoting the code \"$err_code\"\n";
+  // Drop any partial page output that is still buffered
+  while (ob_get_level() > 0) {
+    ob_end_clean();
+  }
+  if (!headers_sent()) {
+    http_response_code(500);
+  }
+  require(__DIR__ . '/templates/error.php');
   exit();
 }
 
