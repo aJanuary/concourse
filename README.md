@@ -73,6 +73,40 @@ you have other projects on your machine.
 5. Go to [http://localhost:8080] for the portal, and [http://localhost:8081] for
    phpMyAdmin.
 
+### Database
+
+The portal runs on MySQL by default. Set `CONFIG_DB_DRIVER` on the `web`
+container to choose the database:
+
+| `CONFIG_DB_DRIVER` | Database | Default port |
+| ------------------ | -------- | ------------ |
+| `mysql` (default)  | MySQL 8  | 3306         |
+| `pgsql`            | Postgres | 5432         |
+
+`CONFIG_DB_HOST`, `CONFIG_DB_NAME`, `CONFIG_DB_USER` and
+`CONFIG_DB_PASSWORD_FILE` apply to both. `CONFIG_DB_PORT` overrides the default
+port. The migrations and the start script pick up the same settings.
+
+To develop against Postgres, layer `docker-compose.postgres.yml` over the
+default compose file. It swaps the `db` service for `postgres:17`, keeps its
+data in a separate `portal-pgdata` volume (no need to create it), and turns off
+phpMyAdmin:
+
+```
+docker-compose -p portal-dev -f docker-compose.yml -f docker-compose.postgres.yml up
+```
+
+Switching an existing install between databases does not carry the data over.
+
+Any SQL that differs between the two databases goes through the helpers in
+`site/lib/db_dialect.php`; write everything else in the SQL the two have in
+common. In particular, MySQL compares text case-insensitively and Postgres does
+not, so compare emails with `LOWER(email) = LOWER(?)`.
+
+`scripts/db-smoke.php` runs every `db_*` function against the configured
+database and cleans up after itself. Run it in the `web` container after the
+migrations have been applied: `docker exec web php /var/scripts/db-smoke.php`.
+
 ### Updating dependencies
 
 1. Add the dependency to `site/lib/composer.json`
