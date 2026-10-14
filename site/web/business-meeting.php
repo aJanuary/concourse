@@ -8,7 +8,7 @@ check_permission('see-business-meeting');
 
 $join_link = db_get_business_meeting_link(get_current_user_badge_no());
 $platform = BUSINESS_MEETING['platform_name'];
-$election = BUSINESS_MEETING['mpc_election'] ?? null;
+$election = business_meeting_mpc_election();
 $mpc_state = business_meeting_mpc_state(new DateTime());
 
 function help_email_link() {

@@ -18,9 +18,16 @@ function business_meeting_format_time($date) {
   return $date->format('l j F Y, H:i T');
 }
 
+// The Mark Protection Committee election from BUSINESS_MEETING, or null if
+// there isn't one
+/** @return array{url: string, opens: string, closes: string}|null */
+function business_meeting_mpc_election() {
+  return BUSINESS_MEETING['mpc_election'] ?? null;
+}
+
 // 'before', 'open' or 'closed', or null if there is no election
 function business_meeting_mpc_state($now) {
-  $election = BUSINESS_MEETING['mpc_election'] ?? null;
+  $election = business_meeting_mpc_election();
   if (!$election) {
     return null;
   }
