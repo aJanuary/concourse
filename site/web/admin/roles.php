@@ -72,6 +72,7 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
 ?>
 <article>
   <h2>Manage roles</h2>
+  <p><a href="/admin/roles/edit-member-roles">Edit a member's roles</a></p>
   <form id="roles-form" autocomplete="off">
 <?php
     render_form_body($_GET['role_id'] ?? 1);

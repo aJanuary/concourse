@@ -201,6 +201,18 @@ function finish_login($identity, $redirect) {
   exit;
 }
 
+// Why a role given or removed by hand may not last, or null if logging in
+// leaves the role alone. Mirrors the role changes in finish_login().
+function role_login_sync_note($badge_no, $role_name) {
+  if (in_array('oidc', AUTH_PROVIDERS, true) && in_array($role_name, OIDC_ROLE_MAP, true)) {
+    return 'Set by the login provider each time they log in';
+  }
+  if (in_array($badge_no, DEFAULT_ROLES_BY_BADGE[$role_name] ?? [], true)) {
+    return 'Given to this badge number each time they log in';
+  }
+  return null;
+}
+
 function redirect_to_login_error($error_code, $redirect = null) {
   $url = '/login?error_code=' . urlencode($error_code);
   if ($redirect !== null) {
