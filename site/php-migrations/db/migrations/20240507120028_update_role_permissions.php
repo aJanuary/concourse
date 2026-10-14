@@ -9,33 +9,23 @@ final class UpdateRolePermissions extends AbstractMigration
     public function up(): void
     {
       //  Clean up the duplicate admin and moderator roles
-      $this->execute('
-        ALTER TABLE role_permissions DROP CONSTRAINT role_permissions_ibfk_1;
-        ALTER TABLE role_permissions ADD CONSTRAINT FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE;
-      ');
-
-      $this->execute("
-        DELETE FROM
-          roles
-        USING
-          roles,
-          roles roles2
-        WHERE
-          roles.role_id > roles2.role_id
-          AND roles.name = roles2.name
-          AND roles.name IN ('admin', 'moderator');
+      $duplicates = $this->fetchAll("
+        SELECT dup.role_id
+        FROM roles dup
+        JOIN roles keep ON keep.name = dup.name AND keep.role_id < dup.role_id
+        WHERE dup.name IN ('admin', 'moderator')
       ");
+      foreach ($duplicates as $duplicate) {
+        $this->execute('DELETE FROM role_permissions WHERE role_id = ' . (int) $duplicate['role_id']);
+        $this->execute('DELETE FROM roles WHERE role_id = ' . (int) $duplicate['role_id']);
+      }
 
       // Create permission table structure
-      $this->execute('
-        CREATE TABLE permissions (
-          permission_id SERIAL PRIMARY KEY,
-          name VARCHAR(255) NOT NULL
-        );
-      ');
-      $this->execute('
-        CREATE UNIQUE INDEX permissions_name_uk ON permissions(name);
-      ');
+      $this->table('permissions', ['id' => false, 'primary_key' => ['permission_id']])
+           ->addColumn('permission_id', 'biginteger', ['identity' => true, 'signed' => false])
+           ->addColumn('name', 'string', ['limit' => 255, 'null' => false])
+           ->addIndex(['name'], ['unique' => true, 'name' => 'permissions_name_uk'])
+           ->create();
       $this->execute("
         INSERT INTO permissions(name) VALUES
           ('see-readme'),
@@ -50,34 +40,26 @@ final class UpdateRolePermissions extends AbstractMigration
           ('manage-discord-ids');
       ");
 
-      // Make a new table to store the role-permission relationship
-      $this->execute('
-        CREATE TABLE role_permissions_new (
-          role_id bigint(20) UNSIGNED NOT NULL,
-          permission_id bigint(20) UNSIGNED NOT NULL,
-          PRIMARY KEY (role_id, permission_id),
-          FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
-          FOREIGN KEY (permission_id) REFERENCES permissions(permission_id) ON DELETE CASCADE
+      // Rebuild role_permissions to reference permissions by id rather than name
+      $old_rows = $this->fetchAll('SELECT role_id, permission FROM role_permissions');
+      $this->table('role_permissions')->drop()->save();
+
+      $this->table('role_permissions', ['id' => false, 'primary_key' => ['role_id', 'permission_id']])
+           ->addColumn('role_id', 'biginteger', ['signed' => false, 'null' => false])
+           ->addColumn('permission_id', 'biginteger', ['signed' => false, 'null' => false])
+           ->addForeignKey('role_id', 'roles', 'role_id', ['delete' => 'CASCADE'])
+           ->addForeignKey('permission_id', 'permissions', 'permission_id', ['delete' => 'CASCADE'])
+           ->create();
+
+      foreach ($old_rows as $row) {
+        $this->execute(
+          'INSERT INTO role_permissions(role_id, permission_id) SELECT ' . (int) $row['role_id'] . ', permission_id FROM permissions WHERE name = '
+          . $this->getAdapter()->getConnection()->quote($row['permission'])
         );
-      ');
+      }
 
-      $this->execute('
-        INSERT INTO role_permissions_new(role_id, permission_id)
-          SELECT role_id, permission_id
-          FROM role_permissions
-          JOIN permissions WHERE permissions.name = role_permissions.permission;
-      ');
-
-      // Drop the old table
-      $this->execute('
-        DROP TABLE role_permissions;
-        RENAME TABLE role_permissions_new TO role_permissions;
-      ');
-      
       // Add missing constraints
-      $this->execute('
-        ALTER TABLE `roles` ADD CONSTRAINT UNIQUE (name);
-        ALTER TABLE `member_roles` ADD CONSTRAINT UNIQUE (badge_no, role_id);
-      ');
+      $this->table('roles')->addIndex(['name'], ['unique' => true])->update();
+      $this->table('member_roles')->addIndex(['badge_no', 'role_id'], ['unique' => true])->update();
     }
 }

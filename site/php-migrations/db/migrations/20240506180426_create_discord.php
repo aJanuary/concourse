@@ -8,14 +8,13 @@ final class CreateDiscord extends AbstractMigration
 {
     public function up(): void
     {
-      $this->execute('CREATE TABLE discord_ids (
-        badge_no VARCHAR(5) NOT NULL,
-        discord_id VARCHAR(100) NOT NULL,
-        username VARCHAR(100) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (badge_no, discord_id),
-        FOREIGN KEY (badge_no) REFERENCES members(badge_no)
-      );');
+      $this->table('discord_ids', ['id' => false, 'primary_key' => ['badge_no', 'discord_id']])
+           ->addColumn('badge_no', 'string', ['limit' => 5, 'null' => false])
+           ->addColumn('discord_id', 'string', ['limit' => 100, 'null' => false])
+           ->addColumn('username', 'string', ['limit' => 100, 'null' => false])
+           ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => true])
+           ->addForeignKey('badge_no', 'members', 'badge_no')
+           ->create();
     }
 
     public function down(): void

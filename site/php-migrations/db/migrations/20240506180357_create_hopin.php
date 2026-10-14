@@ -8,12 +8,12 @@ final class CreateHopin extends AbstractMigration
 {
     public function up(): void
     {
-      $this->execute('CREATE TABLE rce_invites (
-        badge_no VARCHAR(5) PRIMARY KEY,
-        invite_url VARCHAR(100) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (badge_no) REFERENCES members(badge_no)
-      );');
+      $this->table('rce_invites', ['id' => false, 'primary_key' => ['badge_no']])
+           ->addColumn('badge_no', 'string', ['limit' => 5, 'null' => false])
+           ->addColumn('invite_url', 'string', ['limit' => 100, 'null' => false])
+           ->addColumn('created_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => true])
+           ->addForeignKey('badge_no', 'members', 'badge_no')
+           ->create();
     }
 
     public function down(): void
