@@ -43,6 +43,7 @@ container, so changes to them show on the next page load.
 | `scripts/open-portal` | Opens the portal |
 | `scripts/open-mailpit` | Opens [mailpit](https://mailpit.axllent.org/), which catches all mail the portal sends |
 | `scripts/open-db-admin` | Opens phpMyAdmin, or pgAdmin on Postgres (log in to the `portal` server with the password in `secrets/db_dba_password.txt`) |
+| `scripts/db-migrate` | Runs [Phinx](https://book.cakephp.org/phinx/0/en/index.html) in the `web` container: applies pending migrations, or runs the Phinx command given (`create`, `status`, `rollback`, ...) |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
 
 ### Ports and running several checkouts
@@ -85,15 +86,18 @@ All database changes are [Phinx](https://book.cakephp.org/phinx/0/en/index.html)
 migrations, in `site/php-migrations/db/migrations`. They are applied
 automatically when the `web` container starts.
 
-1. Create a migration, replacing `MIGRATIONNAME` with a meaningful name:
+1. Create a migration, replacing `MigrationName` with a meaningful name:
    ```
-   docker compose exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx create MIGRATIONNAME'
+   scripts/db-migrate create MigrationName
    ```
 2. Edit the file to put in the PHP or SQL for the migration.
 3. To apply it without restarting:
    ```
-   docker compose exec web bash -c 'cd /var/php-migrations; vendor/bin/phinx migrate -e development'
+   scripts/db-migrate
    ```
+
+`scripts/db-migrate status` lists which migrations have been applied, and
+`scripts/db-migrate rollback` undoes the most recent one.
 
 Migrations must work on both MySQL and Postgres. Any SQL that differs between
 the two goes through the helpers in `site/lib/db_dialect.php`; write
