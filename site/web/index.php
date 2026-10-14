@@ -180,6 +180,12 @@ $cards = [
       'link' => '/admin/programme/list',
       'card-permission' => 'manage-programme',
     ], [
+      'name' => 'programme-reports',
+      'title' => 'Programme reports',
+      'subtitle' => 'Admin',
+      'link' => '/admin/programme-reports',
+      'card-permission' => 'see-programme-reports',
+    ], [
       'name' => 'manage-login-sessions',
       'title' => 'Manage login sessions',
       'subtitle' => 'Admin',
@@ -340,9 +346,8 @@ $cards = [
         e.target.blur();
       }
       const result = toggleFav(e.target);
-      // Set cookie with name of faved cards.
-      const favedCards = [...$favsList.getElementsByClassName('card')].map($c => cardName($c));
-      document.cookie = 'favs_' + badgeNo + '=' + favedCards.join(',') + '; path=/;SameSite=Strict;max-age=31560000000;';
+      preferences[result.card] = result.mode === 'added';
+      document.cookie = 'favs_' + badgeNo + '=' + encodeURIComponent(JSON.stringify(preferences)) + '; path=/;SameSite=Strict;max-age=31560000000;';
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/analytics?event=favs&data=' + (result.mode == 'added' ? '%2B' : '-') + result.card);
       }
@@ -350,26 +355,51 @@ $cards = [
 
   const $favsList = document.getElementById('favs').getElementsByClassName('cards')[0];
   const $favs = [...document.getElementsByClassName('fav')];
-  let favedCards;
-  if (document.cookie.includes('favs_' + badgeNo)) {
-    favedCards = document.cookie.split('; ').find(c => c.startsWith('favs_' + badgeNo)).split('=')[1].split(',');
-  } else {
+  // Card name => whether the member explicitly added (true) or removed (false)
+  // it. Defaults only apply to cards the member hasn't chosen either way for,
+  // so cards added to the defaults later still reach returning members.
+  let preferences = {};
 <?php
-    $faved_cards = [];
-    if (current_user_has_permission('online')) {
-      $faved_cards = ['chat', 'upload-photo', 'newsletter', 'guide', 'signups', 'stream'];
-    } else {
-      $faved_cards = ['chat', 'newsletter', 'maps', 'guide', 'signups'];
-    }
-    if (current_user_has_permission('programme-participant')) {
-      $faved_cards.push('itinerary');
-    }
-    if (current_user_has_permission('childcare')) {
-      $faved_cards.push('childcare');
-    }
-    echo "favedCards = " . json_encode($faved_cards) . ";\n";
-?>
+  $faved_cards = [];
+  if (current_user_has_permission('online')) {
+    $faved_cards = ['chat', 'upload-photo', 'newsletter', 'guide', 'signups', 'stream'];
+  } else {
+    $faved_cards = ['chat', 'newsletter', 'maps', 'guide', 'signups'];
   }
+  if (current_user_has_permission('programme-participant')) {
+    $faved_cards[] = 'itinerary';
+  }
+  if (current_user_has_permission('childcare')) {
+    $faved_cards[] = 'childcare';
+  }
+  echo "const defaultFavs = " . json_encode($faved_cards) . ";\n";
+?>
+
+  const favsCookie = document.cookie.split('; ').find(c => c.startsWith('favs_' + badgeNo + '='));
+  if (favsCookie) {
+    const cookieValue = decodeURIComponent(favsCookie.split('=')[1]);
+    try {
+      if (cookieValue.startsWith('{')) {
+        preferences = JSON.parse(cookieValue);
+      } else {
+        // Legacy format: the comma separated list of cards shown, so
+        // anything missing from it was removed
+        const shown = cookieValue.split(',').filter(Boolean);
+        for (const card of defaultFavs) {
+          preferences[card] = shown.includes(card);
+        }
+        for (const card of shown) {
+          preferences[card] = true;
+        }
+      }
+    } catch (e) {
+      preferences = {};
+    }
+  }
+
+  const favedCards = defaultFavs
+    .filter(card => preferences[card] !== false)
+    .concat(Object.keys(preferences).filter(card => preferences[card] === true));
   for (let $fav of $favs) {
     $fav.addEventListener('click', handleFavClick);
     if (favedCards.includes(cardName($fav.closest('.card')))) {
