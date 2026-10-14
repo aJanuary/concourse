@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Gives a member the admin role, which has every permission. A member who is
+# not in the members table yet needs an email and name to add them:
+#
+#   scripts/create-admin 0001
+#   scripts/create-admin 0001 you@example.com 'Your Name'
+#
+set -eu -o pipefail
+. "$(dirname "$0")/lib.sh"
+
+# The image's copy of scripts/ can be out of date, so send this checkout's.
+# HTTP_HOST keeps config.php quiet outside a web request.
+exec docker compose exec -T -e HTTP_HOST=localhost web php -- "$@" < scripts/create-admin.php

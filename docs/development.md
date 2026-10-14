@@ -46,6 +46,7 @@ container, so changes to them show on the next page load.
 | `scripts/db-migrate` | Runs [Phinx](https://book.cakephp.org/phinx/0/en/index.html) in the `web` container: applies pending migrations, or runs the Phinx command given (`create`, `status`, `rollback`, ...) |
 | `scripts/composer` | Runs Composer in the `web` container on `site/lib`; `-d /var/php-migrations` runs it on the migrations instead |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
+| `scripts/create-admin` | Gives a member the `admin` role; `scripts/create-admin <badge no> <email> <name>` adds them as a member first |
 
 ### Ports and running several checkouts
 

@@ -13,8 +13,15 @@ no permissions, so the home page is empty until someone grants some.
 ## The first administrator
 
 Nobody can manage roles until someone has the `admin` role or another role
-with `manage-roles`, so the first administrator is set up in the database, for
-example with `scripts/db-shell`.
+with `manage-roles`, so the first administrator is set up in the database.
+In development, `scripts/create-admin` does it, adding you as a member too if
+you give an email and name:
+
+```sh
+scripts/create-admin 0001 you@example.com 'Your Name'
+```
+
+Otherwise, use SQL, for example with `scripts/db-shell`.
 
 Members are added to the `members` table when they first log in, so log in
 once and skip this step if you can. A new database has no members, though,
