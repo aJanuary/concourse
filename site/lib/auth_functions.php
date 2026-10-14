@@ -193,7 +193,11 @@ function finish_login($identity, $redirect) {
 
   // Don't allow open redirects
   // https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html
-  header('Location: ' . (is_valid_redirect($redirect) ? $redirect : '/'));
+  $redirect = is_valid_redirect($redirect) ? $redirect : '/';
+  if ($identity->offer_password) {
+    $redirect = '/password-prompt?redirect=' . urlencode($redirect);
+  }
+  header('Location: ' . $redirect);
   exit;
 }
 

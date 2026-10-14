@@ -49,6 +49,7 @@ function cleanup() {
   db_query("DELETE FROM login_codes WHERE email = 'smoke.test@example.com'");
   db_query("DELETE FROM login_attempts WHERE bucket = 'smoke'");
   db_query("DELETE FROM password_auth WHERE email = 'smoke.test@example.com'");
+  db_query("DELETE FROM password_prompt_dismissals WHERE email = 'smoke.test@example.com'");
   db_query("DELETE FROM oidc_sessions WHERE sub = 'smoke-sub'");
   db_query("DELETE FROM sessions WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
   db_query("DELETE FROM rce_invites WHERE badge_no IN (?, ?)", [$badge, $other_badge]);
@@ -98,6 +99,11 @@ try {
   check('password for unknown email rejected', call('db_check_password_auth', 'nobody@example.com', 'correct horse') === false);
   call('db_set_password_auth', $smoke_email, 'second password');
   check('setting a password again replaces it', call('db_check_password_auth', $smoke_email, 'second password') === true && call('db_check_password_auth', $smoke_email, 'correct horse') === false);
+
+  check('password prompt not dismissed at first', call('db_password_prompt_dismissed', $smoke_email) === false);
+  call('db_dismiss_password_prompt', 'Smoke.Test@example.com');
+  call('db_dismiss_password_prompt', $smoke_email);
+  check('db_dismiss_password_prompt ignores case and repeats', call('db_password_prompt_dismissed', 'SMOKE.TEST@example.COM') === true);
 
   call('db_create_login_code', 'Smoke.Test@example.com', 'hash-one', $future);
   check('wrong login code rejected', call('db_consume_login_code', $smoke_email, 'wrong', 3) === false);

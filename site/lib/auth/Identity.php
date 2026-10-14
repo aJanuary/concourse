@@ -22,6 +22,8 @@ class Identity {
     public ?string $sid = null,
     public ?string $sub = null,
     public ?string $id_token = null,
+    // Whether to ask the member if they want to set a password after login.
+    public bool $offer_password = false,
   ) {
   }
 }

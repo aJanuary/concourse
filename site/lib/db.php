@@ -198,6 +198,14 @@ function db_set_password_auth($email, $password) {
   );
 }
 
+function db_password_prompt_dismissed($email) {
+  return db_fetch_value("SELECT 1 FROM password_prompt_dismissals WHERE email = ?", [strtolower($email)]) !== null;
+}
+
+function db_dismiss_password_prompt($email) {
+  db_upsert('password_prompt_dismissals', ['email'], [], ['email' => strtolower($email)]);
+}
+
 // Only the most recent code for an email can be used
 function db_create_login_code($email, $code_hash, $expires_at) {
   $email = strtolower($email);

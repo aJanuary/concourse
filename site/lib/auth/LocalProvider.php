@@ -281,7 +281,12 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
   }
 
   private function identity_for_member(array $member): Identity {
-    return new Identity($member['badge_no'], $member['email'], $member['name']);
+    return new Identity(
+      $member['badge_no'],
+      $member['email'],
+      $member['name'],
+      offer_password: !db_email_has_password_auth($member['email']) && !db_password_prompt_dismissed($member['email']),
+    );
   }
 
   private function hash_code(string $code): string {
