@@ -56,6 +56,9 @@ services:
     secrets:
       - db_dba_password
       - web_secrets
+      # Uncomment, with the matching lines below, to keep the key for encrypted
+      # secrets in its own file; see docs/configuration.md#encrypted-secrets
+      #- config_encryption_key
     volumes:
       - ./scripts/start.sh:/var/scripts/start.sh
       - type: bind
@@ -79,6 +82,7 @@ services:
       CONFIG_DB_USER: *db-user
       CONFIG_DB_PASSWORD_FILE: /run/secrets/db_dba_password
       CONFIG_SECRETS_FILE: /run/secrets/web_secrets
+      #CONFIG_ENCRYPTION_KEY_FILE: /run/secrets/config_encryption_key
       RUNTIME_ENV: development
       XDEBUG_MODE: "${XDEBUG_MODE:-}"
     # php-fpm only listens once the start script has run the migrations, so
@@ -123,3 +127,5 @@ secrets:
     # An ini file containing the secrets for the web server; see
     # docs/configuration.md.
     file: ./secrets/web_secrets.ini
+  #config_encryption_key:
+  #  file: ./secrets/config_encryption_key.txt

@@ -32,6 +32,9 @@ jobs:
       - name: Run the db smoke test
         run: docker compose exec -T web php /var/scripts/db-smoke.php
 
+      - name: Check encrypted secrets
+        run: docker compose exec -T -e HTTP_HOST=localhost web php < scripts/encryption-check.php
+
       - name: Show container logs
         if: failure()
         run: docker compose logs --no-color

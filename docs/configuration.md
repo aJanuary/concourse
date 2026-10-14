@@ -29,6 +29,62 @@ development.
 | `[discord]` | `bot_token`, `client_id`, `client_secret`, `bm_invite` | Discord bot and OAuth app; see [Discord](integrations/discord.md). `bm_invite` is the invite code for the separate Business Meeting server; see [Business meeting](integrations/business-meeting.md#discord) |
 | `[zoom_events]` | `client_id`, `client_secret`, `account_id`, `event_id`, `ticket_type_id`, `ticket_email_domain` | The `zoomevents` programme handler; see [Zoom Events](integrations/programme.md#zoom-events). `ticket_email_domain` is optional |
 | `[conclar]` | `allowed_origins[]`, `schedule_url` | Origins hosting the ConClár programme guide, and an optional programme JSON for the favourites report. See [ConClár](integrations/conclar.md) |
+| `[encryption]` | `config_encryption_key` | The key for [encrypted secrets](#encrypted-secrets), if it isn't given another way |
+
+## Encrypted secrets
+
+Keys and passwords in the secrets file can be encrypted, so that the file on
+its own, shown on screen or copied somewhere it shouldn't be, doesn't give
+them away. Anyone who also has the encryption key can still read them, as
+can anyone who can run code in the `web` container, so keep the key
+somewhere else if you can.
+
+An encrypted value starts with `enc:`. Values without it are used as they
+are, so you can encrypt some secrets and not others, and turn encryption on
+one secret at a time. These can be encrypted: `[oidc] client_secret`,
+`[smtp] password`, `[crypto] signing_key`, `[discord] bot_token` and
+`client_secret`, `[zoom_events] client_secret`, `[square] access_token` and
+`webhook_signature_key`, and every `[api_keys]` value.
+
+1. Generate a key:
+   ```
+   scripts/encrypt-secret --generate-key
+   ```
+2. Give the `web` container the key in one of these ways. The first one set
+   is used:
+   - the `CONFIG_ENCRYPTION_KEY` environment variable;
+   - a file named by `CONFIG_ENCRYPTION_KEY_FILE`. The compose files have
+     commented lines for passing `secrets/config_encryption_key.txt` as a
+     Docker secret, as the database passwords are;
+   - `config_encryption_key` in the `[encryption]` section of the secrets
+     file, in double quotes. This is the least protection, as the key is next
+     to the values.
+3. Encrypt each value. The script asks for the value without showing it, so
+   it doesn't end up in your shell history, and encrypts it with the `web`
+   container's key:
+   ```
+   scripts/encrypt-secret
+   ```
+   It can also read the value from a pipe. Paste the output, quotes and
+   all, in place of the value in the secrets file:
+   ```ini
+   [smtp]
+   password = "enc:3q2+7w..."
+   ```
+
+If an encrypted value can't be decrypted, because there is no key or the
+wrong one, the feature that uses it fails with an error naming the setting.
+The rest of the portal carries on.
+
+To change the key, encrypt each `enc:` value again with the new key, by
+running the script with `CONFIG_ENCRYPTION_KEY` set to the new key, then put
+the new values and the new key in place together.
+
+On a server without the checkout, run the same script from the image:
+
+```
+docker compose exec -e HTTP_HOST=localhost web php /var/scripts/encrypt-secret.php
+```
 
 ## config.php
 

@@ -129,6 +129,57 @@ function config_get($section, $key, $default = '') {
   return $config_file[$section][$key] ?? $default;
 }
 
+// The key for encrypted secrets, from the CONFIG_ENCRYPTION_KEY environment
+// variable, the file named by CONFIG_ENCRYPTION_KEY_FILE, or [encryption]
+// config_encryption_key, in that order. Empty if none is set.
+function config_encryption_key() {
+  $key = trim((string) getenv('CONFIG_ENCRYPTION_KEY'));
+  if ($key !== '') {
+    return $key;
+  }
+  $key_file = (string) getenv('CONFIG_ENCRYPTION_KEY_FILE');
+  if ($key_file !== '') {
+    $contents = @file_get_contents($key_file);
+    if ($contents === false) {
+      throw new RuntimeException("Can't read the encryption key file '$key_file' named by CONFIG_ENCRYPTION_KEY_FILE");
+    }
+    $key = trim($contents);
+    if ($key !== '') {
+      return $key;
+    }
+  }
+  return trim((string) config_get('encryption', 'config_encryption_key'));
+}
+
+const CONFIG_ENCRYPTED_PREFIX = 'enc:';
+
+// Like config_get(), for keys and passwords. A value starting with enc: is
+// decrypted with config_encryption_key(); other values are returned as they
+// are. Decrypting only when asked means a problem with one secret only
+// breaks the feature that uses it. See "Encrypted secrets" in
+// docs/configuration.md.
+function config_get_secret($section, $key, $default = '') {
+  static $decrypted = [];
+
+  $value = config_get($section, $key, $default);
+  if (!is_string($value) || !str_starts_with($value, CONFIG_ENCRYPTED_PREFIX)) {
+    return $value;
+  }
+  if (!isset($decrypted[$section][$key])) {
+    require_once(__DIR__ . '/encryption.php');
+    $encryption_key = config_encryption_key();
+    if ($encryption_key === '') {
+      throw new RuntimeException("'$key' in the [$section] section of the secrets file is encrypted, but no encryption key is set");
+    }
+    try {
+      $decrypted[$section][$key] = decrypt_config_value(substr($value, strlen(CONFIG_ENCRYPTED_PREFIX)), $encryption_key);
+    } catch (RuntimeException $e) {
+      throw new RuntimeException("Can't decrypt '$key' in the [$section] section of the secrets file: " . $e->getMessage(), 0, $e);
+    }
+  }
+  return $decrypted[$section][$key];
+}
+
 // Call before using an integration so an unconfigured one fails with a clear
 // message rather than a confusing error from the remote service.
 function require_config($section, ...$keys) {
@@ -156,7 +207,6 @@ define('PROG_JOIN_PERMISSION', 'see-rce');
 define('PROG_TEST_MODE', false);
 
 define('ZOOM_EVENTS_CLIENT_ID', config_get('zoom_events', 'client_id'));
-define('ZOOM_EVENTS_CLIENT_SECRET', config_get('zoom_events', 'client_secret'));
 define('ZOOM_EVENTS_ACCOUNT_ID', config_get('zoom_events', 'account_id'));
 define('ZOOM_EVENTS_EVENT_ID', config_get('zoom_events', 'event_id'));
 define('ZOOM_EVENTS_TICKET_TYPE_ID', config_get('zoom_events', 'ticket_type_id'));
@@ -164,13 +214,10 @@ define('ZOOM_EVENTS_TICKET_TYPE_ID', config_get('zoom_events', 'ticket_type_id')
 // addresses aren't shared with Zoom. Leave empty to use the member's email.
 define('ZOOM_EVENTS_TICKET_EMAIL_DOMAIN', config_get('zoom_events', 'ticket_email_domain'));
 
-define('DISCORD_BOT_TOKEN', config_get('discord', 'bot_token'));
 define('DISCORD_CLIENT_ID', config_get('discord', 'client_id'));
-define('DISCORD_CLIENT_SECRET', config_get('discord', 'client_secret'));
 // Invite code for the separate business meeting Discord server, the part after
 // https://discord.gg/. Empty until it opens.
 define('DISCORD_BM_INVITE', trim((string) config_get('discord', 'bm_invite')));
-define('API_KEYS', $config_file['api_keys'] ?? []);
 
 define('ALLOWLIST', array_map('trim', config_get('auth', 'allowlist', [])));
 define('AUTH_PROVIDERS', array_map('trim', config_get('auth', 'providers', [])));
@@ -180,7 +227,6 @@ define('AUTH_PROVIDERS', array_map('trim', config_get('auth', 'providers', [])))
 // claim is truthy. See the README.
 define('OIDC_PROVIDER_URL', config_get('oidc', 'provider_url'));
 define('OIDC_CLIENT_ID', config_get('oidc', 'client_id'));
-define('OIDC_CLIENT_SECRET', config_get('oidc', 'client_secret'));
 define('OIDC_SCOPES', array_map('trim', config_get('oidc', 'scopes', ['openid', 'email', 'profile'])));
 define('OIDC_CLAIMS', array_map('trim', config_get('oidc', 'claims', [])) + ['email' => 'email', 'name' => 'name']);
 define('OIDC_ROLE_MAP', array_map('trim', config_get('oidc', 'role_map', [])));
@@ -205,9 +251,7 @@ define('CONCLAR_MAX_ITEMS', 300);
 define('SMTP_HOST', config_get('smtp', 'host'));
 define('SMTP_PORT', (int) config_get('smtp', 'port', 25));
 define('SMTP_USERNAME', config_get('smtp', 'username'));
-define('SMTP_PASSWORD', config_get('smtp', 'password'));
 define('SMTP_SECURE', config_get('smtp', 'secure'));
-define('SIGNING_KEY', config_get('crypto', 'signing_key'));
 
 // $_SERVER key holding the client address when behind a proxy that sets it,
 // e.g. HTTP_X_FORWARDED_FOR. Only set this if the proxy overwrites the header.

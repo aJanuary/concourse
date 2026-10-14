@@ -18,7 +18,7 @@ function create_secure_token($path, $data, $ttl = 900) {
     'exp' => time() + $ttl,
     'aud' => '',
     'data' => array_merge(['path' => $path], $data)
-  ], SIGNING_KEY, 'HS256');
+  ], config_get_secret('crypto', 'signing_key'), 'HS256');
 }
 
 function create_secure_link($path, $data, $ttl = 900) {
@@ -30,7 +30,7 @@ function verify_secure_link($path, $token) {
   require_config('crypto', 'signing_key');
 
   try {
-    $decoded = JWT::decode($token, new Key(SIGNING_KEY, 'HS256'));
+    $decoded = JWT::decode($token, new Key(config_get_secret('crypto', 'signing_key'), 'HS256'));
     if ($decoded->data->path !== $path) {
       return 'invalid';
     }

@@ -143,7 +143,7 @@ class OidcProvider implements AuthProvider {
   private function client(): OpenIDConnectClient {
     require_config('oidc', 'provider_url', 'client_id', 'client_secret');
 
-    $client = new OpenIDConnectClient(OIDC_PROVIDER_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET);
+    $client = new OpenIDConnectClient(OIDC_PROVIDER_URL, OIDC_CLIENT_ID, config_get_secret('oidc', 'client_secret'));
     $client->setRedirectURL(ROOT_URL . '/oidc/callback');
     $client->addScope(array_values(array_diff(OIDC_SCOPES, ['openid'])));
     // Off only when the config says so, for a development provider with a

@@ -48,7 +48,7 @@ function send_email($to, $subject, $heading, $blocks, $from = SUPPORT_EMAIL) {
     $mail->Host = SMTP_HOST;
     $mail->SMTPAuth = SMTP_USERNAME !== '';
     $mail->Username = SMTP_USERNAME;
-    $mail->Password = SMTP_PASSWORD;
+    $mail->Password = config_get_secret('smtp', 'password');
     $mail->SMTPSecure = SMTP_SECURE;
     $mail->Port = SMTP_PORT;
 

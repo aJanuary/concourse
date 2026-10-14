@@ -23,6 +23,7 @@ ADD ./site/lib /srv/lib
 ADD ./site/web /var/www/html
 ADD ./scripts/start.sh /var/scripts/start.sh
 ADD ./scripts/db-smoke.php /var/scripts/db-smoke.php
+ADD ./scripts/encrypt-secret.php /var/scripts/encrypt-secret.php
 
 # Make analytics dir writable by the web server
 RUN mkdir ${CONFIG_ANALYTICS_DIR} && chown www-data:www-data ${CONFIG_ANALYTICS_DIR}

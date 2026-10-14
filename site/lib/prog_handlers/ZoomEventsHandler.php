@@ -78,7 +78,7 @@ class ZoomEventsHandler implements ProgHandler {
 
     require_config('zoom_events', 'client_id', 'client_secret', 'account_id');
     $response = api_call('https://zoom.us/oauth/token', [
-      'Authorization: Basic ' . base64_encode(ZOOM_EVENTS_CLIENT_ID . ':' . ZOOM_EVENTS_CLIENT_SECRET),
+      'Authorization: Basic ' . base64_encode(ZOOM_EVENTS_CLIENT_ID . ':' . config_get_secret('zoom_events', 'client_secret')),
       'Content-Type: application/x-www-form-urlencoded',
     ], http_build_query([
       'grant_type' => 'account_credentials',

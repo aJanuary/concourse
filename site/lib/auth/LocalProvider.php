@@ -294,7 +294,7 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
 
   private function hash_code(string $code): string {
     require_config('crypto', 'signing_key');
-    return hash_hmac('sha256', $code, SIGNING_KEY);
+    return hash_hmac('sha256', $code, config_get_secret('crypto', 'signing_key'));
   }
 
   private function normalize_email(string $email): ?string {

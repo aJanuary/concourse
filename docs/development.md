@@ -47,6 +47,7 @@ container, so changes to them show on the next page load.
 | `scripts/composer` | Runs Composer in the `web` container on `site/lib`; `-d /var/php-migrations` runs it on the migrations instead |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
 | `scripts/create-admin` | Gives a member the `admin` role; `scripts/create-admin <badge no> <email> <name>` adds them as a member first |
+| `scripts/encrypt-secret` | Encrypts a value for the secrets file, or generates a key with `--generate-key`; see [Encrypted secrets](configuration.md#encrypted-secrets) |
 
 ### Ports and running several checkouts
 
@@ -118,8 +119,15 @@ docker compose exec web php /var/scripts/db-smoke.php
 ```
 
 The "Check" GitHub Action runs `scripts/bootstrap` on each database, which
-applies every migration to an empty database, then this smoke test. It runs
-on pushes to `main` and on pull requests.
+applies every migration to an empty database, then this smoke test and
+`scripts/encryption-check.php`, which checks [encrypted
+secrets](configuration.md#encrypted-secrets):
+
+```
+docker compose exec -T -e HTTP_HOST=localhost web php < scripts/encryption-check.php
+```
+
+It runs on pushes to `main` and on pull requests.
 
 ## Updating dependencies
 

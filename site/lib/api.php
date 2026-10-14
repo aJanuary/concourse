@@ -31,7 +31,7 @@ function validate_signature() {
   }
 
   $client_name = $auth_header_parts[1];
-  if (!isset(API_KEYS[$client_name])) {
+  if (config_get('api_keys', $client_name, null) === null) {
     throw new AuthorizationException("Unknown client name");
   }
 
@@ -50,7 +50,7 @@ function validate_signature() {
   }
 
   $webhook_data = strtoupper($_SERVER["REQUEST_METHOD"]) . "\n" . $_SERVER["REQUEST_URI"] . "\n" . $request_time_str . "\n" . base64_encode(file_get_contents("php://input"));
-  $webhook_sig = hash_hmac("sha256", $webhook_data, API_KEYS[$client_name]);
+  $webhook_sig = hash_hmac("sha256", $webhook_data, config_get_secret('api_keys', $client_name));
   if ($webhook_sig != $auth_header_parts[2]) {
     throw new AuthorizationException("Invalid signature");
   }

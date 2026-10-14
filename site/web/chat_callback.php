@@ -45,7 +45,7 @@ $token_resp = api_call('https://discord.com/api/oauth2/token', [
   'Content-Type: application/x-www-form-urlencoded'
 ], http_build_query([
   'client_id' => DISCORD_CLIENT_ID,
-  'client_secret' => DISCORD_CLIENT_SECRET,
+  'client_secret' => config_get_secret('discord', 'client_secret'),
   'grant_type' => 'authorization_code',
   'code' => $code,
   'redirect_uri' => ROOT_URL . '/chat_callback',
@@ -75,7 +75,7 @@ db_set_discord_id(get_current_user_badge_no(), $discord_id, $discord_username);
 
 // Join server
 $join_resp = api_call('https://discord.com/api/guilds/' . DISCORD_GUILD_ID . '/members/' . $discord_id, [
-  'Authorization: Bot ' . DISCORD_BOT_TOKEN,
+  'Authorization: Bot ' . config_get_secret('discord', 'bot_token'),
   'Content-Type: application/json'
 ], json_encode([
   'access_token' => $access_token,
@@ -87,7 +87,7 @@ error_log("Join response for " . get_current_user_badge_no() . ": " . print_r($j
 
 // Create invite
 $invite_resp = api_call('https://discord.com/api/channels/' . DISCORD_INVITE_CHANNEL_ID . '/invites', [
-  'Authorization: Bot ' . DISCORD_BOT_TOKEN,
+  'Authorization: Bot ' . config_get_secret('discord', 'bot_token'),
   'Content-Type: application/json'
 ], json_encode([
   'max_age' => 86400,
