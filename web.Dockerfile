@@ -7,9 +7,9 @@ ARG CONFIG_WEB_DIR=/var/www/html
 ARG CONFIG_ANALYTICS_DIR=/var/log/analytics
 
 # Need zip and client for migrations and start script
-RUN apt-get update -y && apt-get install -y libmariadb-dev zip mariadb-client vim
+RUN apt-get update -y && apt-get install -y libmariadb-dev libpq-dev zip mariadb-client postgresql-client vim
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 COPY docker/90-xdebug.ini "${PHP_INI_DIR}/config.d"
 
@@ -22,6 +22,7 @@ ADD ./site/php-migrations /var/php-migrations
 ADD ./site/lib /srv/lib
 ADD ./site/web /var/www/html
 ADD ./scripts/start.sh /var/scripts/start.sh
+ADD ./scripts/db-smoke.php /var/scripts/db-smoke.php
 
 # Make analytics dir writable by the web server
 RUN mkdir ${CONFIG_ANALYTICS_DIR} && chown www-data:www-data ${CONFIG_ANALYTICS_DIR}

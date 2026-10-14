@@ -1,0 +1,38 @@
+#
+# Runs the portal against Postgres instead of MySQL. Layer it over the default
+# compose file:
+#
+#   docker-compose -p portal-dev -f docker-compose.yml -f docker-compose.postgres.yml up
+#
+# The data lives in a separate volume, so the MySQL data is untouched.
+#
+volumes:
+  portal-mysqldata: !reset null
+  portal-pgdata:
+
+services:
+  db:
+    image: postgres:17
+    environment: !override
+      POSTGRES_DB: members
+      POSTGRES_USER: dba
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_dba_password
+    secrets: !override
+      - db_dba_password
+    volumes: !override
+      - portal-pgdata:/var/lib/postgresql/data
+    ports: !override
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dba -d members"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    environment:
+      CONFIG_DB_DRIVER: pgsql
+
+  # phpMyAdmin only speaks MySQL
+  phpmyadmin:
+    profiles: ["mysql-only"]

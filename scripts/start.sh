@@ -5,10 +5,17 @@
 # 
 
 # Wait for the database to be ready
-until mysqlcheck -h $CONFIG_DB_HOST -u $CONFIG_DB_USER --password=`cat $CONFIG_DB_PASSWORD_FILE` --databases members; do
-  echo "waiting for mysql..."
-  sleep 5
-done
+if [ "${CONFIG_DB_DRIVER:-mysql}" = "pgsql" ]; then
+  until pg_isready -h $CONFIG_DB_HOST -p ${CONFIG_DB_PORT:-5432} -U $CONFIG_DB_USER -d $CONFIG_DB_NAME; do
+    echo "waiting for postgres..."
+    sleep 5
+  done
+else
+  until mariadb-check --skip-ssl -h $CONFIG_DB_HOST -u $CONFIG_DB_USER --password=`cat $CONFIG_DB_PASSWORD_FILE` --databases members; do
+    echo "waiting for mysql..."
+    sleep 5
+  done
+fi
 
 # Setup and install vendor libs
 cd /srv/lib
