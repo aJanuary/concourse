@@ -87,7 +87,9 @@ link is made each time.
 
 Without a tunnel from Square to a development portal, test the webhook with
 `test/square-webhook/send_webhook.py`, which sends a signed
-`payment.updated` event for a sandbox order.
+`payment.updated` event for a sandbox order. It signs with `[square]
+webhook_signature_key` from `secrets/web_secrets.ini`, decrypting it if it is
+encrypted, as [the API tester](api.md) does.
 
 ## Voter keys
 
