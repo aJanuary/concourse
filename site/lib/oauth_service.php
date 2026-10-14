@@ -3,7 +3,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once getenv('CONFIG_LIB_DIR') . '/vendor/autoload.php';
 
 // Class to provide the services for authentication
-class AuthService {
+class OAuthService {
   public $provider;
   public $token;
 
