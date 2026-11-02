@@ -7,15 +7,15 @@
 {% set key = {room_id: room_id} %}
 {% block fields %}
 {% if not editing %}
-    <p><label>Plano Room ID: <input name="room_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+<p><label>Plano Room ID: <input name="room_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 {% endif %}
-    <p><label>Title: <input name="title" maxlength="256" value="{{ stage.title }}"></label></p>
-    <p><label>Viewer URL: <input name="viewer_url" value="{{ stage.viewer_url }}"></label></p>
-    <p><label>Type: <select name="type">
-      <option value="hybrid" {% if stage.type == 'hybrid' %}selected{% endif %}>Hybrid</option>
-      <option value="online-only" {% if stage.type == 'online-only' %}selected{% endif %}>Online-only</option>
-    </select></label></p>
-    <p><label>Stream Yard URL: <input name="participant_url" value="{{ stage.participant_url }}"></label></p>
+<p><label>Title: <input name="title" maxlength="256" value="{{ stage.title }}"></label></p>
+<p><label>Viewer URL: <input name="viewer_url" value="{{ stage.viewer_url }}"></label></p>
+<p><label>Type: <select name="type">
+  <option value="hybrid" {% if stage.type == 'hybrid' %}selected{% endif %}>Hybrid</option>
+  <option value="online-only" {% if stage.type == 'online-only' %}selected{% endif %}>Online-only</option>
+</select></label></p>
+<p><label>Stream Yard URL: <input name="participant_url" value="{{ stage.participant_url }}"></label></p>
 {% endblock %}
 {% block scripts %}
 <script>

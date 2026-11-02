@@ -7,19 +7,19 @@
 {% set key = {item_id: item_id} %}
 {% block fields %}
 {% if not editing %}
-  <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+<p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 {% endif %}
-  <p><label>Title: <input name="title" maxlength="256" value="{{ session.title }}"></label></p>
-  <p><label>Destination: <input type="text" name="destination" value="{{ session.destination }}"></label></p>
-  <p><label>Handler:
-    <select name="handler">
-      <option value="">Default ({{ default_handler }})</option>
+<p><label>Title: <input name="title" maxlength="256" value="{{ session.title }}"></label></p>
+<p><label>Destination: <input type="text" name="destination" value="{{ session.destination }}"></label></p>
+<p><label>Handler:
+  <select name="handler">
+    <option value="">Default ({{ default_handler }})</option>
 {% for handler in handlers %}
-      <option value="{{ handler }}"{% if session.handler is same as(handler) %} selected{% endif %}>{{ handler }}</option>
+    <option value="{{ handler }}"{% if session.handler is same as(handler) %} selected{% endif %}>{{ handler }}</option>
 {% endfor %}
-    </select>
-  </label></p>
-  <p>The destination depends on the handler: a Zoom Events session id for <code>zoomevents</code>, a room id for <code>stream</code>, and unused for <code>discord</code>.</p>
+  </select>
+</label></p>
+<p>The destination depends on the handler: a Zoom Events session id for <code>zoomevents</code>, a room id for <code>stream</code>, and unused for <code>discord</code>.</p>
 {% endblock %}
 {% block buttons %}
 {% if editing %}
