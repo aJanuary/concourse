@@ -2,7 +2,7 @@
 $GLOBALS['app-data']['allow_implicit_anonymous'] = false;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 
 $members = auth_switchable_members();
@@ -37,16 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $redirect = (string) ($_GET['redirect'] ?? '/');
 
-render_header(
-  'Switch member',
-  'Switch to a different member.',
-  ['Home' => '/', 'Switch member']
-);
-?>
-<article>
-  <h2>Switch member</h2>
-  <p>Select which member you would like to switch to:</p>
-  <?php render_user_select($members, is_valid_redirect($redirect) ? $redirect : '/'); ?>
-</article>
-<?php
-render_footer();
+render_page('pages/switch-member.html.twig', [
+  'title' => 'Switch member',
+  'description' => 'Switch to a different member.',
+  'breadcrumbs' => ['Home' => '/', 'Switch member'],
+  'members' => $members,
+  'redirect' => is_valid_redirect($redirect) ? $redirect : '/',
+]);

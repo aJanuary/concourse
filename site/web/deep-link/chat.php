@@ -2,7 +2,7 @@
 $GLOBALS['app-data']['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 if (array_key_exists('check_has_joined_discord', $_GET)) {
   $usernames = db_get_discord_usernames($_COOKIE[SESSION_COOKIE_NAME]);
@@ -10,21 +10,20 @@ if (array_key_exists('check_has_joined_discord', $_GET)) {
   exit;
 }
 
-if (!current_user_has_permission('see-discord-posts')) {
-  render_header(
-    'Go to a Discord chat for an item',
-    'Discord chat for programme is not yet open.',
-    ['Home' => '/', 'Go to Discord chat for an item']
-  );
-  ?>
-  <article>
-    <h2>Programme chat not yet open</h2>
-    <p>The discord chat for specific programme items is not yet open. Please check back a few days before the convention.</p>
-    <p>In the meantime you can still <a href="/chat">join the <?php echo CON_NAME; ?> Discord</a> to socialise with other members ahead of the convention.</p>
-  </article>
-  <?php
-  render_footer();
+// $outcome is the part of the template to show: not-open, unknown-item,
+// nothing-scheduled or join
+function render_chat_page($outcome, $description, $context = []): never {
+  render_page('pages/deep-link/chat.html.twig', [
+    'title' => 'Go to a Discord chat for an item',
+    'description' => $description,
+    'breadcrumbs' => ['Home' => '/', 'Go to Discord chat for an item'],
+    'outcome' => $outcome,
+  ] + $context);
   exit;
+}
+
+if (!current_user_has_permission('see-discord-posts')) {
+  render_chat_page('not-open', 'Discord chat for programme is not yet open.');
 }
 
 if (array_key_exists('item_id', $_GET)) {
@@ -35,19 +34,7 @@ if (array_key_exists('item_id', $_GET)) {
     $room_id = $_GET['room_id'];
     $post = db_get_discord_post($room_id);
     if (!$post['post_url']) {
-      render_header(
-        'Go to a Discord chat for an item',
-        'Unknown item in the ' . CON_NAME . ' Discord.',
-        ['Home' => '/', 'Go to Discord chat for an item']
-      );
-      ?>
-      <article>
-        <h2>Unknown item</h2>
-        <p>Sorry, we don&apos;t know about that item.</p>
-      </article>
-      <?php
-      render_footer();
-      exit;
+      render_chat_page('unknown-item', 'Unknown item in the ' . CON_NAME . ' Discord.');
     }
   }
 } else if (array_key_exists('room_id', $_GET)) {
@@ -55,19 +42,7 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post_by_room_and_time($room_id, time());
 
   if (!$post['post_url']) {
-    render_header(
-      'Go to a Discord chat for an item',
-      'Nothing scheduled in that room in the ' . CON_NAME . ' Discord.',
-      ['Home' => '/', 'Go to Discord chat for an item']
-    );
-    ?>
-    <article>
-      <h2>Nothing scheduled</h2>
-      <p>We don&apos;t think anything is happening in that room at the moment. Check back later.</p>
-    </article>
-    <?php
-    render_footer();
-    exit;
+    render_chat_page('nothing-scheduled', 'Nothing scheduled in that room in the ' . CON_NAME . ' Discord.');
   }
 } else {
   die('Missing required query parameter "item_id" or "room_id"');
@@ -79,79 +54,8 @@ if (!empty($usernames)) {
   exit;
 }
 
-$invite_url = htmlspecialchars(discord_authorize_url());
-
-render_header(
-  'Go to a Discord chat for an item',
-  'Join the ' . CON_NAME . ' Discord server.',
-  ['Home' => '/', 'Go to Discord chat for an item']
-);
-
-?>
-  <article>
-    <h2>Join the Discord</h2>
-    <p>Before we can take you to the Discord conversation for this item, you'll need to join the Discord.</p>
-    <div class="wizard">
-    <section id="step1">
-      <header class="<?php echo is_logged_in() ? 'complete' : 'active' ?>"><h3>Step 1 - Log in to the member portal</h3></header>
-      <?php
-      if (!is_logged_in()) {
-      ?>
-        <div class="content">
-          <a href="<?php echo make_login_link(); ?>" class="button login">Log in</a>
-          <p><a href="/login-instructions" target="_blank">Log in instructions</a>
-          <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
-      </div>
-      <?php
-      }
-      ?>
-    </section>
-    <section id="step2">
-      <header class="<?php echo is_logged_in() ? "active": "pending"; ?>"><h3>Step 2 - Join the Discord</h3></header>
-      <div class="content">
-        <p><a class="button <?php echo is_logged_in() ? "" : "disabled"; ?>" target="_blank" <?php echo is_logged_in() ? 'href="' . $invite_url . '"' : ''; ?>>Join the Discord server</a></p>
-        <p><a href="/discord-instructions" target="_blank">Instructions on how to Join the discord</a></p>
-      </div>
-    </section>
-    <section id="step3">
-      <header class="pending"><h3>Step 3 - Go to the item</h3></header>
-      <div class="content">
-        <p><a id="deeplink-button" class="button disabled">Go to the item in Discord</a></p>
-      </div>
-    </section>
-  </article>
-  <script>
-    function checkJoinedDiscord() {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', '/deep-link/chat?check_has_joined_discord=true', true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          if (xhr.responseText === 'true') {
-            const $step2 = document.getElementById('step2');
-            const $step2Content = $step2.getElementsByClassName('content')[0];
-            const $step2Header = $step2.getElementsByTagName('header')[0];
-            $step2.removeChild($step2Content);
-            $step2Header.classList.remove('active');
-            $step2Header.classList.add('complete');
-
-            const $step3 = document.getElementById('step3');
-            const $step3Header = $step3.getElementsByTagName('header')[0];
-            $step3Header.classList.remove('pending');
-            $step3Header.classList.add('active');
-
-            const deepLinkButton = document.getElementById('deeplink-button');
-            deepLinkButton.classList.remove('disabled');
-            deepLinkButton.href = '<?php echo $post['post_url']; ?>';
-            deepLinkButton.title = '';
-          } else {
-            setTimeout(checkJoinedDiscord, 1000);
-          }
-        }
-      };
-      xhr.send();
-    }
-    checkJoinedDiscord();
-  </script>
-<?php
-render_footer();
-?>
+render_chat_page('join', 'Join the ' . CON_NAME . ' Discord server.', [
+  'logged_in' => is_logged_in(),
+  'invite_url' => discord_authorize_url(),
+  'post_url' => $post['post_url'],
+]);

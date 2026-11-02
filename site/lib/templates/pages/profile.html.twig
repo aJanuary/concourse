@@ -1,0 +1,68 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<article>
+  <h2>Profile</h2>
+  <dl class="profile-details">
+    <dt>Badge number</dt>
+    <dd>{{ badge_no }}</dd>
+    <dt>Badge name</dt>
+    <dd>{{ name }}</dd>
+    <dt>Email</dt>
+    <dd>{{ email }}</dd>
+{% if roles %}
+    <dt>Roles</dt>
+    <dd>{{ roles|join(', ') }}</dd>
+{% endif %}
+  </dl>
+{% if owns_several %}
+  <p>Other members share this email address. <a href="/switch-member">Switch member</a></p>
+{% endif %}
+
+{% if can_change_password %}
+  <h3>Change password</h3>
+{% if owns_several %}
+  <p>This changes the password for all members with this email address.</p>
+{% endif %}
+{% if error is not null %}
+  <p class="error" role="alert"><img src="/resources/error.svg" alt="error">{{ error }}</p>
+{% endif %}
+{% if password_changed %}
+  <p class="message" role="status">Your password has been changed.</p>
+{% endif %}
+{% if has_password %}
+  <form action="/profile" method="post" class="nu-form">
+    {{ csrf_field() }}
+    <input type="hidden" name="phase" value="change-password">
+    <div class="form-group">
+      <label for="current_password">Current password</label>
+      <input id="current_password" name="current_password" type="password" autocomplete="current-password" required>
+      <span class="error-message" aria-live="polite"></span>
+    </div>
+    <div class="form-group">
+      <label for="new_password">New password</label>
+      <input id="new_password" name="new_password" type="password" autocomplete="new-password" minlength="{{ min_password_length }}" required>
+      <span class="error-message" aria-live="polite"></span>
+    </div>
+    <div class="form-group">
+      <label for="confirm_new_password">Confirm new password</label>
+      <input id="confirm_new_password" name="confirm_new_password" type="password" autocomplete="new-password" required>
+      <span class="error-message" aria-live="polite"></span>
+    </div>
+    <button type="submit" class="button">Change password</button>
+  </form>
+{% else %}
+  <p>You do not have a password yet. You can log in with a code sent to your email, or set a password.</p>
+  <form action="/set-password" method="post">
+    {{ csrf_field() }}
+    <input type="hidden" name="email" value="{{ email }}">
+    <input type="hidden" name="redirect" value="/profile">
+    <button type="submit" class="button">Set password</button>
+  </form>
+{% endif %}
+{% elseif password_change_url != '' %}
+  <h3>Password</h3>
+  <p>Your password is managed by your login provider.</p>
+  <p><a href="{{ password_change_url }}" class="button">Change password</a></p>
+{% endif %}
+</article>
+{% endblock %}

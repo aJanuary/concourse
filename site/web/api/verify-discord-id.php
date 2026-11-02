@@ -3,7 +3,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/discord.php');
 
 
@@ -24,41 +24,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     request_discord_recheck_user($verification_result["id"]);
   }
 
-  render_header(
-    'Verify Discord ID',
-    'Verify Discord ID.',
-    ['Home' => '/', 'Verify Discord ID']
-  );
-
-?>
-  <article>
-    <h3>Success!</h3>
-    <p>Thank you, we have now associated this membership with the Discord account <?php echo htmlspecialchars($verification_result["username"]); ?>. You may close this tab.</p>
-  </article>
-<?php
-
-  render_footer();
+  render_page('pages/api/verify-discord-id.html.twig', [
+    'title' => 'Verify Discord ID',
+    'description' => 'Verify Discord ID.',
+    'breadcrumbs' => ['Home' => '/', 'Verify Discord ID'],
+    'verified_username' => $verification_result['username'],
+  ]);
 } else {
-  $discord_id = db_get_discord_id_from_token($token);
-
-  render_header(
-    'Verify Discord ID',
-    'Verify Discord ID.',
-    ['Home' => '/', 'Verify Discord ID']
-  );
-
-?>
-  <article>
-    <h3>Verify Discord ID</h3>
-    <p>Are you sure you want to associate the membership for <?php echo htmlspecialchars($GLOBALS['app-data']['username']); ?> with the Discord account <?php echo htmlspecialchars($discord_id); ?>?</p>
-    <form action="/api/verify-discord-id" method="post">
-      <?php echo csrf_field(); ?>
-      <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
-      <button type="submit" class="button">Yes, this is my Discord account</button>
-    </form>
-  </article>
-<?php
-  
-    render_footer();
+  render_page('pages/api/verify-discord-id.html.twig', [
+    'title' => 'Verify Discord ID',
+    'description' => 'Verify Discord ID.',
+    'breadcrumbs' => ['Home' => '/', 'Verify Discord ID'],
+    'verified_username' => null,
+    'discord_id' => db_get_discord_id_from_token($token),
+    'token' => $token,
+  ]);
 }
-?>

@@ -1,0 +1,15 @@
+{# A player filling the whole window, such as a replay #}
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>{{ title ?? 'Replay' }}</title><style>
+  html, body { margin: 0; height: 100%; background: #000; }
+  iframe { display: block; width: 100%; height: 100%; border: none; }
+</style></head>
+<body>
+  <iframe
+    src="{{ url }}"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</body>
+</html>

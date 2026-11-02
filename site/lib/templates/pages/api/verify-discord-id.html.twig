@@ -1,0 +1,19 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+{% if verified_username is not null %}
+  <article>
+    <h3>Success!</h3>
+    <p>Thank you, we have now associated this membership with the Discord account {{ verified_username }}. You may close this tab.</p>
+  </article>
+{% else %}
+  <article>
+    <h3>Verify Discord ID</h3>
+    <p>Are you sure you want to associate the membership for {{ site.user.name }} with the Discord account {{ discord_id }}?</p>
+    <form action="/api/verify-discord-id" method="post">
+      {{ csrf_field() }}
+      <input type="hidden" name="token" value="{{ token }}">
+      <button type="submit" class="button">Yes, this is my Discord account</button>
+    </form>
+  </article>
+{% endif %}
+{% endblock %}

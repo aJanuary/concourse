@@ -35,7 +35,7 @@
 
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 
 class ProgHandlerResult {
@@ -96,47 +96,27 @@ function prog_get_handler($name) {
 }
 
 function prog_render_message($title, $heading, $text, $breadcrumb) {
-  render_header($title, $heading . '.', ['Home' => '/', $breadcrumb]);
-  ?>
-  <article>
-    <h2><?php echo htmlspecialchars($heading); ?></h2>
-    <p><?php echo htmlspecialchars($text); ?></p>
-  </article>
-  <?php
-  render_footer();
+  render_page('programme/message.html.twig', [
+    'title' => $title,
+    'description' => $heading . '.',
+    'breadcrumbs' => ['Home' => '/', $breadcrumb],
+    'heading' => $heading,
+    'text' => $text,
+  ]);
   exit;
 }
 
 function prog_render_login($title, $breadcrumb) {
-  render_header($title, 'Log in to continue.', ['Home' => '/', $breadcrumb]);
-  ?>
-  <article>
-    <h2>Log in to continue</h2>
-    <p>You need to be logged in to do this. Please log in to the members portal to continue.</p>
-    <p><a href="<?php echo htmlspecialchars(make_login_link()); ?>" class="button">Log in</a></p>
-  </article>
-  <?php
-  render_footer();
+  render_page('programme/login.html.twig', [
+    'title' => $title,
+    'description' => 'Log in to continue.',
+    'breadcrumbs' => ['Home' => '/', $breadcrumb],
+  ]);
   exit;
 }
 
 function prog_render_embed($url, $title) {
-  ?>
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><title><?php echo htmlspecialchars($title ?? 'Replay'); ?></title><style>
-  html, body { margin: 0; height: 100%; background: #000; }
-  iframe { display: block; width: 100%; height: 100%; border: none; }
-</style></head>
-<body>
-  <iframe
-    src="<?php echo htmlspecialchars($url); ?>"
-    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
-</body>
-</html>
-  <?php
+  echo twig()->render('programme/embed.html.twig', ['url' => $url, 'title' => $title]);
   exit;
 }
 

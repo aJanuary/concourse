@@ -1,0 +1,9 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<article>
+  <h2>Is this you?</h2>
+  <p>You are currently logged in as {{ name }}.</p>
+  <p><a href="/" class="button">Yes, this is me</a></p>
+  <p><a href="/logout">No, log them out</a></p>
+</article>
+{% endblock %}
