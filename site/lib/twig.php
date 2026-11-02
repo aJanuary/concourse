@@ -59,6 +59,9 @@ function twig(): Environment {
   $twig->addFunction(new TwigFunction('pagination', 'pagination_links'));
   $twig->addFilter(new TwigFilter('initials', 'member_initials'));
   $twig->addFilter(new TwigFilter('avatar_colour', 'member_avatar_colour'));
+  // A value as JavaScript, for inside a <script> only. Strings can't contain
+  // < > & ' or ", so they can't end the script or break out of it.
+  $twig->addFilter(new TwigFilter('json', fn($value) => json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ['is_safe' => ['html']]));
 
   return $twig;
 }

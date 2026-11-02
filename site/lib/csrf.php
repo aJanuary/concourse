@@ -10,7 +10,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 define('CSRF_COOKIE_NAME', IS_HTTPS ? '__Host-csrf' : 'csrf');
 
 // The token for this browser, starting its cookie if it has none. Must first
-// be called before any output; render_header() does so. A $purpose gives a
+// be called before any output; render_page() does so. A $purpose gives a
 // separate token, for one that leaves the site such as an OAuth state.
 function csrf_token($purpose = 'form') {
   $secret = $_COOKIE[CSRF_COOKIE_NAME] ?? '';
@@ -46,15 +46,12 @@ function csrf_check() {
     return;
   }
 
-  require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+  require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
   http_response_code(403);
-  render_header('Form expired', 'Form expired.', ['Home' => '/', 'Form expired']);
-?>
-  <article>
-    <h3>Form expired</h3>
-    <p>We could not accept that form. Please go back, reload the page and try again.</p>
-  </article>
-<?php
-  render_footer();
+  render_page('pages/form-expired.html.twig', [
+    'title' => 'Form expired',
+    'description' => 'Form expired.',
+    'breadcrumbs' => ['Home' => '/', 'Form expired'],
+  ]);
   exit;
 }

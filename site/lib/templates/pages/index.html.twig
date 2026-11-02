@@ -1,0 +1,201 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<nav>
+  <div id="favs" class="category">
+    <h2><img src="/resources/fav-text.svg" alt="" width="20px" height="20px"> Quick links</h2>
+    <p id="fav-hint"><em>Click the heart icon on a card to add or remove it from this quick links section.</em></p>
+    <div class="cards"></div>
+  </div>
+{% for category, category_cards in categories %}
+    <div class="category">
+      <h2>{{ category }}</h2>
+      <div class="cards">
+{% for card in category_cards %}
+        <div class="card {{ card.name }}">
+          <div class="hero"
+{% if card['live-card'] ?? false %}
+              aria-label="{{ card.title }}"
+{% else %}
+              aria-hidden="true"
+{% endif %}
+          >
+          </div>
+          <hgroup>
+            <h3><a href="{{ card.link }}"{% if card.link starts with 'http' %} target="_blank"{% endif %}>{{ card.title }}</a></h3>
+{% if card.subtitle %}
+            <h4>{{ card.subtitle }}</h4>
+{% endif %}
+          </hgroup>
+          <button class="fav" aria-label="Add {{ card.title }} to quick links"></button>
+        </div>
+{% endfor %}
+      </div>
+    </div>
+{% endfor %}
+{% if coming_soon_cards %}
+    <div class="category">
+      <h2>Coming soon…</h2>
+      <div class="cards">
+{% for card in coming_soon_cards %}
+        <div class="card {{ card.name }} coming-soon">
+          <div class="hero" aria-hidden="true">
+          </div>
+          <hgroup>
+            <h3>{{ card.title }}</h3>
+{% if card.subtitle %}
+            <h4>{{ card.subtitle }}</h4>
+{% endif %}
+          </hgroup>
+        </div>
+{% endfor %}
+      </div>
+    </div>
+{% endif %}
+</nav>
+
+<script>
+  const badgeNo = {{ badge_no|json }};
+  function updateTime() {
+    const utc = new Date();
+    const $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
+    for (let $time of $times) {
+      const newTime = utc.toLocaleString('en-GB', { timeZone: {{ timezone|json }}, hour: 'numeric', minute: 'numeric', hour12: false });
+      if (newTime != $time.innerText) {
+        // Only update the time if it has changed.
+        // More importantly than an optimization not to change the DOM, it
+        // prevents screen readers from announcing the time every 10 seconds.
+        $time.innerText = newTime;
+      }
+    }
+    setTimeout(updateTime, 10000);
+  }
+  updateTime();
+
+  function handleCardClick(e) {
+    if (navigator.sendBeacon) {
+      const $card = e.target.closest('.card');
+      const cardName = [...$card.classList].find(c => c != 'card');
+      navigator.sendBeacon('/analytics?event=card-click&data=' + cardName);
+    }
+  }
+
+  for (let $card of [...document.querySelectorAll('.card a')]) {
+    $card.addEventListener('click', handleCardClick);
+  }
+
+  const favOrder = [
+    'time',
+    'chat',
+    'upload-photo',
+    'stream',
+    'maps',
+    'benefits',
+    'guide',
+    'times',
+    'signups',
+    'newsletter',
+    'tours',
+    'itinerary',
+    'readme',
+    'gallery',
+    'upload-presentation',
+    'business-meeting',
+    'site-selection',
+    'accessibility',
+    'childcare',
+    'volunteer',
+    'website',
+    'coc',
+    'help',
+  ];
+
+  function cardName($card) {
+    return $card.className.split(' ')[1];
+  }
+
+  function toggleFav(target) {
+    target.classList.toggle('faved');
+
+    const $card = target.closest('.card');
+    const title = $card.getElementsByTagName('h3')[0].innerText;
+    const mode = target.classList.contains('faved') ? 'added' : 'removed';
+    if (mode == 'added') {
+      target.ariaLabel = 'Remove ' + title + ' from quick links';
+      const $cards = [...$favsList.getElementsByClassName('card')];
+      const $nextCard = $cards.find($c => {
+        return favOrder.indexOf(cardName($c)) > favOrder.indexOf(cardName($card));
+      });
+      const $newCard = $card.cloneNode(true);
+      if ($nextCard) {
+        $favsList.insertBefore($newCard, $nextCard);
+      } else {
+        $favsList.appendChild($newCard);
+      }
+      $newCard.querySelector('a').addEventListener('click', handleCardClick);
+      $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
+    } else {
+      target.ariaLabel = 'Removed';
+      // Coming soon cards share the name class but can't be quick links
+      const cardSelector = '.card:not(.coming-soon).' + cardName($card);
+      const $favedCard = $favsList.querySelector(cardSelector);
+      $favsList.removeChild($favedCard);
+      const $normalCardFav = document.querySelector(cardSelector).getElementsByClassName('fav')[0];
+      $normalCardFav.classList.remove('faved');
+      $normalCardFav.ariaLabel = 'Add ' + title + ' to quick links';
+    }
+    return { mode: mode, card: cardName($card) };
+  }
+
+  function handleFavClick(e) {
+      if (e.x !== 0 || e.y !== 0) {
+        e.target.blur();
+      }
+      const result = toggleFav(e.target);
+      preferences[result.card] = result.mode === 'added';
+      document.cookie = 'favs_' + badgeNo + '=' + encodeURIComponent(JSON.stringify(preferences)) + '; path=/;SameSite=Strict;max-age=31560000000;';
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/analytics?event=favs&data=' + (result.mode == 'added' ? '%2B' : '-') + result.card);
+      }
+  }
+
+  const $favsList = document.getElementById('favs').getElementsByClassName('cards')[0];
+  const $favs = [...document.querySelectorAll('.card:not(.coming-soon) .fav')];
+  // Card name => whether the member explicitly added (true) or removed (false)
+  // it. Defaults only apply to cards the member hasn't chosen either way for,
+  // so cards added to the defaults later still reach returning members.
+  let preferences = {};
+  const defaultFavs = {{ default_favs|json }};
+
+  const favsCookie = document.cookie.split('; ').find(c => c.startsWith('favs_' + badgeNo + '='));
+  if (favsCookie) {
+    const cookieValue = decodeURIComponent(favsCookie.split('=')[1]);
+    try {
+      if (cookieValue.startsWith('{')) {
+        preferences = JSON.parse(cookieValue);
+      } else {
+        // Legacy format: the comma separated list of cards shown, so
+        // anything missing from it was removed
+        const shown = cookieValue.split(',').filter(Boolean);
+        for (const card of defaultFavs) {
+          preferences[card] = shown.includes(card);
+        }
+        for (const card of shown) {
+          preferences[card] = true;
+        }
+      }
+    } catch (e) {
+      preferences = {};
+    }
+  }
+
+  const favedCards = defaultFavs
+    .filter(card => preferences[card] !== false)
+    .concat(Object.keys(preferences).filter(card => preferences[card] === true));
+  for (let $fav of $favs) {
+    $fav.addEventListener('click', handleFavClick);
+    if (favedCards.includes(cardName($fav.closest('.card')))) {
+      toggleFav($fav);
+    }
+  }
+</script>
+{% endblock %}

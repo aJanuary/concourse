@@ -39,17 +39,17 @@ These pages have convention specific text or links in them:
 
 | File | What to change |
 |---|---|
-| `site/web/index.php` | The home page cards, many of which link to `example.com`; the quick links shown by default. See [Cards](cards.md) |
+| `site/web/index.php` | The home page cards, many of which link to `example.com`, and the quick links shown by default. See [Cards](cards.md) |
 | `site/web/login.php` | The membership purchase link and who can log in |
-| `site/web/help.php` | The FAQ and Code of Conduct links, and the list of contact addresses |
-| `site/web/programme-guide.php` | Where the programme guide redirects to, and the holding page shown before it opens |
-| `site/web/newsletter.php` | Where the newsletter redirects to, and the holding page |
-| `site/web/convention-guide.php` | The convention guide holding page |
-| `site/web/maps.php`, `site/web/times.php` | Maps and opening times |
-| `site/web/upload-photo.php`, `site/web/upload-presentation.php` | The upload forms they link to |
-| `site/web/virtual-gatherings.php` | The request form it links to, and how members join a gathering |
-| `site/web/guides/` | Participant and moderator guides |
-| `site/web/privacy-policy.php`, `site/web/attributions.php` | The privacy policy and credits |
+| `site/lib/templates/pages/help.html.twig` | The FAQ and Code of Conduct links, and the list of contact addresses |
+| `site/web/programme-guide.php`, `site/lib/templates/pages/programme-guide.html.twig` | Where the programme guide redirects to, and the holding page shown before it opens |
+| `site/web/newsletter.php`, `site/lib/templates/pages/newsletter.html.twig` | Where the newsletter redirects to, and the holding page |
+| `site/lib/templates/pages/convention-guide.html.twig` | The convention guide holding page |
+| `site/lib/templates/pages/maps.html.twig`, `site/lib/templates/pages/times.html.twig` | Maps and opening times |
+| `site/lib/templates/pages/upload-photo.html.twig`, `site/lib/templates/pages/upload-presentation.html.twig` | The upload forms they link to |
+| `site/lib/templates/pages/virtual-gatherings.html.twig` | The request form it links to, and how members join a gathering |
+| `site/lib/templates/pages/guides/` | Participant and moderator guides |
+| `site/lib/templates/pages/privacy-policy.html.twig`, `site/lib/templates/pages/attributions.html.twig` | The privacy policy and credits |
 | `site/web/502.html` | The maintenance page |
 | `site/lib/templates/email/email.html.twig` | The layout of emails the portal sends |
 

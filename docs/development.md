@@ -110,7 +110,8 @@ render_page('pages/admin/roles.html.twig', [
 
 Twig escapes everything a template prints, so pass plain text and never call
 `htmlspecialchars`. The only HTML that isn't escaped comes from functions
-that make it, such as `csrf_field()`, and the `markdown_to_html` filter. Don't
+that make it, such as `csrf_field()`, and the `markdown_to_html` and `json`
+filters. Don't
 use `|raw`.
 
 Besides the page's own variables, every template can use `site`, with the
@@ -126,6 +127,7 @@ these functions and filters:
 | `has_permission(name)` | Whether the visitor has a permission |
 | `pagination(page, total_pages, params)` | The links `partials/pagination.html.twig` shows |
 | `name\|initials`, `badge_no\|avatar_colour` | A member's avatar |
+| `value\|json` | A value as JavaScript, for use inside `<script>` only |
 
 In development a template that uses a variable it wasn't given fails, so
 mistakes show. Production renders it as nothing, and keeps compiled templates

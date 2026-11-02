@@ -2,14 +2,7 @@
 $GLOBALS['app-data']['allow_implicit_anonymous'] = true;
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-
-render_header(
-  null,
-  'The Member Portal for ' . CON_NAME . '.',
-  null,
-  true
-);
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 $cards = [
   'Info' => [
@@ -223,270 +216,57 @@ $cards = [
     ]
   ]
 ];
-?>
 
-<nav>
-  <div id="favs" class="category">
-    <h2><img src="/resources/fav-text.svg" alt="" width="20px" height="20px"> Quick links</h2>
-    <p id="fav-hint"><em>Click the heart icon on a card to add or remove it from this quick links section.</em></p>
-    <div class="cards"></div>
-  </div>
-  <?php
-  foreach ($cards as $category => $category_cards) {
-    $category_cards = array_filter($category_cards, function($card) {
-      return current_user_has_permission($card['card-permission']);
-    });
-    if (empty($category_cards)) {
-      continue;
-    }
-  ?>
-    <div class="category">
-      <h2><?php echo $category; ?></h2>
-      <div class="cards">
-      <?php
-      foreach ($category_cards as $card) {
-        $open_in_new_tab = str_starts_with($card['link'], 'http');
-      ?>
-        <div class="card <?php echo $card['name']; ?>">
-          <div class="hero"
-          <?php if (!empty($card['live-card'])) { ?>
-              aria-label="<?php echo $card['title']; ?>"
-          <?php } else { ?>
-              aria-hidden="true"
-          <?php } ?>
-          >
-          </div>
-          <hgroup>
-            <h3><a href="<?php echo $card['link']; ?>" <?php echo $open_in_new_tab ? 'target="_blank"' : ''; ?>><?php echo $card['title']; ?></a></h3>
-            <?php
-            if ($card['subtitle']) {
-            ?>
-            <h4><?php echo $card['subtitle']; ?></h4>
-            <?php
-            }
-            ?>
-          </hgroup>
-          <button class="fav" aria-label="Add <?php echo $card['title']; ?> to quick links"></button>
-        </div>
-      <?php
-      }
-      ?>
-      </div>
-    </div>
-  <?php
+// Each category's cards the member can use
+$categories = [];
+foreach ($cards as $category => $category_cards) {
+  $category_cards = array_filter($category_cards, function($card) {
+    return current_user_has_permission($card['card-permission']);
+  });
+  if (!empty($category_cards)) {
+    $categories[$category] = $category_cards;
   }
+}
 
-  // Cards the member can't use yet but has been told are on their way, with
-  // the card's permission followed by -coming-soon. Several cards share a
-  // permission, so each card is only listed once.
-  $coming_soon_cards = [];
-  foreach ($cards as $category_cards) {
-    foreach ($category_cards as $card) {
-      if (!current_user_has_permission($card['card-permission'])
-          && current_user_has_permission($card['card-permission'] . '-coming-soon')) {
-        $coming_soon_cards[$card['name']] = $card;
-      }
+// Cards the member can't use yet but has been told are on their way, with
+// the card's permission followed by -coming-soon. Several cards share a
+// permission, so each card is only listed once.
+$coming_soon_cards = [];
+foreach ($cards as $category_cards) {
+  foreach ($category_cards as $card) {
+    if (!current_user_has_permission($card['card-permission'])
+        && current_user_has_permission($card['card-permission'] . '-coming-soon')) {
+      $coming_soon_cards[$card['name']] = $card;
     }
   }
+}
 
-  if (!empty($coming_soon_cards)) {
-  ?>
-    <div class="category">
-      <h2>Coming soon…</h2>
-      <div class="cards">
-      <?php
-      foreach ($coming_soon_cards as $card) {
-      ?>
-        <div class="card <?php echo $card['name']; ?> coming-soon">
-          <div class="hero" aria-hidden="true">
-          </div>
-          <hgroup>
-            <h3><?php echo htmlspecialchars($card['title']); ?></h3>
-            <?php
-            if ($card['subtitle']) {
-            ?>
-            <h4><?php echo htmlspecialchars($card['subtitle']); ?></h4>
-            <?php
-            }
-            ?>
-          </hgroup>
-        </div>
-      <?php
-      }
-      ?>
-      </div>
-    </div>
-  <?php
-  }
-  ?>
-</nav>
+if (current_user_has_permission('online')) {
+  $default_favs = ['chat', 'upload-photo', 'newsletter', 'guide', 'signups', 'stream'];
+} else {
+  $default_favs = ['chat', 'newsletter', 'maps', 'guide', 'signups'];
+}
+if (current_user_has_permission('programme-participant')) {
+  $default_favs[] = 'itinerary';
+}
+if (current_user_has_permission('childcare')) {
+  $default_favs[] = 'childcare';
+}
+if (current_user_has_permission('see-business-meeting')) {
+  $default_favs[] = 'business-meeting';
+}
+if (current_user_has_permission('see-site-selection')) {
+  $default_favs[] = 'site-selection';
+}
 
-<script>
-  const badgeNo = '<?php echo get_current_user_badge_no(); ?>';
-  function updateTime() {
-    const utc = new Date();
-    const $times = [...document.getElementsByClassName('time')].map($time => $time.getElementsByClassName('hero')[0]);
-    for (let $time of $times) {
-      const newTime = utc.toLocaleString('en-GB', { timeZone: '<?php echo TIMEZONE; ?>', hour: 'numeric', minute: 'numeric', hour12: false });
-      if (newTime != $time.innerText) {
-        // Only update the time if it has changed.
-        // More importantly than an optimization not to change the DOM, it
-        // prevents screen readers from announcing the time every 10 seconds.
-        $time.innerText = newTime;
-      }
-    }
-    setTimeout(updateTime, 10000);
-  }
-  updateTime();
-
-  function handleCardClick(e) {
-    if (navigator.sendBeacon) {
-      const $card = e.target.closest('.card');
-      const cardName = [...$card.classList].find(c => c != 'card');
-      navigator.sendBeacon('/analytics?event=card-click&data=' + cardName);
-    }
-  }
-
-  for (let $card of [...document.querySelectorAll('.card a')]) {
-    $card.addEventListener('click', handleCardClick);
-  }
-
-  const favOrder = [
-    'time',
-    'chat',
-    'upload-photo',
-    'stream',
-    'maps',
-    'benefits',
-    'guide',
-    'times',
-    'signups',
-    'newsletter',
-    'tours',
-    'itinerary',
-    'readme',
-    'gallery',
-    'upload-presentation',
-    'business-meeting',
-    'site-selection',
-    'accessibility',
-    'childcare',
-    'volunteer',
-    'website',
-    'coc',
-    'help',
-  ];
-
-  function cardName($card) {
-    return $card.className.split(' ')[1];
-  }
-
-  function toggleFav(target) {
-    target.classList.toggle('faved');
-
-    const $card = target.closest('.card');
-    const title = $card.getElementsByTagName('h3')[0].innerText;
-    const mode = target.classList.contains('faved') ? 'added' : 'removed';
-    if (mode == 'added') {
-      target.ariaLabel = 'Remove ' + title + ' from quick links';
-      const $cards = [...$favsList.getElementsByClassName('card')];
-      const $nextCard = $cards.find($c => {
-        return favOrder.indexOf(cardName($c)) > favOrder.indexOf(cardName($card));
-      });
-      const $newCard = $card.cloneNode(true);
-      if ($nextCard) {
-        $favsList.insertBefore($newCard, $nextCard);
-      } else {
-        $favsList.appendChild($newCard);
-      }
-      $newCard.querySelector('a').addEventListener('click', handleCardClick);
-      $newCard.getElementsByClassName('fav')[0].addEventListener('click', handleFavClick);
-    } else {
-      target.ariaLabel = 'Removed';
-      // Coming soon cards share the name class but can't be quick links
-      const cardSelector = '.card:not(.coming-soon).' + cardName($card);
-      const $favedCard = $favsList.querySelector(cardSelector);
-      $favsList.removeChild($favedCard);
-      const $normalCardFav = document.querySelector(cardSelector).getElementsByClassName('fav')[0];
-      $normalCardFav.classList.remove('faved');
-      $normalCardFav.ariaLabel = 'Add ' + title + ' to quick links';
-    }
-    return { mode: mode, card: cardName($card) };
-  }
-
-  function handleFavClick(e) {
-      if (e.x !== 0 || e.y !== 0) {
-        e.target.blur();
-      }
-      const result = toggleFav(e.target);
-      preferences[result.card] = result.mode === 'added';
-      document.cookie = 'favs_' + badgeNo + '=' + encodeURIComponent(JSON.stringify(preferences)) + '; path=/;SameSite=Strict;max-age=31560000000;';
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon('/analytics?event=favs&data=' + (result.mode == 'added' ? '%2B' : '-') + result.card);
-      }
-  }
-
-  const $favsList = document.getElementById('favs').getElementsByClassName('cards')[0];
-  const $favs = [...document.querySelectorAll('.card:not(.coming-soon) .fav')];
-  // Card name => whether the member explicitly added (true) or removed (false)
-  // it. Defaults only apply to cards the member hasn't chosen either way for,
-  // so cards added to the defaults later still reach returning members.
-  let preferences = {};
-<?php
-  $faved_cards = [];
-  if (current_user_has_permission('online')) {
-    $faved_cards = ['chat', 'upload-photo', 'newsletter', 'guide', 'signups', 'stream'];
-  } else {
-    $faved_cards = ['chat', 'newsletter', 'maps', 'guide', 'signups'];
-  }
-  if (current_user_has_permission('programme-participant')) {
-    $faved_cards[] = 'itinerary';
-  }
-  if (current_user_has_permission('childcare')) {
-    $faved_cards[] = 'childcare';
-  }
-  if (current_user_has_permission('see-business-meeting')) {
-    $faved_cards[] = 'business-meeting';
-  }
-  if (current_user_has_permission('see-site-selection')) {
-    $faved_cards[] = 'site-selection';
-  }
-  echo "const defaultFavs = " . json_encode($faved_cards) . ";\n";
-?>
-
-  const favsCookie = document.cookie.split('; ').find(c => c.startsWith('favs_' + badgeNo + '='));
-  if (favsCookie) {
-    const cookieValue = decodeURIComponent(favsCookie.split('=')[1]);
-    try {
-      if (cookieValue.startsWith('{')) {
-        preferences = JSON.parse(cookieValue);
-      } else {
-        // Legacy format: the comma separated list of cards shown, so
-        // anything missing from it was removed
-        const shown = cookieValue.split(',').filter(Boolean);
-        for (const card of defaultFavs) {
-          preferences[card] = shown.includes(card);
-        }
-        for (const card of shown) {
-          preferences[card] = true;
-        }
-      }
-    } catch (e) {
-      preferences = {};
-    }
-  }
-
-  const favedCards = defaultFavs
-    .filter(card => preferences[card] !== false)
-    .concat(Object.keys(preferences).filter(card => preferences[card] === true));
-  for (let $fav of $favs) {
-    $fav.addEventListener('click', handleFavClick);
-    if (favedCards.includes(cardName($fav.closest('.card')))) {
-      toggleFav($fav);
-    }
-  }
-</script>
-
-<?php
-render_footer();
-?>
+render_page('pages/index.html.twig', [
+  'title' => null,
+  'description' => 'The Member Portal for ' . CON_NAME . '.',
+  'breadcrumbs' => null,
+  'is_home' => true,
+  'categories' => $categories,
+  'coming_soon_cards' => array_values($coming_soon_cards),
+  'default_favs' => $default_favs,
+  'badge_no' => get_current_user_badge_no() ?? '',
+  'timezone' => TIMEZONE,
+]);

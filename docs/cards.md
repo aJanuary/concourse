@@ -106,12 +106,13 @@ The category colours are custom properties at the top of the file:
 
 ### 4. Quick links
 
-In the script at the bottom of `site/web/index.php`:
-
-- `favOrder` lists card names in the order they appear in quick links. Add
-  the new card; cards not in the list go at the end.
-- `$faved_cards` is the quick links a member starts with, which depend on
-  their permissions. Add the card here to put it in quick links by default.
+- `favOrder`, in the script at the bottom of
+  `site/lib/templates/pages/index.html.twig`, lists card names in the order
+  they appear in quick links. Add the new card; cards not in the list go at
+  the end.
+- `$default_favs`, in `site/web/index.php`, is the quick links a member
+  starts with, which depend on their permissions. Add the card here to put it
+  in quick links by default.
   Members who have already chosen keep their choices, but do get cards added
   to the defaults later.
 
@@ -119,37 +120,43 @@ In the script at the bottom of `site/web/index.php`:
 
 If the card links to a new page in the portal, add it to `site/web`. The URL
 is the file name without `.php`, so `site/web/art-auction.php` is
-`/art-auction`. Pages start like this:
+`/art-auction`. Pages are a PHP file like this:
 
 ```php
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 check_permission('see-art-auction');
 
-render_header(
-  'Art auction',
-  'Bid in the ' . CON_NAME . ' art auction.',
-  ['Home' => '/', 'Art auction']
-);
-?>
+render_page('pages/art-auction.html.twig', [
+  'title' => 'Art auction',
+  'description' => 'Bid in the ' . CON_NAME . ' art auction.',
+  'breadcrumbs' => ['Home' => '/', 'Art auction'],
+]);
+```
+
+and a template, `site/lib/templates/pages/art-auction.html.twig`:
+
+```twig
+{% extends 'layout.html.twig' %}
+{% block content %}
 <article>
   <h2>Art auction</h2>
   ...
 </article>
-<?php
-render_footer();
-?>
+{% endblock %}
 ```
+
+See [Templates](development.md#templates) for what templates can use.
 
 `session_auth.php` sends people who aren't logged in to the login page. To
 let them see the page with the `default` role's permissions instead, set
 `$GLOBALS['app-data']['allow_implicit_anonymous'] = true;` before requiring
 it (this only takes effect when `ALLOW_ANONYMOUS_ACCESS` is on).
 `check_permission()` shows a 404 to members without the permission. Forms
-that `POST` must include `<?php echo csrf_field(); ?>`, or they are rejected.
+that `POST` must include `{{ csrf_field() }}`, or they are rejected.
 
 To link to a third party site with the member's details in it, see
 [Linking to other sites](#linking-to-other-sites).
@@ -159,8 +166,9 @@ To link to a third party site with the member's details in it, see
 A page can send the member to another site with their details in the URL, so
 the other site doesn't need its own login. `site/lib/auth_functions.php` has
 `get_current_user_badge_no()`, `get_current_user_name()` and
-`get_current_user_email()`; `site/web/upload-photo.php` and
-`site/web/virtual-gatherings.php` are examples. Anyone can edit a URL, so
+`get_current_user_email()`, and templates have `site.user.name`;
+`site/web/virtual-gatherings.php` and its template, and
+`site/lib/templates/pages/upload-photo.html.twig`, are examples. Anyone can edit a URL, so
 only do this where it doesn't matter if the details are changed.
 
 ## Coming soon
