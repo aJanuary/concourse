@@ -11,13 +11,11 @@ if (array_key_exists('check_has_joined_discord', $_GET)) {
 }
 
 const CHAT_TITLE = 'Go to a Discord chat for an item';
-const CHAT_CRUMB = 'Go to Discord chat for an item';
 
 function render_chat_message($heading, $text, $description): never {
   render_page('pages/message.html.twig', [
     'title' => CHAT_TITLE,
     'description' => $description,
-    'crumb' => CHAT_CRUMB,
     'heading' => $heading,
     'text' => $text,
   ]);

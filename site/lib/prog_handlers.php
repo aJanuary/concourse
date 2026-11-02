@@ -95,20 +95,18 @@ function prog_get_handler($name) {
   return $factories[$name]();
 }
 
-function prog_render_message($title, $heading, $text, $breadcrumb) {
+function prog_render_message($title, $heading, $text) {
   render_page('pages/message.html.twig', [
     'title' => $title,
-    'crumb' => $breadcrumb,
     'heading' => $heading,
     'text' => $text,
   ]);
   exit;
 }
 
-function prog_render_login($title, $breadcrumb) {
+function prog_render_login($title) {
   render_page('pages/log-in-to-continue.html.twig', [
     'title' => $title,
-    'crumb' => $breadcrumb,
   ]);
   exit;
 }
@@ -118,17 +116,17 @@ function prog_render_embed($url, $title) {
   exit;
 }
 
-function prog_send_result(ProgHandlerResult $result, $title, $breadcrumb) {
+function prog_send_result(ProgHandlerResult $result, $title) {
   switch ($result->type) {
     case 'redirect':
       header('Location: ' . $result->url);
       exit;
     case 'message':
-      prog_render_message($title, $result->heading, $result->text, $breadcrumb);
+      prog_render_message($title, $result->heading, $result->text);
     case 'embed':
       prog_render_embed($result->url, $result->heading);
     case 'login':
-      prog_render_login($title, $breadcrumb);
+      prog_render_login($title);
   }
   throw new LogicException("Unknown programme handler result '{$result->type}'");
 }
@@ -142,40 +140,38 @@ function prog_current_member() {
 }
 
 // Shows the "you're early" page when PROG_TEST_MODE is on
-function prog_check_test_mode($title, $breadcrumb) {
+function prog_check_test_mode($title) {
   if (PROG_TEST_MODE) {
     prog_render_message(
       $title,
       "You're early!",
-      "You've gotten to the right place. When we're live, you'll end up at a page where you can join.",
-      $breadcrumb
+      "You've gotten to the right place. When we're live, you'll end up at a page where you can join."
     );
   }
 }
 
 // Shows a message and exits unless the member may join
-function prog_check_may_join($title, $breadcrumb) {
+function prog_check_may_join($title) {
   if (PROG_JOIN_PERMISSION !== '' && !current_user_has_permission(PROG_JOIN_PERMISSION)) {
     prog_render_message(
       $title,
       'Not available',
-      "Your membership doesn't include access to this. Please contact " . SUPPORT_EMAIL . ' if you think that is a mistake.',
-      $breadcrumb
+      "Your membership doesn't include access to this. Please contact " . SUPPORT_EMAIL . ' if you think that is a mistake.'
     );
   }
 }
 
 // Sends the member to a session through its handler. Does not return.
-function prog_join_session($item_id, $title, $breadcrumb) {
-  prog_check_test_mode($title, $breadcrumb);
+function prog_join_session($item_id, $title) {
+  prog_check_test_mode($title);
   if (!is_logged_in()) {
-    prog_render_login($title, $breadcrumb);
+    prog_render_login($title);
   }
-  prog_check_may_join($title, $breadcrumb);
+  prog_check_may_join($title);
 
   $session = db_get_prog_session($item_id);
   if (!$session['found']) {
-    prog_render_message($title, 'Unknown item', "Sorry, we don't know about that item.", $breadcrumb);
+    prog_render_message($title, 'Unknown item', "Sorry, we don't know about that item.");
   }
 
   $handler = prog_get_handler($session['handler'] ?? DEFAULT_PROG_HANDLER);
@@ -186,16 +182,16 @@ function prog_join_session($item_id, $title, $breadcrumb) {
     'destination' => $session['destination'],
     'member' => prog_current_member(),
   ]);
-  prog_send_result($result, $title, $breadcrumb);
+  prog_send_result($result, $title);
 }
 
 // Sends the member to a room's live stream. Does not return.
-function prog_join_room_stream($room_id, $title, $breadcrumb) {
-  prog_check_test_mode($title, $breadcrumb);
+function prog_join_room_stream($room_id, $title) {
+  prog_check_test_mode($title);
   if (!is_logged_in()) {
-    prog_render_login($title, $breadcrumb);
+    prog_render_login($title);
   }
-  prog_check_may_join($title, $breadcrumb);
+  prog_check_may_join($title);
 
   $result = prog_get_handler('stream')->join([
     'kind' => 'session',
@@ -204,16 +200,16 @@ function prog_join_room_stream($room_id, $title, $breadcrumb) {
     'destination' => $room_id,
     'member' => prog_current_member(),
   ]);
-  prog_send_result($result, $title, $breadcrumb);
+  prog_send_result($result, $title);
 }
 
 // Sends the member to a replay through the replay handler. Does not return.
-function prog_open_replay($item_id, $title, $breadcrumb) {
+function prog_open_replay($item_id, $title) {
   if (PROG_REPLAY_REQUIRES_LOGIN && !is_logged_in()) {
-    prog_render_login($title, $breadcrumb);
+    prog_render_login($title);
   }
   if (is_logged_in()) {
-    prog_check_may_join($title, $breadcrumb);
+    prog_check_may_join($title);
   }
 
   $replay = db_get_replay($item_id);
@@ -221,16 +217,14 @@ function prog_open_replay($item_id, $title, $breadcrumb) {
     prog_render_message(
       $title,
       'Replay unavailable',
-      'Unfortunately there was an issue recording this item, so no replay will be available for it.',
-      $breadcrumb
+      'Unfortunately there was an issue recording this item, so no replay will be available for it.'
     );
   }
   if (!$replay['replay_url']) {
     prog_render_message(
       $title,
       'No replay available yet',
-      "Replay isn't available for this item yet. We're working to get replays up as soon as we can, so check back soon.",
-      $breadcrumb
+      "Replay isn't available for this item yet. We're working to get replays up as soon as we can, so check back soon."
     );
   }
 
@@ -241,5 +235,5 @@ function prog_open_replay($item_id, $title, $breadcrumb) {
     'destination' => $replay['replay_url'],
     'member' => prog_current_member(),
   ]);
-  prog_send_result($result, $title, $breadcrumb);
+  prog_send_result($result, $title);
 }

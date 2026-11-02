@@ -7,4 +7,4 @@ if (!array_key_exists('item_id', $_GET)) {
   die('Missing required query parameter "item_id"');
 }
 
-prog_open_replay($_GET['item_id'], 'Go to an item replay', 'Go to an item replay');
+prog_open_replay($_GET['item_id'], 'Go to an item replay');

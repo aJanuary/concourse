@@ -7,4 +7,4 @@ if (!array_key_exists('item_id', $_GET)) {
   die('Missing required query parameter "item_id"');
 }
 
-prog_join_session($_GET['item_id'], 'Go to a session', 'Go to a session');
+prog_join_session($_GET['item_id'], 'Go to a session');

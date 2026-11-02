@@ -7,4 +7,4 @@ if (!array_key_exists('room_id', $_GET)) {
   die('Missing required query parameter "room_id"');
 }
 
-prog_join_room_stream($_GET['room_id'], 'View stream', 'View stream');
+prog_join_room_stream($_GET['room_id'], 'View stream');

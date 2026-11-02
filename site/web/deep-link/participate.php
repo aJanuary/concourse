@@ -11,16 +11,16 @@ require_once(getenv('CONFIG_LIB_DIR') . '/prog_handlers.php');
 $title = 'Participate in an item';
 
 if (array_key_exists('item_id', $_GET)) {
-  prog_join_session($_GET['item_id'], $title, $title);
+  prog_join_session($_GET['item_id'], $title);
 } else if (!array_key_exists('room_id', $_GET)) {
   die('Missing required query parameter "item_id" or "room_id"');
 }
 
-prog_check_test_mode($title, $title);
+prog_check_test_mode($title);
 if (!is_logged_in()) {
-  prog_render_login($title, $title);
+  prog_render_login($title);
 }
-prog_check_may_join($title, $title);
+prog_check_may_join($title);
 
 $stage = db_get_stage($_GET['room_id']);
 if ($stage['type'] == 'hybrid') {
@@ -33,8 +33,7 @@ if (!$participant_url) {
   prog_render_message(
     $title,
     'Unknown item',
-    "Oops, something went wrong and we don't know where you should be going. Please get in touch with the programme team to find out.",
-    $title
+    "Oops, something went wrong and we don't know where you should be going. Please get in touch with the programme team to find out."
   );
 }
 

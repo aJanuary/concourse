@@ -8,15 +8,15 @@ if (!array_key_exists('room_id', $_GET)) {
 }
 
 $title = 'Go to a stage';
-prog_check_test_mode($title, $title);
+prog_check_test_mode($title);
 if (!is_logged_in()) {
-  prog_render_login($title, $title);
+  prog_render_login($title);
 }
-prog_check_may_join($title, $title);
+prog_check_may_join($title);
 
 $stage = db_get_stage($_GET['room_id']);
 if (!$stage['viewer_url']) {
-  prog_render_message($title, 'Unknown room', "Sorry, we don't know about that room.", $title);
+  prog_render_message($title, 'Unknown room', "Sorry, we don't know about that room.");
 }
 
 header('Location: ' . $stage['viewer_url']);
