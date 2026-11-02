@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Manage Zoom link' %}
 {% set description = 'Manage Zoom link.' %}
 {% set parents = {'Manage programme': '/admin/programme/list'} %}
@@ -6,6 +7,9 @@
 {% block content %}
   <article>
     <h2>Edit Zoom link</h2>
+{% if error %}
+{{ ui.error(error) }}
+{% endif %}
     <form action="/admin/programme/zoom/edit" method="POST" class="vertical">
       {{ csrf_field() }}
       <fieldset>
@@ -14,19 +18,5 @@
       </fieldset>
       <input type="submit" value="Save">
     </form>
-
-    <script>
-      if (window.location.search.includes('error')) {
-          var $toast = document.createElement('p');
-          $toast.role = 'alert';
-          $toast.id = 'error-toast';
-          $toast.textContent = 'Error: ' + new URLSearchParams(window.location.search).get('error');
-          $toast.addEventListener('click', e => {
-            e.target.remove();
-          });
-          document.body.appendChild($toast);
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    </script>
   </article>
 {% endblock %}

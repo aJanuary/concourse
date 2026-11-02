@@ -25,5 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $zoom_url = db_get_zoom_url();
 
 render_page('pages/admin/programme/zoom/edit.html.twig', [
+  'error' => $_GET['error'] ?? null,
   'zoom_url' => $zoom_url,
 ]);

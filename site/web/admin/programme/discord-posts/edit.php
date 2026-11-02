@@ -55,6 +55,7 @@ if ($item_id !== null) {
 
 render_page('pages/admin/programme/discord-posts/edit.html.twig', [
   'heading' => $heading,
+  'editing' => $item_id !== null,
   'item_id' => $item_id,
   'post' => $post,
 ]);

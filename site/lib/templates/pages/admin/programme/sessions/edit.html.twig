@@ -1,20 +1,13 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layouts/admin-edit.html.twig' %}
 {% set title = 'Add/edit a session' %}
 {% set description = 'Manage sessions.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage sessions': '/admin/programme/sessions/list'} %}
 {% set crumb = heading %}
-{% block content %}
-  <article>
-    <h2>{{ heading }}</h2>
-    <form action="/admin/programme/sessions/edit" method="POST" class="vertical">
-      {{ csrf_field() }}
-      <fieldset>
-        <legend>Session details</legend>
-{% if item_id is not null %}
-        <input type="hidden" name="item_id" value="{{ item_id }}">
-        <input type="hidden" name="action" value="edit">
-{% else %}
-        <input type="hidden" name="action" value="add">
+{% set action = '/admin/programme/sessions/edit' %}
+{% set legend = 'Session details' %}
+{% set key = {item_id: item_id} %}
+{% block fields %}
+{% if not editing %}
         <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 {% endif %}
         <p><label>Title: <input name="title" maxlength="256" value="{{ session.title }}"></label></p>
@@ -28,13 +21,9 @@
           </select>
         </label></p>
         <p>The destination depends on the handler: a Zoom Events session id for <code>zoomevents</code>, a room id for <code>stream</code>, and unused for <code>discord</code>.</p>
-      </fieldset>
-      <input type="submit" value="Save">
-{% if item_id is not null %}
-      <input id="delete" type="button" value="Delete">
+{% endblock %}
+{% block buttons %}
+{% if editing %}
       <a href="/admin/programme/replay/edit?{{ replay_query|url_encode }}" class="button">Add or edit replay</a>
 {% endif %}
-    </form>
-{% include 'partials/admin/delete-script.html.twig' with {action: '/admin/programme/sessions/edit', field: 'item_id', value: item_id} %}
-  </article>
 {% endblock %}

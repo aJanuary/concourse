@@ -1,31 +1,16 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layouts/admin-edit.html.twig' %}
 {% set title = 'Add/edit a replay' %}
 {% set description = 'Manage replays.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage replays': '/admin/programme/replay/list'} %}
 {% set crumb = heading %}
-{% block content %}
-  <article>
-    <h2>{{ heading }}</h2>
-    <form action="/admin/programme/replay/edit" method="POST" class="vertical">
-      {{ csrf_field() }}
-      <fieldset>
-        <legend>Replay details</legend>
-{% if not new_replay %}
-        <input type="hidden" name="item_id" value="{{ item_id }}">
-        <input type="hidden" name="action" value="edit">
-{% else %}
-        <input type="hidden" name="action" value="add">
+{% set action = '/admin/programme/replay/edit' %}
+{% set legend = 'Replay details' %}
+{% set key = {item_id: item_id} %}
+{% block fields %}
+{% if not editing %}
         <p><label>Plano Item ID: <input name="item_id" value="{{ item_id }}" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 {% endif %}
         <p><label>Title: <input name="title" maxlength="256" value="{{ replay.title }}"></label></p>
         <p><label>Replay URL: <input type="text" name="replay_url" value="{{ replay.replay_url }}"></label></p>
         <p><label><input type="checkbox" name="unavailable"{% if replay.unavailable %} checked{% endif %}> No replay will be available (shows a message instead of the replay)</label></p>
-      </fieldset>
-      <input type="submit" value="Save">
-{% if not new_replay %}
-      <input id="delete" type="button" value="Delete">
-{% endif %}
-    </form>
-{% include 'partials/admin/delete-script.html.twig' with {action: '/admin/programme/replay/edit', field: 'item_id', value: item_id} %}
-  </article>
 {% endblock %}

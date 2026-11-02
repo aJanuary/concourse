@@ -57,6 +57,6 @@ if ($item_id !== '' && !$new_replay) {
 render_page('pages/admin/programme/replay/edit.html.twig', [
   'heading' => $heading,
   'item_id' => $item_id,
-  'new_replay' => $new_replay,
+  'editing' => !$new_replay,
   'replay' => $replay,
 ]);

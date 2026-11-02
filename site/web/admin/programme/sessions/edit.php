@@ -58,6 +58,7 @@ $same_replay_destination = ($session['handler'] ?? DEFAULT_PROG_HANDLER) === PRO
 
 render_page('pages/admin/programme/sessions/edit.html.twig', [
   'heading' => $heading,
+  'editing' => $item_id !== null,
   'item_id' => $item_id,
   'session' => $session,
   'default_handler' => DEFAULT_PROG_HANDLER,

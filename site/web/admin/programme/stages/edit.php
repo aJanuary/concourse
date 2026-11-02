@@ -54,6 +54,7 @@ if ($room_id !== null) {
 
 render_page('pages/admin/programme/stages/edit.html.twig', [
   'heading' => $heading,
+  'editing' => $room_id !== null,
   'room_id' => $room_id,
   'stage' => $stage,
 ]);

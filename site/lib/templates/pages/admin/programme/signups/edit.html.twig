@@ -1,25 +1,13 @@
-{% extends 'layout.html.twig' %}
-{% import 'ui.html.twig' as ui %}
+{% extends 'layouts/admin-edit.html.twig' %}
 {% set title = 'Add/edit a sign-up' %}
 {% set description = 'Manage sign-ups.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage sign-ups': '/admin/programme/signups/list'} %}
 {% set crumb = heading %}
-{% block content %}
-  <article>
-    <h2>{{ heading }}</h2>
-{% if errors %}
-{{ ui.errors(errors) }}
-{% endif %}
-    <form action="/admin/programme/signups/edit" method="POST" class="vertical">
-      {{ csrf_field() }}
-      <fieldset>
-        <legend>Sign-up details</legend>
-{% if editing %}
-        <input type="hidden" name="id" value="{{ id }}">
-        <input type="hidden" name="action" value="edit">
-{% else %}
-        <input type="hidden" name="action" value="add">
-{% endif %}
+{% set action = '/admin/programme/signups/edit' %}
+{% set legend = 'Sign-up details' %}
+{% set key = {id: id} %}
+{% set delete_name = values.title %}
+{% block fields %}
         <p><label>Title: <input name="title" maxlength="256" required value="{{ values.title }}"></label></p>
         <p><label>Category (sign-ups are grouped by this, for example "Workshop"): <input name="category" maxlength="100" required value="{{ values.category }}"></label></p>
         <p><label>Sign-up URL: <input type="url" name="url" maxlength="2048" required value="{{ values.url }}"></label></p>
@@ -30,25 +18,4 @@
         <p><label>Session start (used to group by day and time): <input type="datetime-local" name="session_start" value="{{ values.session_start }}"></label></p>
         <p><label>Sign-ups open (leave empty to open now): <input type="datetime-local" name="opens_at" value="{{ values.opens_at }}"></label></p>
         <p><label>Sign-ups close (leave empty to stay open): <input type="datetime-local" name="closes_at" value="{{ values.closes_at }}"></label></p>
-      </fieldset>
-      <input type="submit" value="Save">
-{% if editing %}
-      <input id="delete" type="button" value="Delete">
-{% endif %}
-    </form>
-{% if editing %}
-    <form id="delete-form" action="/admin/programme/signups/edit" method="POST" hidden>
-      {{ csrf_field() }}
-      <input type="hidden" name="action" value="delete">
-      <input type="hidden" name="id" value="{{ id }}">
-    </form>
-    <script>
-      document.getElementById('delete').addEventListener('click', function() {
-        if (confirm('Are you sure you want to delete ' + {{ values.title|json }} + '?')) {
-          document.getElementById('delete-form').submit();
-        }
-      });
-    </script>
-{% endif %}
-  </article>
 {% endblock %}
