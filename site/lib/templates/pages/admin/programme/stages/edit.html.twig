@@ -1,8 +1,7 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = 'Add/edit a stage' %}
+{% set title = heading %}
 {% set description = 'Manage stages.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage stages': '/admin/programme/stages/list'} %}
-{% set crumb = heading %}
 {% set action = '/admin/programme/stages/edit' %}
 {% set legend = 'Stage details' %}
 {% set key = {room_id: room_id} %}

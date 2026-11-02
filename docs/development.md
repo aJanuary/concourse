@@ -115,8 +115,8 @@ render_page('pages/admin/roles/edit-member-roles.html.twig', [
 ```
 
 The template names the page before its blocks: its title, the meta
-description, and the breadcrumbs between Home and the page. The last
-breadcrumb is the title unless the page sets `crumb`:
+description, and the breadcrumbs between Home and the page. The title is
+also the last breadcrumb:
 
 ```twig
 {% extends 'layout.html.twig' %}

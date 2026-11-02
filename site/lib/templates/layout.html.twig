@@ -3,8 +3,7 @@
      title        shown after the portal's name in the browser tab and as the
                   last breadcrumb; none on the home page, which has no breadcrumbs
      description  the meta description
-     parents      the breadcrumbs between Home and this page, {name: url}
-     crumb        the last breadcrumb, when it isn't the title #}
+     parents      the breadcrumbs between Home and this page, {name: url} #}
 <!doctype html>
 <html lang="en">
   <head>
@@ -62,7 +61,7 @@
 {% for name, url in parents ?? {} %}
           <li><a href="{{ url }}">{{ name }}</a></li>
 {% endfor %}
-          <li>{{ crumb ?? title }}</li>
+          <li>{{ title }}</li>
         </ul>
       </nav>
 {% endif %}

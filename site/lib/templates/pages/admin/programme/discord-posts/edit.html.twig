@@ -1,8 +1,7 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = 'Add/edit a Discord post' %}
+{% set title = heading %}
 {% set description = 'Manage Discord posts.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage Discord posts': '/admin/programme/discord-posts/list'} %}
-{% set crumb = heading %}
 {% set action = '/admin/programme/discord-posts/edit' %}
 {% set legend = 'Discord post details' %}
 {% set key = {item_id: item_id} %}

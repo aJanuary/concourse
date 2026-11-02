@@ -1,8 +1,7 @@
 {% extends 'layout.html.twig' %}
-{% set title = 'Chat' %}
+{% set title = 'Something went wrong' %}
 {% set description = (outcome == 'access-denied' ? 'Access denied when trying to link' : 'Something went wrong linking') ~ ' Discord account for the ' ~ site.con_short_name ~ ' member portal.' %}
-{% set parents = {'Chat Online': '/chat'} %}
-{% set crumb = 'Something went wrong' %}
+{% set parents = {'Chat online': '/chat'} %}
 {% block content %}
 <article>
   <h3>Something went wrong</h3>

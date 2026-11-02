@@ -1,9 +1,8 @@
 {# Stands in for a page that isn't written yet. page is the page's name; a
-   page extending this can also set its own title and description. #}
+   page extending this can also set its own description. #}
 {% extends 'layout.html.twig' %}
-{% set title = title ?? 'Under construction' %}
+{% set title = page ?: 'Under construction' %}
 {% set description = description ?? 'Under construction.' %}
-{% set crumb = page %}
 {% block content %}
 <article>
   <h2>{{ page }}</h2>

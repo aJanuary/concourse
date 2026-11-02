@@ -1,8 +1,7 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = 'Add/edit a sign-up' %}
+{% set title = heading %}
 {% set description = 'Manage sign-ups.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage sign-ups': '/admin/programme/signups/list'} %}
-{% set crumb = heading %}
 {% set action = '/admin/programme/signups/edit' %}
 {% set legend = 'Sign-up details' %}
 {% set key = {id: id} %}

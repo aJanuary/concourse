@@ -1,10 +1,9 @@
 {% extends 'layout.html.twig' %}
-{% set title = 'Log in as a member' %}
+{% set title = 'Log in' %}
 {% set description = 'Development login.' %}
-{% set crumb = 'Log in' %}
 {% block content %}
 <article>
-  <h2>Log in as a member</h2>
+  <h2>Log in</h2>
   <form method="post" action="/login?provider=dev">
     {{ csrf_field() }}
     <input type="hidden" name="redirect" value="{{ redirect }}">

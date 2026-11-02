@@ -1,8 +1,7 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = 'Add/edit a session' %}
+{% set title = heading %}
 {% set description = 'Manage sessions.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage sessions': '/admin/programme/sessions/list'} %}
-{% set crumb = heading %}
 {% set action = '/admin/programme/sessions/edit' %}
 {% set legend = 'Session details' %}
 {% set key = {item_id: item_id} %}
