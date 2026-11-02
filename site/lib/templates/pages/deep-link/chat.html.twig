@@ -1,24 +1,8 @@
 {% extends 'layout.html.twig' %}
 {% set title = 'Go to a Discord chat for an item' %}
+{% set description = 'Join the ' ~ site.con_name ~ ' Discord server.' %}
 {% set crumb = 'Go to Discord chat for an item' %}
 {% block content %}
-{% if outcome == 'not-open' %}
-  <article>
-    <h2>Programme chat not yet open</h2>
-    <p>The discord chat for specific programme items is not yet open. Please check back a few days before the convention.</p>
-    <p>In the meantime you can still <a href="/chat">join the {{ site.con_name }} Discord</a> to socialise with other members ahead of the convention.</p>
-  </article>
-{% elseif outcome == 'unknown-item' %}
-  <article>
-    <h2>Unknown item</h2>
-    <p>Sorry, we don&apos;t know about that item.</p>
-  </article>
-{% elseif outcome == 'nothing-scheduled' %}
-  <article>
-    <h2>Nothing scheduled</h2>
-    <p>We don&apos;t think anything is happening in that room at the moment. Check back later.</p>
-  </article>
-{% else %}
   <article>
     <h2>Join the Discord</h2>
     <p>Before we can take you to the Discord conversation for this item, you'll need to join the Discord.</p>
@@ -79,5 +63,4 @@
     }
     checkJoinedDiscord();
   </script>
-{% endif %}
 {% endblock %}

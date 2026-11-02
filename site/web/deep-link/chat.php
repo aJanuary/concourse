@@ -10,18 +10,23 @@ if (array_key_exists('check_has_joined_discord', $_GET)) {
   exit;
 }
 
-// $outcome is the part of the template to show: not-open, unknown-item,
-// nothing-scheduled or join
-function render_chat_page($outcome, $description, $context = []): never {
-  render_page('pages/deep-link/chat.html.twig', [
+const CHAT_TITLE = 'Go to a Discord chat for an item';
+const CHAT_CRUMB = 'Go to Discord chat for an item';
+
+function render_chat_message($heading, $text, $description): never {
+  render_page('pages/message.html.twig', [
+    'title' => CHAT_TITLE,
     'description' => $description,
-    'outcome' => $outcome,
-  ] + $context);
+    'crumb' => CHAT_CRUMB,
+    'heading' => $heading,
+    'text' => $text,
+  ]);
   exit;
 }
 
 if (!current_user_has_permission('see-discord-posts')) {
-  render_chat_page('not-open', 'Discord chat for programme is not yet open.');
+  render_page('pages/deep-link/chat-not-open.html.twig');
+  exit;
 }
 
 if (array_key_exists('item_id', $_GET)) {
@@ -32,7 +37,7 @@ if (array_key_exists('item_id', $_GET)) {
     $room_id = $_GET['room_id'];
     $post = db_get_discord_post($room_id);
     if (!$post['post_url']) {
-      render_chat_page('unknown-item', 'Unknown item in the ' . CON_NAME . ' Discord.');
+      render_chat_message('Unknown item', "Sorry, we don't know about that item.", 'Unknown item in the ' . CON_NAME . ' Discord.');
     }
   }
 } else if (array_key_exists('room_id', $_GET)) {
@@ -40,7 +45,7 @@ if (array_key_exists('item_id', $_GET)) {
   $post = db_get_discord_post_by_room_and_time($room_id, time());
 
   if (!$post['post_url']) {
-    render_chat_page('nothing-scheduled', 'Nothing scheduled in that room in the ' . CON_NAME . ' Discord.');
+    render_chat_message('Nothing scheduled', "We don't think anything is happening in that room at the moment. Check back later.", 'Nothing scheduled in that room in the ' . CON_NAME . ' Discord.');
   }
 } else {
   die('Missing required query parameter "item_id" or "room_id"');
@@ -52,7 +57,7 @@ if (!empty($usernames)) {
   exit;
 }
 
-render_chat_page('join', 'Join the ' . CON_NAME . ' Discord server.', [
+render_page('pages/deep-link/chat.html.twig', [
   'logged_in' => is_logged_in(),
   'invite_url' => discord_authorize_url(),
   'post_url' => $post['post_url'],

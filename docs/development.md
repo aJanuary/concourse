@@ -93,7 +93,9 @@ Pages and emails are [Twig](https://twig.symfony.com/doc/3.x/) templates in
   breadcrumbs and footer. Pages extend it and fill its `content` block, and
   can add scripts to `head` and a class to the body with `body_class`.
 - `pages/` has one template for each page, at the page's path: the template
-  for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`.
+  for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`. Pages
+  shown from several places, such as `message.html.twig` (a heading and a
+  sentence) and `form-expired.html.twig`, are at the top of `pages/`.
 - `layouts/` has templates that pages of one kind extend instead of
   `layout.html.twig`: the programme admin lists, and the admin pages that
   add, edit and delete one thing.

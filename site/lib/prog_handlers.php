@@ -96,7 +96,7 @@ function prog_get_handler($name) {
 }
 
 function prog_render_message($title, $heading, $text, $breadcrumb) {
-  render_page('programme/message.html.twig', [
+  render_page('pages/message.html.twig', [
     'title' => $title,
     'crumb' => $breadcrumb,
     'heading' => $heading,
@@ -106,7 +106,7 @@ function prog_render_message($title, $heading, $text, $breadcrumb) {
 }
 
 function prog_render_login($title, $breadcrumb) {
-  render_page('programme/login.html.twig', [
+  render_page('pages/log-in-to-continue.html.twig', [
     'title' => $title,
     'crumb' => $breadcrumb,
   ]);
@@ -114,7 +114,7 @@ function prog_render_login($title, $breadcrumb) {
 }
 
 function prog_render_embed($url, $title) {
-  echo twig()->render('programme/embed.html.twig', ['url' => $url, 'title' => $title]);
+  echo twig()->render('pages/embed.html.twig', ['url' => $url, 'title' => $title]);
   exit;
 }
 
