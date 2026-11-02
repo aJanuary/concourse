@@ -19,21 +19,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       db_add_replay($item_id, $title, $replay_url, $unavailable);
     } catch (Exception $e) {
-      header('Location: /admin/programme/replay/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/replay/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "delete") {
     try {
       db_delete_replay($item_id);
     } catch (Exception $e) {
-      header('Location: /admin/programme/replay/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/replay/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "edit") {
     try {
       db_edit_replay($item_id, $title, $replay_url, $unavailable);
     } catch (Exception $e) {
-      header('Location: /admin/programme/replay/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/replay/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   }

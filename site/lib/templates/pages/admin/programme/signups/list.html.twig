@@ -1,14 +1,5 @@
-{% extends 'layout.html.twig' %}
-{% import 'ui.html.twig' as ui %}
+{% extends 'layouts/admin-list.html.twig' %}
 {% set title = 'Manage sign-ups' %}
 {% set description = 'Manage sign-ups.' %}
-{% set parents = {'Manage programme': '/admin/programme/list'} %}
-{% block content %}
-  <article>
-    <h2>Manage sign-ups</h2>
-{% if error is not null %}
-{{ ui.error(error) }}
-{% endif %}
-{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add sign-up...', url: '/admin/programme/signups/edit'}, {label: 'Bulk add sign-ups...', url: '/admin/programme/signups/bulk-add'}], aria_prefix: 'Edit sign-up'} %}
-  </article>
-{% endblock %}
+{% set actions = {'Add sign-up...': '/admin/programme/signups/edit', 'Bulk add sign-ups...': '/admin/programme/signups/bulk-add'} %}
+{% set aria_prefix = 'Edit sign-up' %}

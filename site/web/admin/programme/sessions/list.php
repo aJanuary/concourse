@@ -17,5 +17,6 @@ foreach (db_get_prog_sessions() as $row) {
 }
 
 render_page('pages/admin/programme/sessions/list.html.twig', [
+  'error' => $_GET['error'] ?? null,
   'items' => $items,
 ]);

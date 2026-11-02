@@ -94,6 +94,8 @@ Pages and emails are [Twig](https://twig.symfony.com/doc/3.x/) templates in
   can add scripts to `head` and a class to the body with `body_class`.
 - `pages/` has one template for each page, at the page's path: the template
   for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`.
+- `layouts/` has templates that pages of one kind extend instead of
+  `layout.html.twig`, such as the programme admin lists.
 - `ui.html.twig` has macros for what many pages show: an error, a list of
   errors and the links to the pages of a long list. Import it with
   `{% import 'ui.html.twig' as ui %}` and call `{{ ui.error(message) }}`.

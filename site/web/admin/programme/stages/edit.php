@@ -20,21 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       db_add_stage($room_id, $title, $viewer_url, $type, $participant_url);
     } catch (Exception $e) {
-      header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/stages/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "edit") {
     try {
       db_edit_stage($room_id, $title, $viewer_url, $type, $participant_url);
     } catch (Exception $e) {
-      header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/stages/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "delete") {
     try {
       db_delete_stage($room_id);
     } catch (Exception $e) {
-      header('Location: /admin/programme/stages/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/stages/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   }

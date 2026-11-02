@@ -1,11 +1,5 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layouts/admin-list.html.twig' %}
 {% set title = 'Manage sessions' %}
 {% set description = 'Manage sessions.' %}
-{% set parents = {'Manage programme': '/admin/programme/list'} %}
-{% block content %}
-  <article>
-    <h2>Manage sessions</h2>
-{% include 'partials/admin/query-error.html.twig' %}
-{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add session...', url: '/admin/programme/sessions/edit'}], aria_prefix: 'Edit item'} %}
-  </article>
-{% endblock %}
+{% set actions = {'Add session...': '/admin/programme/sessions/edit'} %}
+{% set aria_prefix = 'Edit item' %}

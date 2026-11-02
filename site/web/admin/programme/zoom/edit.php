@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   try {
     db_set_zoom_url($zoom_url);
   } catch (Exception $e) {
-    header('Location: /admin/programme/zoom/edit?error=' . $e->getMessage());
+    header('Location: /admin/programme/zoom/edit?error=' . urlencode($e->getMessage()));
     throw $e;
   }
 

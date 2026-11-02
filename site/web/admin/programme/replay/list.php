@@ -17,5 +17,6 @@ foreach (db_get_replays() as $row) {
 }
 
 render_page('pages/admin/programme/replay/list.html.twig', [
+  'error' => $_GET['error'] ?? null,
   'items' => $items,
 ]);

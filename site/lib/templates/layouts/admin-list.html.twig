@@ -1,0 +1,38 @@
+{# A programme admin page listing the things it manages. A page extending it
+   sets title and description, and
+     actions      links such as "Add..." at the top, {label: url}
+     aria_prefix  what each item's link does, such as 'Edit stage'
+     notice       optional, a warning under the heading
+   and its PHP passes items, [{label, url, subtitle}], and error, from
+   ?error= when an edit page couldn't save. #}
+{% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
+{% set parents = {'Manage programme': '/admin/programme/list'} %}
+{% block content %}
+  <article>
+    <h2>{{ title }}</h2>
+{% if notice ?? null %}
+    <p>{{ notice }}</p>
+{% endif %}
+{% if error %}
+{{ ui.error(error) }}
+    <script>
+      // So reloading doesn't show the error again
+      window.history.replaceState({}, document.title, window.location.pathname);
+    </script>
+{% endif %}
+    <ul>
+{% for label, url in actions %}
+      <li><a href="{{ url }}">{{ label }}</a></li>
+{% endfor %}
+{% for item in items %}
+      <li>
+        <a aria-label="{{ aria_prefix }} {{ item.label }}" href="{{ item.url }}">{{ item.label }}</a>
+{% if item.subtitle %}
+        <br>{{ item.subtitle }}
+{% endif %}
+      </li>
+{% endfor %}
+    </ul>
+  </article>
+{% endblock %}

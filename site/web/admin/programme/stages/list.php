@@ -17,5 +17,6 @@ foreach (db_get_stages() as $row) {
 }
 
 render_page('pages/admin/programme/stages/list.html.twig', [
+  'error' => $_GET['error'] ?? null,
   'items' => $items,
 ]);

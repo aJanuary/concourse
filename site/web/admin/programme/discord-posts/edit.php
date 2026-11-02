@@ -21,21 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       db_add_discord_post($item_id, $title, $start, $duration, $room_id, $post_url);
     } catch (Exception $e) {
-      header('Location: /admin/programme/discord-posts/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/discord-posts/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "delete") {
     try {
       db_delete_discord_post($item_id);
     } catch (Exception $e) {
-      header('Location: /admin/programme/discord-posts/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/discord-posts/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "edit") {
     try {
       db_edit_discord_post($item_id, $title, $start, $duration, $room_id, $post_url);
     } catch (Exception $e) {
-      header('Location: /admin/programme/discord-posts/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/discord-posts/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   }

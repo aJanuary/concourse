@@ -23,21 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       db_add_prog_session($item_id, $title, $destination, $handler);
     } catch (Exception $e) {
-      header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/sessions/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "delete") {
     try {
       db_delete_prog_session($item_id);
     } catch (Exception $e) {
-      header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/sessions/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   } else if ($action == "edit") {
     try {
       db_edit_prog_session($item_id, $title, $destination, $handler);
     } catch (Exception $e) {
-      header('Location: /admin/programme/sessions/list?error=' . $e->getMessage());
+      header('Location: /admin/programme/sessions/list?error=' . urlencode($e->getMessage()));
       throw $e;
     }
   }

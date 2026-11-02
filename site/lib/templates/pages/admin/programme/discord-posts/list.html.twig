@@ -1,13 +1,6 @@
-{% extends 'layout.html.twig' %}
-{% set title = 'Manage discord posts' %}
+{% extends 'layouts/admin-list.html.twig' %}
+{% set title = 'Manage Discord posts' %}
 {% set description = 'Manage Discord posts.' %}
-{% set parents = {'Manage programme': '/admin/programme/list'} %}
-{% set crumb = 'Manage Discord posts' %}
-{% block content %}
-  <article>
-    <h2>Manage Discord posts</h2>
-    <p>Warning: These may be overriden by Watson</p>
-{% include 'partials/admin/query-error.html.twig' %}
-{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add post...', url: '/admin/programme/discord-posts/edit'}], aria_prefix: 'Edit item'} %}
-  </article>
-{% endblock %}
+{% set notice = 'Warning: These may be overriden by Watson' %}
+{% set actions = {'Add post...': '/admin/programme/discord-posts/edit'} %}
+{% set aria_prefix = 'Edit item' %}

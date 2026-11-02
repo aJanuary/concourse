@@ -1,11 +1,5 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layouts/admin-list.html.twig' %}
 {% set title = 'Manage replays' %}
 {% set description = 'Manage replays.' %}
-{% set parents = {'Manage programme': '/admin/programme/list'} %}
-{% block content %}
-  <article>
-    <h2>Manage replays</h2>
-{% include 'partials/admin/query-error.html.twig' %}
-{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add replay...', url: '/admin/programme/replay/edit'}], aria_prefix: 'Edit item'} %}
-  </article>
-{% endblock %}
+{% set actions = {'Add replay...': '/admin/programme/replay/edit'} %}
+{% set aria_prefix = 'Edit item' %}

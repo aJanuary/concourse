@@ -1,14 +1,5 @@
-{% extends 'layout.html.twig' %}
-{% import 'ui.html.twig' as ui %}
+{% extends 'layouts/admin-list.html.twig' %}
 {% set title = 'Manage stream URLs' %}
 {% set description = 'Manage stream URLs.' %}
-{% set parents = {'Manage programme': '/admin/programme/list'} %}
-{% block content %}
-  <article>
-    <h2>Manage stream URLs</h2>
-{% if error is not null %}
-{{ ui.error(error) }}
-{% endif %}
-{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add stream URL...', url: '/admin/programme/stream-urls/edit'}], aria_prefix: 'Edit stream URL'} %}
-  </article>
-{% endblock %}
+{% set actions = {'Add stream URL...': '/admin/programme/stream-urls/edit'} %}
+{% set aria_prefix = 'Edit stream URL' %}
