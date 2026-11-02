@@ -2,7 +2,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 check_permission('manage-roles');
 
@@ -84,123 +84,29 @@ if ($badge_no !== '') {
 
 $results = ($member === null && $query !== '') ? db_search_members($query) : null;
 
-render_header(
-  'Edit member roles',
-  'Give or remove roles for a member.',
-  ['Home' => '/', 'Manage roles' => '/admin/roles', 'Edit member roles']
-);
-?>
-  <article>
-    <h2>Edit member roles</h2>
-<?php
-if ($message !== null) {
-  if ($message_class === 'error') {
-?>
-    <p class="error"><img src="/resources/error.svg" alt="error" aria-label="error"><?php echo htmlspecialchars($message); ?></p>
-<?php
-  } else {
-?>
-    <p class="message" role="status"><?php echo htmlspecialchars($message); ?></p>
-<?php
+// The member's roles, and the ones they could be given, each with a note
+// when logging in sets it
+$roles = [];
+$addable_roles = [];
+if ($member !== null) {
+  foreach ($member_roles as $role) {
+    $roles[] = $role + ['note' => role_login_sync_note($badge_no, $role['name'])];
+  }
+  foreach ($other_roles as $role) {
+    $addable_roles[] = $role + ['note' => role_login_sync_note($badge_no, $role['name'])];
   }
 }
 
-if ($member === null) {
-?>
-    <form action="/admin/roles/edit-member-roles" method="GET">
-      <p><label>Badge number, name or email: <input name="q" required value="<?php echo htmlspecialchars($query); ?>"></label></p>
-      <input type="submit" value="Find member">
-    </form>
-<?php
-  if ($results !== null) {
-    if (!$results) {
-?>
-    <p>No members match.</p>
-<?php
-    } else {
-?>
-    <ul>
-<?php
-      foreach ($results as $result) {
-?>
-      <li><a href="<?php echo htmlspecialchars(member_roles_url(['badge_no' => $result['badge_no']])); ?>"><?php echo htmlspecialchars($result['name']); ?></a> (<?php echo htmlspecialchars($result['badge_no']); ?>, <?php echo htmlspecialchars($result['email']); ?>)</li>
-<?php
-      }
-?>
-    </ul>
-<?php
-    }
-  }
-} else {
-?>
-    <p>
-      <?php echo htmlspecialchars($member['name']); ?><?php echo $member['real_name'] !== null ? ' (' . htmlspecialchars($member['real_name']) . ')' : ''; ?><br>
-      Badge number <?php echo htmlspecialchars($badge_no); ?>, <?php echo htmlspecialchars($member['email']); ?>
-    </p>
-    <h3>Roles</h3>
-<?php
-  if (!$member_roles) {
-?>
-    <p>They have no roles beyond the default.</p>
-<?php
-  } else {
-?>
-    <ul>
-<?php
-    foreach ($member_roles as $role) {
-      $note = role_login_sync_note($badge_no, $role['name']);
-?>
-      <li>
-        <form action="/admin/roles/edit-member-roles" method="POST">
-          <?php echo csrf_field(); ?>
-          <?php echo htmlspecialchars($role['name']); ?>
-          <input type="hidden" name="action" value="remove">
-          <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($badge_no); ?>">
-          <input type="hidden" name="role_id" value="<?php echo htmlspecialchars((string) $role['role_id']); ?>">
-          <input type="submit" value="Remove" aria-label="Remove <?php echo htmlspecialchars($role['name']); ?>">
-<?php
-      if ($note !== null) {
-?>
-          <br><small><?php echo htmlspecialchars($note); ?>, so removing it here may be undone.</small>
-<?php
-      }
-?>
-        </form>
-      </li>
-<?php
-    }
-?>
-    </ul>
-<?php
-  }
-
-  if ($other_roles) {
-?>
-    <form action="/admin/roles/edit-member-roles" method="POST">
-      <?php echo csrf_field(); ?>
-      <input type="hidden" name="action" value="add">
-      <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($badge_no); ?>">
-      <label>Add role: <select name="role_id">
-<?php
-    foreach ($other_roles as $role) {
-      $note = role_login_sync_note($badge_no, $role['name']);
-?>
-        <option value="<?php echo htmlspecialchars((string) $role['role_id']); ?>"><?php echo htmlspecialchars($role['name']); ?><?php echo $note !== null ? ' (' . htmlspecialchars(strtolower($note)) . ')' : ''; ?></option>
-<?php
-    }
-?>
-      </select></label>
-      <input type="submit" value="Add">
-    </form>
-<?php
-  }
-?>
-    <p>Changes take effect on the member's next page load.</p>
-    <p><a href="/admin/roles/edit-member-roles">Find another member</a></p>
-<?php
-}
-?>
-  </article>
-<?php
-render_footer();
-?>
+render_page('pages/admin/roles/edit-member-roles.html.twig', [
+  'title' => 'Edit member roles',
+  'description' => 'Give or remove roles for a member.',
+  'breadcrumbs' => ['Home' => '/', 'Manage roles' => '/admin/roles', 'Edit member roles'],
+  'message' => $message,
+  'message_class' => $message_class ?? null,
+  'query' => $query,
+  'results' => $results,
+  'badge_no' => $badge_no,
+  'member' => $member,
+  'roles' => $roles,
+  'addable_roles' => $addable_roles,
+]);

@@ -1,0 +1,21 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>Manage login sessions</h2>
+{% include 'partials/admin/query-error.html.twig' %}
+    <form method="POST">
+      {{ csrf_field() }}
+      <ul>
+{% for session in sessions %}
+        <li>
+          <label>
+            <input type="checkbox" name="{{ session.session_id }}">
+            {{ session.badge_no }} {{ session.name }} ({{ session.session_id }})
+          </label>
+        </li>
+{% endfor %}
+      </ul>
+      <input type="submit" value="Delete selected sessions">
+    </form>
+  </article>
+{% endblock %}

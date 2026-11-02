@@ -2,7 +2,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 check_permission('manage-roles');
 
@@ -10,48 +10,15 @@ function is_admin_role($role_id) {
   return (db_get_role($role_id)['name'] ?? null) === ADMIN_ROLE_NAME;
 }
 
-function render_form_body($role_id = 1) {
-?>
-    <label>Role: <select id="role_id" name="role_id" hx-get="/admin/roles" hx-trigger="change" hx-push-url="true" hx-target="closest form">
-<?php
-      $roles = db_get_roles();
-      foreach ($roles as $role) {
-        $selected = ($role['role_id'] == $role_id) ? 'selected' : '';
-?>
-          <option value="<?php echo $role['role_id']; ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($role['name']); ?></option>
-<?php
-      }
-?>
-    </select></label>
-    <a href="#" hx-on:click="addRole(event)">New role...</a>
-<?php
-    $is_admin_role = is_admin_role($role_id);
-    $disabled = $is_admin_role ? ' disabled' : '';
-?>
-    <fieldset id="permissions"<?php echo $disabled; ?>>
-      <legend>Permissions</legend>
-<?php
-    if ($is_admin_role) {
-?>
-      <p>The <?php echo htmlspecialchars(ADMIN_ROLE_NAME); ?> role always has every permission.</p>
-<?php
-    }
-    $permissions = db_get_role_permissions($role_id);
-    foreach ($permissions as $permission) {
-      $checked = $permission['has_permission'] ? 'checked' : '';
-?>
-      <label>
-        <input type="checkbox" name="permission_<?php echo $permission['name']; ?>_<?php echo $permission['permission_id']; ?>" <?php echo $checked; ?>>
-        <?php echo htmlspecialchars($permission['name']); ?>
-      </label>
-<?php
-    }
-?>
-    </fieldset>
-    <input type="submit" hx-post="/admin/roles" hx-target="closest form" value="Save">
-    <input type="button" hx-get="/admin/roles" hx-target="closest form" hx-include="#role_id" value="Reset">
-    <input type="button" hx-on:click="deleteRole(event)" value="Delete">
-<?php
+// What the role form, which htmx swaps in place, shows for a role
+function role_form_context($role_id) {
+  return [
+    'role_id' => $role_id,
+    'roles' => db_get_roles(),
+    'is_admin_role' => is_admin_role($role_id),
+    'admin_role_name' => ADMIN_ROLE_NAME,
+    'permissions' => db_get_role_permissions($role_id),
+  ];
 }
 
 if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
@@ -75,57 +42,12 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
   } else {
     $role_id = $_GET['role_id'];
   }
-  render_form_body($role_id);
+  echo twig()->render('partials/admin/role-form.html.twig', role_form_context($role_id));
   exit;
 }
 
-  render_header(
-    'Manage roles',
-    'Manage roles.',
-    ['Home' => '/', 'Manage roles']
-  );
-?>
-<article>
-  <h2>Manage roles</h2>
-  <p><a href="/admin/roles/edit-member-roles">Edit a member's roles</a></p>
-  <form id="roles-form" autocomplete="off">
-<?php
-    render_form_body($_GET['role_id'] ?? 1);
-?>
-  </form>
-  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
-  <script>
-    document.body.addEventListener('htmx:configRequest', function(e) {
-      e.detail.headers['X-CSRF-Token'] = <?php echo json_encode(csrf_token()); ?>;
-    });
-
-    function addRole(e) {
-      e.preventDefault();
-
-      var name = prompt('Enter the name of the new role');
-      if (name) {
-        htmx.ajax('POST', '/admin/roles', {
-          target: '#roles-form',
-          values: {name: name},
-        });
-      }
-    }
-
-    function deleteRole(e) {
-      e.preventDefault();
-
-      if (confirm('Are you sure you want to delete this role?')) {
-        htmx.ajax('POST', '/admin/roles', {
-          target: '#roles-form',
-          values: {
-            action: 'delete',
-            role_id: document.getElementById('role_id').value,
-          },
-        });
-      }
-    }
-  </script>
-<?php
-render_footer();
-?>
+render_page('pages/admin/roles.html.twig', [
+  'title' => 'Manage roles',
+  'description' => 'Manage roles.',
+  'breadcrumbs' => ['Home' => '/', 'Manage roles'],
+] + role_form_context($_GET['role_id'] ?? 1));

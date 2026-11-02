@@ -1,0 +1,22 @@
+{# The inside of the roles form on /admin/roles, which htmx replaces after each change #}
+    <label>Role: <select id="role_id" name="role_id" hx-get="/admin/roles" hx-trigger="change" hx-push-url="true" hx-target="closest form">
+{% for role in roles %}
+          <option value="{{ role.role_id }}"{% if role.role_id == role_id %} selected{% endif %}>{{ role.name }}</option>
+{% endfor %}
+    </select></label>
+    <a href="#" hx-on:click="addRole(event)">New role...</a>
+    <fieldset id="permissions"{% if is_admin_role %} disabled{% endif %}>
+      <legend>Permissions</legend>
+{% if is_admin_role %}
+      <p>The {{ admin_role_name }} role always has every permission.</p>
+{% endif %}
+{% for permission in permissions %}
+      <label>
+        <input type="checkbox" name="permission_{{ permission.name }}_{{ permission.permission_id }}" {% if permission.has_permission %}checked{% endif %}>
+        {{ permission.name }}
+      </label>
+{% endfor %}
+    </fieldset>
+    <input type="submit" hx-post="/admin/roles" hx-target="closest form" value="Save">
+    <input type="button" hx-get="/admin/roles" hx-target="closest form" hx-include="#role_id" value="Reset">
+    <input type="button" hx-on:click="deleteRole(event)" value="Delete">
