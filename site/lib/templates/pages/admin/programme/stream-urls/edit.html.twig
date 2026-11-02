@@ -1,0 +1,39 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>{{ heading }}</h2>
+    <form action="/admin/programme/stream-urls/edit" method="POST" class="vertical">
+      {{ csrf_field() }}
+      <fieldset>
+        <legend>Stream URL details</legend>
+{% if editing %}
+        <input type="hidden" name="room_id" value="{{ room_id }}">
+        <input type="hidden" name="action" value="edit">
+{% else %}
+        <input type="hidden" name="action" value="add">
+        <p><label>Room ID: <input name="room_id" maxlength="36" required></label></p>
+{% endif %}
+        <p><label>Title: <input name="title" maxlength="256" value="{{ stream_url.title ?? '' }}"></label></p>
+        <p><label>URL (leave empty when the room is not streaming): <input type="text" name="url" value="{{ stream_url.url ?? '' }}"></label></p>
+      </fieldset>
+      <input type="submit" value="Save">
+{% if editing %}
+      <input id="delete" type="button" value="Delete">
+{% endif %}
+    </form>
+{% if editing %}
+    <form id="delete-form" action="/admin/programme/stream-urls/edit" method="POST" hidden>
+      {{ csrf_field() }}
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="room_id" value="{{ room_id }}">
+    </form>
+    <script>
+      document.getElementById('delete').addEventListener('click', function() {
+        if (confirm('Are you sure you want to delete ' + {{ room_id|json }} + '?')) {
+          document.getElementById('delete-form').submit();
+        }
+      });
+    </script>
+{% endif %}
+  </article>
+{% endblock %}

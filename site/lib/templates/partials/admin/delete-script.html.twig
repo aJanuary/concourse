@@ -1,0 +1,25 @@
+{# Makes the #delete button post action=delete with field=value to action, after asking #}
+    <script>
+      var $delete = document.getElementById('delete');
+      if ($delete) {
+        $delete.addEventListener('click', function(e) {
+          if (confirm('Are you sure you want to delete ' + {{ value|json }} + '?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = {{ action|json }};
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'action';
+            input.value = 'delete';
+            form.appendChild(input);
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = {{ field|json }};
+            input.value = {{ value|json }};
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+          }
+        });
+      }
+    </script>

@@ -1,7 +1,7 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 if (!current_user_has_permission('manage-programme')) {
   header('Location: /');
@@ -53,79 +53,16 @@ if ($item_id !== null) {
   $title = 'Add Discord post';
 }
 
-render_header(
-  'Add/edit a Discord post',
-  'Manage Discord posts.',
-  [
+render_page('pages/admin/programme/discord-posts/edit.html.twig', [
+  'title' => 'Add/edit a Discord post',
+  'description' => 'Manage Discord posts.',
+  'breadcrumbs' => [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
     'Manage Discord posts' => '/admin/programme/discord-posts/list',
-    htmlspecialchars($title)
-  ]
-);
-?>
-  <article>
-    <h2><?php echo htmlspecialchars($title); ?></h2>
-    <p>Warning: These may be overriden by Watson</p>
-    <form action="/admin/programme/discord-posts/edit" method="POST" class="vertical">
-      <?php echo csrf_field(); ?>
-      <fieldset>
-        <legend>Discord post details</legend>
-      <?php
-if ($item_id !== null) {
-?>
-        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item_id); ?>">
-        <input type="hidden" name="action" value="edit">
-<?php
-} else {
-?>
-        <input type="hidden" name="action" value="add">
-        <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
-<?php
-}
-?>
-        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($post['title']); ?>"></label></p>
-        <p><label>Start date/time (yyyy-mm-dd hh:mm in 24h BST): <input name="start" pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$" value="<?php echo htmlspecialchars($post['start']); ?>"></label></p>
-        <p><label>Duration (mins): <input name="duration" value="<?php echo htmlspecialchars($post['duration']); ?>" pattern="^\d*$"></label></p>
-        <p><label>Plano Room ID: <input name="room_id" value="<?php echo htmlspecialchars($post['room_id']); ?>" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
-        <p><label>Discord URL: <input type="text" name="post_url" value="<?php echo htmlspecialchars($post['post_url']); ?>"></label></p>
-      </fieldset>
-      <input type="submit" value="Save">
-      <?php
-if ($item_id !== null) {
-?>
-      <input id="delete" type="button" value="Delete">
-<?php
-}
-?>
-    </form>
-
-    <script>
-      var $delete = document.getElementById('delete');
-      if ($delete) {
-        $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete ' + <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?> + '?')) {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/admin/programme/discord-posts/edit';
-            var itemId = <?php echo json_encode($item_id, JSON_HEX_TAG | JSON_HEX_AMP); ?>;
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'action';
-            input.value = 'delete';
-            form.appendChild(input);
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'item_id';
-            input.value = itemId;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-          }
-        });
-      }
-    </script>
-  <article>
-  <?php
-  render_footer();
-  ?>
+    $title,
+  ],
+  'heading' => $title,
+  'item_id' => $item_id,
+  'post' => $post,
+]);

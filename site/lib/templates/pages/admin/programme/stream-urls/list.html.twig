@@ -1,0 +1,10 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>Manage stream URLs</h2>
+{% if error is not null %}
+{% include 'partials/error.html.twig' with {message: error} %}
+{% endif %}
+{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add stream URL...', url: '/admin/programme/stream-urls/edit'}], aria_prefix: 'Edit stream URL'} %}
+  </article>
+{% endblock %}

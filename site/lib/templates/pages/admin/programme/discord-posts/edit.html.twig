@@ -1,0 +1,30 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>{{ heading }}</h2>
+    <p>Warning: These may be overriden by Watson</p>
+    <form action="/admin/programme/discord-posts/edit" method="POST" class="vertical">
+      {{ csrf_field() }}
+      <fieldset>
+        <legend>Discord post details</legend>
+{% if item_id is not null %}
+        <input type="hidden" name="item_id" value="{{ item_id }}">
+        <input type="hidden" name="action" value="edit">
+{% else %}
+        <input type="hidden" name="action" value="add">
+        <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+{% endif %}
+        <p><label>Title: <input name="title" maxlength="256" value="{{ post.title }}"></label></p>
+        <p><label>Start date/time (yyyy-mm-dd hh:mm in 24h BST): <input name="start" pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$" value="{{ post.start }}"></label></p>
+        <p><label>Duration (mins): <input name="duration" value="{{ post.duration }}" pattern="^\d*$"></label></p>
+        <p><label>Plano Room ID: <input name="room_id" value="{{ post.room_id }}" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+        <p><label>Discord URL: <input type="text" name="post_url" value="{{ post.post_url }}"></label></p>
+      </fieldset>
+      <input type="submit" value="Save">
+{% if item_id is not null %}
+      <input id="delete" type="button" value="Delete">
+{% endif %}
+    </form>
+{% include 'partials/admin/delete-script.html.twig' with {action: '/admin/programme/discord-posts/edit', field: 'item_id', value: item_id} %}
+  </article>
+{% endblock %}

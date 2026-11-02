@@ -1,7 +1,7 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 if (!current_user_has_permission('manage-programme')) {
   header('Location: /');
@@ -52,88 +52,16 @@ if ($room_id !== null) {
   $title = 'Add stage';
 }
 
-render_header(
-  'Add/edit a stage',
-  'Manage stages.',
-  [
+render_page('pages/admin/programme/stages/edit.html.twig', [
+  'title' => 'Add/edit a stage',
+  'description' => 'Manage stages.',
+  'breadcrumbs' => [
     'Home' => '/',
     'Manage programme' => '/admin/programme/list',
     'Manage stages' => '/admin/programme/stages/list',
-    htmlspecialchars($title)
-  ]
-);
-?>
-  <article>
-    <h2><?php echo htmlspecialchars($title); ?></h2>
-    <form action="/admin/programme/stages/edit" method="POST" class="vertical">
-      <?php echo csrf_field(); ?>
-      <fieldset>
-        <legend>Stage details</legend>
-      <?php
-if ($room_id !== null) {
-?>
-        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room_id); ?>">
-        <input type="hidden" name="action" value="edit">
-<?php
-} else {
-?>
-        <input type="hidden" name="action" value="add">
-        <p><label>Plano Room ID: <input name="room_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
-<?php
-}
-?>
-        <p><label>Title: <input name="title" maxlength="256" value="<?php echo htmlspecialchars($stage['title']); ?>"></label></p>
-        <p><label>Viewer URL: <input name="viewer_url" value="<?php echo htmlspecialchars($stage['viewer_url']); ?>"></label></p>
-        <p><label>Type: <select name="type">
-          <option value="hybrid" <?php if ($stage['type'] == 'hybrid') { echo 'selected'; } ?>>Hybrid</option>
-          <option value="online-only" <?php if ($stage['type'] == 'online-only') { echo 'selected'; } ?>>Online-only</option>
-        </select></label></p>
-        <p><label>Stream Yard URL: <input name="participant_url" value="<?php echo htmlspecialchars($stage['participant_url']); ?>"></label></p>
-      </fieldset>
-      <input type="submit" value="Save">
-<?php
-if ($room_id !== null) {
-?>
-      <input id="delete" type="button" value="Delete">
-<?php
-}
-?>
-    </form>
-
-    <script>
-      var $type = document.querySelector('select[name="type"]');
-      var $participantUrl = document.querySelector('input[name="participant_url"]');
-      function handleTypeChange() {
-        $participantUrl.disabled = $type.value === 'hybrid';
-      }
-      $type.addEventListener('change', handleTypeChange);
-      handleTypeChange();
-
-      var $delete = document.getElementById('delete');
-      if ($delete) {
-        $delete.addEventListener('click', function(e) {
-          if (confirm('Are you sure you want to delete ' + <?php echo json_encode($room_id, JSON_HEX_TAG | JSON_HEX_AMP); ?> + '?')) {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/admin/programme/stages/edit';
-            var roomId = <?php echo json_encode($room_id, JSON_HEX_TAG | JSON_HEX_AMP); ?>;
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'action';
-            input.value = 'delete';
-            form.appendChild(input);
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'room_id';
-            input.value = roomId;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-          }
-        });
-      }
-    </script>
-    <article>
-  <?php
-  render_footer();
-  ?>
+    $title,
+  ],
+  'heading' => $title,
+  'room_id' => $room_id,
+  'stage' => $stage,
+]);

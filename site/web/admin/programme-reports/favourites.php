@@ -2,7 +2,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/conclar.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/csv.php');
 
@@ -35,38 +35,21 @@ if ($counts && ($_GET['download'] ?? '') === 'csv') {
   exit;
 }
 
-render_header(
-  'Programme item favourites',
-  'How many members starred each programme item.',
-  ['Home' => '/', 'Programme reports' => '/admin/programme-reports', 'Programme item favourites']
-);
-?>
-<article>
-  <h2>Programme item favourites</h2>
-  <?php if ($app_id === ''): ?>
-    <p>No ConClár app ids are configured, so there are no favourites to report.</p>
-  <?php elseif (!$counts): ?>
-    <p>No members have starred any items yet.</p>
-  <?php else: ?>
-    <p><?php echo conclar_count_members_with_favourites($app_id); ?> members have starred items, across <?php echo count($counts); ?> items. Members with neither the online nor the in-person role are only counted in the total.</p>
-    <p><a href="/admin/programme-reports/favourites?app_id=<?php echo urlencode($app_id); ?>&amp;download=csv" class="button">Download CSV</a></p>
-    <table>
-      <thead>
-        <tr><th>Item</th><th>Favourites</th><th>Online</th><th>In person</th></tr>
-      </thead>
-      <tbody>
-        <?php foreach ($counts as $row): ?>
-          <tr>
-            <td><?php echo htmlspecialchars($titles[$row['item_id']] ?? $row['item_id']); ?></td>
-            <td><?php echo (int) $row['total']; ?></td>
-            <td><?php echo (int) $row['online']; ?></td>
-            <td><?php echo (int) $row['in_person']; ?></td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  <?php endif; ?>
-</article>
-<?php
-render_footer();
-?>
+$rows = [];
+foreach ($counts as $row) {
+  $rows[] = [
+    'title' => $titles[$row['item_id']] ?? $row['item_id'],
+    'total' => (int) $row['total'],
+    'online' => (int) $row['online'],
+    'in_person' => (int) $row['in_person'],
+  ];
+}
+
+render_page('pages/admin/programme-reports/favourites.html.twig', [
+  'title' => 'Programme item favourites',
+  'description' => 'How many members starred each programme item.',
+  'breadcrumbs' => ['Home' => '/', 'Programme reports' => '/admin/programme-reports', 'Programme item favourites'],
+  'app_id' => $app_id,
+  'rows' => $rows,
+  'member_count' => $counts ? conclar_count_members_with_favourites($app_id) : 0,
+]);

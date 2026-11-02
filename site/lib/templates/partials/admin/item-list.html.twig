@@ -1,0 +1,16 @@
+{# The things an admin page manages. Include with
+   actions: [{label, url}], links such as "Add..." at the top
+   items: [{label, url, subtitle}], with aria_prefix such as 'Edit item' #}
+    <ul>
+{% for action in actions %}
+      <li><a href="{{ action.url }}">{{ action.label }}</a></li>
+{% endfor %}
+{% for item in items %}
+      <li>
+        <a aria-label="{{ aria_prefix }} {{ item.label }}" href="{{ item.url }}">{{ item.label }}</a>
+{% if item.subtitle %}
+        <br>{{ item.subtitle }}
+{% endif %}
+      </li>
+{% endfor %}
+    </ul>

@@ -1,63 +1,24 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 if (!current_user_has_permission('manage-programme')) {
   header('Location: /');
   exit;
 }
-  
-render_header(
-  'Manage stages',
-  'Manage stages.',
-  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage stages']
-);
-?>
-  <article>
-    <h2>Manage stages</h2>
-    <script>
-      if (window.location.search.includes('error')) {
-        var $toast = document.createElement('p');
-        $toast.classList = ['error'];
-        $toast.textContent = new URLSearchParams(window.location.search).get('error');
-      
-        var $img = document.createElement('img');
-        $img.src = '/resources/error.svg';
-        $img.alt = 'error';
-        $img.ariaLabel = 'error';
-        $toast.prepend($img);
+$items = [];
+foreach (db_get_stages() as $row) {
+  $items[] = [
+    'label' => $row['title'] ?: $row['room_id'],
+    'url' => '/admin/programme/stages/edit?room_id=' . urlencode($row['room_id']),
+    'subtitle' => $row['title'] ? $row['room_id'] : null,
+  ];
+}
 
-        document.write($toast.outerHTML);
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    </script>
-    <ul>
-      <li><a href="/admin/programme/stages/edit">Add stage...</a></li>
-<?php
-        $stages = db_get_stages();
-        foreach ($stages as $stage) {
-          $subtitle = null;
-          if ($stage['title']) {
-            $label = $stage['title'];
-            $subtitle = $stage['room_id'];
-          } else {
-            $label = $stage['room_id'];
-          }
-?>
-          <li>
-            <a aria-label="Edit stage <?php echo htmlspecialchars($label); ?>" href="/admin/programme/stages/edit?room_id=<?php echo $stage['room_id']; ?>"><?php echo htmlspecialchars($label); ?></a>
-            <?php
-            if ($subtitle) {
-              echo '<br>' . htmlspecialchars($subtitle);
-            }
-            ?>
-          </li>
-<?php
-        }
-?>
-    </ul>
-  </article>
-  <?php
-  render_footer();
-  ?>
+render_page('pages/admin/programme/stages/list.html.twig', [
+  'title' => 'Manage stages',
+  'description' => 'Manage stages.',
+  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage stages'],
+  'items' => $items,
+]);

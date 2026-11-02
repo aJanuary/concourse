@@ -1,63 +1,24 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 if (!current_user_has_permission('manage-programme')) {
   header('Location: /');
   exit;
 }
-  
-render_header(
-  'Manage replays',
-  'Manage replays.',
-  ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage replays']
-);
-?>
-  <article>
-    <h2>Manage replays</h2>
-    <script>
-      if (window.location.search.includes('error')) {
-        var $toast = document.createElement('p');
-        $toast.classList = ['error'];
-        $toast.textContent = new URLSearchParams(window.location.search).get('error');
-      
-        var $img = document.createElement('img');
-        $img.src = '/resources/error.svg';
-        $img.alt = 'error';
-        $img.ariaLabel = 'error';
-        $toast.prepend($img);
+$items = [];
+foreach (db_get_replays() as $row) {
+  $items[] = [
+    'label' => $row['title'] ?: $row['item_id'],
+    'url' => '/admin/programme/replay/edit?item_id=' . urlencode($row['item_id']),
+    'subtitle' => $row['title'] ? $row['item_id'] : null,
+  ];
+}
 
-        document.write($toast.outerHTML);
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    </script>
-    <ul>
-      <li><a href="/admin/programme/replay/edit">Add replay...</a></li>
-<?php
-        $replays = db_get_replays();
-        foreach ($replays as $replay) {
-          $subtitle = null;
-          if ($replay['title']) {
-            $label = $replay['title'];
-            $subtitle = $replay['item_id'];
-          } else {
-            $label = $replay['item_id'];
-          }
-?>
-          <li>
-            <a aria-label="Edit item <?php echo htmlspecialchars($label); ?>" href="/admin/programme/replay/edit?item_id=<?php echo $replay['item_id']; ?>"><?php echo htmlspecialchars($label); ?></a>
-            <?php
-            if ($subtitle) {
-              echo '<br>' . htmlspecialchars($subtitle);
-            }
-            ?>
-          </li>
-<?php
-        }
-?>
-    </ul>
-  <article>
-  <?php
-  render_footer();
-  ?>
+render_page('pages/admin/programme/replay/list.html.twig', [
+  'title' => 'Manage replays',
+  'description' => 'Manage replays.',
+  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage replays'],
+  'items' => $items,
+]);

@@ -1,0 +1,9 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>Manage Discord posts</h2>
+    <p>Warning: These may be overriden by Watson</p>
+{% include 'partials/admin/query-error.html.twig' %}
+{% include 'partials/admin/item-list.html.twig' with {actions: [{label: 'Add post...', url: '/admin/programme/discord-posts/edit'}], aria_prefix: 'Edit item'} %}
+  </article>
+{% endblock %}

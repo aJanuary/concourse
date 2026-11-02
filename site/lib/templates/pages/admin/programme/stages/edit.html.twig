@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>{{ heading }}</h2>
+    <form action="/admin/programme/stages/edit" method="POST" class="vertical">
+      {{ csrf_field() }}
+      <fieldset>
+        <legend>Stage details</legend>
+{% if room_id is not null %}
+        <input type="hidden" name="room_id" value="{{ room_id }}">
+        <input type="hidden" name="action" value="edit">
+{% else %}
+        <input type="hidden" name="action" value="add">
+        <p><label>Plano Room ID: <input name="room_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+{% endif %}
+        <p><label>Title: <input name="title" maxlength="256" value="{{ stage.title }}"></label></p>
+        <p><label>Viewer URL: <input name="viewer_url" value="{{ stage.viewer_url }}"></label></p>
+        <p><label>Type: <select name="type">
+          <option value="hybrid" {% if stage.type == 'hybrid' %}selected{% endif %}>Hybrid</option>
+          <option value="online-only" {% if stage.type == 'online-only' %}selected{% endif %}>Online-only</option>
+        </select></label></p>
+        <p><label>Stream Yard URL: <input name="participant_url" value="{{ stage.participant_url }}"></label></p>
+      </fieldset>
+      <input type="submit" value="Save">
+{% if room_id is not null %}
+      <input id="delete" type="button" value="Delete">
+{% endif %}
+    </form>
+
+    <script>
+      var $type = document.querySelector('select[name="type"]');
+      var $participantUrl = document.querySelector('input[name="participant_url"]');
+      function handleTypeChange() {
+        $participantUrl.disabled = $type.value === 'hybrid';
+      }
+      $type.addEventListener('change', handleTypeChange);
+      handleTypeChange();
+    </script>
+{% include 'partials/admin/delete-script.html.twig' with {action: '/admin/programme/stages/edit', field: 'room_id', value: room_id} %}
+  </article>
+{% endblock %}
