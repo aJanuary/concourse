@@ -4,73 +4,70 @@
 {% set description = 'Give or remove roles for a member.' %}
 {% set parents = {'Manage roles': '/admin/roles'} %}
 {% block content %}
-<article>
-  <h2>Edit member roles</h2>
 {% if message is not null %}
 {% if message_class == 'error' %}
 {{ ui.error(message) }}
 {% else %}
-  <p class="message" role="status">{{ message }}</p>
+<p class="message" role="status">{{ message }}</p>
 {% endif %}
 {% endif %}
 {% if member is null %}
-  <form action="/admin/roles/edit-member-roles" method="GET">
-    <p><label>Badge number, name or email: <input name="q" required value="{{ query }}"></label></p>
-    <input type="submit" value="Find member">
-  </form>
+<form action="/admin/roles/edit-member-roles" method="GET">
+  <p><label>Badge number, name or email: <input name="q" required value="{{ query }}"></label></p>
+  <input type="submit" value="Find member">
+</form>
 {% if results is not null %}
 {% if not results %}
-  <p>No members match.</p>
+<p>No members match.</p>
 {% else %}
-  <ul>
+<ul>
 {% for result in results %}
-    <li><a href="/admin/roles/edit-member-roles?{{ {badge_no: result.badge_no}|url_encode }}">{{ result.name }}</a> ({{ result.badge_no }}, {{ result.email }})</li>
+  <li><a href="/admin/roles/edit-member-roles?{{ {badge_no: result.badge_no}|url_encode }}">{{ result.name }}</a> ({{ result.badge_no }}, {{ result.email }})</li>
 {% endfor %}
-  </ul>
+</ul>
 {% endif %}
 {% endif %}
 {% else %}
-  <p>
-    {{ member.name }}{% if member.real_name is not null %} ({{ member.real_name }}){% endif %}<br>
-    Badge number {{ badge_no }}, {{ member.email }}
-  </p>
-  <h3>Roles</h3>
+<p>
+  {{ member.name }}{% if member.real_name is not null %} ({{ member.real_name }}){% endif %}<br>
+  Badge number {{ badge_no }}, {{ member.email }}
+</p>
+<h3>Roles</h3>
 {% if not roles %}
-  <p>They have no roles beyond the default.</p>
+<p>They have no roles beyond the default.</p>
 {% else %}
-  <ul>
+<ul>
 {% for role in roles %}
-    <li>
-      <form action="/admin/roles/edit-member-roles" method="POST">
-        {{ csrf_field() }}
-        {{ role.name }}
-        <input type="hidden" name="action" value="remove">
-        <input type="hidden" name="badge_no" value="{{ badge_no }}">
-        <input type="hidden" name="role_id" value="{{ role.role_id }}">
-        <input type="submit" value="Remove" aria-label="Remove {{ role.name }}">
+  <li>
+    <form action="/admin/roles/edit-member-roles" method="POST">
+      {{ csrf_field() }}
+      {{ role.name }}
+      <input type="hidden" name="action" value="remove">
+      <input type="hidden" name="badge_no" value="{{ badge_no }}">
+      <input type="hidden" name="role_id" value="{{ role.role_id }}">
+      <input type="submit" value="Remove" aria-label="Remove {{ role.name }}">
 {% if role.note is not null %}
-        <br><small>{{ role.note }}, so removing it here may be undone.</small>
+      <br><small>{{ role.note }}, so removing it here may be undone.</small>
 {% endif %}
-      </form>
-    </li>
+    </form>
+  </li>
 {% endfor %}
-  </ul>
+</ul>
 {% endif %}
 {% if addable_roles %}
-  <form action="/admin/roles/edit-member-roles" method="POST">
-    {{ csrf_field() }}
-    <input type="hidden" name="action" value="add">
-    <input type="hidden" name="badge_no" value="{{ badge_no }}">
-    <label>Add role: <select name="role_id">
+<form action="/admin/roles/edit-member-roles" method="POST">
+  {{ csrf_field() }}
+  <input type="hidden" name="action" value="add">
+  <input type="hidden" name="badge_no" value="{{ badge_no }}">
+  <label>Add role: <select name="role_id">
 {% for role in addable_roles %}
-      <option value="{{ role.role_id }}">{{ role.name }}{% if role.note is not null %} ({{ role.note|lower }}){% endif %}</option>
+    <option value="{{ role.role_id }}">{{ role.name }}{% if role.note is not null %} ({{ role.note|lower }}){% endif %}</option>
 {% endfor %}
-    </select></label>
-    <input type="submit" value="Add">
-  </form>
+  </select></label>
+  <input type="submit" value="Add">
+</form>
 {% endif %}
-  <p>Changes take effect on the member's next page load.</p>
-  <p><a href="/admin/roles/edit-member-roles">Find another member</a></p>
+<p>Changes take effect on the member's next page load.</p>
+<p><a href="/admin/roles/edit-member-roles">Find another member</a></p>
 {% endif %}
-</article>
 {% endblock %}

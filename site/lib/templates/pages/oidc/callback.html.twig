@@ -2,31 +2,28 @@
 {% set title = 'Log in' %}
 {% set description = 'Log in to the member portal for ' ~ site.con_name ~ '.' %}
 {% block content %}
-<article>
-  <h2>Log in</h2>
-  <h3>Your login link opened in a different browser</h3>
-  <p>It looks like the link opened in a different browser to the one you started logging in with.</p>
-  <p>Often this is because your email client is using an embedded browser rather than opening using your system browser.</p>
-  <p>Copy the URL below, switch to your regular browser, and paste the URL into the URL bar:</p>
-  <p id="url"><input type="text" readonly value="{{ url }}"/></p>
-  <script>
-    const $url = document.getElementById("url");
-    const $urlInput = $url.querySelector("input");
-    $urlInput.addEventListener('focus', () => $urlInput.select());
+<h3>Your login link opened in a different browser</h3>
+<p>It looks like the link opened in a different browser to the one you started logging in with.</p>
+<p>Often this is because your email client is using an embedded browser rather than opening using your system browser.</p>
+<p>Copy the URL below, switch to your regular browser, and paste the URL into the URL bar:</p>
+<p id="url"><input type="text" readonly value="{{ url }}"/></p>
+<script>
+  const $url = document.getElementById("url");
+  const $urlInput = $url.querySelector("input");
+  $urlInput.addEventListener('focus', () => $urlInput.select());
 
-    if (navigator.clipboard) {
-      const $copy = document.createElement('button');
-      $copy.textContent = 'Copy';
-      $copy.addEventListener('click', () => {
-        navigator.clipboard.writeText($urlInput.value);
-        $urlInput.select();
-        $copy.textContent = 'Copied!';
-        setTimeout(() => $copy.textContent = 'Copy', 2000);
-      });
-      $url.appendChild($copy);
-    }
-  </script>
-  <p>Or, if you started logging in on a different device, you can scan the QR code below with that device's camera app:</p>
-  <img id="qr-code" src="{{ qr_code }}" alt="QR Code" />
-</article>
+  if (navigator.clipboard) {
+    const $copy = document.createElement('button');
+    $copy.textContent = 'Copy';
+    $copy.addEventListener('click', () => {
+      navigator.clipboard.writeText($urlInput.value);
+      $urlInput.select();
+      $copy.textContent = 'Copied!';
+      setTimeout(() => $copy.textContent = 'Copy', 2000);
+    });
+    $url.appendChild($copy);
+  }
+</script>
+<p>Or, if you started logging in on a different device, you can scan the QR code below with that device's camera app:</p>
+<img id="qr-code" src="{{ qr_code }}" alt="QR Code" />
 {% endblock %}

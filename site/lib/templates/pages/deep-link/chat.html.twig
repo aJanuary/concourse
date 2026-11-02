@@ -1,35 +1,33 @@
 {% extends 'layout.html.twig' %}
 {% set title = 'Go to a Discord chat for an item' %}
+{% set heading = 'Join the Discord' %}
 {% set description = 'Join the ' ~ site.con_name ~ ' Discord server.' %}
 {% block content %}
-<article>
-  <h2>Join the Discord</h2>
-  <p>Before we can take you to the Discord conversation for this item, you'll need to join the Discord.</p>
-  <div class="wizard">
-  <section id="step1">
-    <header class="{{ logged_in ? 'complete' : 'active' }}"><h3>Step 1 - Log in to the member portal</h3></header>
+<p>Before we can take you to the Discord conversation for this item, you'll need to join the Discord.</p>
+<div class="wizard">
+<section id="step1">
+  <header class="{{ logged_in ? 'complete' : 'active' }}"><h3>Step 1 - Log in to the member portal</h3></header>
 {% if not logged_in %}
-      <div class="content">
-        <a href="{{ site.user.login_link }}" class="button login">Log in</a>
-        <p><a href="/login-instructions" target="_blank">Log in instructions</a>
-        <p>If you are having trouble logging in, please e-mail <a href="mailto:{{ site.support_email }}?subject=Trouble logging in to member portal">{{ site.support_email }}</a>.</p>
-    </div>
+    <div class="content">
+      <a href="{{ site.user.login_link }}" class="button login">Log in</a>
+      <p><a href="/login-instructions" target="_blank">Log in instructions</a>
+      <p>If you are having trouble logging in, please e-mail <a href="mailto:{{ site.support_email }}?subject=Trouble logging in to member portal">{{ site.support_email }}</a>.</p>
+  </div>
 {% endif %}
-  </section>
-  <section id="step2">
-    <header class="{{ logged_in ? 'active' : 'pending' }}"><h3>Step 2 - Join the Discord</h3></header>
-    <div class="content">
-      <p><a class="button {{ logged_in ? '' : 'disabled' }}" target="_blank"{% if logged_in %} href="{{ invite_url }}"{% endif %}>Join the Discord server</a></p>
-      <p><a href="/discord-instructions" target="_blank">Instructions on how to Join the discord</a></p>
-    </div>
-  </section>
-  <section id="step3">
-    <header class="pending"><h3>Step 3 - Go to the item</h3></header>
-    <div class="content">
-      <p><a id="deeplink-button" class="button disabled">Go to the item in Discord</a></p>
-    </div>
-  </section>
-</article>
+</section>
+<section id="step2">
+  <header class="{{ logged_in ? 'active' : 'pending' }}"><h3>Step 2 - Join the Discord</h3></header>
+  <div class="content">
+    <p><a class="button {{ logged_in ? '' : 'disabled' }}" target="_blank"{% if logged_in %} href="{{ invite_url }}"{% endif %}>Join the Discord server</a></p>
+    <p><a href="/discord-instructions" target="_blank">Instructions on how to Join the discord</a></p>
+  </div>
+</section>
+<section id="step3">
+  <header class="pending"><h3>Step 3 - Go to the item</h3></header>
+  <div class="content">
+    <p><a id="deeplink-button" class="button disabled">Go to the item in Discord</a></p>
+  </div>
+</section>
 <script>
   function checkJoinedDiscord() {
     const xhr = new XMLHttpRequest();

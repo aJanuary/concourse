@@ -2,16 +2,13 @@
 {% set title = 'Upload your photo' %}
 {% set description = 'Upload a photo for ' ~ site.con_name ~ '.' %}
 {% block content %}
-<article>
-  <h2>Upload your photo</h2>
-  <h3>For those not with us in-person</h3>
-  <p>In the opening ceremony we will be showing a montage of photos from {{ site.con_short_name }} members who aren't with us on-site.</p>
-  <p>If you are a member, and aren't with us on-site (either because you bought an online membership, or you bought an in-person membership but can't make it in person) then we invite you to submit a photo for the montage.</p>
+<h3>For those not with us in-person</h3>
+<p>In the opening ceremony we will be showing a montage of photos from {{ site.con_short_name }} members who aren't with us on-site.</p>
+<p>If you are a member, and aren't with us on-site (either because you bought an online membership, or you bought an in-person membership but can't make it in person) then we invite you to submit a photo for the montage.</p>
 {% if site.user.anonymous %}
-  <p><a class="button" href="{{ site.user.login_link }}">Log in to upload a photo</a></p>
+<p><a class="button" href="{{ site.user.login_link }}">Log in to upload a photo</a></p>
 {% else %}
-  <p><a class="button" target="_blank" href="https://example.com/upload-photo?username={{ site.user.name|url_encode }}">Upload photo</a></p>
+<p><a class="button" target="_blank" href="https://example.com/upload-photo?username={{ site.user.name|url_encode }}">Upload photo</a></p>
 {% endif %}
-  <p>The photos, and optionally badge name, will be shown in the opening ceremony, which will be live-streamed and made available for replay to {{ site.con_short_name }} members.
-</article>
+<p>The photos, and optionally badge name, will be shown in the opening ceremony, which will be live-streamed and made available for replay to {{ site.con_short_name }} members.
 {% endblock %}

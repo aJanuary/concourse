@@ -90,8 +90,10 @@ Pages and emails are [Twig](https://twig.symfony.com/doc/3.x/) templates in
 `site/lib/templates`:
 
 - `layout.html.twig` is the whole page around the content: head, header,
-  breadcrumbs and footer. Pages extend it and fill its `content` block, and
-  can add scripts to `head` and a class to the body with `body_class`.
+  breadcrumbs, the page's `<article>` and heading, and footer. Pages extend
+  it and fill its `content` block, and can add scripts to `head` and a class
+  to the body with `body_class`. The home page, which has no article,
+  replaces the `main` block instead.
 - `pages/` has one template for each page, at the page's path: the template
   for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`. Pages
   shown from several places, such as `message.html.twig` (a heading and a
@@ -116,7 +118,10 @@ render_page('pages/admin/roles/edit-member-roles.html.twig', [
 
 The template names the page before its blocks: its title, the meta
 description, and the breadcrumbs between Home and the page. The title is
-also the last breadcrumb:
+also the last breadcrumb and the page's heading; set `heading` when the
+heading should say something else, and `article_class` to give the article
+a class such as `full-width`. The content block is what goes under the
+heading:
 
 ```twig
 {% extends 'layout.html.twig' %}
@@ -124,9 +129,7 @@ also the last breadcrumb:
 {% set description = 'Give or remove roles for a member.' %}
 {% set parents = {'Manage roles': '/admin/roles'} %}
 {% block content %}
-<article>
-  ...
-</article>
+<p>...</p>
 {% endblock %}
 ```
 

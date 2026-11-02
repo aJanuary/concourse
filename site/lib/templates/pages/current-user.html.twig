@@ -1,11 +1,9 @@
 {% extends 'layout.html.twig' %}
 {% set title = 'Current user' %}
+{% set heading = 'Is this you?' %}
 {% set description = 'Who is logged in to ' ~ site.con_name ~ '.' %}
 {% block content %}
-<article>
-  <h2>Is this you?</h2>
-  <p>You are currently logged in as {{ name }}.</p>
-  <p><a href="/" class="button">Yes, this is me</a></p>
-  <p><a href="/logout">No, log them out</a></p>
-</article>
+<p>You are currently logged in as {{ name }}.</p>
+<p><a href="/" class="button">Yes, this is me</a></p>
+<p><a href="/logout">No, log them out</a></p>
 {% endblock %}

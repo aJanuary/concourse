@@ -4,17 +4,14 @@
 {% set title = heading %}
 {% set description = 'Log in to the member portal for ' ~ site.con_name ~ '.' %}
 {% block content %}
-<article>
-  <h2>{{ heading }}</h2>
 {% if error %}
 {{ ui.error(error) }}
 {% endif %}
 {% block form %}{% endblock %}
-  <div class="login-links">
+<div class="login-links">
 {% if allow_anonymous %}
-    <p><a href="/login?skip-login&redirect={{ redirect|url_encode }}">Continue without logging in</a></p>
+  <p><a href="/login?skip-login&redirect={{ redirect|url_encode }}">Continue without logging in</a></p>
 {% endif %}
-    <p>If you are having trouble logging in, please email <a href="mailto:{{ site.support_email }}?subject=Trouble logging in to member portal">{{ site.support_email }}</a>.</p>
-  </div>
-</article>
+  <p>If you are having trouble logging in, please email <a href="mailto:{{ site.support_email }}?subject=Trouble logging in to member portal">{{ site.support_email }}</a>.</p>
+</div>
 {% endblock %}

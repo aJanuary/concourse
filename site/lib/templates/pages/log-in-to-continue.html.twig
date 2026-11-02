@@ -1,9 +1,7 @@
 {% extends 'layout.html.twig' %}
 {% set description = 'Log in to continue.' %}
+{% set heading = 'Log in to continue' %}
 {% block content %}
-<article>
-  <h2>Log in to continue</h2>
-  <p>You need to be logged in to do this. Please log in to the members portal to continue.</p>
-  <p><a href="{{ site.user.login_link }}" class="button">Log in</a></p>
-</article>
+<p>You need to be logged in to do this. Please log in to the members portal to continue.</p>
+<p><a href="{{ site.user.login_link }}" class="button">Log in</a></p>
 {% endblock %}

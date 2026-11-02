@@ -140,14 +140,12 @@ and a template, `site/lib/templates/pages/art-auction.html.twig`:
 {% set title = 'Art auction' %}
 {% set description = 'Bid in the ' ~ site.con_name ~ ' art auction.' %}
 {% block content %}
-<article>
-  <h2>Art auction</h2>
-  ...
-</article>
+<p>...</p>
 {% endblock %}
 ```
 
-See [Templates](development.md#templates) for what templates can use.
+The layout gives the page its heading from the title. See
+[Templates](development.md#templates) for what templates can use.
 
 `session_auth.php` sends people who aren't logged in to the login page. To
 let them see the page with the `default` role's permissions instead, set

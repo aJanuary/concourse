@@ -2,34 +2,31 @@
 {% set title = 'Chat online' %}
 {% set description = 'Join the Discord server for ' ~ site.con_name %}
 {% block content %}
-<article>
-  <h2>Chat online</h2>
-  <p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
+<p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
 {% if not usernames %}
 {% if site.user.anonymous %}
-  <p><a class="button" href="{{ site.user.login_link }}">Log in to chat</a></p>
+<p><a class="button" href="{{ site.user.login_link }}">Log in to chat</a></p>
 {% else %}
-  <p><a class="button" target="_blank" href="{{ authorize_url }}">Join the Discord server</a></p>
+<p><a class="button" target="_blank" href="{{ authorize_url }}">Join the Discord server</a></p>
 {% endif %}
 {% else %}
 {% if usernames|length == 1 %}
-  <p>You have joined the Discord with the username {{ usernames[0] }}.</p>
+<p>You have joined the Discord with the username {{ usernames[0] }}.</p>
 {% else %}
-  <p>You have joined the Discord with the usernames:</p>
-  <ul>
+<p>You have joined the Discord with the usernames:</p>
+<ul>
 {% for username in usernames %}
-    <li>{{ username }}</li>
+  <li>{{ username }}</li>
 {% endfor %}
-  </ul>
+</ul>
 {% endif %}
-  <p><a class="button" target="_blank" href="{{ channel_url }}">Go to Discord in your browser</a> or log in as {{ usernames[0] }} in the <a href="https://discord.com/download">Discord app</a></p>
-  <p><a target="_blank" href="{{ authorize_url }}">Join the Discord server as a different user</a></p>
+<p><a class="button" target="_blank" href="{{ channel_url }}">Go to Discord in your browser</a> or log in as {{ usernames[0] }} in the <a href="https://discord.com/download">Discord app</a></p>
+<p><a target="_blank" href="{{ authorize_url }}">Join the Discord server as a different user</a></p>
 {% endif %}
-  <p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. Your server nickname will be visible alongside your Discord username to other people in the server. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
+<p>Your server nickname will be automatically set to your convention badge name. This is only visible to people in this server, and not in any other servers you might be in. Your server nickname will be visible alongside your Discord username to other people in the server. You may change your nickname on this server if you wish, but we recommend keeping it to match your badge name to make it easier for people to find you.</p>
 
-  <h3>Problems</h3>
-  <p>Read the <a href="/discord-instructions" target="_blank">instructions on how to join the Discord server</a>.</p>
-  <p>If you have any problems, email <a href="mailto:{{ site.support_email }}">{{ site.support_email }}</a> from the e-mail you signed up with and include your discord username, if you know it.</p>
-  <p>You can read through our <a href="https://www.google.co.uk">Guide to using Discord</a> for more information on how to use Discord.</p>
-</article>
+<h3>Problems</h3>
+<p>Read the <a href="/discord-instructions" target="_blank">instructions on how to join the Discord server</a>.</p>
+<p>If you have any problems, email <a href="mailto:{{ site.support_email }}">{{ site.support_email }}</a> from the e-mail you signed up with and include your discord username, if you know it.</p>
+<p>You can read through our <a href="https://www.google.co.uk">Guide to using Discord</a> for more information on how to use Discord.</p>
 {% endblock %}

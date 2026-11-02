@@ -2,25 +2,22 @@
 {% set title = 'Stream and replay' %}
 {% set description = 'Watch streams and replays of programme items at ' ~ site.con_name ~ '.' %}
 {% block content %}
-<article>
-  <h2>Stream and replay</h2>
-  <h3>Live streams</h3>
+<h3>Live streams</h3>
 {% if not logged_in %}
-  <p><a class="button" href="{{ site.user.login_link }}">Log in to watch</a></p>
+<p><a class="button" href="{{ site.user.login_link }}">Log in to watch</a></p>
 {% elseif not can_watch %}
-  <p>Your membership doesn't include access to the streams.</p>
+<p>Your membership doesn't include access to the streams.</p>
 {% else %}
-  <ul>
+<ul>
 {% for stream in streams %}
 {% if stream.streaming %}
-    <li><a target="_blank" href="/deep-link/stream?room_id={{ stream.room_id|url_encode }}">{{ stream.title }}</a></li>
+  <li><a target="_blank" href="/deep-link/stream?room_id={{ stream.room_id|url_encode }}">{{ stream.title }}</a></li>
 {% else %}
-    <li class="no-stream">{{ stream.title }}<br>This room is not currently streaming</li>
+  <li class="no-stream">{{ stream.title }}<br>This room is not currently streaming</li>
 {% endif %}
 {% endfor %}
-  </ul>
+</ul>
 {% endif %}
-  <h3>Replay</h3>
-  <p>To watch a replay, find the item in the <a href="/programme-guide">programme guide</a> and follow its replay link.</p>
-</article>
+<h3>Replay</h3>
+<p>To watch a replay, find the item in the <a href="/programme-guide">programme guide</a> and follow its replay link.</p>
 {% endblock %}

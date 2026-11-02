@@ -3,30 +3,27 @@
 {% set description = 'How many members starred each programme item.' %}
 {% set parents = {'Programme reports': '/admin/programme-reports'} %}
 {% block content %}
-<article>
-  <h2>Programme item favourites</h2>
 {% if app_id == '' %}
-  <p>No ConClár app ids are configured, so there are no favourites to report.</p>
+<p>No ConClár app ids are configured, so there are no favourites to report.</p>
 {% elseif not rows %}
-  <p>No members have starred any items yet.</p>
+<p>No members have starred any items yet.</p>
 {% else %}
-  <p>{{ member_count }} members have starred items, across {{ rows|length }} items. Members with neither the online nor the in-person role are only counted in the total.</p>
-  <p><a href="/admin/programme-reports/favourites?app_id={{ app_id|url_encode }}&amp;download=csv" class="button">Download CSV</a></p>
-  <table>
-    <thead>
-      <tr><th>Item</th><th>Favourites</th><th>Online</th><th>In person</th></tr>
-    </thead>
-    <tbody>
+<p>{{ member_count }} members have starred items, across {{ rows|length }} items. Members with neither the online nor the in-person role are only counted in the total.</p>
+<p><a href="/admin/programme-reports/favourites?app_id={{ app_id|url_encode }}&amp;download=csv" class="button">Download CSV</a></p>
+<table>
+  <thead>
+    <tr><th>Item</th><th>Favourites</th><th>Online</th><th>In person</th></tr>
+  </thead>
+  <tbody>
 {% for row in rows %}
-      <tr>
-        <td>{{ row.title }}</td>
-        <td>{{ row.total }}</td>
-        <td>{{ row.online }}</td>
-        <td>{{ row.in_person }}</td>
-      </tr>
+    <tr>
+      <td>{{ row.title }}</td>
+      <td>{{ row.total }}</td>
+      <td>{{ row.online }}</td>
+      <td>{{ row.in_person }}</td>
+    </tr>
 {% endfor %}
-    </tbody>
-  </table>
+  </tbody>
+</table>
 {% endif %}
-</article>
 {% endblock %}

@@ -2,65 +2,63 @@
 {% import 'ui.html.twig' as ui %}
 {% set title = 'Site selection desk' %}
 {% set description = 'Sell site selection paper ballots.' %}
+{% set article_class = 'full-width' %}
 {% block head %}
     <script src="{{ asset('/resources/confirm.js') }}" defer></script>
 {% endblock %}
 {% block content %}
-<article class="full-width">
-  <h2>Site selection desk</h2>
 {% if message is not null %}
 {% if message_is_error %}
 {{ ui.error(message) }}
 {% else %}
-  <p class="info" role="status">{{ message }}</p>
+<p class="info" role="status">{{ message }}</p>
 {% endif %}
 {% endif %}
-  <form method="GET" class="inline-actions">
-    <label for="search">Badge number, name or email</label>
-    <input type="search" id="search" name="search" value="{{ search }}" required{% if not rows %} autofocus{% endif %}>
-    <input type="submit" value="Search">
+<form method="GET" class="inline-actions">
+  <label for="search">Badge number, name or email</label>
+  <input type="search" id="search" name="search" value="{{ search }}" required{% if not rows %} autofocus{% endif %}>
+  <input type="submit" value="Search">
 {% if search != '' %}
-    <a href="/admin/site-selection/desk">Clear</a>
+  <a href="/admin/site-selection/desk">Clear</a>
 {% endif %}
-  </form>
+</form>
 {% if search != '' and total == 0 %}
-  <p>No members match &ldquo;{{ search }}&rdquo;.</p>
+<p>No members match &ldquo;{{ search }}&rdquo;.</p>
 {% elseif total > 0 %}
-  <p>Showing {{ first }}&ndash;{{ first + rows|length - 1 }} of {{ total }} members{% if may_be_more %}. There may be more: search for something more specific{% endif %}.</p>
-  <table>
-    <thead>
-      <tr><th>Badge number</th><th>Name</th><th>Email</th><th>Site selection</th></tr>
-    </thead>
-    <tbody>
+<p>Showing {{ first }}&ndash;{{ first + rows|length - 1 }} of {{ total }} members{% if may_be_more %}. There may be more: search for something more specific{% endif %}.</p>
+<table>
+  <thead>
+    <tr><th>Badge number</th><th>Name</th><th>Email</th><th>Site selection</th></tr>
+  </thead>
+  <tbody>
 {% for row in rows %}
-      <tr>
-        <td>{{ row.badge_no }}</td>
-        <td>{{ row.name }}</td>
-        <td>{{ row.email }}</td>
-        <td>
-          <div class="inline-actions">
-            <span>{{ row.status }}</span>
+    <tr>
+      <td>{{ row.badge_no }}</td>
+      <td>{{ row.name }}</td>
+      <td>{{ row.email }}</td>
+      <td>
+        <div class="inline-actions">
+          <span>{{ row.status }}</span>
 {% for action in row.actions %}
-            <form method="POST"
-              data-confirm-title="{{ action.title }}"
-              data-confirm-details="{{ {'Action': action.label, 'Badge number': row.badge_no, 'Name': row.name}|json_encode }}"
-              data-confirm-message="{{ action.message }}"
-              data-confirm-button="{{ action.label }}">
-              {{ csrf_field() }}
-              <input type="hidden" name="action" value="{{ action.action }}">
-              <input type="hidden" name="badge_no" value="{{ row.badge_no }}">
-              <input type="hidden" name="search" value="{{ search }}">
-              <input type="hidden" name="page" value="{{ page }}">
-              <input type="submit" value="{{ action.label }}">
-            </form>
+          <form method="POST"
+            data-confirm-title="{{ action.title }}"
+            data-confirm-details="{{ {'Action': action.label, 'Badge number': row.badge_no, 'Name': row.name}|json_encode }}"
+            data-confirm-message="{{ action.message }}"
+            data-confirm-button="{{ action.label }}">
+            {{ csrf_field() }}
+            <input type="hidden" name="action" value="{{ action.action }}">
+            <input type="hidden" name="badge_no" value="{{ row.badge_no }}">
+            <input type="hidden" name="search" value="{{ search }}">
+            <input type="hidden" name="page" value="{{ page }}">
+            <input type="submit" value="{{ action.label }}">
+          </form>
 {% endfor %}
-          </div>
-        </td>
-      </tr>
+        </div>
+      </td>
+    </tr>
 {% endfor %}
-    </tbody>
-  </table>
+  </tbody>
+</table>
 {{ ui.pagination(pages) }}
 {% endif %}
-</article>
 {% endblock %}

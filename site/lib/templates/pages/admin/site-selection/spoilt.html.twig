@@ -4,27 +4,24 @@
 {% set description = 'Spoilt site selection voter keys.' %}
 {% set parents = {'Manage site selection': '/admin/site-selection/list'} %}
 {% block content %}
-<article>
-  <h2>Spoilt keys</h2>
-  <p>A member's online key is spoilt when they move to a paper ballot or are given a new key. Void these keys on the election platform so they can't be used, newest first.</p>
+<p>A member's online key is spoilt when they move to a paper ballot or are given a new key. Void these keys on the election platform so they can't be used, newest first.</p>
 {% if total == 0 %}
-  <p>No keys have been spoilt.</p>
+<p>No keys have been spoilt.</p>
 {% else %}
-  <p>Showing {{ first }}&ndash;{{ first + tokens|length - 1 }} of {{ total }} keys.</p>
-  <table>
-    <thead>
-      <tr><th>Label</th><th>Spoilt</th></tr>
-    </thead>
-    <tbody>
+<p>Showing {{ first }}&ndash;{{ first + tokens|length - 1 }} of {{ total }} keys.</p>
+<table>
+  <thead>
+    <tr><th>Label</th><th>Spoilt</th></tr>
+  </thead>
+  <tbody>
 {% for token in tokens %}
-      <tr>
-        <td>{% if token.label is not null %}{{ token.label }}{% else %}<code>{{ token.token }}</code>{% endif %}</td>
-        <td>{{ token.spoilt }}</td>
-      </tr>
+    <tr>
+      <td>{% if token.label is not null %}{{ token.label }}{% else %}<code>{{ token.token }}</code>{% endif %}</td>
+      <td>{{ token.spoilt }}</td>
+    </tr>
 {% endfor %}
-    </tbody>
-  </table>
+  </tbody>
+</table>
 {{ ui.pagination(pages) }}
 {% endif %}
-</article>
 {% endblock %}

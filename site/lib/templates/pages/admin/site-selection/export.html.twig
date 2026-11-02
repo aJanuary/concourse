@@ -3,9 +3,6 @@
 {% set description = 'Export site selection member details.' %}
 {% set parents = {'Manage site selection': '/admin/site-selection/list'} %}
 {% block content %}
-<article>
-  <h2>Export member details</h2>
-  <p>{{ count == 1 ? '1 member has' : count ~ ' members have' }} paid online and can vote online. Download their names, contact details, addresses and preferences to pass to the winning bid. Members voting on paper aren't included.</p>
-  <p><a href="/admin/site-selection/export?download=csv" class="button">Download CSV</a></p>
-</article>
+<p>{{ count == 1 ? '1 member has' : count ~ ' members have' }} paid online and can vote online. Download their names, contact details, addresses and preferences to pass to the winning bid. Members voting on paper aren't included.</p>
+<p><a href="/admin/site-selection/export?download=csv" class="button">Download CSV</a></p>
 {% endblock %}

@@ -1,9 +1,14 @@
-{# Every portal page extends this and fills the content block, and may add to
-   head and body_class. A page sets, before its blocks:
-     title        shown after the portal's name in the browser tab and as the
-                  last breadcrumb; none on the home page, which has no breadcrumbs
-     description  the meta description
-     parents      the breadcrumbs between Home and this page, {name: url} #}
+{# Every portal page extends this and fills the content block, which goes in
+   an <article> under the page's heading. A page may add to head and
+   body_class, and the home page replaces the whole article with main. A page
+   sets, before its blocks:
+     title          shown after the portal's name in the browser tab, as the
+                    last breadcrumb and as the heading; none on the home page,
+                    which has no breadcrumbs
+     heading        optional, the heading when it isn't the title
+     description    the meta description
+     parents        the breadcrumbs between Home and this page, {name: url}
+     article_class  optional, a class for the article, such as full-width #}
 <!doctype html>
 <html lang="en">
   <head>
@@ -65,7 +70,12 @@
         </ul>
       </nav>
 {% endif %}
+{% block main %}
+      <article{% if article_class ?? null %} class="{{ article_class }}"{% endif %}>
+        <h2>{{ heading ?? title }}</h2>
 {% block content %}{% endblock %}
+      </article>
+{% endblock %}
     </main>
     <footer>
       <div class="container">

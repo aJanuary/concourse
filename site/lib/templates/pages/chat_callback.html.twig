@@ -3,17 +3,14 @@
 {% set description = (outcome == 'access-denied' ? 'Access denied when trying to link' : 'Something went wrong linking') ~ ' Discord account for the ' ~ site.con_short_name ~ ' member portal.' %}
 {% set parents = {'Chat online': '/chat'} %}
 {% block content %}
-<article>
-  <h3>Something went wrong</h3>
 {% if outcome == 'access-denied' %}
-  <p>It looks like you did not click "Authorize" to give us permission to access and store your Discord username.</p>
-  <p>For safety reasons, we require this to be able to associate your membership with your Discord account.</p>
-  <p>Please go back to the <a href="/chat">chat page</a> and try again.</p>
-  <p>If you think you are seeing this page in error, please contact <a href="mailto:{{ site.support_email }}?subject=Problem with member portal&body={{ ('Problem: ' ~ problem)|url_encode }}">{{ site.support_email }}</a>.</p>
+<p>It looks like you did not click "Authorize" to give us permission to access and store your Discord username.</p>
+<p>For safety reasons, we require this to be able to associate your membership with your Discord account.</p>
+<p>Please go back to the <a href="/chat">chat page</a> and try again.</p>
+<p>If you think you are seeing this page in error, please contact <a href="mailto:{{ site.support_email }}?subject=Problem with member portal&body={{ ('Problem: ' ~ problem)|url_encode }}">{{ site.support_email }}</a>.</p>
 {% elseif outcome == 'not-linked' %}
-  <p>Sorry, your link to Discord could not be completed. Please go back to the <a href="/chat">chat page</a> and try again.</p>
+<p>Sorry, your link to Discord could not be completed. Please go back to the <a href="/chat">chat page</a> and try again.</p>
 {% else %}
-  <p>Sorry, something went wrong. Please try again. If the problem persists, contact <a href="mailto:{{ site.support_email }}?subject=Problem with member portal&body={{ ('Problem: ' ~ problem)|url_encode }}">{{ site.support_email }}</a>.</p>
+<p>Sorry, something went wrong. Please try again. If the problem persists, contact <a href="mailto:{{ site.support_email }}?subject=Problem with member portal&body={{ ('Problem: ' ~ problem)|url_encode }}">{{ site.support_email }}</a>.</p>
 {% endif %}
-</article>
 {% endblock %}

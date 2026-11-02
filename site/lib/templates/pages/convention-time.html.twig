@@ -2,23 +2,20 @@
 {% set title = 'Convention time' %}
 {% set description = 'Convert times to and from ' ~ site.con_name ~ ' time.' %}
 {% block content %}
-<article>
-  <h2>Convention time</h2>
-  <p>The convention is in the {{ timezone }} (UTC{{ utc_offset }}) timezone.</p>
+<p>The convention is in the {{ timezone }} (UTC{{ utc_offset }}) timezone.</p>
 
-  <div id="timezone-converter">
-    <div class="converter-column">
-      <label for="convention-time">Convention time ({{ timezone }})</label>
-      <input type="datetime-local" id="convention-time">
-      <a href="#" id="current-time-link">Current time</a>
-    </div>
-    <div class="converter-column">
-      <label for="local-timezone">Your timezone</label>
-      <input type="datetime-local" id="local-time">
-      <select id="local-timezone"></select>
-    </div>
+<div id="timezone-converter">
+  <div class="converter-column">
+    <label for="convention-time">Convention time ({{ timezone }})</label>
+    <input type="datetime-local" id="convention-time">
+    <a href="#" id="current-time-link">Current time</a>
   </div>
-</article>
+  <div class="converter-column">
+    <label for="local-timezone">Your timezone</label>
+    <input type="datetime-local" id="local-time">
+    <select id="local-timezone"></select>
+  </div>
+</div>
 
 <script>
   const CONVENTION_TIMEZONE = {{ timezone|json }};

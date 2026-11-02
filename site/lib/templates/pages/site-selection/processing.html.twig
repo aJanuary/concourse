@@ -3,15 +3,12 @@
 {% set description = 'Your site selection payment is being processed.' %}
 {% set parents = {'Site selection': '/site-selection'} %}
 {% block content %}
-<article>
-  <h2>Processing your payment</h2>
-  <p>Please wait while we confirm your payment&hellip;</p>
-  <div id="taking-longer" role="alert" hidden>
-    <p>Your payment is taking longer than usual to confirm. This can take a few minutes.</p>
-    <p>Once it is confirmed, your voting link will be on the <a href="/site-selection">site selection page</a>.</p>
-    <p>If you were charged and the link still isn't there after a while, contact <a href="mailto:{{ site.support_email }}">{{ site.support_email }}</a>.</p>
-  </div>
-</article>
+<p>Please wait while we confirm your payment&hellip;</p>
+<div id="taking-longer" role="alert" hidden>
+  <p>Your payment is taking longer than usual to confirm. This can take a few minutes.</p>
+  <p>Once it is confirmed, your voting link will be on the <a href="/site-selection">site selection page</a>.</p>
+  <p>If you were charged and the link still isn't there after a while, contact <a href="mailto:{{ site.support_email }}">{{ site.support_email }}</a>.</p>
+</div>
 <script>
 (function() {
   "use strict";

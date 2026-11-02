@@ -10,48 +10,45 @@
 {% extends 'layout.html.twig' %}
 {% import 'ui.html.twig' as ui %}
 {% block content %}
-<article>
-  <h2>{{ heading }}</h2>
 {% block intro %}{% endblock %}
 {% if errors ?? null %}
 {{ ui.errors(errors) }}
 {% endif %}
-  <form action="{{ action }}" method="POST" class="vertical">
-    {{ csrf_field() }}
-    <fieldset>
-      <legend>{{ legend }}</legend>
+<form action="{{ action }}" method="POST" class="vertical">
+  {{ csrf_field() }}
+  <fieldset>
+    <legend>{{ legend }}</legend>
 {% if editing %}
-{% for name, value in key %}
-      <input type="hidden" name="{{ name }}" value="{{ value }}">
-{% endfor %}
-      <input type="hidden" name="action" value="edit">
-{% else %}
-      <input type="hidden" name="action" value="add">
-{% endif %}
-{% block fields %}{% endblock %}
-    </fieldset>
-    <input type="submit" value="Save">
-{% if editing %}
-    <input id="delete" type="button" value="Delete">
-{% endif %}
-{% block buttons %}{% endblock %}
-  </form>
-{% if editing %}
-  <form id="delete-form" action="{{ action }}" method="POST" hidden>
-    {{ csrf_field() }}
-    <input type="hidden" name="action" value="delete">
 {% for name, value in key %}
     <input type="hidden" name="{{ name }}" value="{{ value }}">
 {% endfor %}
-  </form>
-  <script>
-    document.getElementById('delete').addEventListener('click', function() {
-      if (confirm('Are you sure you want to delete ' + {{ (delete_name ?? key|first)|json }} + '?')) {
-        document.getElementById('delete-form').submit();
-      }
-    });
-  </script>
+    <input type="hidden" name="action" value="edit">
+{% else %}
+    <input type="hidden" name="action" value="add">
+{% endif %}
+{% block fields %}{% endblock %}
+  </fieldset>
+  <input type="submit" value="Save">
+{% if editing %}
+  <input id="delete" type="button" value="Delete">
+{% endif %}
+{% block buttons %}{% endblock %}
+</form>
+{% if editing %}
+<form id="delete-form" action="{{ action }}" method="POST" hidden>
+  {{ csrf_field() }}
+  <input type="hidden" name="action" value="delete">
+{% for name, value in key %}
+  <input type="hidden" name="{{ name }}" value="{{ value }}">
+{% endfor %}
+</form>
+<script>
+  document.getElementById('delete').addEventListener('click', function() {
+    if (confirm('Are you sure you want to delete ' + {{ (delete_name ?? key|first)|json }} + '?')) {
+      document.getElementById('delete-form').submit();
+    }
+  });
+</script>
 {% endif %}
 {% block scripts %}{% endblock %}
-</article>
 {% endblock %}

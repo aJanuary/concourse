@@ -2,18 +2,15 @@
 {% set title = 'Log in' %}
 {% set description = 'Development login.' %}
 {% block content %}
-<article>
-  <h2>Log in</h2>
-  <form method="post" action="/login?provider=dev">
-    {{ csrf_field() }}
-    <input type="hidden" name="redirect" value="{{ redirect }}">
-    <label for="badge_no">Member</label>
-    <select name="badge_no" id="badge_no">
+<form method="post" action="/login?provider=dev">
+  {{ csrf_field() }}
+  <input type="hidden" name="redirect" value="{{ redirect }}">
+  <label for="badge_no">Member</label>
+  <select name="badge_no" id="badge_no">
 {% for member in members %}
-      <option value="{{ member.badge_no }}">{{ member.badge_no ~ ' ' ~ member.name }}</option>
+    <option value="{{ member.badge_no }}">{{ member.badge_no ~ ' ' ~ member.name }}</option>
 {% endfor %}
-    </select>
-    <button type="submit" class="button login">Log in</button>
-  </form>
-</article>
+  </select>
+  <button type="submit" class="button login">Log in</button>
+</form>
 {% endblock %}

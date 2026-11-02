@@ -2,38 +2,35 @@
 {% set title = 'Manage discord ids' %}
 {% set description = 'Manage discord ids.' %}
 {% block content %}
-<article>
-  <h3>Manage discord ids</h3>
-  
-  <table>
-    <thead>
-      <tr>
-        <th>Badge no</th>
-        <th>Name</th>
-        <th>Discord ID</th>
-        <th>Discord username</th>
-      </tr>
-    </thead>
-    <tbody>
+
+<table>
+  <thead>
+    <tr>
+      <th>Badge no</th>
+      <th>Name</th>
+      <th>Discord ID</th>
+      <th>Discord username</th>
+    </tr>
+  </thead>
+  <tbody>
 {% for member in members %}
 {% set rowspan = max(member.discord_ids|length, 1) %}
-      <tr class="new-badgeno-row">
-        <td rowspan={{ rowspan }}>{{ member.badge_no }}</td>
-        <td rowspan={{ rowspan }}>{{ member.name }}</td>
+    <tr class="new-badgeno-row">
+      <td rowspan={{ rowspan }}>{{ member.badge_no }}</td>
+      <td rowspan={{ rowspan }}>{{ member.name }}</td>
 {% for discord_id in member.discord_ids %}
 {% if not loop.first %}
-      <tr>
+    <tr>
 {% endif %}
-        <td>{{ discord_id.id }}</td>
-        <td>{{ discord_id.username }}</td>
-      </tr>
+      <td>{{ discord_id.id }}</td>
+      <td>{{ discord_id.username }}</td>
+    </tr>
 {% else %}
-        <td colspan=2><em>No discord id</em></td>
-      </tr>
+      <td colspan=2><em>No discord id</em></td>
+    </tr>
 {% endfor %}
 {% endfor %}
-    </tbody>
-  </table>
+  </tbody>
+</table>
 
-</article>
 {% endblock %}

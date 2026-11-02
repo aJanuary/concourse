@@ -2,8 +2,5 @@
 {# A heading and a sentence. Pass title, heading and text, and optionally description. #}
 {% set description = description ?? (heading ~ '.') %}
 {% block content %}
-<article>
-  <h2>{{ heading }}</h2>
-  <p>{{ text }}</p>
-</article>
+<p>{{ text }}</p>
 {% endblock %}
