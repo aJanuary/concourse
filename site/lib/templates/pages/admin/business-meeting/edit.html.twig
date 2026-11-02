@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = editing ? 'Edit link' : 'Add link' %}
 {% set description = 'Manage business meeting join links.' %}
 {% set parents = {'Manage business meeting': '/admin/business-meeting/list'} %}
@@ -6,7 +7,7 @@
   <article>
     <h2>{{ heading }}</h2>
 {% if errors %}
-{% include 'partials/error-list.html.twig' %}
+{{ ui.errors(errors) }}
 {% endif %}
     <form action="/admin/business-meeting/edit" method="POST" class="vertical">
       {{ csrf_field() }}

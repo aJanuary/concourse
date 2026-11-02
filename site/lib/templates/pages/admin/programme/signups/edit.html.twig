@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Add/edit a sign-up' %}
 {% set description = 'Manage sign-ups.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage sign-ups': '/admin/programme/signups/list'} %}
@@ -7,7 +8,7 @@
   <article>
     <h2>{{ heading }}</h2>
 {% if errors %}
-{% include 'partials/error-list.html.twig' %}
+{{ ui.errors(errors) }}
 {% endif %}
     <form action="/admin/programme/signups/edit" method="POST" class="vertical">
       {{ csrf_field() }}

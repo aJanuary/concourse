@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Edit member roles' %}
 {% set description = 'Give or remove roles for a member.' %}
 {% set parents = {'Manage roles': '/admin/roles'} %}
@@ -7,7 +8,7 @@
     <h2>Edit member roles</h2>
 {% if message is not null %}
 {% if message_class == 'error' %}
-{% include 'partials/error.html.twig' %}
+{{ ui.error(message) }}
 {% else %}
     <p class="message" role="status">{{ message }}</p>
 {% endif %}

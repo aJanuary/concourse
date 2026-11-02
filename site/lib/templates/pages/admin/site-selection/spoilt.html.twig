@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Spoilt keys' %}
 {% set description = 'Spoilt site selection voter keys.' %}
 {% set parents = {'Manage site selection': '/admin/site-selection/list'} %}
@@ -23,7 +24,7 @@
 {% endfor %}
     </tbody>
   </table>
-{% include 'partials/pagination.html.twig' %}
+{{ ui.pagination(pages) }}
 {% endif %}
 </article>
 {% endblock %}

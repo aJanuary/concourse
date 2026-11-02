@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Add keys' %}
 {% set description = 'Add site selection voter keys.' %}
 {% set parents = {'Manage site selection': '/admin/site-selection/list'} %}
@@ -7,10 +8,7 @@
   <h2>Add keys</h2>
   <p>Paste the voter keys from the election platform, one per line, each with a label to tell it apart without showing the key, separated by a comma: <code>Batch A 001,abc-def-ghi</code>. Nothing is added unless every row is fine.</p>
 {% if error is not null %}
-  <div class="error" id="tokens-error" role="alert">
-    <img src="/resources/error.svg" alt="error" aria-label="error">
-    {{ error }}
-  </div>
+{{ ui.error(error, 'tokens-error') }}
 {% endif %}
   <form method="POST" class="vertical">
     {{ csrf_field() }}

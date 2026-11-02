@@ -1,0 +1,51 @@
+{# Pieces of page that many templates show. Import with
+   {% import 'ui.html.twig' as ui %} and call inside a block. #}
+
+{# One problem, such as a form that wasn't accepted. Give an id to point a
+   field's aria-describedby at it. #}
+{% macro error(message, id = null) %}
+    <p class="error"{% if id %} id="{{ id }}"{% endif %} role="alert"><img src="/resources/error.svg" alt="error">{{ message }}</p>
+{% endmacro %}
+
+{# Several problems, such as each field or row of a form that was wrong, after
+   an optional sentence saying what happened #}
+{% macro errors(errors, intro = null) %}
+    <div class="error" role="alert">
+      <img src="/resources/error.svg" alt="error">
+{% if intro %}
+      <p>{{ intro }}</p>
+{% endif %}
+      <ul>
+{% for error in errors %}
+        <li>{{ error }}</li>
+{% endfor %}
+      </ul>
+    </div>
+{% endmacro %}
+
+{# Links to the pages of a long list. pages comes from pagination_links() in
+   twig.php, and is empty when there is only one page. #}
+{% macro pagination(pages) %}
+{% if pages %}
+    <nav aria-label="Pages">
+      <ul class="pagination">
+{% if pages.previous %}
+        <li><a href="{{ pages.previous }}">Previous</a></li>
+{% endif %}
+{% for link in pages.links %}
+{% if link.gap_before %}
+        <li aria-hidden="true">&hellip;</li>
+{% endif %}
+{% if link.current %}
+        <li><a aria-current="page">{{ link.number }}</a></li>
+{% else %}
+        <li><a href="{{ link.url }}">{{ link.number }}</a></li>
+{% endif %}
+{% endfor %}
+{% if pages.next %}
+        <li><a href="{{ pages.next }}">Next</a></li>
+{% endif %}
+      </ul>
+    </nav>
+{% endif %}
+{% endmacro %}

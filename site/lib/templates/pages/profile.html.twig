@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Profile' %}
 {% set description = 'Your profile on ' ~ site.con_name ~ '.' %}
 {% block content %}
@@ -26,7 +27,7 @@
   <p>This changes the password for all members with this email address.</p>
 {% endif %}
 {% if error is not null %}
-  <p class="error" role="alert"><img src="/resources/error.svg" alt="error">{{ error }}</p>
+{{ ui.error(error) }}
 {% endif %}
 {% if password_changed %}
   <p class="message" role="status">Your password has been changed.</p>

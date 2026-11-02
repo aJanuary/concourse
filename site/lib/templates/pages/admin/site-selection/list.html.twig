@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Manage site selection' %}
 {% set description = 'Manage site selection voter keys.' %}
 {% block head %}
@@ -71,7 +72,7 @@
       </tbody>
     </table>
   </form>
-{% include 'partials/pagination.html.twig' %}
+{{ ui.pagination(pages) }}
 {% endif %}
 </article>
 <script>

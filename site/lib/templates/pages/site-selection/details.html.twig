@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Site selection details' %}
 {% set description = 'Your details for site selection.' %}
 {% set parents = {'Site selection': '/site-selection'} %}
@@ -8,10 +9,7 @@
   <h2>Postal address</h2>
   <p>We use your postal address to check that each member votes only once. We won't send you any post.</p>
 {% if error is not null %}
-  <div class="error" id="details-error" role="alert">
-    <img src="/resources/error.svg" alt="error" aria-label="error">
-    {{ error }}
-  </div>
+{{ ui.error(error, 'details-error') }}
 {% endif %}
   <form method="POST" class="site-selection-details">
     {{ csrf_field() }}

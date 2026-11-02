@@ -1,5 +1,6 @@
 {# Every step of logging in with email. Steps fill the form block. #}
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = heading %}
 {% set description = 'Log in to the member portal for ' ~ site.con_name ~ '.' %}
 {% set crumb = 'Log in' %}
@@ -7,7 +8,7 @@
     <article>
       <h2>{{ heading }}</h2>
 {% if error %}
-      <p class="error"><img src="/resources/error.svg" alt="error" aria-label="error">{{ error }}</p>
+{{ ui.error(error) }}
 {% endif %}
 {% block form %}{% endblock %}
       <div class="login-links">

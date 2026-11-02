@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Upload links' %}
 {% set description = 'Upload business meeting join links.' %}
 {% set parents = {'Manage business meeting': '/admin/business-meeting/list'} %}
@@ -6,13 +7,13 @@
   <article>
     <h2>Upload links</h2>
 {% if error is not null %}
-{% include 'partials/error.html.twig' with {message: error} %}
+{{ ui.error(error) }}
 {% endif %}
 {% if counts is not null %}
     <p class="info">Added {{ counts.added }} and updated {{ counts.updated }} links. <a href="/admin/business-meeting/list">Back to the list</a>.</p>
 {% endif %}
 {% if problems %}
-{% include 'partials/error-list.html.twig' with {intro: 'Check these rows:', errors: problems} %}
+{{ ui.errors(problems, 'Check these rows:') }}
 {% endif %}
     <p>Upload a CSV file of join links exported from {{ platform }}. The first row is a header naming the columns:</p>
     <ul>

@@ -62,7 +62,6 @@ function twig(): Environment {
   $twig->addFunction(new TwigFunction('csrf_token', 'csrf_token'));
   $twig->addFunction(new TwigFunction('secure_token', 'create_secure_token'));
   $twig->addFunction(new TwigFunction('has_permission', 'current_user_has_permission'));
-  $twig->addFunction(new TwigFunction('pagination', 'pagination_links'));
   $twig->addFilter(new TwigFilter('initials', 'member_initials'));
   $twig->addFilter(new TwigFilter('avatar_colour', 'member_avatar_colour'));
   // A value as JavaScript, for inside a <script> only. Strings can't contain
@@ -138,7 +137,7 @@ function current_page_number() {
   return max(1, (int) ($_GET['page'] ?? 1));
 }
 
-// The links partials/pagination.html.twig shows for page $page of
+// The links ui.pagination() in ui.html.twig shows for page $page of
 // $total_pages: the first and last, two either side of this one, and
 // previous and next. $params are the other query parameters each link keeps,
 // such as a search. Empty when there is only one page.

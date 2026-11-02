@@ -1,11 +1,12 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Log in' %}
 {% set description = 'Log in to the member portal for ' ~ site.con_name ~ '.' %}
 {% block content %}
 <article>
     <h2>Log in</h2>
 {% if error %}
-    <p class="error"><img src="resources/error.svg" alt="error" aria-label="error">{{ error }}</p>
+{{ ui.error(error) }}
 {% endif %}
 {% for provider in providers %}
 {% if provider.form %}

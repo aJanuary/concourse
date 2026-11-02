@@ -1,4 +1,5 @@
 {% extends 'layout.html.twig' %}
+{% import 'ui.html.twig' as ui %}
 {% set title = 'Site selection desk' %}
 {% set description = 'Sell site selection paper ballots.' %}
 {% block head %}
@@ -9,10 +10,7 @@
   <h2>Site selection desk</h2>
 {% if message is not null %}
 {% if message_is_error %}
-  <div class="error" role="alert">
-    <img src="/resources/error.svg" alt="error" aria-label="error">
-    {{ message }}
-  </div>
+{{ ui.error(message) }}
 {% else %}
   <p class="info" role="status">{{ message }}</p>
 {% endif %}
@@ -62,7 +60,7 @@
 {% endfor %}
     </tbody>
   </table>
-{% include 'partials/pagination.html.twig' %}
+{{ ui.pagination(pages) }}
 {% endif %}
 </article>
 {% endblock %}

@@ -94,8 +94,11 @@ Pages and emails are [Twig](https://twig.symfony.com/doc/3.x/) templates in
   can add scripts to `head` and a class to the body with `body_class`.
 - `pages/` has one template for each page, at the page's path: the template
   for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`.
-- `partials/` has pieces several pages share, such as pagination, and
-  `email/` the layout of the emails the portal sends.
+- `ui.html.twig` has macros for what many pages show: an error, a list of
+  errors and the links to the pages of a long list. Import it with
+  `{% import 'ui.html.twig' as ui %}` and call `{{ ui.error(message) }}`.
+- `partials/` has larger pieces a few pages share, such as the member
+  picker, and `email/` the layout of the emails the portal sends.
 
 A page's PHP checks permissions, handles any form, gathers what the page
 shows and ends with `render_page()`, from `site/lib/twig.php`:
@@ -137,7 +140,6 @@ these functions and filters:
 | `csrf_token()` | The token itself, for htmx's `X-CSRF-Token` header |
 | `secure_token(path, data, ttl)` | A signed token; see `site/lib/secure_links.php` |
 | `has_permission(name)` | Whether the visitor has a permission |
-| `pagination(page, total_pages, params)` | The links `partials/pagination.html.twig` shows |
 | `name\|initials`, `badge_no\|avatar_colour` | A member's avatar |
 | `value\|json` | A value as JavaScript, for use inside `<script>` only |
 
