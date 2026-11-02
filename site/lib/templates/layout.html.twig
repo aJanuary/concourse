@@ -1,4 +1,10 @@
-{# Every portal page extends this and fills the content block, and may add to head and body_class. See render_page() in twig.php for the variables it reads. #}
+{# Every portal page extends this and fills the content block, and may add to
+   head and body_class. A page sets, before its blocks:
+     title        shown after the portal's name in the browser tab and as the
+                  last breadcrumb; none on the home page, which has no breadcrumbs
+     description  the meta description
+     parents      the breadcrumbs between Home and this page, {name: url}
+     crumb        the last breadcrumb, when it isn't the title #}
 <!doctype html>
 <html lang="en">
   <head>
@@ -49,12 +55,14 @@
       </div>
     </header>
     <main>
-{% if breadcrumbs ?? null %}
+{% if title ?? null %}
       <nav class="breadcrumbs">
         <ul>
-{% for name, url in breadcrumbs %}
-          <li>{% if name %}<a href="{{ url }}">{{ name }}</a>{% else %}{{ url }}{% endif %}</li>
+          <li><a href="/">Home</a></li>
+{% for name, url in parents ?? {} %}
+          <li><a href="{{ url }}">{{ name }}</a></li>
 {% endfor %}
+          <li>{{ crumb ?? title }}</li>
         </ul>
       </nav>
 {% endif %}

@@ -33,18 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $room_id = $_GET['room_id'] ?? null;
 $stream_url = $room_id !== null ? db_get_stream_url($room_id) : ['title' => '', 'url' => ''];
 $editing = $room_id !== null;
-$title = $editing ? 'Edit ' . $room_id : 'Add stream URL';
+$heading = $editing ? 'Edit ' . $room_id : 'Add stream URL';
 
 render_page('pages/admin/programme/stream-urls/edit.html.twig', [
-  'title' => 'Add/edit a stream URL',
-  'description' => 'Manage stream URLs.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage programme' => '/admin/programme/list',
-    'Manage stream URLs' => '/admin/programme/stream-urls/list',
-    $title,
-  ],
-  'heading' => $title,
+  'heading' => $heading,
   'room_id' => $room_id,
   'editing' => $editing,
   'stream_url' => $stream_url,

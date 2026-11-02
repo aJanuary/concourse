@@ -120,9 +120,6 @@ foreach ($members as $member) {
 }
 
 render_page('pages/admin/site-selection/desk.html.twig', [
-  'title' => 'Site selection desk',
-  'description' => 'Sell site selection paper ballots.',
-  'breadcrumbs' => ['Home' => '/', 'Site selection desk'],
   'message' => $message,
   'message_is_error' => in_array($message_key, $errors, true),
   'search' => $search,

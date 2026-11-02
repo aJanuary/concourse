@@ -6,8 +6,4 @@ require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 check_permission('see-participant-guides');
 
-render_page('pages/convention-guide.html.twig', [
-  'title' => 'Convention guide',
-  'description' => 'Convention guide for ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Convention guide'],
-]);
+render_page('pages/convention-guide.html.twig');

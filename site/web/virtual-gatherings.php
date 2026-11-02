@@ -5,8 +5,5 @@ require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 render_page('pages/virtual-gatherings.html.twig', [
-  'title' => 'Virtual gatherings',
-  'description' => 'Virtual gatherings for ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Virtual gatherings'],
   'email' => is_anonymous() ? null : get_current_user_email(),
 ]);

@@ -49,9 +49,6 @@ $countries = COUNTRIES;
 asort($countries, SORT_STRING | SORT_FLAG_CASE);
 
 render_page('pages/site-selection/details.html.twig', [
-  'title' => 'Site selection details',
-  'description' => 'Your details for site selection.',
-  'breadcrumbs' => ['Home' => '/', 'Site selection' => '/site-selection', 'Details'],
   'error' => $error,
   'address' => $address,
   'country' => $country,

@@ -12,9 +12,6 @@ $bids = SITE_SELECTION['bids'];
 shuffle($bids);
 
 render_page('pages/site-selection.html.twig', [
-  'title' => 'Site selection',
-  'description' => 'Vote in site selection for the ' . SITE_SELECTION['year'] . ' Worldcon.',
-  'breadcrumbs' => ['Home' => '/', 'Site selection'],
   'site_selection' => SITE_SELECTION,
   'bids' => $bids,
   'assignment' => $assignment,

@@ -14,9 +14,7 @@ if (array_key_exists('check_has_joined_discord', $_GET)) {
 // nothing-scheduled or join
 function render_chat_page($outcome, $description, $context = []): never {
   render_page('pages/deep-link/chat.html.twig', [
-    'title' => 'Go to a Discord chat for an item',
     'description' => $description,
-    'breadcrumbs' => ['Home' => '/', 'Go to Discord chat for an item'],
     'outcome' => $outcome,
   ] + $context);
   exit;

@@ -11,9 +11,6 @@ $election = business_meeting_mpc_election();
 $mpc_state = business_meeting_mpc_state(new DateTime());
 
 render_page('pages/business-meeting.html.twig', [
-  'title' => 'Business Meeting',
-  'description' => 'Join the WSFS Business Meeting online.',
-  'breadcrumbs' => ['Home' => '/', 'Business Meeting'],
   'meeting' => BUSINESS_MEETING,
   'join_link' => $join_link,
   'mpc_state' => $mpc_state,

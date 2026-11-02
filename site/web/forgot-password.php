@@ -17,7 +17,6 @@ if ($provider === null) {
 // set-password.php includes this page
 $kind = ($mode ?? 'forgot') === 'set' ? 'set' : 'reset';
 $path = $kind === 'set' ? '/set-password' : '/forgot-password';
-$title = $kind === 'set' ? 'Set password' : 'Forgot password';
 
 $errors = [
   'mismatch' => 'The passwords you entered did not match. Please try again.',
@@ -38,7 +37,6 @@ $redirect = '/';
 
 $token = $_POST['token'] ?? $_GET['token'] ?? null;
 if ($token !== null) {
-  $title = 'Set password';
   $token_data = verify_secure_link($path, (string) $token);
   if ($token_data === 'invalid') {
     $error = 'The link you used is invalid. Please request a new link.';
@@ -88,9 +86,6 @@ if ($token !== null) {
 }
 
 render_page('pages/forgot-password.html.twig', [
-  'title' => $title,
-  'description' => 'Create a new password for your account on ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', $title],
   'error' => $error,
   'phase' => $phase,
   'kind' => $kind,

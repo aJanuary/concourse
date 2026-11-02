@@ -17,8 +17,5 @@ foreach (db_get_discord_posts() as $row) {
 }
 
 render_page('pages/admin/programme/discord-posts/list.html.twig', [
-  'title' => 'Manage discord posts',
-  'description' => 'Manage Discord posts.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage Discord posts'],
   'items' => $items,
 ]);

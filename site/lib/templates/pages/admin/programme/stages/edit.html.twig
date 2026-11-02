@@ -1,4 +1,8 @@
 {% extends 'layout.html.twig' %}
+{% set title = 'Add/edit a stage' %}
+{% set description = 'Manage stages.' %}
+{% set parents = {'Manage programme': '/admin/programme/list', 'Manage stages': '/admin/programme/stages/list'} %}
+{% set crumb = heading %}
 {% block content %}
   <article>
     <h2>{{ heading }}</h2>

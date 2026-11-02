@@ -11,9 +11,6 @@ $provider = oidc_provider_or_404();
 if (!$provider->login_in_progress()) {
   $url = ROOT_URL . $_SERVER['REQUEST_URI'];
   render_page('pages/oidc/callback.html.twig', [
-    'title' => 'Log in',
-    'description' => 'Log in to the member portal for ' . CON_NAME . '.',
-    'breadcrumbs' => ['Home' => '/', 'Log in'],
     'url' => $url,
     'qr_code' => (new QRCode)->render($url),
   ]);

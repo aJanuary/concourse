@@ -46,22 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $room_id = $_GET['room_id'] ?? null;
 if ($room_id !== null) {
   $stage = db_get_stage($room_id);
-  $title = 'Edit ' . $room_id;
+  $heading = 'Edit ' . $room_id;
 } else {
   $stage = ['title' => '', 'viewer_url' => '', 'type' => '', 'participant_url' => ''];
-  $title = 'Add stage';
+  $heading = 'Add stage';
 }
 
 render_page('pages/admin/programme/stages/edit.html.twig', [
-  'title' => 'Add/edit a stage',
-  'description' => 'Manage stages.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage programme' => '/admin/programme/list',
-    'Manage stages' => '/admin/programme/stages/list',
-    $title,
-  ],
-  'heading' => $title,
+  'heading' => $heading,
   'room_id' => $room_id,
   'stage' => $stage,
 ]);

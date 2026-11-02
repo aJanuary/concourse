@@ -1,4 +1,8 @@
 {% extends 'layout.html.twig' %}
+{% set title = 'Add/edit a Discord post' %}
+{% set description = 'Manage Discord posts.' %}
+{% set parents = {'Manage programme': '/admin/programme/list', 'Manage Discord posts': '/admin/programme/discord-posts/list'} %}
+{% set crumb = heading %}
 {% block content %}
   <article>
     <h2>{{ heading }}</h2>

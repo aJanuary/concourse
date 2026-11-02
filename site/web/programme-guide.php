@@ -9,8 +9,4 @@ if (current_user_has_permission('see-guide-redirect')) {
   exit;
 }
 
-render_page('pages/programme-guide.html.twig', [
-  'title' => 'Programme guide',
-  'description' => 'Programme guide for ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Programme guide'],
-]);
+render_page('pages/programme-guide.html.twig');

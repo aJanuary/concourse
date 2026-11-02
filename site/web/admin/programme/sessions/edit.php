@@ -49,23 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $item_id = $_GET['item_id'] ?? null;
 if ($item_id !== null) {
   $session = db_get_prog_session($item_id);
-  $title = 'Edit ' . $item_id;
+  $heading = 'Edit ' . $item_id;
 } else {
   $session = ['title' => '', 'destination' => '', 'handler' => null];
-  $title = 'Add session';
+  $heading = 'Add session';
 }
 $same_replay_destination = ($session['handler'] ?? DEFAULT_PROG_HANDLER) === PROG_REPLAY_HANDLER;
 
 render_page('pages/admin/programme/sessions/edit.html.twig', [
-  'title' => 'Add/edit a session',
-  'description' => 'Manage sessions.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage programme' => '/admin/programme/list',
-    'Manage sessions' => '/admin/programme/sessions/list',
-    $title,
-  ],
-  'heading' => $title,
+  'heading' => $heading,
   'item_id' => $item_id,
   'session' => $session,
   'default_handler' => DEFAULT_PROG_HANDLER,

@@ -28,9 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 render_page('pages/admin/site-selection/add.html.twig', [
-  'title' => 'Add keys',
-  'description' => 'Add site selection voter keys.',
-  'breadcrumbs' => ['Home' => '/', 'Manage site selection' => '/admin/site-selection/list', 'Add keys'],
   'error' => $error,
   'text' => $text,
 ]);

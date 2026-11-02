@@ -46,9 +46,6 @@ foreach ($counts as $row) {
 }
 
 render_page('pages/admin/programme-reports/favourites.html.twig', [
-  'title' => 'Programme item favourites',
-  'description' => 'How many members starred each programme item.',
-  'breadcrumbs' => ['Home' => '/', 'Programme reports' => '/admin/programme-reports', 'Programme item favourites'],
   'app_id' => $app_id,
   'rows' => $rows,
   'member_count' => $counts ? conclar_count_members_with_favourites($app_id) : 0,

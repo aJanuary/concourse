@@ -6,8 +6,5 @@ require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 check_permission('manage-discord-ids');
 
 render_page('pages/admin/discord.html.twig', [
-  'title' => 'Manage discord ids',
-  'description' => 'Manage discord ids.',
-  'breadcrumbs' => ['Home' => '/', 'Manage discord ids'],
   'members' => db_get_member_discord_data(),
 ]);

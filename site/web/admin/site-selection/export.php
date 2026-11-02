@@ -45,8 +45,5 @@ if (($_GET['download'] ?? '') === 'csv') {
 }
 
 render_page('pages/admin/site-selection/export.html.twig', [
-  'title' => 'Export member details',
-  'description' => 'Export site selection member details.',
-  'breadcrumbs' => ['Home' => '/', 'Manage site selection' => '/admin/site-selection/list', 'Export member details'],
   'count' => count($rows),
 ]);

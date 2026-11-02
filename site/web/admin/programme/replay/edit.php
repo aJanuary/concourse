@@ -49,21 +49,13 @@ $replay['title'] = $replay['title'] ?? $_GET['title'] ?? '';
 $replay['replay_url'] = $replay['replay_url'] ?? $_GET['replay_url'] ?? '';
 
 if ($item_id !== '' && !$new_replay) {
-  $title = 'Edit ' . $item_id;
+  $heading = 'Edit ' . $item_id;
 } else {
-  $title = 'Add replay';
+  $heading = 'Add replay';
 }
 
 render_page('pages/admin/programme/replay/edit.html.twig', [
-  'title' => 'Add/edit a replay',
-  'description' => 'Manage replays.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage programme' => '/admin/programme/list',
-    'Manage replays' => '/admin/programme/replay/list',
-    $title,
-  ],
-  'heading' => $title,
+  'heading' => $heading,
   'item_id' => $item_id,
   'new_replay' => $new_replay,
   'replay' => $replay,

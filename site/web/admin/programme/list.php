@@ -8,8 +8,4 @@ if (!current_user_has_permission('manage-programme')) {
   exit;
 }
 
-render_page('pages/admin/programme/list.html.twig', [
-  'title' => 'Manage programme',
-  'description' => 'Manage programme.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme'],
-]);
+render_page('pages/admin/programme/list.html.twig');

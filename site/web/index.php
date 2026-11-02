@@ -260,9 +260,6 @@ if (current_user_has_permission('see-site-selection')) {
 }
 
 render_page('pages/index.html.twig', [
-  'title' => null,
-  'description' => 'The Member Portal for ' . CON_NAME . '.',
-  'breadcrumbs' => null,
   'categories' => $categories,
   'coming_soon_cards' => array_values($coming_soon_cards),
   'default_favs' => $default_favs,

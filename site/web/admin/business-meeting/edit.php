@@ -44,16 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $editing = true;
 }
 
-$page_title = $editing ? 'Edit link' : 'Add link';
-
 render_page('pages/admin/business-meeting/edit.html.twig', [
-  'title' => $page_title,
-  'description' => 'Manage business meeting join links.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage business meeting' => '/admin/business-meeting/list',
-    $page_title,
-  ],
   'heading' => $editing ? "Edit the link for badge $badge_no" : 'Add a link',
   'errors' => $errors,
   'editing' => $editing,

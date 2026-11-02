@@ -46,8 +46,4 @@ if (array_key_exists('HTTP_HX_REQUEST', $_SERVER)) {
   exit;
 }
 
-render_page('pages/admin/roles.html.twig', [
-  'title' => 'Manage roles',
-  'description' => 'Manage roles.',
-  'breadcrumbs' => ['Home' => '/', 'Manage roles'],
-] + role_form_context($_GET['role_id'] ?? 1));
+render_page('pages/admin/roles.html.twig', role_form_context($_GET['role_id'] ?? 1));

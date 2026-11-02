@@ -291,9 +291,6 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
   // return to $this->redirect.
   private function show_page(string $step, string $heading, array $context, ?string $error = null): never {
     render_page("auth/local/$step.html.twig", [
-      'title' => $heading,
-      'description' => 'Log in to the member portal for ' . CON_NAME . '.',
-      'breadcrumbs' => ['Home' => '/', 'Log in'],
       'heading' => $heading,
       'error' => $error === null ? null : self::ERRORS[$error],
       'allow_anonymous' => ALLOW_ANONYMOUS_ACCESS,

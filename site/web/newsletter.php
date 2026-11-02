@@ -9,8 +9,4 @@ if (current_user_has_permission('see-newsletter-redirect')) {
   exit;
 }
 
-render_page('pages/newsletter.html.twig', [
-  'title' => 'Newsletter',
-  'description' => 'Newsletter for ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Newsletter'],
-]);
+render_page('pages/newsletter.html.twig');

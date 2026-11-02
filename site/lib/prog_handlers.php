@@ -98,8 +98,7 @@ function prog_get_handler($name) {
 function prog_render_message($title, $heading, $text, $breadcrumb) {
   render_page('programme/message.html.twig', [
     'title' => $title,
-    'description' => $heading . '.',
-    'breadcrumbs' => ['Home' => '/', $breadcrumb],
+    'crumb' => $breadcrumb,
     'heading' => $heading,
     'text' => $text,
   ]);
@@ -109,8 +108,7 @@ function prog_render_message($title, $heading, $text, $breadcrumb) {
 function prog_render_login($title, $breadcrumb) {
   render_page('programme/login.html.twig', [
     'title' => $title,
-    'description' => 'Log in to continue.',
-    'breadcrumbs' => ['Home' => '/', $breadcrumb],
+    'crumb' => $breadcrumb,
   ]);
   exit;
 }

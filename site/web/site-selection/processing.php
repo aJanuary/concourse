@@ -7,8 +7,4 @@ require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 // Square's webhook arrives, which may be a little later, so this waits for it.
 check_permission('see-site-selection');
 
-render_page('pages/site-selection/processing.html.twig', [
-  'title' => 'Processing payment',
-  'description' => 'Your site selection payment is being processed.',
-  'breadcrumbs' => ['Home' => '/', 'Site selection' => '/site-selection', 'Processing'],
-]);
+render_page('pages/site-selection/processing.html.twig');

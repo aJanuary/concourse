@@ -61,9 +61,6 @@ if ($signups) {
 }
 
 render_page('pages/sign-ups.html.twig', [
-  'title' => 'Sign-ups',
-  'description' => 'Sign-up for programme items at ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Sign-ups'],
   'category_links' => $category_links,
   'categories' => $categories,
 ]);

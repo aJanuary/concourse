@@ -17,8 +17,5 @@ foreach (db_get_stages() as $row) {
 }
 
 render_page('pages/admin/programme/stages/list.html.twig', [
-  'title' => 'Manage stages',
-  'description' => 'Manage stages.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage stages'],
   'items' => $items,
 ]);

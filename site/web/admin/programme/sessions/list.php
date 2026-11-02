@@ -17,8 +17,5 @@ foreach (db_get_prog_sessions() as $row) {
 }
 
 render_page('pages/admin/programme/sessions/list.html.twig', [
-  'title' => 'Manage sessions',
-  'description' => 'Manage sessions.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage sessions'],
   'items' => $items,
 ]);

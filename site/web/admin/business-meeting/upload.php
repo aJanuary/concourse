@@ -25,13 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 render_page('pages/admin/business-meeting/upload.html.twig', [
-  'title' => 'Upload links',
-  'description' => 'Upload business meeting join links.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage business meeting' => '/admin/business-meeting/list',
-    'Upload links',
-  ],
   'error' => $error,
   'counts' => $counts,
   'problems' => $problems,

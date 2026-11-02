@@ -19,9 +19,6 @@ foreach (signups_sort(db_get_signups()) as $signup) {
 }
 
 render_page('pages/admin/programme/signups/list.html.twig', [
-  'title' => 'Manage sign-ups',
-  'description' => 'Manage sign-ups.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage sign-ups'],
   'error' => $_GET['error'] ?? null,
   'items' => $items,
 ]);

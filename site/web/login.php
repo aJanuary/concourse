@@ -59,9 +59,6 @@ foreach (auth_enabled_providers() as $provider) {
 }
 
 render_page('pages/login.html.twig', [
-    'title' => 'Log in',
-    'description' => 'Log in to the member portal for ' . CON_NAME . '.',
-    'breadcrumbs' => ['Home' => '/', 'Log in'],
     'redirect' => $redirect,
     'error' => $error,
     'providers' => $providers,

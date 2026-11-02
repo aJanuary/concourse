@@ -38,9 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $redirect = (string) ($_GET['redirect'] ?? '/');
 
 render_page('pages/switch-member.html.twig', [
-  'title' => 'Switch member',
-  'description' => 'Switch to a different member.',
-  'breadcrumbs' => ['Home' => '/', 'Switch member'],
   'members' => $members,
   'redirect' => is_valid_redirect($redirect) ? $redirect : '/',
 ]);

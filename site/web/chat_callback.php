@@ -10,10 +10,6 @@ require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 // failed. $problem goes in the body of the email to support.
 function render_chat_problem($outcome, $problem): never {
   render_page('pages/chat_callback.html.twig', [
-    'title' => 'Chat',
-    'description' => ($outcome === 'access-denied' ? 'Access denied when trying to link' : 'Something went wrong linking')
-      . ' Discord account for the ' . CON_SHORT_NAME . ' member portal.',
-    'breadcrumbs' => ['Home' => '/', 'Chat Online' => '/chat', 'Something went wrong'],
     'outcome' => $outcome,
     'problem' => $problem,
   ]);

@@ -72,11 +72,8 @@ function twig(): Environment {
   return $twig;
 }
 
-// Renders a page that extends layout.html.twig. Besides the page's own
-// variables the layout reads:
-//   title        shown after the portal's name in the browser tab, or null
-//   description  the meta description
-//   breadcrumbs  ['Home' => '/', ..., 'This page'], or null for none
+// Renders a page that extends layout.html.twig. The page's template sets
+// its title, description and breadcrumbs; see layout.html.twig.
 function render_page(string $template, array $context = []): void {
   // Starts the CSRF cookie while headers can still be sent
   csrf_token();
@@ -86,11 +83,7 @@ function render_page(string $template, array $context = []): void {
 
 function render_404(): never {
   http_response_code(404);
-  render_page('pages/404.html.twig', [
-    'title' => 'Page not found',
-    'description' => 'Page not found.',
-    'breadcrumbs' => ['Home' => '/', 'Page not found'],
-  ]);
+  render_page('pages/404.html.twig');
   exit;
 }
 

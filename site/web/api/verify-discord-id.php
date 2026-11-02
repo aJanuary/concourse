@@ -25,16 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   render_page('pages/api/verify-discord-id.html.twig', [
-    'title' => 'Verify Discord ID',
-    'description' => 'Verify Discord ID.',
-    'breadcrumbs' => ['Home' => '/', 'Verify Discord ID'],
     'verified_username' => $verification_result['username'],
   ]);
 } else {
   render_page('pages/api/verify-discord-id.html.twig', [
-    'title' => 'Verify Discord ID',
-    'description' => 'Verify Discord ID.',
-    'breadcrumbs' => ['Home' => '/', 'Verify Discord ID'],
     'verified_username' => null,
     'discord_id' => db_get_discord_id_from_token($token),
     'token' => $token,

@@ -17,8 +17,5 @@ foreach (db_get_replays() as $row) {
 }
 
 render_page('pages/admin/programme/replay/list.html.twig', [
-  'title' => 'Manage replays',
-  'description' => 'Manage replays.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage replays'],
   'items' => $items,
 ]);

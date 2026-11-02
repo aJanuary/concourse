@@ -51,9 +51,6 @@ $roles = array_diff(db_get_member_role_names($badge_no), ['default']);
 $owns_several = count(auth_switchable_members()) > 1;
 
 render_page('pages/profile.html.twig', [
-  'title' => 'Profile',
-  'description' => 'Your profile on ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Profile'],
   'badge_no' => $badge_no,
   'name' => get_current_user_name(),
   'email' => $email,

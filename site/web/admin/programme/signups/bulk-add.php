@@ -29,14 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 render_page('pages/admin/programme/signups/bulk-add.html.twig', [
-  'title' => 'Bulk add sign-ups',
-  'description' => 'Bulk add sign-ups.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage programme' => '/admin/programme/list',
-    'Manage sign-ups' => '/admin/programme/signups/list',
-    'Bulk add sign-ups',
-  ],
   'errors' => $errors,
   'csv' => $csv,
   'timezone' => TIMEZONE,

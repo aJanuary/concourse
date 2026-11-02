@@ -47,22 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $item_id = $_GET['item_id'] ?? null;
 if ($item_id !== null) {
   $post = db_get_discord_post($item_id);
-  $title = 'Edit ' . $item_id;
+  $heading = 'Edit ' . $item_id;
 } else {
   $post = ['title' => '', 'start' => '', 'duration' => '', 'room_id' => '', 'post_url' => ''];
-  $title = 'Add Discord post';
+  $heading = 'Add Discord post';
 }
 
 render_page('pages/admin/programme/discord-posts/edit.html.twig', [
-  'title' => 'Add/edit a Discord post',
-  'description' => 'Manage Discord posts.',
-  'breadcrumbs' => [
-    'Home' => '/',
-    'Manage programme' => '/admin/programme/list',
-    'Manage Discord posts' => '/admin/programme/discord-posts/list',
-    $title,
-  ],
-  'heading' => $title,
+  'heading' => $heading,
   'item_id' => $item_id,
   'post' => $post,
 ]);

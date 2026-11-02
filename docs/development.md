@@ -101,12 +101,23 @@ A page's PHP checks permissions, handles any form, gathers what the page
 shows and ends with `render_page()`, from `site/lib/twig.php`:
 
 ```php
-render_page('pages/admin/roles.html.twig', [
-  'title' => 'Manage roles',
-  'description' => 'Manage roles.',
-  'breadcrumbs' => ['Home' => '/', 'Manage roles'],
-  'roles' => db_get_roles(),
+render_page('pages/admin/roles/edit-member-roles.html.twig', [
+  'member' => db_get_member($badge_no),
 ]);
+```
+
+The template names the page before its blocks: its title, the meta
+description, and the breadcrumbs between Home and the page. The last
+breadcrumb is the title unless the page sets `crumb`:
+
+```twig
+{% extends 'layout.html.twig' %}
+{% set title = 'Edit member roles' %}
+{% set description = 'Give or remove roles for a member.' %}
+{% set parents = {'Manage roles': '/admin/roles'} %}
+{% block content %}
+  ...
+{% endblock %}
 ```
 
 Twig escapes everything a template prints, so pass plain text and never call

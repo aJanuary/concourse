@@ -18,8 +18,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit;
 }
 render_page('pages/admin/login-sessions.html.twig', [
-  'title' => 'Manage login sessions',
-  'description' => 'Manage login sessions.',
-  'breadcrumbs' => ['Home' => '/', 'Manage login sessions'],
   'sessions' => db_get_sessions(),
 ]);

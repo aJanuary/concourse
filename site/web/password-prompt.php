@@ -26,9 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 render_page('pages/password-prompt.html.twig', [
-  'title' => 'Set a password',
-  'description' => 'Choose whether to set a password for ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Set a password'],
   'email' => $email,
   'redirect' => $redirect,
 ]);

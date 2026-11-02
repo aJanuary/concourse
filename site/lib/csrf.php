@@ -44,10 +44,6 @@ function csrf_check() {
 
   require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
   http_response_code(403);
-  render_page('pages/form-expired.html.twig', [
-    'title' => 'Form expired',
-    'description' => 'Form expired.',
-    'breadcrumbs' => ['Home' => '/', 'Form expired'],
-  ]);
+  render_page('pages/form-expired.html.twig');
   exit;
 }

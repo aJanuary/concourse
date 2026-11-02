@@ -130,17 +130,15 @@ require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 check_permission('see-art-auction');
 
-render_page('pages/art-auction.html.twig', [
-  'title' => 'Art auction',
-  'description' => 'Bid in the ' . CON_NAME . ' art auction.',
-  'breadcrumbs' => ['Home' => '/', 'Art auction'],
-]);
+render_page('pages/art-auction.html.twig');
 ```
 
 and a template, `site/lib/templates/pages/art-auction.html.twig`:
 
 ```twig
 {% extends 'layout.html.twig' %}
+{% set title = 'Art auction' %}
+{% set description = 'Bid in the ' ~ site.con_name ~ ' art auction.' %}
 {% block content %}
 <article>
   <h2>Art auction</h2>

@@ -1,4 +1,6 @@
 {% extends 'layout.html.twig' %}
+{% set title = 'Business Meeting' %}
+{% set description = 'Join the WSFS Business Meeting online.' %}
 {% set platform = meeting.platform_name %}
 {% set help_email_link %}<a href="mailto:{{ meeting.help_email }}">{{ meeting.help_email }}</a>{% endset %}
 {% block content %}

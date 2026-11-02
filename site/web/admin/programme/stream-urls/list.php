@@ -18,9 +18,6 @@ foreach (db_get_stream_urls() as $row) {
 }
 
 render_page('pages/admin/programme/stream-urls/list.html.twig', [
-  'title' => 'Manage stream URLs',
-  'description' => 'Manage stream URLs.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Manage stream URLs'],
   'error' => $_GET['error'] ?? null,
   'items' => $items,
 ]);

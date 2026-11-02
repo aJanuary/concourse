@@ -25,8 +25,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $zoom_url = db_get_zoom_url();
 
 render_page('pages/admin/programme/zoom/edit.html.twig', [
-  'title' => 'Manage Zoom link',
-  'description' => 'Manage Zoom link.',
-  'breadcrumbs' => ['Home' => '/', 'Manage programme' => '/admin/programme/list', 'Edit Zoom link'],
   'zoom_url' => $zoom_url,
 ]);

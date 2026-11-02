@@ -25,9 +25,6 @@ foreach ($links as $link) {
 }
 
 render_page('pages/admin/business-meeting/list.html.twig', [
-  'title' => 'Manage business meeting',
-  'description' => 'Manage business meeting join links.',
-  'breadcrumbs' => ['Home' => '/', 'Manage business meeting'],
   'message' => $message,
   'platform' => BUSINESS_MEETING['platform_name'],
   'rows' => $rows,

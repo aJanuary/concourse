@@ -5,8 +5,4 @@ require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 check_permission('see-participant-guides');
 
-render_page('pages/guides/participant.html.twig', [
-  'title' => 'Participant guide',
-  'description' => 'Participant guide for ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Guides' => '/guides/list', 'Participant guide'],
-]);
+render_page('pages/guides/participant.html.twig');

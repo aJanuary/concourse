@@ -98,9 +98,6 @@ if ($member !== null) {
 }
 
 render_page('pages/admin/roles/edit-member-roles.html.twig', [
-  'title' => 'Edit member roles',
-  'description' => 'Give or remove roles for a member.',
-  'breadcrumbs' => ['Home' => '/', 'Manage roles' => '/admin/roles', 'Edit member roles'],
   'message' => $message,
   'message_class' => $message_class ?? null,
   'query' => $query,

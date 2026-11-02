@@ -30,9 +30,6 @@ class DevProvider implements AuthProvider {
     require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
     render_page('auth/dev/begin.html.twig', [
-      'title' => 'Log in as a member',
-      'description' => 'Development login.',
-      'breadcrumbs' => ['Home' => '/', 'Log in'],
       'redirect' => $redirect,
       'members' => db_get_members(),
     ]);

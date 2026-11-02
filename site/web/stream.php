@@ -18,9 +18,6 @@ if ($can_watch) {
 }
 
 render_page('pages/stream.html.twig', [
-  'title' => 'Stream',
-  'description' => 'Watch streams and replays of programme items at ' . CON_NAME . '.',
-  'breadcrumbs' => ['Home' => '/', 'Stream and replay'],
   'logged_in' => is_logged_in(),
   'can_watch' => $can_watch,
   'streams' => $streams,

@@ -97,9 +97,6 @@ foreach ($tokens as $token) {
 }
 
 render_page('pages/admin/site-selection/list.html.twig', [
-  'title' => 'Manage site selection',
-  'description' => 'Manage site selection voter keys.',
-  'breadcrumbs' => ['Home' => '/', 'Manage site selection'],
   'message' => $message,
   'available' => plural($available, 'key is', 'keys are'),
   'search' => $search,

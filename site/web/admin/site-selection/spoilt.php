@@ -14,9 +14,6 @@ $total_pages = max(1, (int) ceil($total / PER_PAGE));
 $tokens = db_get_spoilt_site_selection_tokens(PER_PAGE, ($page - 1) * PER_PAGE);
 
 render_page('pages/admin/site-selection/spoilt.html.twig', [
-  'title' => 'Spoilt keys',
-  'description' => 'Spoilt site selection voter keys.',
-  'breadcrumbs' => ['Home' => '/', 'Manage site selection' => '/admin/site-selection/list', 'Spoilt keys'],
   'total' => $total,
   'first' => ($page - 1) * PER_PAGE + 1,
   'tokens' => array_map(fn($token) => $token + ['spoilt' => site_selection_format_time($token['spoilt_at'])], $tokens),
