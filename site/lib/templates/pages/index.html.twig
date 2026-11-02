@@ -9,49 +9,10 @@
     <div class="cards"></div>
   </div>
 {% for category, category_cards in categories %}
-    <div class="category">
-      <h2>{{ category }}</h2>
-      <div class="cards">
-{% for card in category_cards %}
-        <div class="card {{ card.name }}">
-          <div class="hero"
-{% if card['live-card'] ?? false %}
-              aria-label="{{ card.title }}"
-{% else %}
-              aria-hidden="true"
-{% endif %}
-          >
-          </div>
-          <hgroup>
-            <h3><a href="{{ card.link }}"{% if card.link starts with 'http' %} target="_blank"{% endif %}>{{ card.title }}</a></h3>
-{% if card.subtitle %}
-            <h4>{{ card.subtitle }}</h4>
-{% endif %}
-          </hgroup>
-          <button class="fav" aria-label="Add {{ card.title }} to quick links"></button>
-        </div>
-{% endfor %}
-      </div>
-    </div>
+{{ _self.category(category, category_cards) }}
 {% endfor %}
 {% if coming_soon_cards %}
-    <div class="category">
-      <h2>Coming soon…</h2>
-      <div class="cards">
-{% for card in coming_soon_cards %}
-        <div class="card {{ card.name }} coming-soon">
-          <div class="hero" aria-hidden="true">
-          </div>
-          <hgroup>
-            <h3>{{ card.title }}</h3>
-{% if card.subtitle %}
-            <h4>{{ card.subtitle }}</h4>
-{% endif %}
-          </hgroup>
-        </div>
-{% endfor %}
-      </div>
-    </div>
+{{ _self.category('Coming soon…', coming_soon_cards, true) }}
 {% endif %}
 </nav>
 
@@ -201,3 +162,35 @@
   }
 </script>
 {% endblock %}
+
+{# The cards in one category. Coming-soon cards are greyed out, without a
+   link or a quick links button. #}
+{% macro category(name, cards, coming_soon = false) %}
+    <div class="category">
+      <h2>{{ name }}</h2>
+      <div class="cards">
+{% for card in cards %}
+        <div class="card {{ card.name }}{% if coming_soon %} coming-soon{% endif %}">
+{% if (card['live-card'] ?? false) and not coming_soon %}
+          <div class="hero" aria-label="{{ card.title }}"></div>
+{% else %}
+          <div class="hero" aria-hidden="true"></div>
+{% endif %}
+          <hgroup>
+{% if coming_soon %}
+            <h3>{{ card.title }}</h3>
+{% else %}
+            <h3><a href="{{ card.link }}"{% if card.link starts with 'http' %} target="_blank"{% endif %}>{{ card.title }}</a></h3>
+{% endif %}
+{% if card.subtitle %}
+            <h4>{{ card.subtitle }}</h4>
+{% endif %}
+          </hgroup>
+{% if not coming_soon %}
+          <button class="fav" aria-label="Add {{ card.title }} to quick links"></button>
+{% endif %}
+        </div>
+{% endfor %}
+      </div>
+    </div>
+{% endmacro %}
