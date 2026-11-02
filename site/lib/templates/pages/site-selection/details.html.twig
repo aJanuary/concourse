@@ -1,0 +1,44 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<article>
+  <h2>Postal address</h2>
+  <p>We use your postal address to check that each member votes only once. We won't send you any post.</p>
+{% if error is not null %}
+  <div class="error" id="details-error" role="alert">
+    <img src="/resources/error.svg" alt="error" aria-label="error">
+    {{ error }}
+  </div>
+{% endif %}
+  <form method="POST" class="site-selection-details">
+    {{ csrf_field() }}
+    <p>
+      <label for="address">Address, as you'd write it on an envelope <span class="required" aria-hidden="true">*</span></label>
+      <textarea id="address" name="address" required{% if error is not null %} aria-describedby="details-error"{% endif %}>{{ address }}</textarea>
+    </p>
+    <p>
+      <label for="country">Country <span class="required" aria-hidden="true">*</span></label>
+      <select id="country" name="country" required>
+        <option value="">Choose a country</option>
+{% for code, name in countries %}
+        <option value="{{ code }}"{% if country is same as(code ~ '') %} selected{% endif %}>{{ name }}</option>
+{% endfor %}
+      </select>
+    </p>
+    <h2>Preferences</h2>
+    <p class="checkbox">
+      <label>
+        <input type="checkbox" name="consent_to_publish_name" value="1"{% if consent_to_publish_name %} checked{% endif %}>
+        The winning bid may list my name as a member on their website and in their progress reports.
+      </label>
+    </p>
+    <p class="checkbox">
+      <label>
+        <input type="checkbox" name="wants_paper_publications" value="1"{% if wants_paper_publications %} checked{% endif %}>
+        I would like paper publications from the winning bid. They may charge extra for this.
+      </label>
+    </p>
+    <p><input type="submit" value="Continue to payment"></p>
+    <p>Payments are taken by Square. We don't see or keep your card details. See Square's <a href="https://squareup.com/legal/privacy" target="_blank">privacy notice</a>.</p>
+  </form>
+</article>
+{% endblock %}

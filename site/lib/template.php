@@ -34,11 +34,6 @@
     ]);
   }
 
-  // The page number asked for in ?page=, at least 1
-  function current_page_number() {
-    return max(1, (int) ($_GET['page'] ?? 1));
-  }
-
   function render_pagination($page, $total_pages, $params = []) {
     echo twig()->render('partials/pagination.html.twig', ['pages' => pagination_links($page, $total_pages, $params)]);
   }

@@ -1,7 +1,7 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/site_selection.php');
 
 check_permission('manage-tokens');
@@ -65,13 +65,15 @@ $total_pages = max(1, (int) ceil($total / PER_PAGE));
 $tokens = db_get_site_selection_tokens(PER_PAGE, ($page - 1) * PER_PAGE, $search, $sort, !$ascending);
 $available = db_count_available_site_selection_tokens();
 
-function sort_link($column, $title) {
-  global $sort, $ascending, $search;
+// The table's columns, each a link that sorts by it, or reverses the sort
+$columns = [];
+foreach (['label' => 'Label', 'token' => 'Key', 'badge_no' => 'Status', 'added_by' => 'Added by', 'added_at' => 'Added'] as $column => $heading) {
   $ascending_next = !($sort === $column && $ascending);
-  $params = array_filter(['search' => $search, 'sort' => $column, 'dir' => $ascending_next ? 'asc' : 'desc']);
-  $indicator = $sort === $column ? ($ascending ? ' ▲' : ' ▼') : '';
-  $aria_sort = $sort === $column ? ($ascending ? 'ascending' : 'descending') : null;
-  return '<th' . ($aria_sort ? ' aria-sort="' . $aria_sort . '"' : '') . '><a href="?' . htmlspecialchars(http_build_query($params)) . '">' . htmlspecialchars($title) . $indicator . '</a></th>';
+  $columns[] = [
+    'heading' => $heading . ($sort === $column ? ($ascending ? ' ▲' : ' ▼') : ''),
+    'url' => '?' . http_build_query(array_filter(['search' => $search, 'sort' => $column, 'dir' => $ascending_next ? 'asc' : 'desc'])),
+    'aria_sort' => $sort === $column ? ($ascending ? 'ascending' : 'descending') : null,
+  ];
 }
 
 function token_status($token) {
@@ -82,116 +84,32 @@ function token_status($token) {
   return ($token['spoilt_at'] !== null ? 'Spoilt, was ' : 'Assigned to ') . $who;
 }
 
-render_header(
-  'Manage site selection',
-  'Manage site selection voter keys.',
-  ['Home' => '/', 'Manage site selection']
-);
-?>
-<article class="full-width">
-  <h2>Manage site selection</h2>
-<?php
-if ($message !== null) {
-?>
-  <p class="info" role="status"><?php echo htmlspecialchars($message); ?></p>
-<?php
+$rows = [];
+foreach ($tokens as $token) {
+  $rows[] = [
+    'id' => $token['id'],
+    'label' => $token['label'],
+    'token' => $token['token'],
+    'status' => token_status($token),
+    'added_by' => $token['added_by'] . ($token['added_by_name'] !== null ? ' (' . $token['added_by_name'] . ')' : ''),
+    'added' => site_selection_format_time($token['added_at']),
+  ];
 }
-?>
-  <p>These are the voter keys from the election platform. Members who pay online are each assigned one that is available. <?php echo htmlspecialchars(plural($available, 'key is', 'keys are')); ?> available.</p>
-  <ul>
-    <li><a href="/admin/site-selection/add">Add keys...</a></li>
-    <li><a href="/admin/site-selection/spoilt">Spoilt keys</a>, to void on the election platform</li>
-    <li><a href="/admin/site-selection/export">Export member details</a> for the winning bid</li>
-<?php
-if (current_user_has_permission('sell-tokens')) {
-?>
-    <li><a href="/admin/site-selection/desk">Site selection desk</a></li>
-<?php
-}
-?>
-  </ul>
 
-  <form method="GET" class="inline-actions">
-    <label for="search">Search labels and keys</label>
-    <input type="search" id="search" name="search" value="<?php echo htmlspecialchars($search); ?>">
-<?php
-if ($sort !== 'added_at' || $ascending) {
-?>
-    <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort); ?>">
-    <input type="hidden" name="dir" value="<?php echo $ascending ? 'asc' : 'desc'; ?>">
-<?php
-}
-?>
-    <input type="submit" value="Search">
-<?php
-if ($search !== '') {
-?>
-    <a href="?<?php echo htmlspecialchars(http_build_query(array_diff_key($list_params, ['search' => '']))); ?>">Clear</a>
-<?php
-}
-?>
-  </form>
-<?php
-if ($total === 0) {
-?>
-  <p><?php echo $search !== '' ? 'No keys match your search.' : 'There are no keys yet.'; ?></p>
-<?php
-} else {
-  $first = ($page - 1) * PER_PAGE + 1;
-?>
-  <p>Showing <?php echo $first; ?>&ndash;<?php echo $first + count($tokens) - 1; ?> of <?php echo $total; ?> keys.</p>
-  <form method="POST" action="?<?php echo htmlspecialchars(http_build_query($list_params + ($page > 1 ? ['page' => $page] : []))); ?>">
-    <?php echo csrf_field(); ?>
-    <div class="inline-actions">
-      <button type="submit" class="button" name="bulk_action" value="unassign"
-        data-confirm-title="Unassign the selected keys?"
-        data-confirm-message="Each goes back to the pool to be given to someone else, even if it was spoilt. A member who had one can no longer vote with it."
-        data-confirm-button="Unassign keys">Unassign selected</button>
-      <button type="submit" class="button" name="bulk_action" value="delete"
-        data-confirm-title="Delete the selected keys?"
-        data-confirm-message="This can't be undone. Keys that are assigned aren't deleted."
-        data-confirm-button="Delete keys">Delete selected</button>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th><input type="checkbox" id="select-all" aria-label="Select all keys on this page"></th>
-          <?php echo sort_link('label', 'Label'); ?>
-          <?php echo sort_link('token', 'Key'); ?>
-          <?php echo sort_link('badge_no', 'Status'); ?>
-          <?php echo sort_link('added_by', 'Added by'); ?>
-          <?php echo sort_link('added_at', 'Added'); ?>
-        </tr>
-      </thead>
-      <tbody>
-<?php
-  foreach ($tokens as $token) {
-?>
-        <tr>
-          <td><input type="checkbox" name="ids[]" value="<?php echo $token['id']; ?>" aria-label="Select <?php echo htmlspecialchars($token['label'] ?? $token['token']); ?>"></td>
-          <td><?php echo htmlspecialchars($token['label'] ?? ''); ?></td>
-          <td><code><?php echo htmlspecialchars($token['token']); ?></code></td>
-          <td><?php echo htmlspecialchars(token_status($token)); ?></td>
-          <td><?php echo htmlspecialchars($token['added_by'] . ($token['added_by_name'] !== null ? ' (' . $token['added_by_name'] . ')' : '')); ?></td>
-          <td><?php echo htmlspecialchars(site_selection_format_time($token['added_at'])); ?></td>
-        </tr>
-<?php
-  }
-?>
-      </tbody>
-    </table>
-  </form>
-<?php
-  render_pagination($page, $total_pages, $list_params);
-}
-?>
-</article>
-<script src="<?php echo get_internal_url('/resources/confirm.js'); ?>" defer></script>
-<script>
-document.getElementById('select-all')?.addEventListener('change', function() {
-  document.querySelectorAll('input[name="ids[]"]').forEach($box => $box.checked = this.checked);
-});
-</script>
-<?php
-render_footer();
-?>
+render_page('pages/admin/site-selection/list.html.twig', [
+  'title' => 'Manage site selection',
+  'description' => 'Manage site selection voter keys.',
+  'breadcrumbs' => ['Home' => '/', 'Manage site selection'],
+  'message' => $message,
+  'available' => plural($available, 'key is', 'keys are'),
+  'search' => $search,
+  'sort' => $sort,
+  'ascending' => $ascending,
+  'clear_search_query' => http_build_query(array_diff_key($list_params, ['search' => ''])),
+  'action_query' => http_build_query($list_params + ($page > 1 ? ['page' => $page] : [])),
+  'total' => $total,
+  'first' => ($page - 1) * PER_PAGE + 1,
+  'columns' => $columns,
+  'rows' => $rows,
+  'pages' => pagination_links($page, $total_pages, $list_params),
+]);

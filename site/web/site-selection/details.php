@@ -1,7 +1,7 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/site_selection.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/square.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/countries.php');
@@ -48,61 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $countries = COUNTRIES;
 asort($countries, SORT_STRING | SORT_FLAG_CASE);
 
-render_header(
-  'Site selection details',
-  'Your details for site selection.',
-  ['Home' => '/', 'Site selection' => '/site-selection', 'Details']
-);
-?>
-<article>
-  <h2>Postal address</h2>
-  <p>We use your postal address to check that each member votes only once. We won't send you any post.</p>
-<?php
-if ($error !== null) {
-?>
-  <div class="error" id="details-error" role="alert">
-    <img src="/resources/error.svg" alt="error" aria-label="error">
-    <?php echo htmlspecialchars($error); ?>
-  </div>
-<?php
-}
-?>
-  <form method="POST" class="site-selection-details">
-    <?php echo csrf_field(); ?>
-    <p>
-      <label for="address">Address, as you'd write it on an envelope <span class="required" aria-hidden="true">*</span></label>
-      <textarea id="address" name="address" required<?php if ($error !== null) { ?> aria-describedby="details-error"<?php } ?>><?php echo htmlspecialchars($address); ?></textarea>
-    </p>
-    <p>
-      <label for="country">Country <span class="required" aria-hidden="true">*</span></label>
-      <select id="country" name="country" required>
-        <option value="">Choose a country</option>
-<?php
-foreach ($countries as $code => $name) {
-?>
-        <option value="<?php echo htmlspecialchars($code); ?>"<?php echo $country === $code ? ' selected' : ''; ?>><?php echo htmlspecialchars($name); ?></option>
-<?php
-}
-?>
-      </select>
-    </p>
-    <h2>Preferences</h2>
-    <p class="checkbox">
-      <label>
-        <input type="checkbox" name="consent_to_publish_name" value="1"<?php echo $consent_to_publish_name ? ' checked' : ''; ?>>
-        The winning bid may list my name as a member on their website and in their progress reports.
-      </label>
-    </p>
-    <p class="checkbox">
-      <label>
-        <input type="checkbox" name="wants_paper_publications" value="1"<?php echo $wants_paper_publications ? ' checked' : ''; ?>>
-        I would like paper publications from the winning bid. They may charge extra for this.
-      </label>
-    </p>
-    <p><input type="submit" value="Continue to payment"></p>
-    <p>Payments are taken by Square. We don't see or keep your card details. See Square's <a href="https://squareup.com/legal/privacy" target="_blank">privacy notice</a>.</p>
-  </form>
-</article>
-<?php
-render_footer();
-?>
+render_page('pages/site-selection/details.html.twig', [
+  'title' => 'Site selection details',
+  'description' => 'Your details for site selection.',
+  'breadcrumbs' => ['Home' => '/', 'Site selection' => '/site-selection', 'Details'],
+  'error' => $error,
+  'address' => $address,
+  'country' => $country,
+  'countries' => $countries,
+  'wants_paper_publications' => $wants_paper_publications,
+  'consent_to_publish_name' => $consent_to_publish_name,
+]);

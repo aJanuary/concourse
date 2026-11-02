@@ -1,0 +1,78 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<article class="full-width">
+  <h2>Manage site selection</h2>
+{% if message is not null %}
+  <p class="info" role="status">{{ message }}</p>
+{% endif %}
+  <p>These are the voter keys from the election platform. Members who pay online are each assigned one that is available. {{ available }} available.</p>
+  <ul>
+    <li><a href="/admin/site-selection/add">Add keys...</a></li>
+    <li><a href="/admin/site-selection/spoilt">Spoilt keys</a>, to void on the election platform</li>
+    <li><a href="/admin/site-selection/export">Export member details</a> for the winning bid</li>
+{% if has_permission('sell-tokens') %}
+    <li><a href="/admin/site-selection/desk">Site selection desk</a></li>
+{% endif %}
+  </ul>
+
+  <form method="GET" class="inline-actions">
+    <label for="search">Search labels and keys</label>
+    <input type="search" id="search" name="search" value="{{ search }}">
+{% if sort != 'added_at' or ascending %}
+    <input type="hidden" name="sort" value="{{ sort }}">
+    <input type="hidden" name="dir" value="{{ ascending ? 'asc' : 'desc' }}">
+{% endif %}
+    <input type="submit" value="Search">
+{% if search != '' %}
+    <a href="?{{ clear_search_query }}">Clear</a>
+{% endif %}
+  </form>
+{% if total == 0 %}
+  <p>{{ search != '' ? 'No keys match your search.' : 'There are no keys yet.' }}</p>
+{% else %}
+  <p>Showing {{ first }}&ndash;{{ first + rows|length - 1 }} of {{ total }} keys.</p>
+  <form method="POST" action="?{{ action_query }}">
+    {{ csrf_field() }}
+    <div class="inline-actions">
+      <button type="submit" class="button" name="bulk_action" value="unassign"
+        data-confirm-title="Unassign the selected keys?"
+        data-confirm-message="Each goes back to the pool to be given to someone else, even if it was spoilt. A member who had one can no longer vote with it."
+        data-confirm-button="Unassign keys">Unassign selected</button>
+      <button type="submit" class="button" name="bulk_action" value="delete"
+        data-confirm-title="Delete the selected keys?"
+        data-confirm-message="This can't be undone. Keys that are assigned aren't deleted."
+        data-confirm-button="Delete keys">Delete selected</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="select-all" aria-label="Select all keys on this page"></th>
+{% for column in columns %}
+          <th{% if column.aria_sort %} aria-sort="{{ column.aria_sort }}"{% endif %}><a href="{{ column.url }}">{{ column.heading }}</a></th>
+{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+{% for row in rows %}
+        <tr>
+          <td><input type="checkbox" name="ids[]" value="{{ row.id }}" aria-label="Select {{ row.label ?? row.token }}"></td>
+          <td>{{ row.label ?? '' }}</td>
+          <td><code>{{ row.token }}</code></td>
+          <td>{{ row.status }}</td>
+          <td>{{ row.added_by }}</td>
+          <td>{{ row.added }}</td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+  </form>
+{% include 'partials/pagination.html.twig' %}
+{% endif %}
+</article>
+<script src="{{ asset('/resources/confirm.js') }}" defer></script>
+<script>
+document.getElementById('select-all')?.addEventListener('change', function() {
+  document.querySelectorAll('input[name="ids[]"]').forEach($box => $box.checked = this.checked);
+});
+</script>
+{% endblock %}

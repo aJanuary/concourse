@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+<article>
+  <h2>Site selection</h2>
+  <p>Voting in site selection lets you have your say in where the {{ site_selection.ordinal }} Worldcon will be held in {{ site_selection.year }}.</p>
+  <p>To vote, pay the site selection fee of <strong>{{ site_selection.fee }}</strong>. This buys you an advance <a href="https://www.wsfs.org/membership/" target="_blank">WSFS membership</a> of the {{ site_selection.year }} Worldcon, and the fees are passed on to the winning bid.</p>
+{% if just_paid and assignment is not null %}
+  <p class="info" role="status">Thank you for paying the site selection fee. You can now vote.</p>
+{% endif %}
+{% if ballot_url %}
+  <p><a href="{{ ballot_url }}" class="button" target="_blank">Vote in site selection</a></p>
+  <p>Don't share this link with anyone: it lets whoever has it vote as you.</p>
+{% elseif assignment is not null %}
+  <p class="info">You are voting with a paper ballot.</p>
+{% else %}
+  <p><a href="/site-selection/details" class="button">Pay the site selection fee</a></p>
+{% endif %}
+{% if assignment is null or assignment.method == 'online' %}
+  <p>Or <a href="{{ site_selection.paper_ballot_url }}" target="_blank">vote with a paper ballot</a>.</p>
+{% endif %}
+  <h3>The bids</h3>
+  <ul>
+{% for bid in bids %}
+{% if bid.withdrawn ?? false %}
+    <li><s><a href="{{ bid.url }}" target="_blank">{{ bid.name }}</a></s> has withdrawn.</li>
+{% else %}
+    <li><a href="{{ bid.url }}" target="_blank">{{ bid.name }}</a></li>
+{% endif %}
+{% endfor %}
+  </ul>
+  <p>Find out more about <a href="{{ site_selection.info_url }}" target="_blank">how site selection works</a>.</p>
+</article>
+{% if just_paid %}
+<script>
+// So reloading or bookmarking the page doesn't thank them again
+const url = new URL(window.location);
+url.searchParams.delete('success');
+window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+</script>
+{% endif %}
+{% endblock %}

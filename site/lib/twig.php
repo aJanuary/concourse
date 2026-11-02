@@ -141,6 +141,11 @@ function member_avatar_colour($badge_no) {
   return ((int) preg_replace('/\D/', '', $badge_no) % 4) + 1;
 }
 
+// The page number asked for in ?page=, at least 1
+function current_page_number() {
+  return max(1, (int) ($_GET['page'] ?? 1));
+}
+
 // The links partials/pagination.html.twig shows for page $page of
 // $total_pages: the first and last, two either side of this one, and
 // previous and next. $params are the other query parameters each link keeps,

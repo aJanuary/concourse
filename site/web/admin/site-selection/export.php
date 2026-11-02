@@ -1,7 +1,7 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/site_selection.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/countries.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/csv.php');
@@ -44,17 +44,9 @@ if (($_GET['download'] ?? '') === 'csv') {
   exit;
 }
 
-render_header(
-  'Export member details',
-  'Export site selection member details.',
-  ['Home' => '/', 'Manage site selection' => '/admin/site-selection/list', 'Export member details']
-);
-?>
-<article>
-  <h2>Export member details</h2>
-  <p><?php echo count($rows) === 1 ? '1 member has' : count($rows) . ' members have'; ?> paid online and can vote online. Download their names, contact details, addresses and preferences to pass to the winning bid. Members voting on paper aren't included.</p>
-  <p><a href="/admin/site-selection/export?download=csv" class="button">Download CSV</a></p>
-</article>
-<?php
-render_footer();
-?>
+render_page('pages/admin/site-selection/export.html.twig', [
+  'title' => 'Export member details',
+  'description' => 'Export site selection member details.',
+  'breadcrumbs' => ['Home' => '/', 'Manage site selection' => '/admin/site-selection/list', 'Export member details'],
+  'count' => count($rows),
+]);
