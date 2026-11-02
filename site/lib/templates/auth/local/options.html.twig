@@ -1,0 +1,24 @@
+{% extends 'auth/local/page.html.twig' %}
+{% block form %}
+      <p>Logging in as <strong>{{ email }}</strong> (<a href="/login?redirect={{ redirect|url_encode }}">change</a>)</p>
+      <form method="post" action="/login?provider=local" class="nu-form">
+        <input type="hidden" name="phase" value="entered-password">
+{% include 'auth/local/hidden-fields.html.twig' %}
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" autofocus required>
+        </div>
+        <button type="submit" class="button login">Log in</button>
+      </form>
+      <div class="login-links">
+        <form method="post" action="/login?provider=local">
+          <input type="hidden" name="phase" value="requested-code">
+{% include 'auth/local/hidden-fields.html.twig' %}
+          <button type="submit" class="button link">Email me a login code instead</button>
+        </form>
+        <form method="post" action="/forgot-password">
+{% include 'auth/local/hidden-fields.html.twig' %}
+          <button type="submit" class="button link">Forgotten your password, or don't have one yet?</button>
+        </form>
+      </div>
+{% endblock %}

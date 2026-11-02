@@ -20,6 +20,9 @@ trap 'rm -rf "$JARS"' EXIT
 
 PUBLIC=(
   / /login '/login?error_code=unknown-member' '/login?provider=dev' '/login?provider=local'
+  '/login?provider=local&error=invalid-code' '/login?provider=local&phase=options&email=admin%40example.com&redirect=%2Fmaps'
+  '/login?provider=local&phase=enter-code&email=admin%40example.com&error=invalid-code'
+  '/login?provider=local&phase=choose&token=bad' '/login?error_code=nope'
   /help /site-map /attributions /privacy-policy /login-instructions /discord-instructions
   /convention-guide /convention-time /maps /times /newsletter /programme-guide
   /under-construction '/under-construction?page=Gallery' /virtual-gatherings

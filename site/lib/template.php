@@ -42,13 +42,3 @@
   function render_pagination($page, $total_pages, $params = []) {
     echo twig()->render('partials/pagination.html.twig', ['pages' => pagination_links($page, $total_pages, $params)]);
   }
-
-  function render_404(): never {
-    http_response_code(404);
-    render_page('pages/404.html.twig', [
-      'title' => 'Page not found',
-      'description' => 'Page not found.',
-      'breadcrumbs' => ['Home' => '/', 'Page not found'],
-    ]);
-    exit;
-  }

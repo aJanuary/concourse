@@ -1,0 +1,21 @@
+{% extends 'auth/local/page.html.twig' %}
+{% block form %}
+      <p>Multiple members are associated with the email address {{ email }}. Please select your name from the list below to log in.</p>
+      <ul id="user-select">
+{% for member in members %}
+        <li>
+          <form method="post" action="/login?provider=local">
+            {{ csrf_field() }}
+            <input type="hidden" name="phase" value="selected-member">
+            <input type="hidden" name="token" value="{{ token }}">
+            <input type="hidden" name="badge_no" value="{{ member.badge_no }}">
+            <input type="hidden" name="redirect" value="{{ redirect }}">
+            <button type="submit">
+              <span class="avatar color-{{ member.badge_no|avatar_colour }}">{{ member.name|initials }}</span>
+              [{{ member.badge_no }}] {{ member.name }}
+            </button>
+          </form>
+        </li>
+{% endfor %}
+      </ul>
+{% endblock %}

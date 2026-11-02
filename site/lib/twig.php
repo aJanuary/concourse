@@ -17,6 +17,12 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
+// A template and its variables, for a page to include, such as a login
+// provider's form on the login page: {% include form.name with form.context %}
+final class Template {
+  public function __construct(public readonly string $name, public readonly array $context = []) {}
+}
+
 // Where production keeps compiled templates. The image is rebuilt for every
 // deploy, so the cache never outlives the templates it was compiled from.
 const TWIG_CACHE_DIR = '/var/cache/twig';
@@ -77,6 +83,16 @@ function render_page(string $template, array $context = []): void {
   csrf_token();
   record_analytics(member_type(), 'request', $_SERVER['REQUEST_URI']);
   echo twig()->render($template, ['site' => site_context()] + $context);
+}
+
+function render_404(): never {
+  http_response_code(404);
+  render_page('pages/404.html.twig', [
+    'title' => 'Page not found',
+    'description' => 'Page not found.',
+    'breadcrumbs' => ['Home' => '/', 'Page not found'],
+  ]);
+  exit;
 }
 
 // What the layout and any page can know about the portal and the visitor

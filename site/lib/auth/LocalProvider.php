@@ -5,6 +5,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/mail.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/secure_links.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(__DIR__ . '/AuthProvider.php');
 require_once(__DIR__ . '/InlineLoginForm.php');
 require_once(__DIR__ . '/MemberSource.php');
@@ -64,36 +65,25 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
     switch ($_GET['phase'] ?? '') {
       case 'options':
         if ($email !== null) {
-          $this->render_options($email, $this->redirect, $error);
+          $this->render_options($email, $error);
         }
         break;
 
       case 'enter-code':
         if ($email !== null) {
-          $this->render_code_form($email, $this->redirect, $error);
+          $this->render_code_form($email, $error);
         }
         break;
 
       case 'choose':
-        $this->render_chooser((string) ($_GET['token'] ?? ''), $this->redirect);
+        $this->render_chooser((string) ($_GET['token'] ?? ''));
     }
 
-    $this->render_entry($this->redirect, $error);
+    $this->render_entry($error);
   }
 
-  public function render_inline_form(string $redirect): void {
-    ?>
-    <form method="post" action="/login?provider=local" class="nu-form">
-      <?php echo csrf_field(); ?>
-      <input type="hidden" name="phase" value="entered-email">
-      <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" autocomplete="username" required>
-      </div>
-      <button type="submit" class="button login">Next</button>
-    </form>
-    <?php
+  public function inline_form(string $redirect): Template {
+    return new Template('auth/local/inline-form.html.twig', ['redirect' => $redirect]);
   }
 
   // Each phase either finishes the login or redirects to the next page
@@ -184,39 +174,20 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
     $this->go('choose', null, $redirect, null, $token);
   }
 
-  private function render_chooser(string $token, string $redirect): never {
+  private function render_chooser(string $token): never {
     $data = verify_secure_link('/login', $token);
     if ($data === 'expired') {
-      $this->render_entry($redirect, 'link-expired');
+      $this->render_entry('link-expired');
     }
     if ($data === 'invalid' || ($data['phase'] ?? '') !== 'select-member') {
-      $this->render_entry($redirect, 'link-invalid');
+      $this->render_entry('link-invalid');
     }
 
-    $email = $data['email'];
-    $members = $this->members->members_for_email($email);
-    $this->render_page('Choose a member', function () use ($members, $token, $email, $redirect) {
-      ?>
-      <p>Multiple members are associated with the email address <?php echo htmlspecialchars($email); ?>. Please select your name from the list below to log in.</p>
-      <ul id="user-select">
-        <?php foreach ($members as $member) { ?>
-          <li>
-            <form method="post" action="/login?provider=local">
-              <?php echo csrf_field(); ?>
-              <input type="hidden" name="phase" value="selected-member">
-              <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
-              <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($member['badge_no']); ?>">
-              <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
-              <button type="submit">
-                <span class="avatar color-<?php echo ((int) preg_replace('/\D/', '', $member['badge_no']) % 4) + 1; ?>"><?php echo htmlspecialchars($this->initials($member['name'])); ?></span>
-                [<?php echo htmlspecialchars($member['badge_no']); ?>] <?php echo htmlspecialchars($member['name']); ?>
-              </button>
-            </form>
-          </li>
-        <?php } ?>
-      </ul>
-      <?php
-    });
+    $this->show_page('choose', 'Choose a member', [
+      'email' => $data['email'],
+      'members' => $this->members->members_for_email($data['email']),
+      'token' => $token,
+    ]);
   }
 
   public function send_login_code(string $email): void {
@@ -316,113 +287,30 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
     return $redirect;
   }
 
-  private function initials(string $name): string {
-    $parts = preg_split('/\s+/', trim($name));
-    if (count($parts) === 1) {
-      return strtoupper(substr($parts[0], 0, 1));
-    }
-    return strtoupper(substr($parts[0], 0, 1) . substr($parts[count($parts) - 1], 0, 1));
-  }
-
-  private function render_page(string $title, callable $body, ?string $error = null): never {
-    require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
-
-    render_header($title, 'Log in to the member portal for ' . CON_NAME . '.', ['Home' => '/', 'Log in']);
-    ?>
-    <article>
-      <h2><?php echo htmlspecialchars($title); ?></h2>
-      <?php if ($error !== null) { ?>
-        <p class="error"><img src="/resources/error.svg" alt="error" aria-label="error"><?php echo self::ERRORS[$error]; ?></p>
-      <?php } ?>
-      <?php $body(); ?>
-      <div class="login-links">
-        <?php if (ALLOW_ANONYMOUS_ACCESS) { ?>
-          <p><a href="/login?skip-login&redirect=<?php echo urlencode($this->redirect); ?>">Continue without logging in</a></p>
-        <?php } ?>
-        <p>If you are having trouble logging in, please email <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
-      </div>
-    </article>
-    <?php
-    render_footer();
+  // $step is the template in templates/auth/local. Forms and links on it
+  // return to $this->redirect.
+  private function show_page(string $step, string $heading, array $context, ?string $error = null): never {
+    render_page("auth/local/$step.html.twig", [
+      'title' => $heading,
+      'description' => 'Log in to the member portal for ' . CON_NAME . '.',
+      'breadcrumbs' => ['Home' => '/', 'Log in'],
+      'heading' => $heading,
+      'error' => $error === null ? null : self::ERRORS[$error],
+      'allow_anonymous' => ALLOW_ANONYMOUS_ACCESS,
+      'redirect' => $this->redirect,
+    ] + $context);
     exit;
   }
 
-  private function render_entry(string $redirect, ?string $error = null): never {
-    $this->render_page('Log in', function () use ($redirect) {
-      $this->render_inline_form($redirect);
-    }, $error);
+  private function render_entry(?string $error = null): never {
+    $this->show_page('entry', 'Log in', [], $error);
   }
 
-  private function hidden_fields(string $email, string $redirect): string {
-    return csrf_field()
-      . '<input type="hidden" name="email" value="' . htmlspecialchars($email) . '">'
-      . '<input type="hidden" name="redirect" value="' . htmlspecialchars($redirect) . '">';
+  private function render_options(string $email, ?string $error = null): never {
+    $this->show_page('options', 'Log in', ['email' => $email], $error);
   }
 
-  private function render_options(string $email, string $redirect, ?string $error = null): never {
-    $this->render_page('Log in', function () use ($email, $redirect) {
-      $fields = $this->hidden_fields($email, $redirect);
-      ?>
-      <p>Logging in as <strong><?php echo htmlspecialchars($email); ?></strong> (<a href="/login?redirect=<?php echo urlencode($redirect); ?>">change</a>)</p>
-      <form method="post" action="/login?provider=local" class="nu-form">
-        <input type="hidden" name="phase" value="entered-password">
-        <?php echo $fields; ?>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" autofocus required>
-        </div>
-        <button type="submit" class="button login">Log in</button>
-      </form>
-      <div class="login-links">
-        <form method="post" action="/login?provider=local">
-          <input type="hidden" name="phase" value="requested-code">
-          <?php echo $fields; ?>
-          <button type="submit" class="button link">Email me a login code instead</button>
-        </form>
-        <form method="post" action="/forgot-password">
-          <?php echo $fields; ?>
-          <button type="submit" class="button link">Forgotten your password, or don't have one yet?</button>
-        </form>
-      </div>
-      <?php
-    }, $error);
-  }
-
-  private function render_code_form(string $email, string $redirect, ?string $error = null): never {
-    $this->render_page('Enter your login code', function () use ($email, $redirect) {
-      $fields = $this->hidden_fields($email, $redirect);
-      ?>
-      <p>If <?php echo htmlspecialchars($email); ?> belongs to a member, a login code has been sent to it. Please enter it below.</p>
-      <p>If you do not receive the email within a few minutes, please check your spam or junk mail folder.</p>
-      <form method="post" action="/login?provider=local" class="nu-form">
-        <input type="hidden" name="phase" value="entered-code">
-        <?php echo $fields; ?>
-        <div class="form-group">
-          <label for="code">Login code</label>
-          <input type="text" id="code" name="code" class="code-input" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" autofocus required>
-        </div>
-        <button type="submit" class="button login">Log in</button>
-        <script>
-        // Submits once the code is complete. The pause lets iOS finish filling
-        // the field from the email before the form is read.
-        document.getElementById('code').addEventListener('input', function() {
-          var input = this;
-          if (/^[0-9]{6}$/.test(input.value)) {
-            setTimeout(function() {
-              if (/^[0-9]{6}$/.test(input.value)) {
-                input.form.submit();
-              }
-            }, 100);
-          }
-        });
-        </script>
-      </form>
-      <form method="post" action="/login?provider=local">
-        <input type="hidden" name="phase" value="requested-code">
-        <?php echo $fields; ?>
-        <button type="submit" class="button link">Send a new code</button>
-      </form>
-      <?php
-    }, $error);
+  private function render_code_form(string $email, ?string $error = null): never {
+    $this->show_page('enter-code', 'Enter your login code', ['email' => $email], $error);
   }
 }

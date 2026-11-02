@@ -27,26 +27,15 @@ class DevProvider implements AuthProvider {
 
   public function begin(string $redirect): void {
     $this->require_development();
-    require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+    require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
-    render_header('Log in as a member', 'Development login.', ['Home' => '/', 'Log in']);
-    ?>
-    <article>
-      <h2>Log in as a member</h2>
-      <form method="post" action="/login?provider=dev">
-        <?php echo csrf_field(); ?>
-        <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
-        <label for="badge_no">Member</label>
-        <select name="badge_no" id="badge_no">
-          <?php foreach (db_get_members() as $member) { ?>
-            <option value="<?php echo htmlspecialchars($member['badge_no']); ?>"><?php echo htmlspecialchars($member['badge_no'] . ' ' . $member['name']); ?></option>
-          <?php } ?>
-        </select>
-        <button type="submit" class="button login">Log in</button>
-      </form>
-    </article>
-    <?php
-    render_footer();
+    render_page('auth/dev/begin.html.twig', [
+      'title' => 'Log in as a member',
+      'description' => 'Development login.',
+      'breadcrumbs' => ['Home' => '/', 'Log in'],
+      'redirect' => $redirect,
+      'members' => db_get_members(),
+    ]);
     exit;
   }
 

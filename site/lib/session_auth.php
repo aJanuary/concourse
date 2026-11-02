@@ -8,7 +8,7 @@ csrf_check();
 
 function check_permission($permission) {
   if (!current_user_has_permission($permission)) {
-    require_once('template.php');
+    require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
     render_404();
   }
 }

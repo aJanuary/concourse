@@ -2,7 +2,7 @@
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth_functions.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/db.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/auth/InlineLoginForm.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/csrf.php');
@@ -38,17 +38,9 @@ if (ALLOW_ANONYMOUS_ACCESS && isset($_GET['skip-login'])) {
     exit();
 }
 
-render_header(
-    'Log in',
-    'Log in to the member portal for ' . CON_NAME . '.',
-    ['Home' => '/', 'Log in']
-);
+$redirect = $_GET['redirect'] ?? '/';
 
-?>
-
-<article>
-    <h2>Log in</h2>
-<?php
+$error = null;
 if (isset($_GET['error_code'])) {
     $error = [
         'invalid-state' => 'Your login could not be completed. Please try logging in again.',
@@ -56,57 +48,23 @@ if (isset($_GET['error_code'])) {
         'unknown-member' => 'No member with that badge number exists.',
         'not-in-allowlist' => 'Sorry, the portal is not open for general access just yet. Watch for an email from the convention announcing it as open.',
     ][$_GET['error_code']] ?? 'An unknown error occurred.';
-?>
-    <p class="error"><img src="resources/error.svg" alt="error" aria-label="error"><?php echo $error; ?></p>
-<?php
 }
+
+// Each provider's form, or the button that starts its login
+$providers = [];
 foreach (auth_enabled_providers() as $provider) {
-    if ($provider instanceof InlineLoginForm) {
-        $provider->render_inline_form($_GET['redirect'] ?? '/');
-        continue;
-    }
-?>
-    <a href="?provider=<?php echo urlencode($provider->id()); ?>&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>" class="button login"><?php echo htmlspecialchars($provider->display_name()); ?></a>
-<?php
+    $providers[] = $provider instanceof InlineLoginForm
+        ? ['form' => $provider->inline_form($redirect)]
+        : ['form' => null, 'id' => $provider->id(), 'name' => $provider->display_name()];
 }
-if (ALLOW_ANONYMOUS_ACCESS) {
-?>
-    <p><a href="/login?skip-login&redirect=<?php echo urlencode($_GET['redirect'] ?? '/'); ?>">Continue without logging in</a></p>
-<?php
-}
-?>
-    <p>Logging in to the member portal allows us to customise your online experience and give you quick access to the things most relevant to you. We also require you to log in to watch the programme online and to chat on Discord.</p>
-<?php
-    if (time() < strtotime(CON_START_DATE)) {
-?>
-    <h3>Not a member?</h3>
-    <p>If you&apos;re not yet a member of the convention, you can still <a href="https://example.com/buy-membership">purchase a membership or ticket</a>.</p>
-<?php
-    }
-?>
-    <h3>Who can log in the portal?</h3>
-    <p>People aged 16 and over who have Attending Memberships, Day Tickets, Online Memberships, or Online Tickets can log in the portal.
-    <?php
-    if (time() < strtotime(CON_START_DATE)) {
-    ?>
-        If you don&apos;t already have one of these and would like to access the portal, you can <a href="https://example.com/buy-membership">purchase a membership or ticket</a>.
-    <?php
-    }
-    ?>
-    <?php
-if (ALLOW_ANONYMOUS_ACCESS) {
-?>
-    <p>If you do not wish to log in, or cannot (for example, because you are under 16), then you can click the "Continue without logging in" link to access most of the portal.</p>
-<?php
-}
-?>
-    <h3>Problems</h3>
-    <p>Read the <a href="/login-instructions" target="_blank">instructions on how to log in</a>.</p>
-    <p>If you are having trouble logging in, please e-mail <a href="mailto:<?php echo SUPPORT_EMAIL; ?>?subject=Trouble logging in to member portal"><?php echo SUPPORT_EMAIL; ?></a>.</p>
-</article>
 
-<?php
-
-render_footer();
-
-?>
+render_page('pages/login.html.twig', [
+    'title' => 'Log in',
+    'description' => 'Log in to the member portal for ' . CON_NAME . '.',
+    'breadcrumbs' => ['Home' => '/', 'Log in'],
+    'redirect' => $redirect,
+    'error' => $error,
+    'providers' => $providers,
+    'allow_anonymous' => ALLOW_ANONYMOUS_ACCESS,
+    'before_con' => time() < strtotime(CON_START_DATE),
+]);

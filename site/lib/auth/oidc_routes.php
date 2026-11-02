@@ -7,7 +7,7 @@ require_once(getenv('CONFIG_LIB_DIR') . '/auth/providers.php');
 function oidc_provider_or_404() {
   $provider = auth_get_provider('oidc');
   if ($provider === null) {
-    require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+    require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
     render_404();
   }
   return $provider;

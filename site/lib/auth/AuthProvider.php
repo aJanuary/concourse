@@ -16,7 +16,9 @@
  *
  * Flow:
  *  1. login.php calls begin($redirect). The provider sends the browser
- *     elsewhere (or renders a form) and exits.
+ *     elsewhere (or renders a page with render_page()) and exits. A provider
+ *     whose form can sit on the login page itself also implements
+ *     InlineLoginForm. Its templates go in templates/auth/<id>.
  *  2. The provider's callback or form submission calls complete($params).
  *     It returns an Identity, or throws AuthFailure with one of the error
  *     codes login.php knows how to display.
