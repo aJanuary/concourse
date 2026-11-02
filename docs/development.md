@@ -129,6 +129,9 @@ these functions and filters:
 | `name\|initials`, `badge_no\|avatar_colour` | A member's avatar |
 | `value\|json` | A value as JavaScript, for use inside `<script>` only |
 
+`templates/error.php`, the page shown when a page throws, is plain PHP rather
+than Twig, so that it still works when the problem is in Twig.
+
 In development a template that uses a variable it wasn't given fails, so
 mistakes show. Production renders it as nothing, and keeps compiled templates
 in `/var/cache/twig`.

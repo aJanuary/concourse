@@ -28,10 +28,6 @@ function csrf_token($purpose = 'form') {
   return hash_hmac('sha256', $purpose, $secret);
 }
 
-function csrf_field() {
-  return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(csrf_token()) . '">';
-}
-
 function csrf_token_valid($token, $purpose = 'form') {
   return is_string($token) && isset($_COOKIE[CSRF_COOKIE_NAME]) && hash_equals(csrf_token($purpose), $token);
 }

@@ -58,7 +58,7 @@ function twig(): Environment {
   // Everything a template can call. Anything else it needs comes from the
   // page's context.
   $twig->addFunction(new TwigFunction('asset', 'get_internal_url'));
-  $twig->addFunction(new TwigFunction('csrf_field', 'csrf_field', ['is_safe' => ['html']]));
+  $twig->addFunction(new TwigFunction('csrf_field', fn() => $twig->render('partials/csrf-field.html.twig'), ['is_safe' => ['html']]));
   $twig->addFunction(new TwigFunction('csrf_token', 'csrf_token'));
   $twig->addFunction(new TwigFunction('secure_token', 'create_secure_token'));
   $twig->addFunction(new TwigFunction('has_permission', 'current_user_has_permission'));
