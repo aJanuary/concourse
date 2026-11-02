@@ -1,4 +1,7 @@
 {% extends 'layout.html.twig' %}
+{% block head %}
+    <script src="{{ asset('/resources/confirm.js') }}" defer></script>
+{% endblock %}
 {% block content %}
 <article class="full-width">
   <h2>Site selection desk</h2>
@@ -60,5 +63,4 @@
 {% include 'partials/pagination.html.twig' %}
 {% endif %}
 </article>
-<script src="{{ asset('/resources/confirm.js') }}" defer></script>
 {% endblock %}

@@ -89,8 +89,9 @@ The web image includes Xdebug, which is off unless `XDEBUG_MODE` is set. Set it 
 Pages and emails are [Twig](https://twig.symfony.com/doc/3.x/) templates in
 `site/lib/templates`:
 
-- `layout.html.twig` is the portal's header and footer. Pages extend it and
-  fill its `content` block.
+- `layout.html.twig` is the whole page around the content: head, header,
+  breadcrumbs and footer. Pages extend it and fill its `content` block, and
+  can add scripts to `head` and a class to the body with `body_class`.
 - `pages/` has one template for each page, at the page's path: the template
   for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`.
 - `partials/` has pieces several pages share, such as pagination, and

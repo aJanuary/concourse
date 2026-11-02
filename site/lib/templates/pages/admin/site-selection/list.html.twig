@@ -1,4 +1,7 @@
 {% extends 'layout.html.twig' %}
+{% block head %}
+    <script src="{{ asset('/resources/confirm.js') }}" defer></script>
+{% endblock %}
 {% block content %}
 <article class="full-width">
   <h2>Manage site selection</h2>
@@ -69,7 +72,6 @@
 {% include 'partials/pagination.html.twig' %}
 {% endif %}
 </article>
-<script src="{{ asset('/resources/confirm.js') }}" defer></script>
 <script>
 document.getElementById('select-all')?.addEventListener('change', function() {
   document.querySelectorAll('input[name="ids[]"]').forEach($box => $box.checked = this.checked);

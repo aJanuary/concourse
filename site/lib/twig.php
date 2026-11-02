@@ -77,7 +77,6 @@ function twig(): Environment {
 //   title        shown after the portal's name in the browser tab, or null
 //   description  the meta description
 //   breadcrumbs  ['Home' => '/', ..., 'This page'], or null for none
-//   is_home      true on the home page only
 function render_page(string $template, array $context = []): void {
   // Starts the CSRF cookie while headers can still be sent
   csrf_token();

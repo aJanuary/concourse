@@ -263,7 +263,6 @@ render_page('pages/index.html.twig', [
   'title' => null,
   'description' => 'The Member Portal for ' . CON_NAME . '.',
   'breadcrumbs' => null,
-  'is_home' => true,
   'categories' => $categories,
   'coming_soon_cards' => array_values($coming_soon_cards),
   'default_favs' => $default_favs,
