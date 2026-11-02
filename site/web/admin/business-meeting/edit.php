@@ -1,7 +1,7 @@
 <?php
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/session_auth.php');
-require_once(getenv('CONFIG_LIB_DIR') . '/template.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/business_meeting.php');
 
 check_permission('manage-business-meeting');
@@ -46,83 +46,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $page_title = $editing ? 'Edit link' : 'Add link';
 
-render_header(
-  $page_title,
-  'Manage business meeting join links.',
-  [
+render_page('pages/admin/business-meeting/edit.html.twig', [
+  'title' => $page_title,
+  'description' => 'Manage business meeting join links.',
+  'breadcrumbs' => [
     'Home' => '/',
     'Manage business meeting' => '/admin/business-meeting/list',
-    $page_title
-  ]
-);
-?>
-  <article>
-    <h2><?php echo htmlspecialchars($editing ? "Edit the link for badge $badge_no" : 'Add a link'); ?></h2>
-<?php
-if ($errors) {
-?>
-    <div class="error">
-      <img src="/resources/error.svg" alt="error" aria-label="error">
-      <ul>
-<?php
-  foreach ($errors as $error) {
-?>
-        <li><?php echo htmlspecialchars($error); ?></li>
-<?php
-  }
-?>
-      </ul>
-    </div>
-<?php
-}
-?>
-    <form action="/admin/business-meeting/edit" method="POST" class="vertical">
-      <?php echo csrf_field(); ?>
-      <fieldset>
-        <legend>Join link</legend>
-<?php
-if ($editing) {
-?>
-        <input type="hidden" name="action" value="edit">
-        <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($badge_no); ?>">
-<?php
-} else {
-?>
-        <input type="hidden" name="action" value="add">
-        <p><label>Badge number: <input name="badge_no" maxlength="<?php echo BUSINESS_MEETING_BADGE_MAX_LENGTH; ?>" required value="<?php echo htmlspecialchars($badge_no); ?>"></label></p>
-<?php
-}
-?>
-        <p><label><?php echo htmlspecialchars(BUSINESS_MEETING['platform_name']); ?> join link: <input type="url" name="join_link" maxlength="<?php echo BUSINESS_MEETING_LINK_MAX_LENGTH; ?>" required pattern="https://.*" value="<?php echo htmlspecialchars($join_link); ?>"></label></p>
-      </fieldset>
-      <input type="submit" value="Save">
-<?php
-if ($editing) {
-?>
-      <input id="delete" type="button" value="Delete">
-<?php
-}
-?>
-    </form>
-<?php
-if ($editing) {
-?>
-    <form id="delete-form" action="/admin/business-meeting/edit" method="POST" hidden>
-      <?php echo csrf_field(); ?>
-      <input type="hidden" name="action" value="delete">
-      <input type="hidden" name="badge_no" value="<?php echo htmlspecialchars($badge_no); ?>">
-    </form>
-    <script>
-      document.getElementById('delete').addEventListener('click', function() {
-        if (confirm('Are you sure you want to delete the link for badge ' + <?php echo json_encode($badge_no, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + '?')) {
-          document.getElementById('delete-form').submit();
-        }
-      });
-    </script>
-<?php
-}
-?>
-  </article>
-<?php
-render_footer();
-?>
+    $page_title,
+  ],
+  'heading' => $editing ? "Edit the link for badge $badge_no" : 'Add a link',
+  'errors' => $errors,
+  'editing' => $editing,
+  'badge_no' => $badge_no,
+  'join_link' => $join_link,
+  'platform' => BUSINESS_MEETING['platform_name'],
+  'badge_max_length' => BUSINESS_MEETING_BADGE_MAX_LENGTH,
+  'link_max_length' => BUSINESS_MEETING_LINK_MAX_LENGTH,
+]);

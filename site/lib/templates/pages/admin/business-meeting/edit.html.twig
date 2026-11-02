@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+  <article>
+    <h2>{{ heading }}</h2>
+{% if errors %}
+{% include 'partials/error-list.html.twig' %}
+{% endif %}
+    <form action="/admin/business-meeting/edit" method="POST" class="vertical">
+      {{ csrf_field() }}
+      <fieldset>
+        <legend>Join link</legend>
+{% if editing %}
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="badge_no" value="{{ badge_no }}">
+{% else %}
+        <input type="hidden" name="action" value="add">
+        <p><label>Badge number: <input name="badge_no" maxlength="{{ badge_max_length }}" required value="{{ badge_no }}"></label></p>
+{% endif %}
+        <p><label>{{ platform }} join link: <input type="url" name="join_link" maxlength="{{ link_max_length }}" required pattern="https://.*" value="{{ join_link }}"></label></p>
+      </fieldset>
+      <input type="submit" value="Save">
+{% if editing %}
+      <input id="delete" type="button" value="Delete">
+{% endif %}
+    </form>
+{% if editing %}
+    <form id="delete-form" action="/admin/business-meeting/edit" method="POST" hidden>
+      {{ csrf_field() }}
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="badge_no" value="{{ badge_no }}">
+    </form>
+    <script>
+      document.getElementById('delete').addEventListener('click', function() {
+        if (confirm('Are you sure you want to delete the link for badge ' + {{ badge_no|json }} + '?')) {
+          document.getElementById('delete-form').submit();
+        }
+      });
+    </script>
+{% endif %}
+  </article>
+{% endblock %}
