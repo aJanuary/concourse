@@ -46,14 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $room_id = $_GET['room_id'] ?? null;
 if ($room_id !== null) {
   $stage = db_get_stage($room_id);
-  $heading = 'Edit ' . $room_id;
 } else {
   $stage = ['title' => '', 'viewer_url' => '', 'type' => '', 'participant_url' => ''];
-  $heading = 'Add stage';
 }
 
 render_page('pages/admin/programme/stages/edit.html.twig', [
-  'heading' => $heading,
   'editing' => $room_id !== null,
   'room_id' => $room_id,
   'stage' => $stage,

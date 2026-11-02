@@ -1,4 +1,5 @@
 {% extends 'auth/local/page.html.twig' %}
+{% set title = 'Log in' %}
 {% block form %}
 <p>Logging in as <strong>{{ email }}</strong> (<a href="/login?redirect={{ redirect|url_encode }}">change</a>)</p>
 <form method="post" action="/login?provider=local" class="nu-form">

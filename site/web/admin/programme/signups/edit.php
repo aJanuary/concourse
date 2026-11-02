@@ -60,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $editing = $id !== null;
-$heading = $editing ? 'Edit sign-up' : 'Add sign-up';
 
 // Redisplaying a rejected submission: datetime-local needs the 'T'
 foreach (SIGNUP_TIME_FIELDS as $field) {
@@ -68,7 +67,6 @@ foreach (SIGNUP_TIME_FIELDS as $field) {
 }
 
 render_page('pages/admin/programme/signups/edit.html.twig', [
-  'heading' => $heading,
   'errors' => $errors,
   'editing' => $editing,
   'id' => $id,

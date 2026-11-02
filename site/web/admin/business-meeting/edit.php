@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 render_page('pages/admin/business-meeting/edit.html.twig', [
-  'heading' => $editing ? "Edit the link for badge $badge_no" : 'Add a link',
   'errors' => $errors,
   'editing' => $editing,
   'badge_no' => $badge_no,

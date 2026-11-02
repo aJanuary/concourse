@@ -1,5 +1,5 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = heading %}
+{% set title = editing ? 'Edit ' ~ room_id : 'Add stream URL' %}
 {% set description = 'Manage stream URLs.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage stream URLs': '/admin/programme/stream-urls/list'} %}
 {% set action = '/admin/programme/stream-urls/edit' %}

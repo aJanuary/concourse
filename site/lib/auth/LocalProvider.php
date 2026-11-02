@@ -183,7 +183,7 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
       $this->render_entry('link-invalid');
     }
 
-    $this->show_page('choose', 'Choose a member', [
+    $this->show_page('choose', [
       'email' => $data['email'],
       'members' => $this->members->members_for_email($data['email']),
       'token' => $token,
@@ -289,9 +289,8 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
 
   // $step is the template in templates/auth/local. Forms and links on it
   // return to $this->redirect.
-  private function show_page(string $step, string $heading, array $context, ?string $error = null): never {
+  private function show_page(string $step, array $context, ?string $error = null): never {
     render_page("auth/local/$step.html.twig", [
-      'heading' => $heading,
       'error' => $error === null ? null : self::ERRORS[$error],
       'allow_anonymous' => ALLOW_ANONYMOUS_ACCESS,
       'redirect' => $this->redirect,
@@ -300,14 +299,14 @@ class LocalProvider implements AuthProvider, InlineLoginForm {
   }
 
   private function render_entry(?string $error = null): never {
-    $this->show_page('entry', 'Log in', [], $error);
+    $this->show_page('entry', [], $error);
   }
 
   private function render_options(string $email, ?string $error = null): never {
-    $this->show_page('options', 'Log in', ['email' => $email], $error);
+    $this->show_page('options', ['email' => $email], $error);
   }
 
   private function render_code_form(string $email, ?string $error = null): never {
-    $this->show_page('enter-code', 'Enter your login code', ['email' => $email], $error);
+    $this->show_page('enter-code', ['email' => $email], $error);
   }
 }

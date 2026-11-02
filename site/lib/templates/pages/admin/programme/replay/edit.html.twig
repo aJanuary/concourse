@@ -1,5 +1,5 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = heading %}
+{% set title = editing ? 'Edit ' ~ item_id : 'Add replay' %}
 {% set description = 'Manage replays.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage replays': '/admin/programme/replay/list'} %}
 {% set action = '/admin/programme/replay/edit' %}

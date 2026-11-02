@@ -48,14 +48,7 @@ $new_replay = !$replay['found'];
 $replay['title'] = $replay['title'] ?? $_GET['title'] ?? '';
 $replay['replay_url'] = $replay['replay_url'] ?? $_GET['replay_url'] ?? '';
 
-if ($item_id !== '' && !$new_replay) {
-  $heading = 'Edit ' . $item_id;
-} else {
-  $heading = 'Add replay';
-}
-
 render_page('pages/admin/programme/replay/edit.html.twig', [
-  'heading' => $heading,
   'item_id' => $item_id,
   'editing' => !$new_replay,
   'replay' => $replay,

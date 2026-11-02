@@ -1,5 +1,5 @@
 {% extends 'layouts/admin-edit.html.twig' %}
-{% set title = heading %}
+{% set title = editing ? 'Edit ' ~ item_id : 'Add session' %}
 {% set description = 'Manage sessions.' %}
 {% set parents = {'Manage programme': '/admin/programme/list', 'Manage sessions': '/admin/programme/sessions/list'} %}
 {% set action = '/admin/programme/sessions/edit' %}
