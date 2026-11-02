@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ description }}">
+    <title>{{ site.con_name }} Member Portal{% if title ?? null %} - {{ title }}{% endif %}</title>
+    <link rel="shortcut icon" href="/resources/favicon.png">
+    <link rel="stylesheet" href="{{ asset('/resources/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('/resources/style.css') }}">
+    <script src="{{ asset('/resources/dropdown.js') }}" defer></script>
+    <script src="{{ asset('/resources/form.js') }}" defer></script>
+  </head>
+  <body{% if is_home ?? false %} class="home"{% endif %}>
+    <header>
+      <div class="container">
+        <a href="/" class="site-branding-container" rel="home">
+          <div class="site-logo">
+            <img width="36" height="36" src="/resources/logo-2x.webp" srcset="/resources/logo-1x.webp 1x, /resources/logo-1.5x.webp 1.5x, /resources/logo-2x.webp 2x" alt="">
+          </div>
+          <div class="site-branding">
+            <hgroup>
+              <h1>{{ site.con_short_name }}</h1>
+              <p>Member portal</p>
+            </hgroup>
+          </div>
+        </a>
+{% if site.user %}
+        <div class="username">
+{% if site.user.anonymous %}
+          <a href="{{ site.user.login_link }}">Log in</a>
+{% else %}
+          <div id="user-dropdown">
+            <input type="checkbox" id="user-menu-toggle" role="button" aria-haspopup="true" aria-controls="user-dropdown-menu">
+            <label for="user-menu-toggle" id="user-menu-label">{{ site.user.name }}</label>
+            <div id="user-dropdown-menu" role="menu">
+              <a href="/profile" role="menuitem">Profile</a>
+{% if site.user.can_switch %}
+              <a href="/switch-member?redirect={{ site.request_uri|url_encode }}" role="menuitem">Switch member</a>
+{% endif %}
+              <a href="/logout" role="menuitem">Log out</a>
+            </div>
+          </div>
+{% endif %}
+        </div>
+{% endif %}
+      </div>
+    </header>
+    <main>
+{% if breadcrumbs ?? null %}
+      <nav class="breadcrumbs">
+        <ul>
+{% for name, url in breadcrumbs %}
+          <li>{% if name %}<a href="{{ url }}">{{ name }}</a>{% else %}{{ url }}{% endif %}</li>
+{% endfor %}
+        </ul>
+      </nav>
+{% endif %}

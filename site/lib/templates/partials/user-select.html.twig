@@ -1,0 +1,17 @@
+{# One button per member. Each posts a token bound to the current member, so
+   a form from another site or another login cannot switch the session.
+   Include with members and redirect. #}
+    <ul id="user-select">
+{% for member in members %}
+      <li>
+        <form method="post" action="/switch-member">
+          {{ csrf_field() }}
+          <input type="hidden" name="token" value="{{ secure_token('/switch-member', {from: site.user.badge_no, badge_no: member.badge_no, redirect: redirect}, 300) }}">
+          <button type="submit"{% if member.badge_no == site.user.badge_no %} aria-current="true"{% endif %}>
+            <span class="avatar color-{{ member.badge_no|avatar_colour }}">{{ member.name|initials }}</span>
+            [{{ member.badge_no }}] {{ member.name }}
+          </button>
+        </form>
+      </li>
+{% endfor %}
+    </ul>

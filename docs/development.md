@@ -47,7 +47,7 @@ container, so changes to them show on the next page load.
 | `scripts/composer` | Runs Composer in the `web` container on `site/lib`; `-d /var/php-migrations` runs it on the migrations instead |
 | `scripts/db-shell` | A `mysql` or `psql` shell on the database. Arguments go to the client; `scripts/db-shell < dump.sql` runs a file |
 | `scripts/create-admin` | Gives a member the `admin` role; `scripts/create-admin <badge no> <email> <name>` adds them as a member first |
-| `scripts/lint` | Runs [PHPStan](https://phpstan.org/) on the portal's PHP, as CI does; see [Static analysis](#static-analysis) |
+| `scripts/lint` | Runs [PHPStan](https://phpstan.org/) on the portal's PHP and compiles the Twig templates, as CI does; see [Static analysis](#static-analysis) |
 | `scripts/encrypt-secret` | Encrypts a value for the secrets file, or generates a key with `--generate-key`; see [Encrypted secrets](configuration.md#encrypted-secrets) |
 
 ### Ports and running several checkouts
@@ -83,6 +83,53 @@ the next login is. See [OpenID Connect login](logging-in.md#openid-connect-login
 
 The web image includes Xdebug, which is off unless `XDEBUG_MODE` is set. Set it (for example
 `XDEBUG_MODE=debug`) when starting the containers to turn it on.
+
+## Templates
+
+Pages and emails are [Twig](https://twig.symfony.com/doc/3.x/) templates in
+`site/lib/templates`:
+
+- `layout.html.twig` is the portal's header and footer. Pages extend it and
+  fill its `content` block.
+- `pages/` has one template for each page, at the page's path: the template
+  for `site/web/admin/roles.php` is `pages/admin/roles.html.twig`.
+- `partials/` has pieces several pages share, such as pagination, and
+  `email/` the layout of the emails the portal sends.
+
+A page's PHP checks permissions, handles any form, gathers what the page
+shows and ends with `render_page()`, from `site/lib/twig.php`:
+
+```php
+render_page('pages/admin/roles.html.twig', [
+  'title' => 'Manage roles',
+  'description' => 'Manage roles.',
+  'breadcrumbs' => ['Home' => '/', 'Manage roles'],
+  'roles' => db_get_roles(),
+]);
+```
+
+Twig escapes everything a template prints, so pass plain text and never call
+`htmlspecialchars`. The only HTML that isn't escaped comes from functions
+that make it, such as `csrf_field()`, and the `markdown_to_html` filter. Don't
+use `|raw`.
+
+Besides the page's own variables, every template can use `site`, with the
+convention's names and contact addresses and the visitor (`site.user`), and
+these functions and filters:
+
+| Name | Does |
+|---|---|
+| `asset(path)` | A file in `site/web/resources` with a version that changes when it does |
+| `csrf_field()` | The hidden field every form posts; see `site/lib/csrf.php` |
+| `csrf_token()` | The token itself, for htmx's `X-CSRF-Token` header |
+| `secure_token(path, data, ttl)` | A signed token; see `site/lib/secure_links.php` |
+| `has_permission(name)` | Whether the visitor has a permission |
+| `pagination(page, total_pages, params)` | The links `partials/pagination.html.twig` shows |
+| `name\|initials`, `badge_no\|avatar_colour` | A member's avatar |
+
+In development a template that uses a variable it wasn't given fails, so
+mistakes show. Production renders it as nothing, and keeps compiled templates
+in `/var/cache/twig`.
 
 ## Database changes
 
@@ -137,6 +184,9 @@ and `scripts/`, in the web image. It finds undefined functions, constants and
 variables, wrong argument types and dead code. Arguments go to
 `phpstan analyse`, so `scripts/lint site/web/index.php` checks one file.
 
+- After PHPStan, `tools/twig-lint.php` compiles every template, which finds
+  syntax errors and unknown functions and filters. It can't find a missing
+  variable; development's strict variables do that when the page renders.
 - PHPStan has its own Composer project in `tools/`, so it isn't installed with
   the portal. `scripts/lint` installs it on first run.
 - `tools/phpstan-bootstrap.php` loads `site/lib/config.php` with the

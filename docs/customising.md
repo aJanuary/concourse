@@ -51,7 +51,7 @@ These pages have convention specific text or links in them:
 | `site/web/guides/` | Participant and moderator guides |
 | `site/web/privacy-policy.php`, `site/web/attributions.php` | The privacy policy and credits |
 | `site/web/502.html` | The maintenance page |
-| `site/lib/templates/email.html.twig` | The layout of emails the portal sends |
+| `site/lib/templates/email/email.html.twig` | The layout of emails the portal sends |
 
 Several cards name the tool behind them (for example ConClár or Planorama).
 Change these to whatever your convention uses, or remove the cards.

@@ -2,31 +2,17 @@
 
 require_once(getenv('CONFIG_LIB_DIR') . '/config.php');
 require_once(getenv('CONFIG_LIB_DIR') . '/vendor/autoload.php');
+require_once(getenv('CONFIG_LIB_DIR') . '/twig.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use Twig\Extra\Markdown\DefaultMarkdown;
-use Twig\Extra\Markdown\MarkdownRuntime;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 // $blocks is a list of ['type' => 'para'|'code'|'button', ...]. Paragraph text
 // is Markdown. Returns whether the message was accepted by the SMTP server.
 function send_email($to, $subject, $heading, $blocks, $from = SUPPORT_EMAIL) {
   require_config('smtp', 'host');
 
-  $loader = new \Twig\Loader\FilesystemLoader(getenv('CONFIG_LIB_DIR') . '/templates');
-  $twig = new \Twig\Environment($loader);
-  $twig->addRuntimeLoader(new class implements RuntimeLoaderInterface {
-    public function load($class) {
-      if (MarkdownRuntime::class === $class) {
-        return new MarkdownRuntime(new DefaultMarkdown());
-      }
-      return null;
-    }
-  });
-  $twig->addExtension(new \Twig\Extra\Markdown\MarkdownExtension());
-
-  $body = $twig->load('email.html.twig')->render([
+  $body = twig()->render('email/email.html.twig', [
     'con_name' => CON_NAME,
     'con_website' => CON_WEBSITE,
     'heading' => $heading,

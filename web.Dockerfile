@@ -28,6 +28,9 @@ ADD ./scripts/encrypt-secret.php /var/scripts/encrypt-secret.php
 # Make analytics dir writable by the web server
 RUN mkdir ${CONFIG_ANALYTICS_DIR} && chown www-data:www-data ${CONFIG_ANALYTICS_DIR}
 
+# Compiled Twig templates, in production; TWIG_CACHE_DIR in site/lib/twig.php
+RUN mkdir /var/cache/twig && chown www-data:www-data /var/cache/twig
+
 # Install composer in the docker image, 
 # and put in a place that composer will be in the path
 RUN curl -sS https://getcomposer.org/installer | php -d allow_url_fopen=On -- --install-dir=/usr/local/bin --filename=composer
