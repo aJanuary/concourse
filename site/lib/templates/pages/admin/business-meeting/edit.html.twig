@@ -8,7 +8,7 @@
 {% set delete_name = 'the link for badge ' ~ badge_no %}
 {% block fields %}
 {% if not editing %}
-        <p><label>Badge number: <input name="badge_no" maxlength="{{ badge_max_length }}" required value="{{ badge_no }}"></label></p>
+<p><label>Badge number: <input name="badge_no" maxlength="{{ badge_max_length }}" required value="{{ badge_no }}"></label></p>
 {% endif %}
-        <p><label>{{ platform }} join link: <input type="url" name="join_link" maxlength="{{ link_max_length }}" required pattern="https://.*" value="{{ join_link }}"></label></p>
+<p><label>{{ platform }} join link: <input type="url" name="join_link" maxlength="{{ link_max_length }}" required pattern="https://.*" value="{{ join_link }}"></label></p>
 {% endblock %}

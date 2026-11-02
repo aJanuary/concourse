@@ -9,30 +9,30 @@
 {% import 'ui.html.twig' as ui %}
 {% set parents = {'Manage programme': '/admin/programme/list'} %}
 {% block content %}
-  <article>
-    <h2>{{ title }}</h2>
+<article>
+  <h2>{{ title }}</h2>
 {% if notice ?? null %}
-    <p>{{ notice }}</p>
+  <p>{{ notice }}</p>
 {% endif %}
 {% if error %}
 {{ ui.error(error) }}
-    <script>
-      // So reloading doesn't show the error again
-      window.history.replaceState({}, document.title, window.location.pathname);
-    </script>
+  <script>
+    // So reloading doesn't show the error again
+    window.history.replaceState({}, document.title, window.location.pathname);
+  </script>
 {% endif %}
-    <ul>
+  <ul>
 {% for label, url in actions %}
-      <li><a href="{{ url }}">{{ label }}</a></li>
+    <li><a href="{{ url }}">{{ label }}</a></li>
 {% endfor %}
 {% for item in items %}
-      <li>
-        <a aria-label="{{ aria_prefix }} {{ item.label }}" href="{{ item.url }}">{{ item.label }}</a>
+    <li>
+      <a aria-label="{{ aria_prefix }} {{ item.label }}" href="{{ item.url }}">{{ item.label }}</a>
 {% if item.subtitle %}
-        <br>{{ item.subtitle }}
+      <br>{{ item.subtitle }}
 {% endif %}
-      </li>
+    </li>
 {% endfor %}
-    </ul>
-  </article>
+  </ul>
+</article>
 {% endblock %}

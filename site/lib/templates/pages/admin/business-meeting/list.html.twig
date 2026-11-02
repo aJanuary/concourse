@@ -2,33 +2,33 @@
 {% set title = 'Manage business meeting' %}
 {% set description = 'Manage business meeting join links.' %}
 {% block content %}
-  <article>
-    <h2>Manage business meeting</h2>
+<article>
+  <h2>Manage business meeting</h2>
 {% if message is not null %}
-    <p class="info">{{ message }}</p>
+  <p class="info">{{ message }}</p>
 {% endif %}
-    <p>Members with the <code>see-business-meeting</code> permission can join the business meeting with the {{ platform }} join link for their badge number.</p>
-    <ul>
-      <li><a href="/admin/business-meeting/edit">Add a link...</a></li>
-      <li><a href="/admin/business-meeting/upload">Upload links...</a></li>
-    </ul>
-    <p>{{ rows|length == 1 ? '1 member has' : rows|length ~ ' members have' }} a join link. Names are only shown for members who have logged in.</p>
+  <p>Members with the <code>see-business-meeting</code> permission can join the business meeting with the {{ platform }} join link for their badge number.</p>
+  <ul>
+    <li><a href="/admin/business-meeting/edit">Add a link...</a></li>
+    <li><a href="/admin/business-meeting/upload">Upload links...</a></li>
+  </ul>
+  <p>{{ rows|length == 1 ? '1 member has' : rows|length ~ ' members have' }} a join link. Names are only shown for members who have logged in.</p>
 {% if rows %}
-    <table>
-      <thead>
-        <tr><th>Badge number</th><th>Name</th><th>Join link</th><th>Updated</th></tr>
-      </thead>
-      <tbody>
+  <table>
+    <thead>
+      <tr><th>Badge number</th><th>Name</th><th>Join link</th><th>Updated</th></tr>
+    </thead>
+    <tbody>
 {% for row in rows %}
-        <tr>
-          <td><a aria-label="Edit the link for badge {{ row.badge_no }}" href="/admin/business-meeting/edit?badge_no={{ row.badge_no|url_encode }}">{{ row.badge_no }}</a></td>
-          <td>{{ row.name }}</td>
-          <td class="join-link"><details><summary>Show</summary><code>{{ row.join_link }}</code></details></td>
-          <td>{{ row.updated }}</td>
-        </tr>
+      <tr>
+        <td><a aria-label="Edit the link for badge {{ row.badge_no }}" href="/admin/business-meeting/edit?badge_no={{ row.badge_no|url_encode }}">{{ row.badge_no }}</a></td>
+        <td>{{ row.name }}</td>
+        <td class="join-link"><details><summary>Show</summary><code>{{ row.join_link }}</code></details></td>
+        <td>{{ row.updated }}</td>
+      </tr>
 {% endfor %}
-      </tbody>
-    </table>
+    </tbody>
+  </table>
 {% endif %}
-  </article>
+</article>
 {% endblock %}

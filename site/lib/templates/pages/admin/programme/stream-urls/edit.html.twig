@@ -8,8 +8,8 @@
 {% set key = {room_id: room_id} %}
 {% block fields %}
 {% if not editing %}
-        <p><label>Room ID: <input name="room_id" maxlength="36" required></label></p>
+<p><label>Room ID: <input name="room_id" maxlength="36" required></label></p>
 {% endif %}
-        <p><label>Title: <input name="title" maxlength="256" value="{{ stream_url.title ?? '' }}"></label></p>
-        <p><label>URL (leave empty when the room is not streaming): <input type="text" name="url" value="{{ stream_url.url ?? '' }}"></label></p>
+<p><label>Title: <input name="title" maxlength="256" value="{{ stream_url.title ?? '' }}"></label></p>
+<p><label>URL (leave empty when the room is not streaming): <input type="text" name="url" value="{{ stream_url.url ?? '' }}"></label></p>
 {% endblock %}

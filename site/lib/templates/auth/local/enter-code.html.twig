@@ -1,33 +1,33 @@
 {% extends 'auth/local/page.html.twig' %}
 {% block form %}
-      <p>If {{ email }} belongs to a member, a login code has been sent to it. Please enter it below.</p>
-      <p>If you do not receive the email within a few minutes, please check your spam or junk mail folder.</p>
-      <form method="post" action="/login?provider=local" class="nu-form">
-        <input type="hidden" name="phase" value="entered-code">
+<p>If {{ email }} belongs to a member, a login code has been sent to it. Please enter it below.</p>
+<p>If you do not receive the email within a few minutes, please check your spam or junk mail folder.</p>
+<form method="post" action="/login?provider=local" class="nu-form">
+  <input type="hidden" name="phase" value="entered-code">
 {% include 'auth/local/hidden-fields.html.twig' %}
-        <div class="form-group">
-          <label for="code">Login code</label>
-          <input type="text" id="code" name="code" class="code-input" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" autofocus required>
-        </div>
-        <button type="submit" class="button login">Log in</button>
-        <script>
-        // Submits once the code is complete. The pause lets iOS finish filling
-        // the field from the email before the form is read.
-        document.getElementById('code').addEventListener('input', function() {
-          var input = this;
-          if (/^[0-9]{6}$/.test(input.value)) {
-            setTimeout(function() {
-              if (/^[0-9]{6}$/.test(input.value)) {
-                input.form.submit();
-              }
-            }, 100);
-          }
-        });
-        </script>
-      </form>
-      <form method="post" action="/login?provider=local">
-        <input type="hidden" name="phase" value="requested-code">
+  <div class="form-group">
+    <label for="code">Login code</label>
+    <input type="text" id="code" name="code" class="code-input" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" autofocus required>
+  </div>
+  <button type="submit" class="button login">Log in</button>
+  <script>
+  // Submits once the code is complete. The pause lets iOS finish filling
+  // the field from the email before the form is read.
+  document.getElementById('code').addEventListener('input', function() {
+    var input = this;
+    if (/^[0-9]{6}$/.test(input.value)) {
+      setTimeout(function() {
+        if (/^[0-9]{6}$/.test(input.value)) {
+          input.form.submit();
+        }
+      }, 100);
+    }
+  });
+  </script>
+</form>
+<form method="post" action="/login?provider=local">
+  <input type="hidden" name="phase" value="requested-code">
 {% include 'auth/local/hidden-fields.html.twig' %}
-        <button type="submit" class="button link">Send a new code</button>
-      </form>
+  <button type="submit" class="button link">Send a new code</button>
+</form>
 {% endblock %}

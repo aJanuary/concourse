@@ -8,9 +8,9 @@
 {% set key = {item_id: item_id} %}
 {% block fields %}
 {% if not editing %}
-        <p><label>Plano Item ID: <input name="item_id" value="{{ item_id }}" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+<p><label>Plano Item ID: <input name="item_id" value="{{ item_id }}" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 {% endif %}
-        <p><label>Title: <input name="title" maxlength="256" value="{{ replay.title }}"></label></p>
-        <p><label>Replay URL: <input type="text" name="replay_url" value="{{ replay.replay_url }}"></label></p>
-        <p><label><input type="checkbox" name="unavailable"{% if replay.unavailable %} checked{% endif %}> No replay will be available (shows a message instead of the replay)</label></p>
+<p><label>Title: <input name="title" maxlength="256" value="{{ replay.title }}"></label></p>
+<p><label>Replay URL: <input type="text" name="replay_url" value="{{ replay.replay_url }}"></label></p>
+<p><label><input type="checkbox" name="unavailable"{% if replay.unavailable %} checked{% endif %}> No replay will be available (shows a message instead of the replay)</label></p>
 {% endblock %}

@@ -7,15 +7,15 @@
 {% set legend = 'Discord post details' %}
 {% set key = {item_id: item_id} %}
 {% block intro %}
-    <p>Warning: These may be overriden by Watson</p>
+<p>Warning: These may be overriden by Watson</p>
 {% endblock %}
 {% block fields %}
 {% if not editing %}
-        <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+    <p><label>Plano Item ID: <input name="item_id" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
 {% endif %}
-        <p><label>Title: <input name="title" maxlength="256" value="{{ post.title }}"></label></p>
-        <p><label>Start date/time (yyyy-mm-dd hh:mm in 24h BST): <input name="start" pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$" value="{{ post.start }}"></label></p>
-        <p><label>Duration (mins): <input name="duration" value="{{ post.duration }}" pattern="^\d*$"></label></p>
-        <p><label>Plano Room ID: <input name="room_id" value="{{ post.room_id }}" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
-        <p><label>Discord URL: <input type="text" name="post_url" value="{{ post.post_url }}"></label></p>
+    <p><label>Title: <input name="title" maxlength="256" value="{{ post.title }}"></label></p>
+    <p><label>Start date/time (yyyy-mm-dd hh:mm in 24h BST): <input name="start" pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$" value="{{ post.start }}"></label></p>
+    <p><label>Duration (mins): <input name="duration" value="{{ post.duration }}" pattern="^\d*$"></label></p>
+    <p><label>Plano Room ID: <input name="room_id" value="{{ post.room_id }}" required pattern="^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$"></label></p>
+    <p><label>Discord URL: <input type="text" name="post_url" value="{{ post.post_url }}"></label></p>
 {% endblock %}

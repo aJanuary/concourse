@@ -124,9 +124,14 @@ breadcrumb is the title unless the page sets `crumb`:
 {% set description = 'Give or remove roles for a member.' %}
 {% set parents = {'Manage roles': '/admin/roles'} %}
 {% block content %}
+<article>
   ...
+</article>
 {% endblock %}
 ```
+
+Twig tags go at the start of the line, and the HTML in a block, partial or
+macro starts there too, indented only by its own nesting.
 
 Twig escapes everything a template prints, so pass plain text and never call
 `htmlspecialchars`. The only HTML that isn't escaped comes from functions

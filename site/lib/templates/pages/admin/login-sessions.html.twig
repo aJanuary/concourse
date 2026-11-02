@@ -2,21 +2,21 @@
 {% set title = 'Manage login sessions' %}
 {% set description = 'Manage login sessions.' %}
 {% block content %}
-  <article>
-    <h2>Manage login sessions</h2>
-    <form method="POST">
-      {{ csrf_field() }}
-      <ul>
+<article>
+  <h2>Manage login sessions</h2>
+  <form method="POST">
+    {{ csrf_field() }}
+    <ul>
 {% for session in sessions %}
-        <li>
-          <label>
-            <input type="checkbox" name="{{ session.session_id }}">
-            {{ session.badge_no }} {{ session.name }} ({{ session.session_id }})
-          </label>
-        </li>
+      <li>
+        <label>
+          <input type="checkbox" name="{{ session.session_id }}">
+          {{ session.badge_no }} {{ session.name }} ({{ session.session_id }})
+        </label>
+      </li>
 {% endfor %}
-      </ul>
-      <input type="submit" value="Delete selected sessions">
-    </form>
-  </article>
+    </ul>
+    <input type="submit" value="Delete selected sessions">
+  </form>
+</article>
 {% endblock %}
